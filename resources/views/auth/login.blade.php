@@ -73,7 +73,10 @@
                   >
                 </div>
               </div>
-              <form>
+
+              <form method="POST" action="/login">
+                @csrf
+
                 <div class="space-y-5">
                   <!-- Email -->
                   <div>
@@ -88,7 +91,11 @@
                       name="email"
                       placeholder="info@gmail.com"
                       class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                      value="{{ old('email') }}"
+                      required
                     />
+
+                    <x-form-error name="email" />
                   </div>
                   <!-- Password -->
                   <div>
@@ -101,7 +108,9 @@
                       <input
                         :type="showPassword ? 'text' : 'password'"
                         placeholder="Enter your password"
+                        name="password"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                        required
                       />
                       <span
                         @click="showPassword = !showPassword"
@@ -141,6 +150,7 @@
                         </svg>
                       </span>
                     </div>
+                    <x-form-error name="password" />
                   </div>
 
                   <!-- Button -->

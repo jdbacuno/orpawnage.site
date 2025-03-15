@@ -8,8 +8,14 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
 
+    <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" />
+    
     @vite(['resources/css/auth.css'])
   </head>
   <body
@@ -32,6 +38,7 @@
     <!-- ===== Preloader End ===== -->
 
     {{ $slot }}
+    <script src="{{ asset('js/custom.js') }}"></script>
     <script defer src="{{ asset('js/auth.js') }}"></script>
   </body>
 </html>
