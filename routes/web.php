@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('home');
-    });
+    })->name('home');
 
     Route::get('/services/adopt-a-pet', function () {
         return view('adopt-a-pet');
@@ -42,3 +42,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
+
+Route::get('/admin', function () {
+    return view('admin.home');
+})->name('home')->middleware(['auth', 'isAdmin']);

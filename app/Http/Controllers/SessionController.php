@@ -28,19 +28,19 @@ class SessionController extends Controller
 
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => 'No account found with this email.'
+                'email' => 'No account found with this email'
             ]);
         }
 
         if (!Auth::attempt($attributes)) {
             throw ValidationException::withMessages([
-                'password' => 'Incorrect password.'
+                'password' => 'Incorrect password'
             ]);
         }
 
         $request->session()->regenerate();
 
-        return redirect('/');
+        return $user->isAdmin ? redirect('/admin') : redirect('/');
     }
 
     public function destroy()

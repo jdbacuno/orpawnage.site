@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>OrPAWnage |  {{ Route::currentRouteName() ? ucfirst(Route::currentRouteName()) : '' }}</title>
     <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" type="image/png" sizes="16x16">
     <link
       href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"
@@ -117,7 +117,7 @@
             >
               <button
                 type="button"
-                class="flex text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 dark:focus:ring-gray-600"
+                class="flex text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40"
                 id="user-menu-button"
                 aria-expanded="false"
                 data-dropdown-toggle="user-dropdown"
@@ -147,14 +147,30 @@
                     >Your Account</span
                   >
                   <span
-                    class="block text-sm text-gray-500 truncate dark:text-gray-400"
-                    >name@flowbite.com</span
-                  >
+                    class="block text-sm text-gray-500 truncate dark:text-gray-400 truncate"
+                    >
+                    @if (Auth::check())
+                      {{ Auth::user()->email }}
+                    @endif
+                    </span>
                 </div>
                 <ul
                   class="py-2 transition-colors duration-300"
                   aria-labelledby="user-menu-button"
                 >
+                  @if (Auth::user()->isAdmin)
+                    <li
+                      class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500"
+                    >
+                      <i class="ph-fill ph-grid-four"></i>
+                      <a
+                        href="/admin"
+                        class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        >Go to Admin Dashboard</a
+                      >
+                    </li>
+                  @endif
+
                   <li
                     class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500"
                   >
@@ -165,6 +181,7 @@
                       >Transaction Status</a
                     >
                   </li>
+
                   <li
                     class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500"
                   >
