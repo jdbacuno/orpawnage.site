@@ -1,0 +1,25 @@
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Center the cards and make them responsive */
+.grid {
+  justify-content: center;
+}
+
+/* Make cards stretch full width on mobile */
+@media (max-width: 640px) {
+  .card {
+    max-width: 100%;
+  }
+}
