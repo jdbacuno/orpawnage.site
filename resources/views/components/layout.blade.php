@@ -179,11 +179,13 @@
                     class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500"
                   >
                     <i class="ph-fill ph-sign-out"></i>
-                    <a
-                      href="signin.html"
-                      class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >Sign Out</a
-                    >
+                    <form action="/logout" method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <button class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                      Sign Out</button>
+                    </form>
                   </li>
                 </ul>
               </div>
