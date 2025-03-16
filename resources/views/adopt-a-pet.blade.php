@@ -1,18 +1,12 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
   <section class="bg-gray-50 dark:bg-gray-900 py-20 md:pt-28">
-    <div
-      class="max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6"
-    >
+    <div class="max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
       <div class="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-        <h1
-          class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight"
-        >
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
           Lorem ipsum dolor
-          <span class="text-orange-500"
-            >Or<span class="text-yellow-500">PAW</span>nage</span
-          >
+          <span class="text-orange-500">Or<span class="text-yellow-500">PAW</span>nage</span>
         </h1>
         <p class="mt-4 text-gray-600 dark:text-gray-400">
           Browse through hundreds of pets looking for a new home. Give them
@@ -22,42 +16,21 @@
         <!-- SEARCH BAR -->
         <div class="mt-6">
           <form class="max-w-md mx-auto">
-            <label
-              for="default-search"
-              class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-              >Search</label
-            >
+            <label for="default-search"
+              class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div class="relative">
-              <div
-                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-              >
-                <svg
-                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
               </div>
-              <input
-                type="search"
-                id="default-search"
+              <input type="search" id="default-search"
                 class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
-                placeholder="Search by species, color, etc..."
-                required
-              />
-              <button
-                type="submit"
-                class="text-white absolute end-2.5 bottom-2.5 bg-orange-500 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-400/60 font-medium rounded-full text-sm px-4 py-2"
-              >
+                placeholder="Search by species, color, etc..." required />
+              <button type="submit"
+                class="text-white absolute end-2.5 bottom-2.5 bg-orange-500 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-400/60 font-medium rounded-full text-sm px-4 py-2">
                 Search
               </button>
             </div>
@@ -67,11 +40,8 @@
 
       <!-- RIGHT SIDE IMAGE -->
       <div class="lg:w-1/2">
-        <img
-          src="{{ asset('images/catdogBG.jpg') }}"
-          alt="Pet Adoption Hero Image"
-          class="w-full max-w-[500px] mx-auto rounded-lg shadow-lg"
-        />
+        <img src="{{ asset('images/catdogBG.jpg') }}" alt="Pet Adoption Hero Image"
+          class="w-full max-w-[500px] mx-auto rounded-lg shadow-lg" />
       </div>
     </div>
   </section>
@@ -81,21 +51,15 @@
   <section class="bg-yellow-500 py-16">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
-      <div
-        class="text-black flex flex-col justify-center items-center mb-6 gap-10"
-      >
+      <div class="text-black flex flex-col justify-center items-center mb-6 gap-10">
         <h2 class="text-4xl font-extrabold text-black">
           Available Pets for Adoption
         </h2>
         <div class="flex items-center space-x-2">
-          <span class="text-md font-bold text-gray-600 dark:text-gray-400"
-            >Sort by:</span
-          >
+          <span class="text-md font-bold text-gray-600 dark:text-gray-400">Sort by:</span>
           <form>
-            <select
-              id="sort"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5 min-w-[200px]"
-            >
+            <select id="sort"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5 min-w-[200px]">
               <option value="latest">Latest</option>
               <option value="oldest">Oldest</option>
               <option value="age">Age</option>
@@ -109,289 +73,54 @@
       </div>
 
       <!-- Pet Cards Grid -->
-
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center"
-      >
+      @if ($pets->count() > 0)
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
+        @foreach ($pets as $pet)
         <!-- CARD -->
         <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
+          class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col">
+          <a href="/services/{{ $pet->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
+            <img class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
+              src="{{ asset('storage/' . $pet->image_path) }}" alt="Pet Image" />
           </a>
           <div class="p-5 flex flex-col flex-grow">
             <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
+              Pet #{{ $pet->pet_number }}
             </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
+            <p class="text-sm text-gray-600">{{ ucfirst($pet->breed) }} - {{ ucfirst($pet->species) }}</p>
+            <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
+              <ul>
+                <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age_unit }}</li>
+                <li><span class="text-md text-black font-bold">Sex:</span> {{ ucfirst($pet->sex) }}</li>
+                <li><span class="text-md text-black font-bold">Color:</span> {{ ucfirst($pet->color) }}</li>
+              </ul>
+            </div>
 
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
+            <a href="/services/{{ $pet->slug }}/adoption-form" role="button"
+              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition">
               Adopt Now
             </a>
           </div>
         </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
-
-        <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-        >
-          <a href="#" class="block overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('images/black-dog.jpg') }}"
-              alt="Pet 1"
-            />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Bella
-            </h5>
-            <p class="text-sm text-gray-600">Golden Retriever - Dog</p>
-            <p
-              class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6"
-            >
-              Bella is a sweet and loving dog looking for a forever home.
-              She loves to play around with kids, enjoys belly rubs, and is
-              highly obedient. She needs a family that can give her warmth
-              and love forever. Bella would make a great family dog.
-            </p>
-
-            <!-- openModal() -->
-            <a
-              href="/services/adoption-form"
-              role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition"
-              onclick=""
-            >
-              Adopt Now
-            </a>
-          </div>
-        </div>
+        @endforeach
       </div>
-
-      <hr
-        class="my-6 border-gray-400/50 sm:mx-auto dark:border-gray-700 lg:my-8"
-      />
-
-      <!-- Pagination -->
-      <div class="flex justify-center items-center space-x-6 mt-10">
-        <button
-          class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition"
-        >
-          <!-- <i class="ph-bold ph-caret-left"></i> -->
-          Prev
-        </button>
-        <button
-          class="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-yellow-500 transition"
-        >
-          <!-- <i class="ph-bold ph-caret-right"></i> -->
-          Next
-        </button>
+      @else
+      <!-- No Pets Available Message -->
+      <div class="text-center text-black mt-10">
+        <p class="text-lg font-semibold">No pets available for adoption at the moment.</p>
+        <p class="text-xl">Please check back later!</p>
       </div>
+      @endif
+
+      <hr class="my-6 border-gray-400/50 sm:mx-auto dark:border-gray-700 lg:my-8" />
+
+      <!-- Tailwind Pagination -->
+      @if ($pets->count() > 0)
+      <div class="mt-8">
+        {{ $pets->links() }}
+      </div>
+      @endif
+
     </div>
   </section>
   <!-- ========== END OF PET LISTING SECTION ========== -->

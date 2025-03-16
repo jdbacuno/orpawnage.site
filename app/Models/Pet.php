@@ -4,9 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Pet extends Model
 {
     /** @use HasFactory<\Database\Factories\PetFactory> */
     use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($pet) {
+            $pet->slug = Str::slug($pet->species . '-' . $pet->breed . '-' . now()->timestamp);
+        });
+    }
 }

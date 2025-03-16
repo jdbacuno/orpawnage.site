@@ -3,6 +3,7 @@
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
+use App\Models\Pet;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -11,16 +12,17 @@ Route::middleware('auth')->group(function () {
     })->name('Home');
 
     Route::get('/services/adopt-a-pet', function () {
-        return view('adopt-a-pet');
+        $pets = Pet::latest('updated_at')->paginate(10);
+        return view('adopt-a-pet', compact('pets'));
     })->name('Available Pets');
-
-    Route::get('/services/adoption-form', function () {
-        return view('adoption-form');
-    })->name('Adopt a Pet');
 
     Route::get('/services/surrender-an-animal', function () {
         return view('surrender');
     })->name('Surrender a Pet');
+
+    Route::get('/services/{pet:slug}/adoption-form', function (Pet $pet) {
+        return view('adoption-form', compact('pet'));
+    })->name('Adopt a Pet');
 
     Route::get('/report/missing-pet', function () {
         return view('missing-form');
