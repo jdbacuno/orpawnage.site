@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
   @vite(['resources/css/admin/style.css'])
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -25,7 +26,7 @@
       <li class="mb-1 group {{ request()->is('admin') ? 'active' : '' }}">
         <a href="/admin"
           class="flex items-center py-2 px-4 text-gray-300 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
-          <i class="ri-home-2-line mr-3 text-lg"></i>
+          <i class="ph-fill ph-squares-four mr-3 text-lg"></i>
           <span class="text-sm">Dashboard</span>
         </a>
       </li>

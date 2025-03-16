@@ -7,7 +7,7 @@
       <h2 class="text-xl font-semibold text-gray-800">Pet Profiles</h2>
       <!-- Add New Pet Button -->
       <button id="openModal"
-        class="bg-yellow-500 hover:bg-orange-500 text-white font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
+        class="bg-yellow-500 hover:bg-orange-500 text-black font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
         <i class="ph-fill ph-plus-circle"></i>
         <span class="hidden md:inline-flex ml-2">Add a New Pet</span>
       </button>
@@ -18,29 +18,29 @@
       <table class="w-full border border-gray-200 rounded-lg">
         <thead>
           <tr class="bg-gray-100 text-gray-700">
+            <th class="py-2 px-4 text-left">Pet No.</th>
             <th class="py-2 px-4 text-left">Image</th>
-            <th class="py-2 px-4 text-left">Name</th>
+            <th class="py-2 px-4 text-left">Species</th>
             <th class="py-2 px-4 text-left">Breed</th>
             <th class="py-2 px-4 text-left">Age</th>
-            <th class="py-2 px-4 text-left">Status</th>
+            <th class="py-2 px-4 text-left">Sex</th>
+            <th class="py-2 px-4 text-left">Color</th>
             <th class="py-2 px-4 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Static Data -->
+          @foreach($pets as $pet)
           <tr class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="py-2 px-4">#{{ $pet->pet_number }}</td>
             <td class="py-2 px-4">
-              <img src="{{ asset('images/black-dog.jpg') }}" alt="Pet Image"
+              <img src="{{ asset('storage/' . $pet->image_path) }}" alt="Pet Image"
                 class="w-12 h-12 rounded-full object-cover">
             </td>
-            <td class="py-2 px-4">Buddy</td>
-            <td class="py-2 px-4">Golden Retriever</td>
-            <td class="py-2 px-4">3 years</td>
-            <td class="py-2 px-4">
-              <span class="px-2 py-1 text-sm font-semibold rounded-md bg-green-500 text-white">
-                Available
-              </span>
-            </td>
+            <td class="py-2 px-4">{{ ucfirst($pet->species) }}</td>
+            <td class="py-2 px-4">{{ ucfirst($pet->breed) }}</td>
+            <td class="py-2 px-4">{{ $pet->age }} {{ $pet->age_unit }}</td>
+            <td class="py-2 px-4">{{ ucfirst($pet->sex) }}</td>
+            <td class="py-2 px-4">{{ ucfirst($pet->color) }}</td>
             <td class="py-2 px-4 text-center">
               <a href="#" class="text-blue-500 hover:text-blue-600 mr-2">
                 <i class="ph-fill ph-pencil-simple"></i>
@@ -50,71 +50,18 @@
               </button>
             </td>
           </tr>
-
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="py-2 px-4">
-              <img src="{{ asset('images/black-dog.jpg') }}" alt="Pet Image"
-                class="w-12 h-12 rounded-full object-cover">
-            </td>
-            <td class="py-2 px-4">Whiskers</td>
-            <td class="py-2 px-4">Siamese</td>
-            <td class="py-2 px-4">2 years</td>
-            <td class="py-2 px-4">
-              <span class="px-2 py-1 text-sm font-semibold rounded-md bg-red-500 text-white">
-                Adopted
-              </span>
-            </td>
-            <td class="py-2 px-4 text-center">
-              <a href="#" class="text-blue-500 hover:text-blue-600 mr-2">
-                <i class="ph-fill ph-pencil-simple"></i>
-              </a>
-              <button class="text-red-500 hover:text-red-600">
-                <i class="ph-fill ph-trash"></i>
-              </button>
-            </td>
-          </tr>
-
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="py-2 px-4">
-              <img src="{{ asset('images/black-dog.jpg') }}" alt="Pet Image"
-                class="w-12 h-12 rounded-full object-cover">
-            </td>
-            <td class="py-2 px-4">Polly</td>
-            <td class="py-2 px-4">Parrot</td>
-            <td class="py-2 px-4">5 years</td>
-            <td class="py-2 px-4">
-              <span class="px-2 py-1 text-sm font-semibold rounded-md bg-green-500 text-white">
-                Available
-              </span>
-            </td>
-            <td class="py-2 px-4 text-center">
-              <a href="#" class="text-blue-500 hover:text-blue-600 mr-2">
-                <i class="ph-fill ph-pencil-simple"></i>
-              </a>
-              <button class="text-red-500 hover:text-red-600">
-                <i class="ph-fill ph-trash"></i>
-              </button>
-            </td>
-          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination and Results Count -->
-    <div class="mt-4 flex justify-between items-center">
-      <span class="text-gray-600 text-sm">
-        Showing 1 - 3 of 3 results
-      </span>
-      <div class="pagination flex gap-2">
-        <button class="px-3 py-1 text-gray-500 bg-gray-200 rounded-md cursor-not-allowed" disabled>
-          <i class="ph ph-caret-left"></i>
-        </button>
-        <button class="px-3 py-1 bg-blue-500 text-white rounded-md">1</button>
-        <button class="px-3 py-1 text-gray-500 bg-gray-200 rounded-md cursor-not-allowed" disabled>
-          <i class="ph ph-caret-right"></i>
-        </button>
-      </div>
+    <!-- Pagination -->
+    <div class="mt-4">
+      {{ $pets->links() }}
+      <!-- Laravel default pagination links -->
     </div>
+
+
   </div>
 
   <!-- Modal (Initially Hidden) -->
@@ -210,8 +157,18 @@
 
         <div class="mb-3">
           <label class="block text-gray-700 text-sm font-medium">Color</label>
-          <input type="text" name="color" placeholder="black, orange, tricolor, etc."
-            class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('color') }}" required>
+          <select name="color" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+            <option value="black" {{ old('color')==='black' ? 'selected' : '' }}>Black</option>
+            <option value="white" {{ old('color')==='white' ? 'selected' : '' }}>White</option>
+            <option value="gray" {{ old('color')==='gray' ? 'selected' : '' }}>Gray</option>
+            <option value="brown" {{ old('color')==='brown' ? 'selected' : '' }}>Brown</option>
+            <option value="orange" {{ old('color')==='orange' ? 'selected' : '' }}>Orange</option>
+            <option value="calico" {{ old('color')==='calico' ? 'selected' : '' }}>Calico</option>
+            <option value="tabby" {{ old('color')==='tabby' ? 'selected' : '' }}>Tabby</option>
+            <option value="bi-color" {{ old('color')==='bi-color' ? 'selected' : '' }}>Bi-color</option>
+            <option value="tri-color" {{ old('color')==='tri-color' ? 'selected' : '' }}>Tri-color</option>
+            <option value="others" {{ old('color')==='others' ? 'selected' : '' }}>Others</option>
+          </select>
           <x-form-error name="color" />
         </div>
 

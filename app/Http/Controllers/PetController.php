@@ -11,7 +11,8 @@ class PetController extends Controller
 {
     public function create()
     {
-        return view('admin.pets');
+        $pets = Pet::latest('updated_at')->paginate(5);
+        return view('admin.pets', compact('pets'));
     }
 
     public function store(Request $request)
@@ -23,7 +24,7 @@ class PetController extends Controller
             'age' => ['required', 'integer', 'min:0'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
-            'color' => ['required', 'string'],
+            'color' => ['required', Rule::in(['black', 'white', 'gray', 'brown', 'orange', 'calico', 'tabby', 'bi-color', 'tri-color', 'others'])],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
         ]);
 
@@ -35,7 +36,7 @@ class PetController extends Controller
         // Generate unique image filename
         $timestamp = now()->format('YmdHis');
         $extension = $request->image->getClientOriginalExtension();
-        $imageFileName = "pet#{$validated['pet_number']}-{$timestamp}.{$extension}";
+        $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
 
         // Store the image
         $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');

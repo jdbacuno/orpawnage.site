@@ -24,7 +24,7 @@ class PetFactory extends Factory
             'age_unit' => fake()->randomElement(['months', 'years']),
             'sex' => fake()->randomElement(['male', 'female']),
             'color' => fake()->colorName(),
-            'image_path' => 'images/default.jpg',
+            'image_path' => 'pet-images/catdog.svg',
         ];
     }
 }
