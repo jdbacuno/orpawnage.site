@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
             'password' => '123456',
             'email_verified_at' => now()
         ]);  // 1 admin
+
+        $this->call(PetSeeder::class);
     }
 }
