@@ -32,7 +32,7 @@
       </li>
       <li class="mb-1 group {{ request()->is('admin/pet-profiles') ? 'active' : '' }}">
         <a href="/admin/pet-profiles"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold"">
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
           <i class=" ph-fill ph-paw-print mr-3 text-lg"></i>
           <span class="text-sm">Manage Pet Profiles</span>
         </a>

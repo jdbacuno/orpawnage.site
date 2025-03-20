@@ -8,39 +8,41 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2 overflow-hidden">
         <!-- LEFT SIDE: Pet Image -->
         <div class="h-full w-full">
-          <img src="{{ asset('images/black-dog.jpg') }}" alt="Pet Image" class="w-full h-auto object-cover" />
+          {{-- asset('storage/' . $pet->image_path) --}}
+          <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
+            class="w-full h-auto object-cover" />
         </div>
 
         <!-- RIGHT SIDE: Pet Details and User Information -->
         <div class="p-6">
           <!-- Pet Details -->
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Adopt Pet#1
+            Adopt Pet#{{ $pet->pet_number }}
           </h2>
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Species</label>
-              <input type="text" value="Dog" readonly
+              <input type="text" value="{{ ucfirst($pet->species) }}" readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Breed</label>
-              <input type="text" value="Golden Retriever" readonly
+              <input type="text" value="{{ ucwords($pet->breed) }}" readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Age</label>
-              <input type="text" value="2 Years" readonly
+              <input type="text" value="{{ $pet->age }} {{ $pet->age_unit }}" readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Sex</label>
-              <input type="text" value="Female" readonly
+              <input type="text" value="{{ ucfirst($pet->sex) }}" readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Color</label>
-              <input type="text" value="Golden" readonly
+              <input type="text" value="{{ ucfirst($pet->color) }}" readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
           </div>
@@ -92,9 +94,7 @@
                 <select
                   class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 focus:border-orange-500"
                   required>
-                  <option value="" disabled selected>
-                    Select Civil Status
-                  </option>
+                  <option value="" disabled selected>Select Civil Status</option>
                   <option value="Single">Single</option>
                   <option value="Married">Married</option>
                   <option value="Divorced">Divorced</option>
@@ -116,6 +116,7 @@
           </form>
         </div>
       </div>
+
     </div>
   </section>
   <!-- END OF THE SECTION -->

@@ -16,7 +16,7 @@
 
 <body class="mx-auto max-w-[1920px]">
   <!-- ===== Preloader Start ===== -->
-  {{-- <div id="preloader" class="preloader h-16 w-16">
+  <div id="preloader" class="preloader h-16 w-16">
     <div class="dog">
       <div class="torso">
         <div class="fur">
@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-  </div> --}}
+  </div>
   <!-- ===== Preloader End ===== -->
 
   <div class="bg-white">
@@ -352,6 +352,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
+  <script src="{{ asset('js/scrollToPets.js') }}"></script>
 </body>
 
 </html>

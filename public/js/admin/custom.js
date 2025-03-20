@@ -1,35 +1,23 @@
-// dismissing alert
-// target element that will be dismissed
-const $targetEl = document.getElementById("alert-3");
+// Select all alert containers and buttons dynamically
+document.addEventListener("DOMContentLoaded", function () {
+    const alertElements = document.querySelectorAll("[id^=alert-]"); // Select all alerts that start with "alert-"
+    const dismissButtons = document.querySelectorAll(".dismiss-btn"); // Select all dismiss buttons
 
-// optional trigger element
-const $triggerEl = document.getElementById("triggerElement");
+    setTimeout(() => {
+        document.querySelector(alertId).remove(); // Remove after animation
+    }, 2000);
 
-// options object
-const options = {
-    transition: "transition-opacity",
-    duration: 1000,
-    timing: "ease-out",
+    dismissButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const alertId = button.getAttribute("data-dismiss-target"); // Get target alert ID
+            const alertEl = document.querySelector(alertId);
 
-    // callback functions
-    onHide: (context, targetEl) => {
-        console.log("element has been dismissed");
-        console.log(targetEl);
-    },
-};
-
-// instance options object
-const instanceOptions = {
-    id: "targetElement",
-    override: true,
-};
-
-console.log("Hello");
-
-/*
- * $targetEl (required)
- * $triggerEl (optional)
- * options (optional)
- * instanceOptions (optional)
- */
-const dismiss = new Dismiss($targetEl, $triggerEl, options, instanceOptions);
+            if (alertEl) {
+                alertEl.classList.add("opacity-0"); // Fade out effect
+                setTimeout(() => {
+                    alertEl.remove(); // Remove after animation
+                }, 500);
+            }
+        });
+    });
+});

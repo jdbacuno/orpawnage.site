@@ -12,7 +12,7 @@ Route::middleware('auth')->group(function () {
     })->name('Home');
 
     Route::get('/services/adopt-a-pet', function () {
-        $pets = Pet::latest('updated_at')->paginate(10);
+        $pets = Pet::latest('updated_at')->paginate(8);
         return view('adopt-a-pet', compact('pets'));
     })->name('Available Pets');
 
@@ -54,6 +54,10 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
 
     Route::get('/admin/pet-profiles', [PetController::class, 'create'])->name('Manage Pet Profiles');
     Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('Manage Pet Profiles');
+
+    Route::patch('/admin/pet-profiles/{pet}', [PetController::class, 'update']);
+
+    Route::delete('/admin/pet-profiles/{pet}', [PetController::class, 'destroy']);
 });
 
 // for all undefined routes

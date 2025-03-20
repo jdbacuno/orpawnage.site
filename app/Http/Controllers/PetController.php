@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Pet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class PetController extends Controller
@@ -17,46 +19,146 @@ class PetController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'pet_number' => ['required', 'integer', 'min:1'], // Ensuring pet_number starts from 1
+        // Validate the request manually
+        $validator = Validator::make($request->all(), [
+            'pet_number' => ['required', 'integer', 'min:1'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
             'breed' => ['required', 'string'],
             'age' => ['required', 'integer', 'min:0'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
-            'color' => ['required', Rule::in(['black', 'white', 'gray', 'brown', 'orange', 'calico', 'tabby', 'bi-color', 'tri-color', 'others'])],
+            'color' => ['required', Rule::in([
+                'black',
+                'white',
+                'gray',
+                'brown',
+                'orange',
+                'calico',
+                'tabby',
+                'bi-color',
+                'tri-color',
+                'others'
+            ])],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_open', 'add'); // Keep modal open on error
+        }
+
         // Normalize case for specific fields
+        $validated = $validator->validated();
         $validated['species'] = strtolower(trim($validated['species']));
         $validated['breed'] = strtolower(trim($validated['breed']));
         $validated['color'] = strtolower(trim($validated['color']));
 
-        // Generate unique image filename
-        $timestamp = now()->format('YmdHis');
-        $extension = $request->image->getClientOriginalExtension();
-        $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
+        // Upload Image
+        if ($request->hasFile('image')) {
+            $timestamp = now()->format('YmdHis');
+            $extension = $request->image->getClientOriginalExtension();
+            $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
+            $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');
 
-        // Store the image
-        $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');
+            $validated['image_path'] = $imagePath;
+        }
 
-        // Create the pet record in the database
-        Pet::create([
-            'pet_number' => $validated['pet_number'],
-            'species' => $validated['species'],
-            'breed' => $validated['breed'],
-            'age' => $validated['age'],
-            'age_unit' => $validated['age_unit'],
-            'sex' => $validated['sex'],
-            'color' => $validated['color'],
-            'image_path' => $imagePath,
-        ]);
+        unset($validated['image']); // Remove 'image' field before saving
 
-        // Return back with success message and keep the modal open
+        // Insert the data into the database
+        Pet::create($validated);
+
         return redirect()->back()->with([
-            'success' => 'Pet added successfully!',
-            'modal_open' => true // This can be used in Blade to reopen the modal
+            'add_success' => 'Pet added successfully!',
+            'modal_open' => 'add' // Keep modal open on success
         ]);
+    }
+
+    public function update(Request $request, Pet $pet)
+    {
+        // Validate the request manually
+        $validator = Validator::make($request->all(), [
+            'pet_number' => ['required', 'integer', 'min:1'],
+            'species' => ['required', Rule::in(['feline', 'canine'])],
+            'breed' => ['required', 'string'],
+            'age' => ['required', 'integer', 'min:0'],
+            'age_unit' => ['required', Rule::in(['months', 'years'])],
+            'sex' => ['required', Rule::in(['male', 'female'])],
+            'color' => ['required', Rule::in([
+                'black',
+                'white',
+                'gray',
+                'brown',
+                'orange',
+                'calico',
+                'tabby',
+                'bi-color',
+                'tri-color',
+                'others'
+            ])],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
+        ]);
+
+        // If validation fails, redirect with errors under 'edit_pet' bag
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator, 'edit_pet')
+                ->withInput()
+                ->with([
+                    'modal_open' => 'edit',
+                    'edit_pet_id' => $pet->id  // Pass pet ID to prefill modal correctly
+                ]);
+        }
+
+        // Normalize case for specific fields
+        $validated = $validator->validated();
+        $validated['species'] = strtolower(trim($validated['species']));
+        $validated['breed'] = strtolower(trim($validated['breed']));
+        $validated['color'] = strtolower(trim($validated['color']));
+
+        // Handle Image Upload & Deletion
+        if ($request->hasFile('image')) {
+            // Delete existing image if it exists
+            if ($pet->image_path && Storage::disk('public')->exists($pet->image_path)) {
+                Storage::disk('public')->delete($pet->image_path);
+            }
+
+            // Store new image
+            $timestamp = now()->format('YmdHis');
+            $extension = $request->image->getClientOriginalExtension();
+            $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
+            $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');
+
+            $validated['image_path'] = $imagePath;
+        }
+
+        // Remove 'image' field before updating the database
+        unset($validated['image']);
+
+        // Update the pet record
+        $pet->update($validated);
+
+        return redirect('/admin/pet-profiles')
+            ->with([
+                'modal_open' => 'edit',
+                'edit_pet_id' => $pet->id, // Ensure the modal remains open for the same pet
+                'edit_pet_data' => $pet->fresh(), // Pass fresh updated data for correct repopulation
+                'edit_success' => 'Pet updated successfully!'
+            ]);
+    }
+
+    public function destroy(Pet $pet)
+    {
+        // Delete pet image if exists
+        if ($pet->image_path && Storage::disk('public')->exists($pet->image_path)) {
+            Storage::disk('public')->delete($pet->image_path);
+        }
+
+        // Delete pet record
+        $pet->delete();
+
+        return redirect('/admin/pet-profiles')->with('success', 'Pet deleted successfully!');
     }
 }

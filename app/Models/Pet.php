@@ -16,7 +16,7 @@ class Pet extends Model
         parent::boot();
 
         static::creating(function ($pet) {
-            $pet->slug = Str::slug($pet->species . '-' . $pet->breed . '-' . now()->timestamp);
+            $pet->slug = Str::slug($pet->species . '-' . $pet->breed . '-' . now()->timestamp . '-' . Str::random(5));
         });
     }
 }
