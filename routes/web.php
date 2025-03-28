@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -17,9 +18,8 @@ Route::middleware('auth')->group(function () {
         return view('surrender');
     })->name('Surrender a Pet');
 
-    Route::get('/services/{pet:slug}/adoption-form', function (Pet $pet) {
-        return view('adoption-form', compact('pet'));
-    })->name('Adopt a Pet');
+    Route::get('/services/{pet:slug}/adoption-form', [AdoptionApplicationController::class, 'create'])->name('Adopt a Pet');
+    Route::post('/services/{pet:slug}/adoption-form', [AdoptionApplicationController::class, 'store']);
 
     Route::get('/report/missing-pet', function () {
         return view('missing-form');
@@ -53,8 +53,9 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
     Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('Manage Pet Profiles');
 
     Route::patch('/admin/pet-profiles/{pet}', [PetController::class, 'update']);
-
     Route::delete('/admin/pet-profiles/{pet}', [PetController::class, 'destroy']);
+
+    Route::get('/admin/adoption-applications', function () {});
 });
 
 // for all undefined routes

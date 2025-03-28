@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function adoptionApplications()
+    {
+        return $this->hasMany(AdoptionApplication::class);
+    }
 }

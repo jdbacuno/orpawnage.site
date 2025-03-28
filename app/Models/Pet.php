@@ -19,4 +19,9 @@ class Pet extends Model
             $pet->slug = Str::slug($pet->species . '-' . $pet->breed . '-' . now()->timestamp . '-' . Str::random(5));
         });
     }
+
+    public function adoptionApplication()
+    {
+        return $this->hasOne(AdoptionApplication::class);
+    }
 }

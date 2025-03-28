@@ -280,8 +280,7 @@
               </h2>
               <ul class="text-gray-500 dark:text-gray-400 font-medium">
                 <li class="mb-4">
-                  <a href="/servicees/adopt-a-pet"
-                    class="hover:text-orange-500 transition-colors duration-300">Adopt</a>
+                  <a href="/services/adopt-a-pet" class="hover:text-orange-500 transition-colors duration-300">Adopt</a>
                 </li>
                 <li class="mb-4">
                   <a href="/services/surrender-an-animal"
@@ -353,6 +352,7 @@
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
   <script src="{{ asset('js/scrollToPets.js') }}"></script>
+  <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>

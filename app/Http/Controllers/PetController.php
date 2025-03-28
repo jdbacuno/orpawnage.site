@@ -13,7 +13,9 @@ class PetController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pet::query();
+        $query = Pet::whereNotIn('id', function ($subQuery) {
+            $subQuery->select('pet_id')->from('adoption_applications');
+        });
 
         // Apply filters
         if ($request->filled('species')) {
@@ -75,6 +77,7 @@ class PetController extends Controller
 
         return view('adopt-a-pet', compact('pets'));
     }
+
 
     public function create()
     {
