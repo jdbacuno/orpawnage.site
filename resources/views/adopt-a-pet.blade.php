@@ -55,21 +55,67 @@
         <h2 class="text-4xl font-extrabold text-black">
           Available Pets for Adoption
         </h2>
-        <div class="flex items-center space-x-2">
-          <span class="text-md font-bold text-gray-600 dark:text-gray-400">Sort by:</span>
-          <form>
-            <select id="sort"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5 min-w-[200px]">
-              <option value="latest">Latest</option>
-              <option value="oldest">Oldest</option>
-              <option value="age">Age</option>
-              <option value="species">Species</option>
-              <option value="breed">Breed</option>
-              <option value="gender">Gender</option>
-              <option value="color">Color</option>
+        <!-- Filters Section -->
+        <div class="flex flex-wrap gap-4 items-center justify-center">
+          <form method="GET" action="{{ request()->url() }}#pets" class="flex flex-wrap gap-4">
+            <!-- Species Filter -->
+            <select name="species"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              onchange="this.form.submit()">
+              <option value="">All Species</option>
+              <option value="feline" {{ request('species')=='feline' ? 'selected' : '' }}>Cats</option>
+              <option value="canine" {{ request('species')=='canine' ? 'selected' : '' }}>Dogs</option>
             </select>
+
+            <!-- Gender Filter -->
+            <select name="sex"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              onchange="this.form.submit()">
+              <option value="">All Genders</option>
+              <option value="male" {{ request('sex')=='male' ? 'selected' : '' }}>Male</option>
+              <option value="female" {{ request('sex')=='female' ? 'selected' : '' }}>Female</option>
+            </select>
+
+            <!-- Color Filter -->
+            <select name="color"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              onchange="this.form.submit()">
+              <option value="">All Colors</option>
+              <option value="black" {{ request('color')=='black' ? 'selected' : '' }}>Black</option>
+              <option value="white" {{ request('color')=='white' ? 'selected' : '' }}>White</option>
+              <option value="gray" {{ request('color')=='gray' ? 'selected' : '' }}>Gray</option>
+              <option value="brown" {{ request('color')=='brown' ? 'selected' : '' }}>Brown</option>
+              <option value="orange" {{ request('color')=='orange' ? 'selected' : '' }}>Orange</option>
+              <option value="calico" {{ request('color')=='calico' ? 'selected' : '' }}>Calico</option>
+              <option value="tabby" {{ request('color')=='tabby' ? 'selected' : '' }}>Tabby</option>
+              <option value="bi-color" {{ request('color')=='bi-color' ? 'selected' : '' }}>Bi-Color</option>
+              <option value="tri-color" {{ request('color')=='tri-color' ? 'selected' : '' }}>Tri-Color</option>
+              <option value="others" {{ request('color')=='others' ? 'selected' : '' }}>Others</option>
+            </select>
+
+            <!-- Combined Sort Dropdown -->
+            <div>
+              <select name="sort_by"
+                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+                onchange="this.form.submit()">
+                <option value="latest" {{ request('sort_by')=='latest' ? 'selected' : '' }}>Recently Added</option>
+                <option value="oldest" {{ request('sort_by')=='oldest' ? 'selected' : '' }}>Oldest (by Date)</option>
+                <option value="youngest" {{ request('sort_by')=='youngest' ? 'selected' : '' }}>Youngest (by Age)
+                </option>
+                <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest (by Age)
+                </option>
+              </select>
+            </div>
+
+            <!-- Filter Button -->
+            {{-- <button type="submit"
+              class="px-4 py-2 bg-orange-400 text-white font-bold rounded-lg hover:bg-yellow-500 transition">
+              Apply Filters
+            </button> --}}
           </form>
         </div>
+
+
       </div>
 
       <!-- Pet Cards Grid -->
@@ -84,9 +130,7 @@
               src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" />
           </a>
           <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">
-              Pet #{{ $pet->pet_number }}
-            </h5>
+            <h5 class="text-lg font-bold text-gray-900 dark:text-white">Pet #{{ $pet->pet_number }}</h5>
             <p class="text-sm text-gray-600">{{ ucwords($pet->breed) }} - {{ ucfirst($pet->species) }}</p>
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
@@ -95,7 +139,6 @@
                 <li><span class="text-md text-black font-bold">Color:</span> {{ ucfirst($pet->color) }}</li>
               </ul>
             </div>
-
             <a href="/services/{{ $pet->slug }}/adoption-form" role="button"
               class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition">
               Adopt Now
@@ -105,12 +148,15 @@
         @endforeach
       </div>
       @else
-      <!-- No Pets Available Message -->
+      <!-- No Pets Found Message -->
       <div class="text-center text-black mt-10">
-        <p class="text-lg font-semibold">No pets available for adoption at the moment.</p>
-        <p class="text-xl">Please check back later!</p>
+        <p class="text-lg font-semibold">
+          No pets found matching your filters.
+        </p>
+        <p class="text-xl">Try adjusting your search criteria.</p>
       </div>
       @endif
+
 
       <hr class="my-6 border-gray-400/50 sm:mx-auto dark:border-gray-700 lg:my-8" />
 

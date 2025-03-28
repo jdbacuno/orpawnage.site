@@ -15,6 +15,11 @@
 
     <!-- Pet Profiles Table -->
     <div class="overflow-x-auto">
+      @if($pets->isEmpty())
+      <div class="flex items-center justify-center p-6 text-gray-500">
+        <p class="text-lg">No pets found.</p>
+      </div>
+      @else
       <table class="w-full border border-gray-200 rounded-lg">
         <thead>
           <tr class="bg-gray-100 text-gray-700">
@@ -61,7 +66,9 @@
           @endforeach
         </tbody>
       </table>
+      @endif
     </div>
+
 
     <!-- Pagination -->
     <div class="mt-4">
@@ -206,6 +213,7 @@
 
 
   <!-- Edit Pet Modal -->
+  @if (!$pets->isEmpty())
   <div id="editModal"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 {{ session('modal_open') === 'edit' ? '' : 'hidden' }}">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-hidden relative flex flex-col">
@@ -353,6 +361,7 @@
       </div>
     </div>
   </div>
+  @endif
 
   <!-- Delete Pet Modal -->
   <!-- Delete Pet Modal -->

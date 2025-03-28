@@ -11,10 +11,7 @@ Route::middleware('auth')->group(function () {
         return view('home');
     })->name('Home');
 
-    Route::get('/services/adopt-a-pet', function () {
-        $pets = Pet::latest('updated_at')->paginate(8);
-        return view('adopt-a-pet', compact('pets'));
-    })->name('Available Pets');
+    Route::get('/services/adopt-a-pet', [PetController::class, 'index'])->name('Available Pets');
 
     Route::get('/services/surrender-an-animal', function () {
         return view('surrender');
