@@ -78,9 +78,35 @@ class PetController extends Controller
 
     public function create()
     {
-        $pets = Pet::latest('updated_at')->paginate(5);
+        $query = Pet::query();
+
+        // Apply sorting
+        if (request()->has('sort')) {
+            $sortField = request('sort');
+            $sortDirection = request('direction') === 'asc' ? 'asc' : 'desc';
+
+            // Special case for sorting by age (considering age unit)
+            if ($sortField === 'age') {
+                $query->orderByRaw("CASE 
+                WHEN age_unit = 'years' THEN age * 12
+                ELSE age
+            END $sortDirection");
+            } else {
+                $query->orderBy($sortField, $sortDirection);
+            }
+        } else {
+            // Default sorting: youngest first, then recently added
+            $query->orderByRaw("CASE 
+            WHEN age_unit = 'years' THEN age * 12
+            ELSE age
+        END ASC")->orderBy('created_at', 'desc');
+        }
+
+        $pets = $query->paginate(5)->appends(request()->query());
+
         return view('admin.pets', compact('pets'));
     }
+
 
     public function store(Request $request)
     {

@@ -23,16 +23,60 @@
       <table class="w-full border border-gray-200 rounded-lg">
         <thead>
           <tr class="bg-gray-100 text-gray-700">
-            <th class="py-2 px-4 text-left">Pet No.</th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'pet_number', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Pet No. {!! request('sort') === 'pet_number' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
             <th class="py-2 px-4 text-left">Image</th>
-            <th class="py-2 px-4 text-left">Species</th>
-            <th class="py-2 px-4 text-left">Breed</th>
-            <th class="py-2 px-4 text-left">Age</th>
-            <th class="py-2 px-4 text-left">Sex</th>
-            <th class="py-2 px-4 text-left">Color</th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'species', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Species {!! request('sort') === 'species' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'breed', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Breed {!! request('sort') === 'breed' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'age', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Age {!! request('sort') === 'age' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'sex', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Sex {!! request('sort') === 'sex' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'color', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Color {!! request('sort') === 'color' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Date Added {!! request('sort') === 'created_at' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'updated_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600">
+                Updated At {!! request('sort') === 'updated_at' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}
+              </a>
+            </th>
             <th class="py-2 px-4 text-center">Actions</th>
           </tr>
         </thead>
+
+
         <tbody>
           @foreach($pets as $pet)
           <tr class="border-b border-gray-200 hover:bg-gray-50">
@@ -50,17 +94,31 @@
             <td class="py-2 px-4">{{ $pet->age }} {{ $pet->age_unit }}</td>
             <td class="py-2 px-4">{{ ucfirst($pet->sex) }}</td>
             <td class="py-2 px-4">{{ ucfirst($pet->color) }}</td>
+            <td class="py-2 px-4">{{ $pet->created_at->format('M d, Y h:i A') }}</td>
+            <td class="py-2 px-4">{{ $pet->updated_at->format('M d, Y h:i A') }}</td>
             <td class="py-2 px-4 text-center">
-              <a href="#" class="text-blue-500 hover:text-blue-600 mr-4 edit-btn" data-id="{{ $pet->id }}"
-                data-number="{{ $pet->pet_number }}" data-species="{{ $pet->species }}" data-breed="{{ $pet->breed }}"
-                data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}" data-sex="{{ $pet->sex }}"
-                data-color="{{ $pet->color }}" data-image="{{ asset('storage/' . $pet->image_path) }}">
-                <i class="ph-fill ph-pencil-simple"></i>
-              </a>
-              <button class="text-red-500 hover:text-red-600 delete-btn" data-id="{{ $pet->id }}"
-                data-number="{{ $pet->pet_number }}">
-                <i class="ph-fill ph-trash"></i>
-              </button>
+              <span class="flex items-center justify-center">
+                <!-- Eye Icon - View Pet -->
+                <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
+                  class="text-blue-500 hover:text-blue-600 mr-4">
+                  <i class="ph-fill ph-eye"></i>
+                </a>
+
+                <!-- Edit Icon - Opens Edit Modal -->
+                <a href="#" class="text-blue-500 hover:text-blue-600 mr-4 edit-btn" data-id="{{ $pet->id }}"
+                  data-number="{{ $pet->pet_number }}" data-species="{{ $pet->species }}" data-breed="{{ $pet->breed }}"
+                  data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}" data-sex="{{ $pet->sex }}"
+                  data-color="{{ $pet->color }}" data-image="{{ asset('storage/' . $pet->image_path) }}">
+                  <i class="ph-fill ph-pencil-simple"></i>
+                </a>
+
+                <!-- Delete Button -->
+                <button class="text-red-500 hover:text-red-600 delete-btn" data-id="{{ $pet->id }}"
+                  data-number="{{ $pet->pet_number }}">
+                  <i class="ph-fill ph-trash"></i>
+                </button>
+              </span>
+
             </td>
           </tr>
           @endforeach
