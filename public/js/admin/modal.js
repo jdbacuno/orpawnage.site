@@ -154,3 +154,118 @@ document.addEventListener("DOMContentLoaded", function () {
       deleteModal.classList.add("hidden");
   });
 });
+
+// Pet Info Modal
+document.addEventListener('DOMContentLoaded', function () {
+  const petInfoModal = document.getElementById('petInfoModal');
+  const closePetInfoModal = document.getElementById('closePetInfoModal');
+
+  document.querySelectorAll(".pet-info-btn").forEach(button => {
+    button.addEventListener("click", function() {
+        const image = this.getAttribute("data-image");
+        const number = this.getAttribute("data-number");
+        const species = this.getAttribute("data-species");
+        const breed = this.getAttribute("data-breed");
+        const age = this.getAttribute("data-age");
+        const ageUnit = this.getAttribute("data-age-unit");
+        const color = this.getAttribute("data-color");
+        const sex = this.getAttribute("data-sex");
+
+        document.getElementById("petImage").src = image;
+        document.getElementById("petNumber").textContent = number;
+        document.getElementById("petSpecies").textContent = species;
+        document.getElementById("petBreed").textContent = breed;
+        document.getElementById("petAge").textContent = age;
+        document.getElementById("petAgeUnit").textContent = ageUnit;
+        document.getElementById("petColor").textContent = color;
+        document.getElementById("petSex").textContent = sex;
+
+        petInfoModal.classList.remove("hidden");
+    });
+  });
+
+  closePetInfoModal.addEventListener('click', function () {
+      petInfoModal.classList.add('hidden');
+  });
+
+});
+
+// Adopter Info Modal
+document.addEventListener('DOMContentLoaded', function () {
+  const adopterInfoModal = document.getElementById('adopterInfoModal');
+  const closeAdopterInfoModal = document.getElementById('closeAdopterInfoModal');
+  
+  document.querySelectorAll(".adopter-info-btn").forEach(button => {
+    button.addEventListener("click", function() {
+        const name = this.getAttribute("data-name");
+        const email = this.getAttribute("data-email");
+        const age = this.getAttribute("data-age");
+        const birthdate = this.getAttribute("data-birthdate");
+        const address = this.getAttribute("data-address");
+        const phone = this.getAttribute("data-phone");
+        const civilStatus = this.getAttribute("data-civil");
+        const citizenship = this.getAttribute("data-citizenship");
+  
+        document.getElementById("adopterName").textContent = name;
+        document.getElementById("adopterEmail").textContent = email;
+        document.getElementById("adopterAge").textContent = age;
+        document.getElementById("adopterBirthdate").textContent = birthdate;
+        document.getElementById("adopterAddress").textContent = address;
+        document.getElementById("adopterPhone").textContent = phone;
+        document.getElementById("adopterCivilStatus").textContent = civilStatus;
+        document.getElementById("adopterCitizenship").textContent = citizenship;
+  
+        document.getElementById("adopterInfoModal").classList.remove("hidden");
+    });
+  });
+  
+  closeAdopterInfoModal.addEventListener('click', function () {
+      adopterInfoModal.classList.add('hidden');
+  });
+});
+
+// Approve Adoption Application
+document.addEventListener("DOMContentLoaded", function () {
+  const approveModal = document.getElementById("approveModal");
+  const closeApproveModal = document.getElementById("closeApproveModal");
+  const approveForm = document.getElementById("approveForm");
+  const pickupDateInput = document.getElementById("pickupDate");
+  const applicationIdInput = document.getElementById("applicationId");
+
+  function setPickupDateRange() {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      const maxDate = new Date(today);
+      maxDate.setDate(today.getDate() + 7);
+
+      // Format as YYYY-MM-DD
+      const formatDate = (date) => date.toISOString().split("T")[0];
+
+      // Set restrictions
+      pickupDateInput.min = formatDate(tomorrow);
+      pickupDateInput.max = formatDate(maxDate);
+  }
+
+  document.querySelectorAll(".approve-btn").forEach(button => {
+      button.addEventListener("click", function () {
+          const applicationId = this.getAttribute("data-id");
+
+          applicationIdInput.value = applicationId;
+          pickupDateInput.value = ""; // Reset date input
+
+          // Set date range restrictions
+          setPickupDateRange();
+
+          // Show the modal
+          approveModal.classList.remove("hidden");
+      });
+  });
+
+  closeApproveModal.addEventListener("click", function () {
+      approveModal.classList.add("hidden");
+  });
+});
+
+

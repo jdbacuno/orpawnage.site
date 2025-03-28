@@ -430,7 +430,6 @@
   @endif
 
   <!-- Delete Pet Modal -->
-  <!-- Delete Pet Modal -->
   <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <!-- Modal Content -->
@@ -451,6 +450,5 @@
       </div>
     </div>
   </div>
-
 
 </x-admin-layout>

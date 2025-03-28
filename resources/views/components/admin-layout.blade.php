@@ -37,7 +37,7 @@
           <span class="text-sm">Manage Pet Profiles</span>
         </a>
       </li>
-      <li class="mb-1 group">
+      <li class="mb-1 group {{ request()->is('admin/adoption-applications') ? 'selected' : '' }}">
         <a href="#"
           class="flex items-center py-2 px-4 text-gray-300 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-500/60 group-[.selected]:text-black sidebar-dropdown-toggle">
           <i class="ph-fill ph-mailbox mr-3 text-lg"></i>
@@ -45,20 +45,22 @@
           <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
         </a>
         <ul class="pl-7 mt-2 hidden group-[.selected]:block">
-          <li class="mb-1">
-            <a href="/admin/adoption-applications" {{ request()->is('admin/adoption-applications') ? 'active' : '' }}
-              class="text-gray-300 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500
-              hover:text-black hover:font-semibold group-[.active]:bg-yellow-500 group-[.active]:text-black p-2
-              rounded-full">Adoption
-              Applications</a>
+          <li class="mb-1 group {{ request()->is('admin/adoption-applications') ? 'active' : '' }}">
+            <a href="/admin/adoption-applications"
+              class="text-gray-300 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+              Adoption Applications
+            </a>
+
           </li>
           <li class="mb-1">
-            <a href="#"
-              class="text-gray-300 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500 hover:text-black hover:font-semibold group-[.active]:bg-yellow-500 group-[.active]:text-black p-2 rounded-full">Surrender
-              Applications</a>
+            <a href="#" class="text-gray-300 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500
+              hover:text-black hover:font-semibold p-2 rounded-full">
+              Surrender Applications
+            </a>
           </li>
         </ul>
       </li>
+
       <li class="mb-1 group">
         <a href="#"
           class="flex items-center py-2 px-4 text-gray-300 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-500/60 group-[.selected]:text-black sidebar-dropdown-toggle">

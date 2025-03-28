@@ -5,13 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\AdoptionApplication;
 use App\Models\Pet;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AdoptionApplicationController extends Controller
 {
+    public function index()
+    {
+        $sort = request('sort', 'created_at'); // Default sorting column
+        $direction = request('direction', 'desc'); // Default sorting direction
+
+        // Ensure only valid columns are used to prevent SQL injection
+        $allowedSorts = ['created_at', 'pet_number', 'species', 'breed', 'age', 'sex', 'color'];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        $adoptionApplications = AdoptionApplication::with(['pet', 'user'])
+            ->orderBy($sort, $direction)
+            ->paginate(5);
+
+        return view('admin.adoption-applications', compact('adoptionApplications'));
+    }
+
     public function create(Pet $pet)
     {
         return view('adoption-form', compact('pet'));
@@ -60,5 +77,36 @@ class AdoptionApplicationController extends Controller
         ]);
 
         return back()->with('success', 'Adoption application submitted successfully!');
+    }
+
+    public function approve(Request $request)
+    {
+        $request->validate([
+            'application_id' => 'required|exists:adoption_applications,id',
+            'pickup_date' => 'required|date|after_or_equal:tomorrow|before_or_equal:' . now()->addDays(7)->toDateString(),
+        ]);
+
+        $application = AdoptionApplication::findOrFail($request->application_id);
+        $application->update([
+            'pickup_date' => $request->pickup_date,
+            'status' => 'to be picked up',
+        ]);
+
+        return redirect('/admin/adoption-applications')->with('success', 'Pickup date scheduled successfully.');
+    }
+
+    public function markAsPickedUp(Request $request)
+    {
+        $application = AdoptionApplication::findOrFail($request->application_id);
+
+        if ($application->status !== 'to be picked up') {
+            return redirect()->back()->with('error', 'Invalid status change.');
+        }
+
+        $application->update([
+            'status' => 'picked up',
+        ]);
+
+        return redirect()->route('admin/adoption-applications')->with('success', 'Adoption marked as picked up.');
     }
 }

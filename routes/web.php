@@ -4,7 +4,9 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
+use App\Models\AdoptionApplication;
 use App\Models\Pet;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -55,7 +57,10 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
     Route::patch('/admin/pet-profiles/{pet}', [PetController::class, 'update']);
     Route::delete('/admin/pet-profiles/{pet}', [PetController::class, 'destroy']);
 
-    Route::get('/admin/adoption-applications', function () {});
+    Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
+
+    Route::patch('/admin/adoption-applications/approve', [AdoptionApplicationController::class, 'approve']);
+    Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
 });
 
 // for all undefined routes

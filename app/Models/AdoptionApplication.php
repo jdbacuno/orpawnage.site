@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdoptionApplication extends Model
 {
+    protected $casts = [
+        'pickup_date' => 'date', // Ensures it's treated as a Carbon instance
+        'birthdate' => 'date',
+    ];
+
     public function pet()
     {
         return $this->belongsTo(Pet::class);

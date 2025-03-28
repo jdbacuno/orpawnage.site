@@ -23,7 +23,8 @@ return new class extends Migration
             $table->text('address');
             $table->string('civil_status');
             $table->string('citizenship');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['to be scheduled', 'to be picked up', 'picked up', 'rejected'])->default('to be scheduled');
+            $table->date('pickup_date')->nullable(); // Allows NULL for "Not set"
             $table->timestamps();
         });
     }
