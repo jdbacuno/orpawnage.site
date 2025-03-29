@@ -99,13 +99,13 @@
                 </button>
                 @elseif ($application->status === 'rejected')
                 <button
-                  class="flex-1 bg-red-500 p-1 text-sm text-white w-full rounded-md text-center cursor-not-allowed"
+                  class="flex-1 bg-red-500 p-1 text-sm text-white w-full rounded-md text-center disabled cursor-not-allowed"
                   disabled>
                   Rejected
                 </button>
                 @else
                 <button
-                  class="flex-1 bg-blue-500 p-1 text-sm text-white hover:bg-blue-400 w-full rounded-md text-center disabled">
+                  class="flex-1 bg-blue-500 p-1 text-sm text-white w-full rounded-md text-center disabled cursor-not-allowed">
                   Picked Up
                 </button>
                 @endif

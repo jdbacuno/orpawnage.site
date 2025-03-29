@@ -2,23 +2,25 @@
   <!-- ========== ADOPTION REQUESTS SECTION ========== -->
   <section class="py-20 px-5 lg:px-20">
     <h2 class="text-2xl font-semibold text-orange-500 mb-6">
-      Adoption Requests
+      Adoption Applications
     </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6">
+    <div class="flex flex-wrap gap-x-4 gap-y-6">
       @if ($adoptionApplications->isEmpty())
-      <div class="col-span-full text-center text-gray-500 text-lg">
+      <div class="w-full text-center text-gray-500 text-lg">
         No adoption applications found.
       </div>
       @else
       @foreach ($adoptionApplications as $application)
-      <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col max-w-sm">
+      <div
+        class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-full sm:w-[48%] lg:w-[32%] max-w-sm flex-grow min-h-full">
+
         <!-- Pet Image -->
         <img src="{{ asset('storage/' . $application->pet->image_path) }}" alt="Pet Image"
           class="w-full h-52 object-cover" />
 
         <!-- Content -->
-        <div class="p-6 flex-1 max-h-[250px] overflow-y-auto">
+        <div class="p-6 flex-1 overflow-y-auto">
           <h3 class="text-lg font-semibold text-gray-900 mb-2">
             Adoption Request for Pet#{{ $application->pet->pet_number }}
           </h3>
@@ -40,15 +42,20 @@
           <p class="text-sm text-gray-700"><strong>Gender:</strong> {{ ucfirst($application->pet->sex) }}</p>
           <p class="text-sm text-gray-700"><strong>Color:</strong> {{ ucfirst($application->pet->color) }}</p>
           <p class="text-sm text-gray-700"><strong>Status:</strong> {{ ucfirst($application->status) }}</p>
+
           @if ($application->status === 'rejected')
           <p class="text-sm text-gray-700">
             <strong>Reason for Rejection:</strong>
-            <span id="rejectReasonShort">{{ ucfirst(Str::limit($application->reject_reason, 10, '...'))
-              }}</span>
-            <span id="rejectReasonFull" class="hidden">{{ ucfirst($application->reject_reason) }}</span>
+            <span id="rejectReasonShort">
+              {{ ucfirst(Str::limit($application->reject_reason, 10, '...')) }}
+            </span>
+            <span id="rejectReasonFull" class="hidden">
+              {{ ucfirst($application->reject_reason) }}
+            </span>
             @if (strlen($application->reject_reason) > 10)
-            <button id="seeMoreBtn" onclick="toggleRejectReason()" class="text-blue-600 text-sm underline">See
-              More</button>
+            <button id="seeMoreBtn" onclick="toggleRejectReason()" class="text-blue-600 text-sm underline">
+              See More
+            </button>
             @endif
           </p>
           @endif
@@ -58,29 +65,29 @@
         <div class="p-6 pt-0">
           @if ($application->status === 'to be picked up' || $application->status === 'to be scheduled')
           <div class="flex items-center gap-2">
-            <button class="flex-1 bg-green-600 text-white font-medium rounded-lg py-2">
+            <button class="flex-1 bg-green-600 text-white font-medium rounded-lg py-2 disabled cursor-not-allowed">
               {{ $application->status === 'to be picked up' ? 'Pick-up on ' .
               $application->pickup_date->format('M d, Y') : 'To be scheduled' }}
             </button>
             <button onclick="openCancelModal({{ $application->id }})"
-              class="bg-red-600 text-white font-medium rounded-lg px-4 py-2 rounded-lg">
+              class="bg-red-600 text-white font-medium rounded-lg px-4 py-2">
               Cancel
             </button>
           </div>
           @elseif ($application->status === 'rejected')
           <div class="flex items-center gap-2">
-            <button class="w-full bg-black text-white font-medium rounded-lg py-2">
+            <button class="w-full bg-black text-white font-medium rounded-lg py-2 disabled cursor-not-allowed">
               Rejected
             </button>
-
             <button onclick="openCancelModal({{ $application->id }})"
-              class="bg-red-600 text-white font-medium rounded-lg px-4 py-2 rounded-lg">
+              class="bg-red-600 text-white font-medium rounded-lg px-4 py-2">
               Delete
             </button>
           </div>
           @elseif ($application->status === 'picked up')
-          <button class="w-full bg-blue-500 text-white font-medium rounded-lg py-2 cursor-not-allowed" disabled>
-            Picked up on {{ $application->updated_at->format('M d, Y') }}
+          <button class="w-full bg-blue-500 text-white font-medium rounded-lg py-2 disabled cursor-not-allowed"
+            disabled>
+            Picked up
           </button>
           @else
           <button class="w-full bg-gray-600 text-white font-medium rounded-lg py-2 cursor-not-allowed" disabled>
@@ -90,15 +97,22 @@
         </div>
       </div>
       @endforeach
+
+      <!-- Pagination -->
+      <div class="mt-6 flex justify-center">
+        {{ $adoptionApplications->links() }}
+      </div>
       @endif
     </div>
+
+
 
   </section>
 
   <!-- ========== SURRENDER REQUESTS SECTION ========== -->
   <section class="pt-10 pb-20 px-5 lg:px-20 border-t border-t-gray-200">
     <h2 class="text-2xl font-semibold text-orange-500 mb-6">
-      Surrender Requests
+      Surrender Applications
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6">
@@ -175,6 +189,7 @@
     </div>
   </section>
 
+  @if(!$adoptionApplications->isEmpty())
   <!-- Cancel/Delete Confirmation Modal -->
   <div id="cancelModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-96">
@@ -192,4 +207,5 @@
       </div>
     </div>
   </div>
+  @endif
 </x-layout>

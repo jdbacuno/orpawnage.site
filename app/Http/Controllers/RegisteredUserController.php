@@ -20,7 +20,15 @@ class RegisteredUserController extends Controller
             'username' => ['required', 'unique:users,username'],
             'email' => ['required', 'email', 'unique:users,email'], // check 'users' table, and in the 'email' field
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
-            'password' => ['required', 'confirmed', Password::min(6)],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(6)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
         ]);
 
         $userAttributes['username'] = strtolower($userAttributes['username']);

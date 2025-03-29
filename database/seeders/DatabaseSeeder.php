@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'orpawnage_admin',
             'email' => 'unidentifiedhumanlifeform@gmail.com',
             'contact_number' => '09053461306',
-            'password' => '123456',
+            'password' => '!Admin0329',
             'email_verified_at' => now()
         ]);  // 1 admin
 

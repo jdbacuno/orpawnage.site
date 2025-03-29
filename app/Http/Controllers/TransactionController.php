@@ -13,10 +13,11 @@ class TransactionController extends Controller
     {
         $adoptionApplications = AdoptionApplication::with('pet')
             ->where('user_id', Auth::id()) // Only fetch the current user's applications
-            ->get();
+            ->paginate(5); // Paginate with 5 items per page
 
         return view('transactions', compact('adoptionApplications'));
     }
+
 
     public function destroy(AdoptionApplication $application)
     {
