@@ -12,20 +12,19 @@
       </div>
       @else
       @foreach ($adoptionApplications as $application)
-      <div
-        class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-full sm:w-[48%] lg:w-[32%] max-w-sm flex-grow min-h-full">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-full sm:w-[45%] lg:w-[30%] max-w-xs">
 
         <!-- Pet Image -->
         <img src="{{ asset('storage/' . $application->pet->image_path) }}" alt="Pet Image"
-          class="w-full h-52 object-cover" />
+          class="w-full h-44 object-cover" />
 
-        <!-- Content -->
-        <div class="p-6 flex-1 overflow-y-auto">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">
+        <!-- Scrollable Content -->
+        <div class="p-4 flex-1 overflow-y-auto max-h-[200px]">
+          <h3 class="text-md font-semibold text-gray-900 mb-2">
             Adoption Request for Pet#{{ $application->pet->pet_number }}
           </h3>
 
-          <p class="text-sm text-gray-700">
+          <p class="text-xs text-gray-700">
             <strong>Date of Pick-up:</strong>
             @if ($application->status === 'Rejected')
             Rejected
@@ -34,17 +33,16 @@
             @endif
           </p>
 
-          <p class="text-sm text-gray-700"><strong>Species:</strong> {{ ucfirst($application->pet->species) }}</p>
-          <p class="text-sm text-gray-700"><strong>Breed:</strong> {{ ucfirst($application->pet->breed) }}</p>
-          <p class="text-sm text-gray-700">
-            <strong>Age:</strong> {{ $application->pet->age }} {{ ucfirst($application->pet->age_unit) }}
-          </p>
-          <p class="text-sm text-gray-700"><strong>Gender:</strong> {{ ucfirst($application->pet->sex) }}</p>
-          <p class="text-sm text-gray-700"><strong>Color:</strong> {{ ucfirst($application->pet->color) }}</p>
-          <p class="text-sm text-gray-700"><strong>Status:</strong> {{ ucfirst($application->status) }}</p>
+          <p class="text-xs text-gray-700"><strong>Species:</strong> {{ ucfirst($application->pet->species) }}</p>
+          <p class="text-xs text-gray-700"><strong>Breed:</strong> {{ ucfirst($application->pet->breed) }}</p>
+          <p class="text-xs text-gray-700"><strong>Age:</strong> {{ $application->pet->age }} {{
+            ucfirst($application->pet->age_unit) }}</p>
+          <p class="text-xs text-gray-700"><strong>Gender:</strong> {{ ucfirst($application->pet->sex) }}</p>
+          <p class="text-xs text-gray-700"><strong>Color:</strong> {{ ucfirst($application->pet->color) }}</p>
+          <p class="text-xs text-gray-700"><strong>Status:</strong> {{ ucfirst($application->status) }}</p>
 
           @if ($application->status === 'rejected')
-          <p class="text-sm text-gray-700">
+          <p class="text-xs text-gray-700">
             <strong>Reason for Rejection:</strong>
             <span id="rejectReasonShort">
               {{ ucfirst(Str::limit($application->reject_reason, 10, '...')) }}
@@ -53,7 +51,7 @@
               {{ ucfirst($application->reject_reason) }}
             </span>
             @if (strlen($application->reject_reason) > 10)
-            <button id="seeMoreBtn" onclick="toggleRejectReason()" class="text-blue-600 text-sm underline">
+            <button id="seeMoreBtn" onclick="toggleRejectReason()" class="text-blue-600 text-xs underline">
               See More
             </button>
             @endif
@@ -61,13 +59,13 @@
           @endif
         </div>
 
-        <!-- Button Section -->
-        <div class="p-6 pt-0">
+        <!-- Button Section (Fixed at the Bottom) -->
+        <div class="p-4 pt-0">
           @if ($application->status === 'to be picked up' || $application->status === 'to be scheduled')
           <div class="flex items-center gap-2">
             <button class="flex-1 bg-green-600 text-white font-medium rounded-lg py-2 disabled cursor-not-allowed">
-              {{ $application->status === 'to be picked up' ? 'Pick-up on ' .
-              $application->pickup_date->format('M d, Y') : 'To be scheduled' }}
+              {{ $application->status === 'to be picked up' ? 'Pick-up on ' . $application->pickup_date->format('M d,
+              Y') : 'To be scheduled' }}
             </button>
             <button onclick="openCancelModal({{ $application->id }})"
               class="bg-red-600 text-white font-medium rounded-lg px-4 py-2">
@@ -96,15 +94,16 @@
           @endif
         </div>
       </div>
+
       @endforeach
 
-      <!-- Pagination -->
-      <div class="mt-6 flex justify-center">
-        {{ $adoptionApplications->links() }}
-      </div>
-      @endif
     </div>
 
+    <!-- Pagination -->
+    <div class="mt-6">
+      {{ $adoptionApplications->links() }}
+    </div>
+    @endif
 
 
   </section>
