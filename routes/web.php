@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdoptionApplicationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -48,9 +49,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware(['isAdmin', 'auth'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.home');
-    })->name('Home');
+    Route::get('/admin', [DashboardController::class, 'index'])->name('Home');
 
     Route::get('/admin/pet-profiles', [PetController::class, 'create'])->name('Manage Pet Profiles');
     Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('Manage Pet Profiles');

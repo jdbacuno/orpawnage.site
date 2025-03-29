@@ -1,7 +1,7 @@
 <x-layout>
   <!-- ========== ADOPTION REQUESTS SECTION ========== -->
   <section class="py-20 px-5 lg:px-20">
-    <h2 class="text-2xl font-semibold text-orange-500 mb-6">
+    <h2 class="text-2xl font-semibold text-black mb-6">
       Adoption Applications
     </h2>
 
@@ -110,7 +110,7 @@
 
   <!-- ========== SURRENDER REQUESTS SECTION ========== -->
   <section class="pt-10 pb-20 px-5 lg:px-20 border-t border-t-gray-200">
-    <h2 class="text-2xl font-semibold text-orange-500 mb-6">
+    <h2 class="text-2xl font-semibold text-black mb-6">
       Surrender Applications
     </h2>
 
