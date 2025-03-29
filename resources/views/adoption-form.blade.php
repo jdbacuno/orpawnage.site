@@ -18,7 +18,8 @@
         </div>
 
         <!-- RIGHT SIDE: Pet Details and User Information -->
-        <div class="px-6 pt-0 pb-6">
+        <div class="px-0 sm:px-6 pt-0 sm:pb-6">
+
 
           @if (session('success'))
           <div id="alert-3"
@@ -173,7 +174,7 @@
                 <label class="text-sm font-medium text-gray-600">Birthdate</label>
                 <input type="date" name="birthdate"
                   class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 focus:border-orange-500"
-                  value="{{ old('birthdate') }}" required />
+                  value="{{ old('birthdate') }}" required min="1900-01-01" max="2099-12-31" />
                 <x-form-error name="birthdate" />
               </div>
               <div>

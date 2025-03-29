@@ -14,7 +14,9 @@ class PetController extends Controller
     public function index(Request $request)
     {
         $query = Pet::whereNotIn('id', function ($subQuery) {
-            $subQuery->select('pet_id')->from('adoption_applications');
+            $subQuery->select('pet_id')
+                ->from('adoption_applications')
+                ->whereNotIn('status', ['rejected']); // Exclude only non-rejected applications
         });
 
         // Apply filters

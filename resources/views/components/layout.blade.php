@@ -136,7 +136,7 @@
 
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-bell"></i>
-                  <a href="transaction.html"
+                  <a href="/transactions"
                     class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Transaction
                     Status</a>
                 </li>
@@ -351,8 +351,10 @@
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
-  <script src="{{ asset('js/scrollToPets.js') }}"></script>
+  <script src="{{ asset('js/scrollTo.js') }}"></script>
   <script src="{{ asset('js/custom.js') }}"></script>
+  <script src="{{ asset('js/seemore.js') }}"></script>
+  <script src="{{ asset('js/modal.js') }}"></script>
 </body>
 
 </html>

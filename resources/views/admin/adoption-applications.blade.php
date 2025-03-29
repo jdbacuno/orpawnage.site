@@ -82,24 +82,30 @@
 
             <td class="py-2 px-4 whitespace-nowrap">{{ $application->created_at->format('M d, Y h:i A') }}</td>
             <td class="py-2 px-4 text-center whitespace-nowrap">
-              <span class="flex justify-around items-center gap-1">
-                @if ($application->status !== 'picked up')
+              <span class="flex justify-between items-center gap-1">
+                @if ($application->status !== 'picked up' && $application->status !== 'rejected')
                 <!-- Approve Button -->
                 <button
-                  class="bg-green-500 p-1 text-sm text-white hover:bg-green-400 w-32 rounded-md text-center approve-btn"
+                  class="flex-1 bg-green-500 p-1 text-sm text-white hover:bg-green-400 w-32 rounded-md text-center approve-btn"
                   data-id="{{ $application->id }}" data-pickup="{{ $application->pickup_date }}">
                   {{ $application->pickup_date ? 'Reschedule' : 'Approve' }}
                 </button>
 
                 <!-- Reject Button -->
                 <button
-                  class="bg-red-500 p-1 text-sm text-white hover:bg-red-400 w-24 rounded-md text-center reject-btn"
+                  class="flex-1 bg-red-500 p-1 text-sm text-white hover:bg-red-400 w-24 rounded-md text-center reject-btn"
                   data-id="{{ $application->id }}">
                   Reject
                 </button>
+                @elseif ($application->status === 'rejected')
+                <button
+                  class="flex-1 bg-red-500 p-1 text-sm text-white w-full rounded-md text-center cursor-not-allowed"
+                  disabled>
+                  Rejected
+                </button>
                 @else
                 <button
-                  class="bg-blue-500 p-1 text-sm text-white hover:bg-blue-400 w-full rounded-md text-center disabled">
+                  class="flex-1 bg-blue-500 p-1 text-sm text-white hover:bg-blue-400 w-full rounded-md text-center disabled">
                   Picked Up
                 </button>
                 @endif
@@ -191,8 +197,39 @@
         <!-- Date Input -->
         <label for="pickupDate" class="block font-medium text-gray-700">Pickup Date:</label>
         <input type="date" id="pickupDate" name="pickup_date" class="w-full border p-2 rounded-md mb-4" required>
+        <x-form-error name="pickup_date" />
 
         <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md w-full">
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reject Modal -->
+  <div id="rejectModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+
+      <!-- Close Button -->
+      <button type="button" id="closeRejectModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800">Reject Adoption</h2>
+      <p class="mb-4">Please provide a reason for rejecting this application:</p>
+
+      <!-- Form -->
+      <form id="rejectForm" method="POST" action="/admin/adoption-applications/reject">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="application_id" id="rejectApplicationId">
+
+        <!-- Rejection Reason -->
+        <label for="rejectReason" class="block font-medium text-gray-700">Reason:</label>
+        <textarea id="rejectReason" name="reject_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
+        <x-form-error name="reject_reason" />
+
+        <button type="submit" class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md w-full">
           Submit
         </button>
       </form>

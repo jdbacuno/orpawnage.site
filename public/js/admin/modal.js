@@ -240,18 +240,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function setPickupDateRange() {
       const today = new Date();
-      const tomorrow = new Date(today);
+      let tomorrow = new Date(today);
       tomorrow.setDate(today.getDate() + 1);
 
       const maxDate = new Date(today);
       maxDate.setDate(today.getDate() + 7);
 
-      // Format as YYYY-MM-DD
+      // Function to format date as YYYY-MM-DD
       const formatDate = (date) => date.toISOString().split("T")[0];
+
+      // Function to check if a date falls on a weekend (Saturday or Sunday)
+      const isWeekend = (date) => date.getDay() === 0 || date.getDay() === 6;
+
+      // Ensure the initial minimum date is not a weekend
+      while (isWeekend(tomorrow)) {
+          tomorrow.setDate(tomorrow.getDate() + 1);
+      }
+
+      // Ensure the max date doesn't include weekends
+      let adjustedMaxDate = new Date(maxDate);
+      while (isWeekend(adjustedMaxDate)) {
+          adjustedMaxDate.setDate(adjustedMaxDate.getDate() - 1);
+      }
 
       // Set restrictions
       pickupDateInput.min = formatDate(tomorrow);
-      pickupDateInput.max = formatDate(maxDate);
+      pickupDateInput.max = formatDate(adjustedMaxDate);
   }
 
   document.querySelectorAll(".approve-btn").forEach(button => {
@@ -275,3 +289,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// Reject Adoption Application
+document.addEventListener("DOMContentLoaded", function () {
+  const rejectModal = document.getElementById("rejectModal");
+  const closeRejectModal = document.getElementById("closeRejectModal");
+  const rejectForm = document.getElementById("rejectForm");
+  const rejectApplicationIdInput = document.getElementById("rejectApplicationId");
+
+  document.querySelectorAll(".reject-btn").forEach(button => {
+      button.addEventListener("click", function () {
+          const applicationId = this.getAttribute("data-id");
+          rejectApplicationIdInput.value = applicationId;
+          rejectModal.classList.remove("hidden");
+      });
+  });
+
+  closeRejectModal.addEventListener("click", function () {
+      rejectModal.classList.add("hidden");
+  });
+});

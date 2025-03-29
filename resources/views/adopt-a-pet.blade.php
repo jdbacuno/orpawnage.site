@@ -77,7 +77,7 @@
             </select>
 
             <!-- Reproductive Status Filter -->
-            <select name="sex"
+            <select name="reproductive_status"
               class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
               onchange="this.form.submit()">
               <option value="">All Reproductive Statuses</option>
@@ -106,7 +106,7 @@
             </select>
 
             <!-- Source Filter -->
-            <select name="sex"
+            <select name="source"
               class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
               onchange="this.form.submit()">
               <option value="">All Sources</option>
@@ -157,7 +157,6 @@
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
                 <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age_unit }}</li>
-                <li><span class="text-md text-black font-bold">Breed:</span> {{ ucwords($pet->breed) }}</li>
                 <li><span class="text-md text-black font-bold">Sex:</span> {{ ucfirst($pet->sex) }}</li>
                 <li><span class="text-md text-black font-bold">Reproductive Status:</span> {{
                   ucfirst($pet->reproductive_status) }}</li>

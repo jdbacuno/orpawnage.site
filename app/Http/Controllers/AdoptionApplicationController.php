@@ -41,7 +41,7 @@ class AdoptionApplicationController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'age' => ['required', 'integer', 'min:18'],
-            'birthdate' => ['required', 'date'],
+            'birthdate' => ['required', 'date', 'after_or_equal:1900-01-01', 'before_or_equal:2099-12-31'],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
             'address' => ['required', 'string', 'max:500'],
             'civil_status' => ['required', 'string'],
@@ -81,9 +81,15 @@ class AdoptionApplicationController extends Controller
     public function approve(Request $request)
     {
         $request->validate([
-            'application_id' => 'required|exists:adoption_applications,id',
-            'pickup_date' => 'required|date|after_or_equal:tomorrow|before_or_equal:' . now()->addDays(7)->toDateString(),
+            'application_id' => ['required', 'exists:adoption_applications,id'],
+            'pickup_date' => [
+                'required',
+                'date',
+                'after_or_equal:tomorrow',
+                'before_or_equal:' . now()->addDays(7)->toDateString()
+            ],
         ]);
+
 
         $application = AdoptionApplication::findOrFail($request->application_id);
         $application->update([
@@ -107,5 +113,23 @@ class AdoptionApplicationController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Adoption marked as picked up.');
+    }
+
+    public function reject(Request $request)
+    {
+        $request->validate([
+            'application_id' => ['required', 'exists:adoption_applications,id'],
+            'reject_reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        $application = AdoptionApplication::findOrFail($request->application_id);
+
+        // Update status and store the reason
+        $application->update([
+            'status' => 'rejected',
+            'reject_reason' => $request->reject_reason,
+        ]);
+
+        return redirect()->back()->with('success', 'Adoption application rejected.');
     }
 }

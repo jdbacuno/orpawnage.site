@@ -4,9 +4,7 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
-use App\Models\AdoptionApplication;
-use App\Models\Pet;
-use Illuminate\Http\Request;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -30,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/abused-stray-animal', function () {
         return view('abused-stray-form');
     })->name('Report an Abuse / Stray Animal');
+
+    Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Transactions Status');
+    Route::delete('/transactions/{application}', [TransactionController::class, 'destroy']);
 
     Route::view('/about', 'about')->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
@@ -61,6 +62,7 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
 
     Route::patch('/admin/adoption-applications/approve', [AdoptionApplicationController::class, 'approve']);
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
+    Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
 });
 
 // for all undefined routes

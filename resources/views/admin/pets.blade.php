@@ -14,7 +14,7 @@
     </div>
 
     <!-- Pet Profiles Table -->
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto z-10">
       @if($pets->isEmpty())
       <div class="flex items-center justify-center p-6 text-gray-500">
         <p class="text-lg">No pets found.</p>
@@ -117,13 +117,27 @@
                   <i class="ph-fill ph-pencil-simple"></i>
                 </a>
 
-                <!-- Delete Button -->
+                <!-- Delete Button (Disabled if pet is in an adoption application) -->
+                @if($pet->adoptionApplication && in_array($pet->adoptionApplication->status, ['to be picked up', 'to be
+                scheduled']))
+                <button class="text-gray-400 cursor-not-allowed relative group" disabled>
+                  <i class="ph-fill ph-trash"></i>
+                  <!-- Tooltip -->
+                  <span
+                    class="absolute left-full -translate-x-100 mb-2 w-max px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition">
+                    {{ $pet->adoptionApplication->status }}
+                  </span>
+                </button>
+
+                @else
                 <button class="text-red-500 hover:text-red-600 delete-btn" data-id="{{ $pet->id }}"
                   data-number="{{ $pet->pet_number }}">
                   <i class="ph-fill ph-trash"></i>
                 </button>
+                @endif
               </span>
             </td>
+
 
             <td class="py-2 px-4">
               <a href="/services/{{ $pet->slug }}/adoption-form"
