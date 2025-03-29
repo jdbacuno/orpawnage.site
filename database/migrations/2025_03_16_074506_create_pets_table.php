@@ -19,7 +19,9 @@ return new class extends Migration
             $table->integer('age');
             $table->enum('age_unit', ['months', 'years']);
             $table->enum('sex', ['male', 'female']);
+            $table->enum('reproductive_status', ['intact', 'neutered', 'unknown'])->default('unknown');
             $table->string('color');
+            $table->enum('source', ['surrendered', 'rescued', 'other'])->default('other');
             $table->string('image_path');
             $table->timestamps();
         });

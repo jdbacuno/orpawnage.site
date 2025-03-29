@@ -50,14 +50,13 @@ class AdoptionApplicationController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+                ->withErrors($validator) // Keeps validation errors separate
+                ->withInput()
+                ->with('submission_error', 'Failed to submit application. Please check the form for errors.');
         }
 
         // Check if the pet has already been requested for adoption
-        $existingApplication = AdoptionApplication::where('pet_id', $pet->id)->exists();
-
-        if ($existingApplication) {
+        if (AdoptionApplication::where('pet_id', $pet->id)->exists()) {
             return back()->with('error_request', 'This pet has already been requested for adoption.');
         }
 
@@ -107,6 +106,6 @@ class AdoptionApplicationController extends Controller
             'status' => 'picked up',
         ]);
 
-        return redirect()->route('admin/adoption-applications')->with('success', 'Adoption marked as picked up.');
+        return redirect()->back()->with('success', 'Adoption marked as picked up.');
     }
 }

@@ -70,7 +70,9 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("editAge").value = this.getAttribute("data-age");
           document.getElementById("editAgeUnit").value = this.getAttribute("data-age-unit");
           document.getElementById("editSex").value = this.getAttribute("data-sex");
+          document.getElementById("editReproStatus").value = this.getAttribute("data-repro-status");
           document.getElementById("editColor").value = this.getAttribute("data-color");
+          document.getElementById("editSource").value = this.getAttribute("data-source");
 
           const successMessage = document.querySelector(".edit-success");
           if (successMessage) {
@@ -169,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const age = this.getAttribute("data-age");
         const ageUnit = this.getAttribute("data-age-unit");
         const color = this.getAttribute("data-color");
+        const source = this.getAttribute("data-source");
         const sex = this.getAttribute("data-sex");
+        const reproductiveStatus = this.getAttribute("data-repro-status");
 
         document.getElementById("petImage").src = image;
         document.getElementById("petNumber").textContent = number;
@@ -178,7 +182,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("petAge").textContent = age;
         document.getElementById("petAgeUnit").textContent = ageUnit;
         document.getElementById("petColor").textContent = color;
+        document.getElementById("petSource").textContent = source;
         document.getElementById("petSex").textContent = sex;
+        document.getElementById("petReproStatus").textContent = reproductiveStatus;
 
         petInfoModal.classList.remove("hidden");
     });

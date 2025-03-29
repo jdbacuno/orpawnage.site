@@ -26,8 +26,16 @@ class PetController extends Controller
             $query->where('sex', $request->sex);
         }
 
+        if ($request->filled('reproductive_status')) {
+            $query->where('reproductive_status', $request->reproductive_status);
+        }
+
         if ($request->filled('color')) {
             $query->where('color', $request->color);
+        }
+
+        if ($request->filled('source')) {
+            $query->where('source', $request->source);
         }
 
         // Default sorting when first visiting the page
@@ -91,18 +99,15 @@ class PetController extends Controller
             // Special case for sorting by age (considering age unit)
             if ($sortField === 'age') {
                 $query->orderByRaw("CASE 
-                WHEN age_unit = 'years' THEN age * 12
-                ELSE age
-            END $sortDirection");
+            WHEN age_unit = 'years' THEN age * 12
+            ELSE age
+        END $sortDirection");
             } else {
                 $query->orderBy($sortField, $sortDirection);
             }
         } else {
-            // Default sorting: youngest first, then recently added
-            $query->orderByRaw("CASE 
-            WHEN age_unit = 'years' THEN age * 12
-            ELSE age
-        END ASC")->orderBy('created_at', 'desc');
+            // Default sorting: recently added first
+            $query->orderBy('created_at', 'desc');
         }
 
         $pets = $query->paginate(5)->appends(request()->query());
@@ -121,6 +126,7 @@ class PetController extends Controller
             'age' => ['required', 'integer', 'min:0'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
+            'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
             'color' => ['required', Rule::in([
                 'black',
                 'white',
@@ -133,6 +139,7 @@ class PetController extends Controller
                 'tri-color',
                 'others'
             ])],
+            'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
         ]);
 
@@ -145,9 +152,7 @@ class PetController extends Controller
 
         // Normalize case for specific fields
         $validated = $validator->validated();
-        $validated['species'] = strtolower(trim($validated['species']));
         $validated['breed'] = strtolower(trim($validated['breed']));
-        $validated['color'] = strtolower(trim($validated['color']));
 
         // Upload Image
         if ($request->hasFile('image')) {
@@ -180,6 +185,7 @@ class PetController extends Controller
             'age' => ['required', 'integer', 'min:0'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
+            'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
             'color' => ['required', Rule::in([
                 'black',
                 'white',
@@ -192,6 +198,7 @@ class PetController extends Controller
                 'tri-color',
                 'others'
             ])],
+            'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
         ]);
 
@@ -208,9 +215,7 @@ class PetController extends Controller
 
         // Normalize case for specific fields
         $validated = $validator->validated();
-        $validated['species'] = strtolower(trim($validated['species']));
         $validated['breed'] = strtolower(trim($validated['breed']));
-        $validated['color'] = strtolower(trim($validated['color']));
 
         // Handle Image Upload & Deletion
         if ($request->hasFile('image')) {

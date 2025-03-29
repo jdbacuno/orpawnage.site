@@ -37,7 +37,8 @@
                 data-number="{{ $application->pet->pet_number }}" data-species="{{ $application->pet->species }}"
                 data-breed="{{ $application->pet->breed }}" data-age="{{ $application->pet->age }}"
                 data-age-unit="{{ $application->pet->age_unit }}" data-color="{{ $application->pet->color }}"
-                data-sex="{{ $application->pet->sex }}">
+                data-sex="{{ $application->pet->sex }}" data-repro-status="{{ $application->pet->reproductive_status }}"
+                data-source="{{ $application->pet->source }}">
                 #{{ $application->pet->pet_number }} - {{ $application->pet->species }}
               </a>
             </td>
@@ -140,6 +141,8 @@
           <p><strong>Age:</strong> <span id="petAge"></span> <span id="petAgeUnit"></span></p>
           <p><strong>Color:</strong> <span id="petColor"></span></p>
           <p><strong>Sex:</strong> <span id="petSex"></span></p>
+          <p><strong>Reproductive Status:</strong> <span id="petReproStatus"></span></p>
+          <p><strong>Source:</strong> <span id="petSource"></span></p>
         </div>
       </div>
     </div>
@@ -157,7 +160,7 @@
       <h2 class="text-xl font-semibold text-gray-800">Adopter's Information</h2>
       <p><strong>Name:</strong> <span id="adopterName"></span></p>
       <p><strong>Email:</strong> <span id="adopterEmail"></span></p>
-      <p><strong>Age:</strong> <span id="adopterAge"></span></p>
+      <p><strong>Age:</strong> <span id="adopterAge"></span> years old</p>
       <p><strong>Birthdate:</strong> <span id="adopterBirthdate"></span></p>
       <p><strong>Address:</strong> <span id="adopterAddress"></span></p>
       <p><strong>Phone:</strong> <span id="adopterPhone"></span></p>

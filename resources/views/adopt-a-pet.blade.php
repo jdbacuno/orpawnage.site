@@ -76,6 +76,18 @@
               <option value="female" {{ request('sex')=='female' ? 'selected' : '' }}>Female</option>
             </select>
 
+            <!-- Reproductive Status Filter -->
+            <select name="sex"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+              onchange="this.form.submit()">
+              <option value="">All Reproductive Statuses</option>
+              <option value="intact" {{ request('reproductive_status')=='intact' ? 'selected' : '' }}>Intact</option>
+              <option value="neutered" {{ request('reproductive_status')=='neutered' ? 'selected' : '' }}>Neutered
+              </option>
+              <option value="unknown" {{ request('reproductive_status')=='unknown' ? 'selected' : '' }}>Unknown
+              </option>
+            </select>
+
             <!-- Color Filter -->
             <select name="color"
               class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
@@ -91,6 +103,16 @@
               <option value="bi-color" {{ request('color')=='bi-color' ? 'selected' : '' }}>Bi-Color</option>
               <option value="tri-color" {{ request('color')=='tri-color' ? 'selected' : '' }}>Tri-Color</option>
               <option value="others" {{ request('color')=='others' ? 'selected' : '' }}>Others</option>
+            </select>
+
+            <!-- Source Filter -->
+            <select name="sex"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              onchange="this.form.submit()">
+              <option value="">All Sources</option>
+              <option value="surrendered" {{ request('source')=='surrendered' ? 'selected' : '' }}>Surrendered</option>
+              <option value="rescued" {{ request('source')=='rescued' ? 'selected' : '' }}>Rescued</option>
+              <option value="other" {{ request('source')=='other' ? 'selected' : '' }}>Other</option>
             </select>
 
             <!-- Combined Sort Dropdown -->
@@ -135,8 +157,12 @@
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
                 <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age_unit }}</li>
+                <li><span class="text-md text-black font-bold">Breed:</span> {{ ucwords($pet->breed) }}</li>
                 <li><span class="text-md text-black font-bold">Sex:</span> {{ ucfirst($pet->sex) }}</li>
+                <li><span class="text-md text-black font-bold">Reproductive Status:</span> {{
+                  ucfirst($pet->reproductive_status) }}</li>
                 <li><span class="text-md text-black font-bold">Color:</span> {{ ucfirst($pet->color) }}</li>
+                <li><span class="text-md text-black font-bold">Source:</span> {{ ucfirst($pet->source) }}</li>
               </ul>
             </div>
             <a href="/services/{{ $pet->slug }}/adoption-form" role="button"

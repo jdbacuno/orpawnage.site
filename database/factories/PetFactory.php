@@ -44,7 +44,9 @@ class PetFactory extends Factory
             'age' => $this->faker->numberBetween(1, 15),
             'age_unit' => $this->faker->randomElement(['months', 'years']),
             'sex' => $this->faker->randomElement(['male', 'female']),
+            'reproductive_status' => $this->faker->randomElement(['intact', 'neutered', 'unknown']),
             'color' => $this->faker->randomElement(['black', 'white', 'orange', 'brown']),
+            'source' => $this->faker->randomElement(['surrendered', 'rescued', 'other']),
             'image_path' => 'pet-images/catdog.svg',
             'slug' => $slug, // Ensures uniqueness
         ];
