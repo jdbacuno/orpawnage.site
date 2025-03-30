@@ -17,6 +17,11 @@ body {
   justify-content: center;
 }
 
+.active {
+  color: #fff !important;
+  background-color: #ff6600;
+}
+
 /* Make cards stretch full width on mobile */
 @media (max-width: 640px) {
   .card {

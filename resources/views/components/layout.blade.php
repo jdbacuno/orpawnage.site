@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
@@ -176,13 +176,13 @@
               <!-- HOME -->
               <li>
                 <a href="/"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300">Home</a>
+                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/') ? 'active' : '' }}">Home</a>
               </li>
 
               <!-- SERVICES -->
               <li>
                 <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
                   Services
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -212,7 +212,7 @@
               <!-- REPORT -->
               <li>
                 <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
                   Report
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -242,14 +242,14 @@
               <!-- ABOUT US -->
               <li>
                 <a href="/about"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-blue-700 hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300">About
+                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-blue-700 hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('about') ? 'active' : '' }}">About
                   Us</a>
               </li>
 
               <!-- DONATE -->
               <li>
                 <a href="/donate"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-orange-500 hover:text-white transition-colors duration-300">Donate</a>
+                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
               </li>
             </ul>
           </div>
@@ -348,6 +348,14 @@
     <!-- ========== END OF FOOTER ========== -->
   </div>
 
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTop" class="fixed bottom-20 right-8 z-50 hidden bg-orange-500 hover:bg-yellow-500 hover:text-black 
+text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full transition-opacity duration-300">
+    <i class="ph-bold ph-arrow-up"></i>
+  </button>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
@@ -355,6 +363,7 @@
   <script src="{{ asset('js/custom.js') }}"></script>
   <script src="{{ asset('js/seemore.js') }}"></script>
   <script src="{{ asset('js/modal.js') }}"></script>
+  <script src="{{ asset('js/scrollToTop.js') }}"></script>
 </body>
 
 </html>
