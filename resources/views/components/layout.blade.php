@@ -7,7 +7,7 @@
   <title>OrPAWnage | {{ Route::currentRouteName() ? ucfirst(Route::currentRouteName()) : '' }}</title>
   <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" type="image/png" sizes="16x16">
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  @vite(['resources/css/admin/fonts/phosphor/phosphor-fill.css'])
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ asset('js/theme.js') }}"></script>
 
@@ -321,8 +321,6 @@
                 </li>
               </ul>
 
-              <!-- Include Phosphor Icons CDN -->
-              <script src="https://unpkg.com/@phosphor-icons/web"></script>
             </div>
           </div>
         </div>
@@ -351,7 +349,7 @@
   <!-- Scroll to Top Button -->
   <button id="scrollToTop" class="fixed bottom-20 right-8 z-50 hidden bg-orange-500 hover:bg-yellow-500 hover:text-black 
 text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full transition-opacity duration-300">
-    <i class="ph-bold ph-arrow-up"></i>
+    <i class="ph-fill ph-arrow-up"></i>
   </button>
 
 
