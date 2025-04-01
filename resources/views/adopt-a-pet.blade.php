@@ -156,7 +156,8 @@
             <p class="text-sm text-gray-600">{{ ucwords($pet->breed) }} - {{ ucfirst($pet->species) }}</p>
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
-                <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age_unit }}</li>
+                <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age == 1 ?
+                  Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old</li>
                 <li><span class="text-md text-black font-bold">Sex:</span> {{ ucfirst($pet->sex) }}</li>
                 <li><span class="text-md text-black font-bold">Reproductive Status:</span> {{
                   ucfirst($pet->reproductive_status) }}</li>

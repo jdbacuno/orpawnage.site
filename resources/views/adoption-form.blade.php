@@ -116,7 +116,9 @@
             </div>
             <div>
               <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Age</label>
-              <input type="text" value="{{ $pet->age }} {{ $pet->age_unit }}" readonly
+              <input type="text"
+                value="{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old"
+                readonly
                 class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
             </div>
             <div>

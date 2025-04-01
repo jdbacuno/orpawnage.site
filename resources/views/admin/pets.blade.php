@@ -152,7 +152,8 @@
             </td>
             <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->species) }}</td>
             <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->breed) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ $pet->age }} {{ $pet->age_unit }}</td>
+            <td class="py-2 px-4 whitespace-nowrap">{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) :
+              Str::plural($pet->age_unit) }}</td>
             <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->sex) }}</td>
             <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->reproductive_status) }}</td>
             <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->color) }}</td>
@@ -294,8 +295,8 @@
             <select name="color" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
               <option value="black" {{ old('color')==='black' ? 'selected' : '' }}>Black</option>
               <option value="white" {{ old('color')==='white' ? 'selected' : '' }}>White</option>
-              <option value="gray" {{ old('color')==='black' ? 'selected' : '' }}>Gray</option>
-              <option value="brown" {{ old('color')==='gray' ? 'selected' : '' }}>Brown</option>
+              <option value="gray" {{ old('color')==='gray' ? 'selected' : '' }}>Gray</option>
+              <option value="brown" {{ old('color')==='brown' ? 'selected' : '' }}>Brown</option>
               <option value="orange" {{ old('color')==='orange' ? 'selected' : '' }}>Orange</option>
               <option value="calico" {{ old('color')==='calico' ? 'selected' : '' }}>Calico</option>
               <option value="tabby" {{ old('color')==='tabby' ? 'selected' : '' }}>Tabby</option>
