@@ -34,7 +34,6 @@
           </p>
 
           <p class="text-xs text-gray-700"><strong>Species:</strong> {{ ucfirst($application->pet->species) }}</p>
-          <p class="text-xs text-gray-700"><strong>Breed:</strong> {{ ucfirst($application->pet->breed) }}</p>
           <p class="text-xs text-gray-700"><strong>Age:</strong> {{ $application->pet->age }} {{
             ucfirst($application->pet->age_unit) }}</p>
           <p class="text-xs text-gray-700"><strong>Gender:</strong> {{ ucfirst($application->pet->sex) }}</p>
@@ -125,7 +124,6 @@
           <strong>Request ID:</strong> 12345678
         </p>
         <p class="text-sm text-gray-700"><strong>Species:</strong> Dog</p>
-        <p class="text-sm text-gray-700"><strong>Breed:</strong> Askal</p>
         <p class="text-sm text-gray-700"><strong>Sex:</strong> Male</p>
         <p class="text-sm text-gray-700 truncate">
           <strong>Reason:</strong> Unable to provide care lorem ipsum dolor
@@ -150,7 +148,6 @@
           <strong>Request ID:</strong> 789456123
         </p>
         <p class="text-sm text-gray-700"><strong>Species:</strong> Dog</p>
-        <p class="text-sm text-gray-700"><strong>Breed:</strong> Askal</p>
         <p class="text-sm text-gray-700"><strong>Sex:</strong> Male</p>
         <p class="text-sm text-gray-700 truncate">
           <strong>Reason:</strong> Unable to provide care

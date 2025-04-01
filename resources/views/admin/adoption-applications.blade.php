@@ -35,9 +35,9 @@
               <a href="#" class="text-blue-500 hover:text-blue-600 hover:underline pet-info-btn"
                 data-id="{{ $application->id }}" data-image="{{ asset('storage/' . $application->pet->image_path) }}"
                 data-number="{{ $application->pet->pet_number }}" data-species="{{ $application->pet->species }}"
-                data-breed="{{ $application->pet->breed }}" data-age="{{ $application->pet->age }}"
-                data-age-unit="{{ $application->pet->age_unit }}" data-color="{{ $application->pet->color }}"
-                data-sex="{{ $application->pet->sex }}" data-repro-status="{{ $application->pet->reproductive_status }}"
+                data-age="{{ $application->pet->age }}" data-age-unit="{{ $application->pet->age_unit }}"
+                data-color="{{ $application->pet->color }}" data-sex="{{ $application->pet->sex }}"
+                data-repro-status="{{ $application->pet->reproductive_status }}"
                 data-source="{{ $application->pet->source }}">
                 #{{ $application->pet->pet_number }} - {{ $application->pet->species }}
               </a>
@@ -143,7 +143,6 @@
         <div>
           <p><strong>Pet No:</strong> #<span id="petNumber"></span></p>
           <p><strong>Species:</strong> <span id="petSpecies"></span></p>
-          <p><strong>Breed:</strong> <span id="petBreed"></span></p>
           <p><strong>Age:</strong> <span id="petAge"></span> <span id="petAgeUnit"></span></p>
           <p><strong>Color:</strong> <span id="petColor"></span></p>
           <p><strong>Sex:</strong> <span id="petSex"></span></p>

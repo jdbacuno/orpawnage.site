@@ -1,4 +1,0 @@
-id,user_id,pet_id,full_name,email,age,birthdate,contact_number,address,civil_status,citizenship,status,reject_reason,pickup_date,created_at,updated_at
-7,2,9,Alvin B. Manding,alvin@test.com,22,2001-12-08,09123456789,"123 Unknown St., Angeles City",Single,Filipino,rejected,Na-adopt na po siya sir.,,2025-03-29 21:40:13,2025-03-29 21:42:51
-8,2,3,Alvin B. Manding,alvin@test.com,22,2001-12-08,09123456789,"123 Unknown St., Angeles City",Single,Filipino,picked up,,2025-03-31,2025-03-29 21:40:48,2025-03-29 21:42:27
-9,2,10,Alvin B. Manding,alvin@test.com,22,2001-12-08,09123456789,"123 Unknown St., Angeles City",Single,Filipino,to be picked up,,2025-03-31,2025-03-29 21:41:17,2025-03-29 21:42:14

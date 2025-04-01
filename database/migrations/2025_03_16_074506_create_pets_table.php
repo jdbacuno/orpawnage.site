@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('pet_number');
             $table->enum('species', ['feline', 'canine']);
-            $table->string('breed');
             $table->integer('age');
-            $table->enum('age_unit', ['months', 'years']);
+            $table->enum('age_unit', ['months', 'years', 'weeks']);
             $table->enum('sex', ['male', 'female']);
             $table->enum('reproductive_status', ['intact', 'neutered', 'unknown'])->default('unknown');
             $table->string('color');

@@ -66,7 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("editPetId").value = petId;
           document.getElementById("editPetNumber").value = this.getAttribute("data-number");
           document.getElementById("editSpecies").value = this.getAttribute("data-species");
-          document.getElementById("editBreed").value = this.getAttribute("data-breed");
           document.getElementById("editAge").value = this.getAttribute("data-age");
           document.getElementById("editAgeUnit").value = this.getAttribute("data-age-unit");
           document.getElementById("editSex").value = this.getAttribute("data-sex");
@@ -165,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const image = this.getAttribute("data-image");
         const number = this.getAttribute("data-number");
         const species = this.getAttribute("data-species");
-        const breed = this.getAttribute("data-breed");
         const age = this.getAttribute("data-age");
         const ageUnit = this.getAttribute("data-age-unit");
         const color = this.getAttribute("data-color");
@@ -173,12 +171,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const sex = this.getAttribute("data-sex");
         const reproductiveStatus = this.getAttribute("data-repro-status");
 
+        // Make the unit singular if age is 1
+        const ageUnitSingular = (age === 1) ? (ageUnit === "weeks" ? "week" : (ageUnit === "months" ? "month" : "year")) : ageUnit;
+        
         document.getElementById("petImage").src = image;
         document.getElementById("petNumber").textContent = number;
         document.getElementById("petSpecies").textContent = species;
-        document.getElementById("petBreed").textContent = breed;
         document.getElementById("petAge").textContent = age;
-        document.getElementById("petAgeUnit").textContent = ageUnit;
+        document.getElementById("petAgeUnit").textContent = ageUnitSingular;
         document.getElementById("petColor").textContent = color;
         document.getElementById("petSource").textContent = source;
         document.getElementById("petSex").textContent = sex;

@@ -153,7 +153,7 @@
           </a>
           <div class="p-5 flex flex-col flex-grow">
             <h5 class="text-lg font-bold text-gray-900 dark:text-white">Pet #{{ $pet->pet_number }}</h5>
-            <p class="text-sm text-gray-600">{{ ucwords($pet->breed) }} - {{ ucfirst($pet->species) }}</p>
+            <p class="text-sm text-gray-600">{{ ucfirst($pet->species) }}</p>
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
                 <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age == 1 ?

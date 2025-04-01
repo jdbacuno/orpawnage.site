@@ -63,22 +63,24 @@ class PetController extends Controller
                     break;
                 case 'oldest_age':
                     $query->orderByRaw("
-                    (CASE 
-                        WHEN age_unit = 'years' THEN age * 12 
-                        WHEN age_unit = 'months' THEN age 
-                        ELSE 0 
-                    END) DESC
-                ");
+                (CASE 
+                    WHEN age_unit = 'years' THEN age * 12 * 4  
+                    WHEN age_unit = 'months' THEN age * 4     
+                    WHEN age_unit = 'weeks' THEN age           
+                    ELSE 0 
+                END) DESC
+            ");
                     break;
                 case 'youngest':
                 default:
                     $query->orderByRaw("
-                    (CASE 
-                        WHEN age_unit = 'years' THEN age * 12 
-                        WHEN age_unit = 'months' THEN age 
-                        ELSE 0 
-                    END) ASC
-                ");
+                (CASE 
+                    WHEN age_unit = 'years' THEN age * 12 * 4  
+                    WHEN age_unit = 'months' THEN age * 4     
+                    WHEN age_unit = 'weeks' THEN age            
+                    ELSE 0 
+                END) ASC
+            ");
                     break;
             }
         }
@@ -87,7 +89,6 @@ class PetController extends Controller
 
         return view('adopt-a-pet', compact('pets'));
     }
-
 
     public function create()
     {
@@ -101,9 +102,11 @@ class PetController extends Controller
             // Special case for sorting by age (considering age unit)
             if ($sortField === 'age') {
                 $query->orderByRaw("CASE 
-            WHEN age_unit = 'years' THEN age * 12
-            ELSE age
-        END $sortDirection");
+                WHEN age_unit = 'years' THEN age * 12 * 4  
+                WHEN age_unit = 'months' THEN age * 4      
+                WHEN age_unit = 'weeks' THEN age            
+                ELSE 0 
+            END $sortDirection");
             } else {
                 $query->orderBy($sortField, $sortDirection);
             }
@@ -112,7 +115,7 @@ class PetController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $pets = $query->paginate(5)->appends(request()->query());
+        $pets = $query->paginate(10)->appends(request()->query());
 
         return view('admin.pets', compact('pets'));
     }
@@ -123,7 +126,6 @@ class PetController extends Controller
         $validator = Validator::make($request->all(), [
             'pet_number' => ['required', 'integer', 'min:1'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
-            'breed' => ['required', 'string'],
             'age' => ['required', 'integer', 'min:1'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
@@ -134,6 +136,7 @@ class PetController extends Controller
                 'gray',
                 'brown',
                 'orange',
+                'brindle',
                 'calico',
                 'tabby',
                 'bi-color',
@@ -141,7 +144,7 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],  // Changed to 'file' and added 'svg' mime
+            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
 
         if ($validator->fails()) {
@@ -153,25 +156,24 @@ class PetController extends Controller
 
         // Normalize case for specific fields
         $validated = $validator->validated();
-        $validated['breed'] = strtolower(trim($validated['breed']));
 
         // Upload Image
         if ($request->hasFile('image')) {
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
             $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
-            $imagePath = $request->file->storeAs('pet-images', $imageFileName, 'public');
+            $imagePath = $request->file('image')->storeAs('pet-images', $imageFileName, 'public');
 
             $validated['image_path'] = $imagePath;
         }
 
         unset($validated['image']); // Remove 'image' field before saving
 
-        // Insert the data into the database
-        Pet::create($validated);
+        // Create and store the pet
+        $pet = Pet::create($validated); // 🔥 FIX: Assign the created pet to a variable
 
         return redirect()->back()->with([
-            'add_success' => 'Pet #' . $validated['pet_number'] . ' has been added successfully!',
+            'add_success' => '<a class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $pet->pet_number . '</a>',
             'modal_open' => null // Keep modal open on success
         ]);
     }
@@ -182,9 +184,8 @@ class PetController extends Controller
         $validator = Validator::make($request->all(), [
             'pet_number' => ['required', 'integer', 'min:1'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
-            'breed' => ['required', 'string'],
             'age' => ['required', 'integer', 'min:1'],
-            'age_unit' => ['required', Rule::in(['months', 'years'])],
+            'age_unit' => ['required', Rule::in(['months', 'years', 'weeks'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
             'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
             'color' => ['required', Rule::in([
@@ -193,6 +194,7 @@ class PetController extends Controller
                 'gray',
                 'brown',
                 'orange',
+                'brindle',
                 'calico',
                 'tabby',
                 'bi-color',
@@ -216,7 +218,6 @@ class PetController extends Controller
 
         // Normalize case for specific fields
         $validated = $validator->validated();
-        $validated['breed'] = strtolower(trim($validated['breed']));
 
         // Handle Image Upload & Deletion
         if ($request->hasFile('image')) {
@@ -229,7 +230,7 @@ class PetController extends Controller
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
             $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
-            $imagePath = $request->file->storeAs('pet-images', $imageFileName, 'public');
+            $imagePath = $request->file('image')->storeAs('pet-images', $imageFileName, 'public');
 
             $validated['image_path'] = $imagePath;
         }
@@ -240,11 +241,10 @@ class PetController extends Controller
         // Update the pet record
         $pet->update($validated);
 
-        // Redirect with success message and close modal
-        return redirect('/admin/pet-profiles')
+        return redirect()->to(url()->previous()) // Redirect to the previous page
             ->with([
                 'edit_pet_id' => $pet->id,
-                'edit_success' => 'Pet #' . $pet->pet_number . ' has been updated!',
+                'edit_success' => '<a class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $validated['pet_number'] . '</a>',
                 'modal_open' => null, // Close the modal
             ]);
     }
@@ -259,6 +259,9 @@ class PetController extends Controller
         // Delete pet record
         $pet->delete();
 
-        return redirect('/admin/pet-profiles')->with('success', 'Pet deleted successfully!');
+        return redirect('/admin/pet-profiles')->with([
+            'delete_success' => "Pet #{$pet->pet_number} has been deleted!",
+            'modal_open' => null, // Close the modal
+        ]);
     }
 }
