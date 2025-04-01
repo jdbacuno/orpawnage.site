@@ -117,7 +117,6 @@ class PetController extends Controller
         return view('admin.pets', compact('pets'));
     }
 
-
     public function store(Request $request)
     {
         // Validate the request manually
@@ -125,7 +124,7 @@ class PetController extends Controller
             'pet_number' => ['required', 'integer', 'min:1'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
             'breed' => ['required', 'string'],
-            'age' => ['required', 'integer', 'min:0'],
+            'age' => ['required', 'integer', 'min:1'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
             'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
@@ -142,7 +141,7 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
+            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],  // Changed to 'file' and added 'svg' mime
         ]);
 
         if ($validator->fails()) {
@@ -161,7 +160,7 @@ class PetController extends Controller
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
             $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
-            $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');
+            $imagePath = $request->file->storeAs('pet-images', $imageFileName, 'public');
 
             $validated['image_path'] = $imagePath;
         }
@@ -172,8 +171,8 @@ class PetController extends Controller
         Pet::create($validated);
 
         return redirect()->back()->with([
-            'add_success' => 'Pet added successfully!',
-            'modal_open' => 'add' // Keep modal open on success
+            'add_success' => 'Pet #' . $validated['pet_number'] . ' has been added successfully!',
+            'modal_open' => null // Keep modal open on success
         ]);
     }
 
@@ -184,7 +183,7 @@ class PetController extends Controller
             'pet_number' => ['required', 'integer', 'min:1'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
             'breed' => ['required', 'string'],
-            'age' => ['required', 'integer', 'min:0'],
+            'age' => ['required', 'integer', 'min:1'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
             'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
@@ -201,7 +200,7 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10240'],
+            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],  // Changed to 'file' and added 'svg' mime
         ]);
 
         // If validation fails, redirect with errors under 'edit_pet' bag
@@ -230,7 +229,7 @@ class PetController extends Controller
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
             $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
-            $imagePath = $request->image->storeAs('pet-images', $imageFileName, 'public');
+            $imagePath = $request->file->storeAs('pet-images', $imageFileName, 'public');
 
             $validated['image_path'] = $imagePath;
         }
@@ -241,12 +240,12 @@ class PetController extends Controller
         // Update the pet record
         $pet->update($validated);
 
+        // Redirect with success message and close modal
         return redirect('/admin/pet-profiles')
             ->with([
-                'modal_open' => 'edit',
-                'edit_pet_id' => $pet->id, // Ensure the modal remains open for the same pet
-                'edit_pet_data' => $pet->fresh(), // Pass fresh updated data for correct repopulation
-                'edit_success' => 'Pet updated successfully!'
+                'edit_pet_id' => $pet->id,
+                'edit_success' => 'Pet #' . $pet->pet_number . ' has been updated!',
+                'modal_open' => null, // Close the modal
             ]);
     }
 

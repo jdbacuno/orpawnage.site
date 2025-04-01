@@ -120,8 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   });
 
-  
-
   // Ensure modal remains open if session indicates so
   if ("{{ session('modal_open') }}" === "edit") {
       document.getElementById("editModal").classList.remove("hidden");
