@@ -123,6 +123,13 @@
                   !!}</span>
               </a>
             </th>
+            <th class="py-2 px-4 text-center">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'pet_name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
+                Pet Name <span>{!! request('sort') === 'pet_name' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
+                  !!}</span>
+              </a>
+            </th>
             <th class="py-2 px-4 text-left">Image</th>
             <th class="py-2 px-4 text-left">
               <a href="{{ request()->fullUrlWithQuery(['sort' => 'species', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
@@ -195,10 +202,11 @@
 
                 <!-- Edit Icon - Opens Edit Modal -->
                 <a href="#" class="text-blue-500 hover:text-blue-600 edit-btn" data-id="{{ $pet->id }}"
-                  data-number="{{ $pet->pet_number }}" data-species="{{ $pet->species }}" data-age="{{ $pet->age }}"
-                  data-age-unit="{{ $pet->age_unit }}" data-sex="{{ $pet->sex }}"
-                  data-repro-status="{{ $pet->reproductive_status }}" data-color="{{ $pet->color }}"
-                  data-source="{{ $pet->source }}" data-image="{{ asset('storage/' . $pet->image_path) }}">
+                  data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
+                  data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
+                  data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
+                  data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
+                  data-image="{{ asset('storage/' . $pet->image_path) }}">
                   <i class="ph-fill ph-pencil-simple"></i>
                 </a>
 
@@ -233,6 +241,9 @@
                 #{{ $pet->pet_number }}
               </a>
             </td>
+
+            <td class="py-2 px-4">{{ ucwords($pet->pet_name) }}</td>
+
             <td class="py-2 px-4">
               <img src="{{ asset('storage/' . $pet->image_path) }}" alt="Pet Image"
                 class="w-12 h-12 rounded-full object-cover">
@@ -301,6 +312,14 @@
               class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('pet_number') }}"
               required>
             <x-form-error name="pet_number" />
+          </div>
+
+          <div>
+            <label class="block text-gray-700 text-sm font-medium">Pet Name (If Any)</label>
+            <input type="text" name="pet_name" placeholder="Type &quot;N/A&quot; if none"
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('pet_name') }}"
+              required>
+            <x-form-error name="pet_name" />
           </div>
 
           <div>
@@ -437,6 +456,14 @@
               value="{{ old('pet_number', $editPetData->pet_number) }}"
               class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
             <x-form-error name="pet_number" />
+          </div>
+
+          <div>
+            <label class="block text-gray-700 text-sm font-medium">Pet Name</label>
+            <input type="text" name="pet_name" id="editPetName" value="{{ old('pet_name', $editPetData->pet_name) }}"
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+              placeholder="Type &quot;N/A&quot; if none" required>
+            <x-form-error name="pet_name" />
           </div>
 
           <div>

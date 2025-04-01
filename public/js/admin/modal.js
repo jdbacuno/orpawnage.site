@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           document.getElementById("editPetId").value = petId;
           document.getElementById("editPetNumber").value = this.getAttribute("data-number");
+          document.getElementById("editPetName").value = this.getAttribute("data-name");
           document.getElementById("editSpecies").value = this.getAttribute("data-species");
           document.getElementById("editAge").value = this.getAttribute("data-age");
           document.getElementById("editAgeUnit").value = this.getAttribute("data-age-unit");
@@ -163,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
     button.addEventListener("click", function() {
         const image = this.getAttribute("data-image");
         const number = this.getAttribute("data-number");
+        const name = this.getAttribute("data-name");
         const species = this.getAttribute("data-species");
         const age = this.getAttribute("data-age");
         const ageUnit = this.getAttribute("data-age-unit");
@@ -176,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         document.getElementById("petImage").src = image;
         document.getElementById("petNumber").textContent = number;
+        document.getElementById("petName").textContent = name;
         document.getElementById("petSpecies").textContent = species;
         document.getElementById("petAge").textContent = age;
         document.getElementById("petAgeUnit").textContent = ageUnitSingular;

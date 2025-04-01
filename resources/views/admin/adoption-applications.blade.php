@@ -12,7 +12,7 @@
         <thead>
           <tr class="bg-gray-100 text-gray-700">
             <th class="py-2 px-4 text-left">Pet No.</th>
-            <th class="py-2 px-4 text-left">Name</th>
+            <th class="py-2 px-4 text-left">Adopter's Name</th>
             <th class="py-2 px-4 text-left">Status</th>
             <th class="py-2 px-4 text-left">Pickup Date</th>
             <th class="py-2 px-4 text-left">
@@ -34,10 +34,10 @@
             <td class="py-2 px-4 whitespace-nowrap">
               <a href="#" class="text-blue-500 hover:text-blue-600 hover:underline pet-info-btn"
                 data-id="{{ $application->id }}" data-image="{{ asset('storage/' . $application->pet->image_path) }}"
-                data-number="{{ $application->pet->pet_number }}" data-species="{{ $application->pet->species }}"
-                data-age="{{ $application->pet->age }}" data-age-unit="{{ $application->pet->age_unit }}"
-                data-color="{{ $application->pet->color }}" data-sex="{{ $application->pet->sex }}"
-                data-repro-status="{{ $application->pet->reproductive_status }}"
+                data-number="{{ $application->pet->pet_number }}" data-name="{{ $application->pet->pet_name }}"
+                data-species="{{ $application->pet->species }}" data-age="{{ $application->pet->age }}"
+                data-age-unit="{{ $application->pet->age_unit }}" data-color="{{ $application->pet->color }}"
+                data-sex="{{ $application->pet->sex }}" data-repro-status="{{ $application->pet->reproductive_status }}"
                 data-source="{{ $application->pet->source }}">
                 #{{ $application->pet->pet_number }} - {{ $application->pet->species }}
               </a>
@@ -142,6 +142,7 @@
 
         <div>
           <p><strong>Pet No:</strong> #<span id="petNumber"></span></p>
+          <p><strong>Pet Name:</strong> <span id="petName"></span></p>
           <p><strong>Species:</strong> <span id="petSpecies"></span></p>
           <p><strong>Age:</strong> <span id="petAge"></span> <span id="petAgeUnit"></span></p>
           <p><strong>Color:</strong> <span id="petColor"></span></p>

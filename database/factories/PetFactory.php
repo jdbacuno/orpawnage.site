@@ -32,15 +32,14 @@ class PetFactory extends Factory
     public function definition()
     {
         $species = $this->faker->randomElement(['feline', 'canine']);
-        $breed = $this->faker->word;
 
         // Generate a unique slug by appending uniqid()
-        $slug = Str::slug("{$species}-{$breed}-" . uniqid());
+        $slug = Str::slug("{$species}" . uniqid());
 
         return [
             'pet_number' => $this->faker->unique()->numberBetween(1, 1000),
             'species' => $species,
-            'breed' => $breed,
+            'name' => $this->faker->firstName(),
             'age' => $this->faker->numberBetween(1, 15),
             'age_unit' => $this->faker->randomElement(['months', 'years']),
             'sex' => $this->faker->randomElement(['male', 'female']),

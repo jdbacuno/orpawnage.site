@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->integer('pet_number');
+            $table->string('pet_name');
             $table->enum('species', ['feline', 'canine']);
             $table->integer('age');
             $table->enum('age_unit', ['months', 'years', 'weeks']);

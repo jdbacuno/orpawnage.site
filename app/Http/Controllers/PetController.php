@@ -92,7 +92,11 @@ class PetController extends Controller
 
     public function create()
     {
-        $query = Pet::query();
+        $query = Pet::whereNotIn('id', function ($subQuery) {
+            $subQuery->select('pet_id')
+                ->from('adoption_applications')
+                ->where('status', 'picked up'); // Exclude pets that have been picked up
+        });
 
         // Apply sorting
         if (request()->has('sort')) {
@@ -125,6 +129,7 @@ class PetController extends Controller
         // Validate the request manually
         $validator = Validator::make($request->all(), [
             'pet_number' => ['required', 'integer', 'min:1'],
+            'pet_name' => ['required', 'string'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
             'age' => ['required', 'integer', 'min:1'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
@@ -157,6 +162,10 @@ class PetController extends Controller
         // Normalize case for specific fields
         $validated = $validator->validated();
 
+        if (strtolower($validated['pet_name']) == 'n/a') {
+            $validated['pet_name'] = 'N/A';
+        }
+
         // Upload Image
         if ($request->hasFile('image')) {
             $timestamp = now()->format('YmdHis');
@@ -183,6 +192,7 @@ class PetController extends Controller
         // Validate the request manually
         $validator = Validator::make($request->all(), [
             'pet_number' => ['required', 'integer', 'min:1'],
+            'pet_name' => ['required', 'string'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
             'age' => ['required', 'integer', 'min:1'],
             'age_unit' => ['required', Rule::in(['months', 'years', 'weeks'])],
@@ -218,6 +228,10 @@ class PetController extends Controller
 
         // Normalize case for specific fields
         $validated = $validator->validated();
+
+        if (strtolower($validated['pet_name']) == 'n/a') {
+            $validated['pet_name'] = 'N/A';
+        }
 
         // Handle Image Upload & Deletion
         if ($request->hasFile('image')) {

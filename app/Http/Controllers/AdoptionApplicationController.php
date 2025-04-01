@@ -24,7 +24,7 @@ class AdoptionApplicationController extends Controller
 
         $adoptionApplications = AdoptionApplication::with(['pet', 'user'])
             ->orderBy($sort, $direction)
-            ->paginate(5);
+            ->paginate(10);
 
         return view('admin.adoption-applications', compact('adoptionApplications'));
     }

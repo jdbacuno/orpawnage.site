@@ -21,7 +21,9 @@
         <!-- Scrollable Content -->
         <div class="p-4 flex-1 overflow-y-auto max-h-[200px]">
           <h3 class="text-md font-semibold text-gray-900 mb-2">
-            Adoption Request for Pet#{{ $application->pet->pet_number }}
+            Adoption Request for Pet#{{ $application->pet->pet_number }} {{ strtolower($application->pet->pet_name) !==
+            'n/a' ? ' - '
+            . ucwords($application->pet->pet_name) : '' }}
           </h3>
 
           <p class="text-xs text-gray-700">

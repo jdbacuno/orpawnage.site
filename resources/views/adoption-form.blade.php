@@ -101,7 +101,7 @@
 
           <!-- Pet Details -->
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Adopt Pet#{{ $pet->pet_number }}
+            Adopt Pet#{{ $pet->pet_number }} {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : '' }}
           </h2>
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div>
