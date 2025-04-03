@@ -10,6 +10,11 @@ class FeaturedPet extends Model
 
     public function pet()
     {
-        return $this->belongsTo(Pet::class);
+        return $this->belongsTo(Pet::class, 'id');
+    }
+
+    public function adoptionApplication()
+    {
+        return $this->hasOne(AdoptionApplication::class);
     }
 }

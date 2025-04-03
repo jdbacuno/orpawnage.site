@@ -182,7 +182,7 @@
               <!-- HOME -->
               <li>
                 <a href="/featured-pets"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/featured') ? 'active' : '' }}">Featured
+                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
                   Pets</a>
               </li>
 
