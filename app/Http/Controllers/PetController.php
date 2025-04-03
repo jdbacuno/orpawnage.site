@@ -119,7 +119,7 @@ class PetController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $pets = $query->paginate(10)->appends(request()->query());
+        $pets = $query->paginate(5)->appends(request()->query());
 
         return view('admin.pets', compact('pets'));
     }

@@ -122,7 +122,7 @@
                   <div x-data="{ showPassword: false }" class="relative">
                     <input :type="showPassword ? 'text' : 'password'" name="password" placeholder="Enter your password"
                       class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                      required />
+                      value="{{ old('password') }}" required />
                     <span @click="showPassword = !showPassword"
                       class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-400">
                       <svg x-show="!showPassword" class="fill-current" width="20" height="20" viewBox="0 0 20 20"
@@ -202,7 +202,7 @@
 
         <!-- Centered Logo -->
         <div class="relative z-10 flex items-center justify-center w-full h-full">
-          <img src="{{ asset('images/orpawnage-logo-2.png') }}" alt="Logo" class="block w-28 sm:w-32 md:w-36 lg:w-40" />
+          <img src="{{ asset('images/orpawnage-logo.png') }}" alt="Logo" class="block w-28 sm:w-32 md:w-36 lg:w-40" />
         </div>
       </div>
     </div>

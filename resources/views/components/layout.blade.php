@@ -179,6 +179,13 @@
                   class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/') ? 'active' : '' }}">Home</a>
               </li>
 
+              <!-- HOME -->
+              <li>
+                <a href="/featured-pets"
+                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/featured') ? 'active' : '' }}">Featured
+                  Pets</a>
+              </li>
+
               <!-- SERVICES -->
               <li>
                 <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
@@ -269,7 +276,7 @@
               <img src="{{ asset('images/orpawnage-logo.png') }}" class="w-[100px] h-[100px]" alt="Brand Logo 1" />
             </a>
             <a href="/" class="flex items-center">
-              <img src="{{ asset('images/orpawnage-logo-2.png') }}" class="w-[150px] h-[150px]" alt="Brand Logo 2" />
+              <img src="{{ asset('images/cityvet_logo.png') }}" class="w-[150px] h-[100px]" alt="Brand Logo 2" />
             </a>
           </div>
 

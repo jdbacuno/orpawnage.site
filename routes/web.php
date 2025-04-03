@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -9,9 +10,9 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('home');
-    })->name('Home');
+    Route::view('/', 'home')->name('Home');
+
+    Route::get('/featured-pets', [FeaturedPetController::class, 'index'])->name('Featured Pets');
 
     Route::get('/services/adopt-a-pet', [PetController::class, 'index'])->name('Available Pets');
 

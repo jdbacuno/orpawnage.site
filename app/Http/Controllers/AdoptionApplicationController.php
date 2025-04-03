@@ -17,7 +17,7 @@ class AdoptionApplicationController extends Controller
         $direction = request('direction', 'desc'); // Default sorting direction
 
         // Ensure only valid columns are used to prevent SQL injection
-        $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color'];
+        $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color', 'status'];
         if (!in_array($sort, $allowedSorts)) {
             $sort = 'created_at';
         }

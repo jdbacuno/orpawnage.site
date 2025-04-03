@@ -13,7 +13,14 @@
           <tr class="bg-gray-100 text-gray-700">
             <th class="py-2 px-4 text-left">Pet No.</th>
             <th class="py-2 px-4 text-left">Adopter's Name</th>
-            <th class="py-2 px-4 text-left">Status</th>
+            <th class="py-2 px-4 text-left">
+              <a href="{{ request()->fullUrlWithQuery(['sort' => 'status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
+                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
+                Status
+                <span>{!! request('sort') === 'status' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
+                  !!}</span>
+              </a>
+            </th>
             <th class="py-2 px-4 text-left">Pickup Date</th>
             <th class="py-2 px-4 text-left">
               <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
