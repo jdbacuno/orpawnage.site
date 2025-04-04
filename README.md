@@ -86,7 +86,48 @@ npm run dev
 - Checkout the `prediction_script.py` file in the `scripts/ml` folder and install the necessary modules
 - Checkout the `UpdateFeaturedPets.php` file in the `app\Console\Commands` folder and modify according to your Python installation folder
 
-<strong>12. Routes</strong>
+<strong>12. Run Scheduler</strong>
+```bash
+php artisan schedule:run
+```
+---
+**You must setup the cron or task scheduler:**
+Setting up Laravel Scheduler on Windows with Task Scheduler
+
+1. **Open Task Scheduler**  
+   Press **Win + R**, type `taskschd.msc`, and press Enter.
+
+2. **Create a New Task**  
+   In **Task Scheduler**, click **Create Task** on the right side.
+
+3. **General Settings**  
+   - **Name** the task: `Laravel Schedule Run`.
+   - **Configure for**: Choose your Windows version.
+   - **Run with highest privileges**: Check this if necessary.
+
+4. **Trigger**  
+   - Click the **Triggers** tab, then click **New**.
+   - Set **Begin the task** to **On a schedule** and choose **Daily**.
+   - Set **Repeat task every** to **1 minute** for **Indefinitely**.
+
+5. **Action**  
+   - Click the **Actions** tab, then **New**.
+   - Select **Start a program**.
+   - **Program/script**: Browse to **php.exe** (e.g., `C:\xampp\php\php.exe`).
+   - **Add arguments**: `artisan schedule:run`
+   - **Start in**: Path to your Laravel project.
+
+6. **Save the Task**  
+   Click **OK** to save the task.
+
+7. **Confirm the Task Runs**  
+   Test by right-clicking the task in Task Scheduler and selecting **Run**.
+
+--- 
+
+This will make sure your Laravel scheduler runs every minute.
+
+<strong>13. Routes</strong>
 - Start the Laravel Herd app, make sure NGINX and PHP are active
 - Go the browser and in the address bar, type: http://`your_project_folder_name.test`. It should direct you to signin / signup page.
 - You may proceed to sign up a new user account or login as admin with the following credentials:
