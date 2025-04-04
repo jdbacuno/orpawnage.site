@@ -123,12 +123,12 @@ importance_df = pd.DataFrame({
 
 
 # Plot feature importance (commented out)
-plt.figure(figsize=(10, 6))
-sns.barplot(x='Coefficient', y='Feature', data=importance_df.sort_values('Coefficient', ascending=False))
-plt.title('Feature Importance in Adoption Prediction')
-plt.tight_layout()
-plt.savefig('feature_importance.png')
-plt.show()
+# plt.figure(figsize=(10, 6))
+# sns.barplot(x='Coefficient', y='Feature', data=importance_df.sort_values('Coefficient', ascending=False))
+# plt.title('Feature Importance in Adoption Prediction')
+# plt.tight_layout()
+# plt.savefig('feature_importance.png')
+# plt.show()
 
 
 # Text table replacement:
@@ -137,14 +137,14 @@ plt.show()
 
 
 # Age distribution comparison (commented out)
-plt.figure(figsize=(12, 6))
-sns.histplot(data=adopted_pets, x='age_months', color='green', label='Adopted', kde=True)
-sns.histplot(data=available_pets, x='age_months', color='blue', label='Available', kde=True)
-plt.title('Age Distribution: Adopted vs Available Pets')
-plt.xlabel('Age (months)')
-plt.legend()
-plt.savefig('age_distribution.png')
-plt.show()
+# plt.figure(figsize=(12, 6))
+# sns.histplot(data=adopted_pets, x='age_months', color='green', label='Adopted', kde=True)
+# sns.histplot(data=available_pets, x='age_months', color='blue', label='Available', kde=True)
+# plt.title('Age Distribution: Adopted vs Available Pets')
+# plt.xlabel('Age (months)')
+# plt.legend()
+# plt.savefig('age_distribution.png')
+# plt.show()
 
 
 # Text table replacement:
@@ -160,17 +160,17 @@ plt.show()
 
 
 # Species distribution comparison (commented out)
-plt.figure(figsize=(12, 6))
-sns.countplot(data=pd.concat([adopted_pets.assign(Status='Adopted'), 
-                             available_pets.assign(Status='Available')]), 
-              x='species', hue='Status', palette={'Adopted': 'green', 'Available': 'blue'})
-plt.title('Species Distribution: Adopted vs Available Pets')
-plt.xlabel('Species')
-plt.ylabel('Count')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig('species_distribution.png')
-plt.show()
+# plt.figure(figsize=(12, 6))
+# sns.countplot(data=pd.concat([adopted_pets.assign(Status='Adopted'), 
+#                              available_pets.assign(Status='Available')]), 
+#               x='species', hue='Status', palette={'Adopted': 'green', 'Available': 'blue'})
+# plt.title('Species Distribution: Adopted vs Available Pets')
+# plt.xlabel('Species')
+# plt.ylabel('Count')
+# plt.xticks(rotation=45)
+# plt.tight_layout()
+# plt.savefig('species_distribution.png')
+# plt.show()
 
 
 # Text table replacement:
@@ -183,17 +183,17 @@ plt.show()
 
 
 # Sex distribution comparison (commented out)
-plt.figure(figsize=(12, 6))
-sns.countplot(data=pd.concat([adopted_pets.assign(Status='Adopted'), 
-                             available_pets.assign(Status='Available')]), 
-              x='sex', hue='Status', palette={'Adopted': 'green', 'Available': 'blue'})
-plt.title('Sex Distribution: Adopted vs Available Pets')
-plt.xlabel('Sex')
-plt.ylabel('Count')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig('sex_distribution.png')
-plt.show()
+# plt.figure(figsize=(12, 6))
+# sns.countplot(data=pd.concat([adopted_pets.assign(Status='Adopted'), 
+#                              available_pets.assign(Status='Available')]), 
+#               x='sex', hue='Status', palette={'Adopted': 'green', 'Available': 'blue'})
+# plt.title('Sex Distribution: Adopted vs Available Pets')
+# plt.xlabel('Sex')
+# plt.ylabel('Count')
+# plt.xticks(rotation=45)
+# plt.tight_layout()
+# plt.savefig('sex_distribution.png')
+# plt.show()
 
 # Text table replacement:
 # print("\nSex Distribution:")

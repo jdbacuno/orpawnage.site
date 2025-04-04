@@ -63,7 +63,7 @@ class UpdateFeaturedPets extends Command
     protected function schedule(Schedule $schedule)
     {
         // Run the command monthly on the first day of the month at midnight
-        $schedule->command('app:update-featured-pets')->monthly();
+        $schedule->command('app:update-featured-pets')->everySecond();
 
         // Alternatively, you could specify a specific day and time like this:
         // $schedule->command('app:update-featured-pets')->monthlyOn(1, '00:00');
