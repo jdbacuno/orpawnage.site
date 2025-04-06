@@ -35,8 +35,8 @@
                 ucfirst($featured->species) }}</p>
               <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
                 <ul>
-                  <li><span class="text-md text-black font-bold">Adoption Likelihood:</span> {{
-                    number_format($featured->adoption_probability * 100, 1) }}%</li>
+                  {{-- <li><span class="text-md text-black font-bold">Adoption Likelihood:</span> {{
+                    number_format($featured->adoption_probability * 100, 1) }}%</li> --}}
                   <li><span class="text-md text-black font-bold">Age:</span> {{ $featured->age }} {{ $featured->age == 1
                     ?
                     Str::singular($featured->age_unit) : Str::plural($featured->age_unit) }} old</li>
