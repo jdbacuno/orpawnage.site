@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import RobustScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -41,56 +42,53 @@ available_pets = pd.read_sql("""
     )
 """, db_connection)
 
-# Convert all ages to months for consistency and cap values to handle outliers
+# Convert all ages to months
 def convert_to_months(age, unit):
     if unit == 'weeks':
-        age_months = age / 4
+        return age / 4
     elif unit == 'years':
-        age_months = age * 12
-    else:  # months
-        age_months = age
-    return min(max(age_months, 1), 60)  # Clamp to [1, 60] months (1 month to 5 years)
+        return age * 12
+    return age  # already in months
 
 adopted_pets['age_months'] = adopted_pets.apply(lambda x: convert_to_months(x['age'], x['age_unit']), axis=1)
 available_pets['age_months'] = available_pets.apply(lambda x: convert_to_months(x['age'], x['age_unit']), axis=1)
 
-# For adopted pets, create target variable (all 1 since they were adopted)
-adopted_pets['was_adopted'] = 1
+# Avoid zero or negative values
+adopted_pets['age_months'] = adopted_pets['age_months'].clip(lower=0.25)
+available_pets['age_months'] = available_pets['age_months'].clip(lower=0.25)
 
-# For available pets, this will be our prediction target
-available_pets['was_adopted'] = 0  # placeholder for now
+# Apply log1p transformation
+adopted_pets['log_age_months'] = np.log1p(adopted_pets['age_months'])
+available_pets['log_age_months'] = np.log1p(available_pets['age_months'])
+
+# Label data
+adopted_pets['was_adopted'] = 1
+available_pets['was_adopted'] = 0
+
+# Combine for training
+full_data = pd.concat([adopted_pets, available_pets])
 
 # Step 2: Feature Engineering and Model Training
 # ---------------------------------------------------------------------------
-# Create a balanced dataset including both adopted and non-adopted pets
-non_adopted_pets = available_pets.copy()
-non_adopted_pets['was_adopted'] = 0  # Label them as 'not adopted'
-
-# Combine adopted and non-adopted pets
-full_data = pd.concat([adopted_pets, non_adopted_pets])
-
-# Prepare features and target
-features = ['age_months', 'sex', 'species']
+features = ['log_age_months', 'sex', 'species']
 X = full_data[features]
 y = full_data['was_adopted']
 
-# Preprocessing pipeline
-numeric_features = ['age_months']
+numeric_features = ['log_age_months']
 categorical_features = ['sex', 'species']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', RobustScaler(), numeric_features),  # More robust to outliers
+        ('num', RobustScaler(), numeric_features),
         ('cat', OneHotEncoder(), categorical_features)
-    ])
+    ]
+)
 
-# Create pipeline
 model = Pipeline([
     ('preprocessor', preprocessor),
-    ('classifier', LogisticRegression())
+    ('classifier', LogisticRegression(max_iter=1000))
 ])
 
-# Train the model
 model.fit(X, y)
 
 # Step 3: Predict Adoption Likelihood for Available Pets
