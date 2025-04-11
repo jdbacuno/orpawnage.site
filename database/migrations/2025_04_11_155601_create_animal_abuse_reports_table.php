@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('animal_abuse_reports', function (Blueprint $table) {
             $table->id();
+            $table->string('report_number')->unique(); // ← Add this line
             $table->string('full_name')->nullable();
             $table->string('contact_no');
             $table->string('incident_location');
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->string('animal_condition');
             $table->text('additional_notes');
             $table->string('incident_photo');
+            $table->string('status')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

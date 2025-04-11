@@ -73,7 +73,7 @@
           <li class="mb-1 group {{ request()->is('admin/abused-or-stray-pets') ? 'selected' : '' }}">
             <a href="#"
               class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-500/60 group-[.selected]:text-black sidebar-dropdown-toggle">
-              <i class="ph-fill ph-mailbox mr-3 text-lg"></i>
+              <i class="ph-fill ph-warning mr-3 text-lg"></i>
               <span class="text-sm">Reports</span>
               <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
             </a>

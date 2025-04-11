@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import RobustScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
@@ -34,16 +34,22 @@ query = f"""
 adopted_pets = pd.read_sql(query, db_connection)
 
 # Fetch current available pets
-available_pets = pd.read_sql("SELECT * FROM pets WHERE id NOT IN (SELECT pet_id FROM adoption_applications WHERE status = 'picked up')", db_connection)
+available_pets = pd.read_sql("""
+    SELECT * FROM pets 
+    WHERE id NOT IN (
+        SELECT pet_id FROM adoption_applications WHERE status = 'picked up'
+    )
+""", db_connection)
 
-# Convert all ages to months for consistency
+# Convert all ages to months for consistency and cap values to handle outliers
 def convert_to_months(age, unit):
     if unit == 'weeks':
-        return age / 4
+        age_months = age / 4
     elif unit == 'years':
-        return age * 12
+        age_months = age * 12
     else:  # months
-        return age
+        age_months = age
+    return min(max(age_months, 1), 60)  # Clamp to [1, 60] months (1 month to 5 years)
 
 adopted_pets['age_months'] = adopted_pets.apply(lambda x: convert_to_months(x['age'], x['age_unit']), axis=1)
 available_pets['age_months'] = available_pets.apply(lambda x: convert_to_months(x['age'], x['age_unit']), axis=1)
@@ -74,7 +80,7 @@ categorical_features = ['sex', 'species']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', StandardScaler(), numeric_features),
+        ('num', RobustScaler(), numeric_features),  # More robust to outliers
         ('cat', OneHotEncoder(), categorical_features)
     ])
 
@@ -121,7 +127,6 @@ importance_df = pd.DataFrame({
     'Coefficient': coefficients
 })
 
-
 # Plot feature importance (commented out)
 # plt.figure(figsize=(10, 6))
 # sns.barplot(x='Coefficient', y='Feature', data=importance_df.sort_values('Coefficient', ascending=False))
@@ -130,11 +135,9 @@ importance_df = pd.DataFrame({
 # plt.savefig('feature_importance.png')
 # plt.show()
 
-
 # Text table replacement:
 # print("\nFeature Importance in Adoption Prediction:")
 # print(importance_df.sort_values('Coefficient', ascending=False).to_string(index=False))
-
 
 # Age distribution comparison (commented out)
 # plt.figure(figsize=(12, 6))
@@ -146,7 +149,6 @@ importance_df = pd.DataFrame({
 # plt.savefig('age_distribution.png')
 # plt.show()
 
-
 # Text table replacement:
 # print("\nAge Distribution Statistics (months):")
 # age_stats = pd.DataFrame({
@@ -157,7 +159,6 @@ importance_df = pd.DataFrame({
 #     'Max Age': [adopted_pets['age_months'].max(), available_pets['age_months'].max()]
 # })
 # print(age_stats.to_string(index=False))
-
 
 # Species distribution comparison (commented out)
 # plt.figure(figsize=(12, 6))
@@ -172,7 +173,6 @@ importance_df = pd.DataFrame({
 # plt.savefig('species_distribution.png')
 # plt.show()
 
-
 # Text table replacement:
 # print("\nSpecies Distribution:")
 # species_dist = pd.concat([
@@ -180,7 +180,6 @@ importance_df = pd.DataFrame({
 #     available_pets['species'].value_counts().rename('Available')
 # ], axis=1).fillna(0)
 # print(species_dist.to_string())
-
 
 # Sex distribution comparison (commented out)
 # plt.figure(figsize=(12, 6))

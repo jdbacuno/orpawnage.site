@@ -1,9 +1,9 @@
 id,slug,pet_number,pet_name,species,age,age_unit,sex,reproductive_status,color,source,image_path,created_at,updated_at,age_months,was_adopted,adoption_probability
-3,feline-puspin-1743222783-4i2nk,4,N/A,feline,9,months,female,unknown,tri-color,rescued,pet-images/pet4_20250329123303.jpg,2025-03-29 12:33:00,2025-04-04 22:09:33,9,0,0.34587186033571415
-23,feline-puspin-1743498669-isdw6,14,N/A,feline,10,months,female,unknown,brindle,rescued,pet-images/pet14_20250401171109.jpg,2025-04-01 17:11:00,2025-04-01 19:38:00,10,0,0.3506851107501002
-32,feline-puspin-1743507049-tsnsy,25,N/A,feline,10,months,female,unknown,brindle,rescued,pet-images/pet25_20250401193049.jpg,2025-04-01 19:30:00,2025-04-01 19:37:00,10,0,0.3506851107501002
-2,feline-puspin-1743221743-kqnz6,3,N/A,feline,1,years,female,unknown,white,rescued,pet-images/pet3_20250329121543.jpg,2025-03-29 12:15:00,2025-03-29 12:15:00,12,0,0.3604025339791219
-1,feline-puspin-1743221604-0q1c2,1,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet1_20250329121323.jpg,2025-03-29 12:13:00,2025-03-29 12:34:00,12,0,0.3604025339791219
-26,feline-puspin-1743506734-zvtjw,19,N/A,feline,1,years,female,unknown,black,rescued,pet-images/pet19_20250401192534.jpg,2025-04-01 19:25:00,2025-04-01 19:25:00,12,0,0.3604025339791219
-27,feline-puspin-1743506840-6e7yd,20,N/A,feline,1,years,female,unknown,bi-color,rescued,pet-images/pet20_20250401192720.jpg,2025-04-01 19:27:00,2025-04-01 19:27:00,12,0,0.3604025339791219
-30,feline-puspin-1743506986-tlxwx,22,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet22_20250401192945.jpg,2025-04-01 19:29:00,2025-04-01 19:29:00,12,0,0.3604025339791219
+3,feline-puspin-1743222783-4i2nk,4,N/A,feline,9,months,female,unknown,tri-color,rescued,pet-images/pet4_20250329123303.jpg,2025-03-29 12:33:00,2025-04-04 22:09:33,9,0,0.3337867291600644
+23,feline-puspin-1743498669-isdw6,14,N/A,feline,10,months,female,unknown,brindle,rescued,pet-images/pet14_20250401171109.jpg,2025-04-01 17:11:00,2025-04-01 19:38:00,10,0,0.33856186675321465
+32,feline-puspin-1743507049-tsnsy,25,N/A,feline,10,months,female,unknown,brindle,rescued,pet-images/pet25_20250401193049.jpg,2025-04-01 19:30:00,2025-04-01 19:37:00,10,0,0.33856186675321465
+2,feline-puspin-1743221743-kqnz6,3,N/A,feline,1,years,female,unknown,white,rescued,pet-images/pet3_20250329121543.jpg,2025-03-29 12:15:00,2025-03-29 12:15:00,12,0,0.34821068742477146
+1,feline-puspin-1743221604-0q1c2,1,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet1_20250329121323.jpg,2025-03-29 12:13:00,2025-03-29 12:34:00,12,0,0.34821068742477146
+26,feline-puspin-1743506734-zvtjw,19,N/A,feline,1,years,female,unknown,black,rescued,pet-images/pet19_20250401192534.jpg,2025-04-01 19:25:00,2025-04-01 19:25:00,12,0,0.34821068742477146
+27,feline-puspin-1743506840-6e7yd,20,N/A,feline,1,years,female,unknown,bi-color,rescued,pet-images/pet20_20250401192720.jpg,2025-04-01 19:27:00,2025-04-01 19:27:00,12,0,0.34821068742477146
+30,feline-puspin-1743506986-tlxwx,22,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet22_20250401192945.jpg,2025-04-01 19:29:00,2025-04-01 19:29:00,12,0,0.34821068742477146

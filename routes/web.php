@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdoptionApplicationController;
+use App\Http\Controllers\AnimalAbuseReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\PetController;
@@ -64,9 +65,10 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
     Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
 
-    Route::get('/admin/abused-or-stray-pets', function () {
-        return view('admin.abused-stray-reports');
-    })->name('Manage Abused or Stray Pet Reports');
+    Route::get('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'index'])->name('Manage Abused or Stray Pet Reports');
+    Route::post('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'store']);
+    Route::patch('/admin/abused-or-stray-pets/acknowledge', [AnimalAbuseReportController::class, 'update']);
+    Route::patch('/admin/abused-or-stray-pets/reject', [AnimalAbuseReportController::class, 'destroy']);
 });
 
 // for all undefined routes
