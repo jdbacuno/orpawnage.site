@@ -11,13 +11,25 @@ class TransactionController extends Controller
 {
     public function adoption()
     {
-        $adoptionApplications = AdoptionApplication::with('pet')
-            ->where('user_id', Auth::id()) // Only fetch the current user's applications
-            ->paginate(10); // Paginate with 5 items per page
+        $query = AdoptionApplication::with('pet')
+            ->where('user_id', Auth::id());
+
+        if (request()->has('status') && in_array(request('status'), ['to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
+            $query->where('status', request('status'));
+        }
+
+        $adoptionApplications = $query->orderByRaw("
+            CASE status
+                WHEN 'to be picked up' THEN 0
+                WHEN 'to be scheduled' THEN 1
+                WHEN 'picked up' THEN 2
+                ELSE 3
+            END
+        ")->paginate(10);
+
 
         return view('transactions', compact('adoptionApplications'));
     }
-
 
     public function destroy(AdoptionApplication $application)
     {

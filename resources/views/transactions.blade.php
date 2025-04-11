@@ -5,12 +5,34 @@
       Adoption Applications
     </h2>
 
+    <!-- Filters Section -->
+    <div class="flex flex-wrap gap-4 items-center justify-start mb-6">
+      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+
+        <!-- Status Filter -->
+        <select name="status"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+          onchange="this.form.submit()">
+          <option value="">All Statuses</option>
+          <option value="to be picked up" {{ request('status')=='to be picked up' ? 'selected' : '' }}>To be picked up
+          </option>
+          <option value="to be scheduled" {{ request('status')=='to be scheduled' ? 'selected' : '' }}>To be scheduled
+          </option>
+          <option value="picked up" {{ request('status')=='picked up' ? 'selected' : '' }}>Picked up
+          </option>
+          <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
+        </select>
+
+      </form>
+    </div>
+
     <div class="flex flex-wrap gap-x-4 gap-y-6">
       @if ($adoptionApplications->isEmpty())
       <div class="w-full text-center text-gray-500 text-lg">
         No adoption applications found.
       </div>
       @else
+
       @foreach ($adoptionApplications as $application)
       <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-full sm:w-[45%] lg:w-[30%] max-w-xs">
 
@@ -102,7 +124,7 @@
 
     <!-- Pagination -->
     <div class="mt-6">
-      {{ $adoptionApplications->links() }}
+      {{ $adoptionApplications->appends(request()->except('page'))->links() }}
     </div>
     @endif
 

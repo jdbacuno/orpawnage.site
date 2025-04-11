@@ -7,7 +7,9 @@
         <h2 class="text-3xl font-bold text-orange-400 mb-6 text-left">
           Report an Incident of Abused/Stray Animal
         </h2>
-        <form action="#" method="POST">
+        <form action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data">
+          @csrf
+
           <!-- Two-column layout for large screens -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <!-- Personal Info -->
@@ -17,23 +19,27 @@
               </h3>
               <div>
                 <label class="block text-gray-700 font-medium">Reporter's Name (Optional)</label>
-                <input type="text" placeholder="Fullname (optional)"
+                <input type="text" name="full_name" placeholder="Fullname (optional)"
                   class="w-full p-3 border rounded-md focus:border-orange-500" />
+                <x-form-error name="full_name" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Contact No.</label>
-                <input type="tel" placeholder="Contact number"
+                <input type="tel" name="contact_no" placeholder="Contact number"
                   class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                <x-form-error name="contact_no" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Location of Incident</label>
-                <input type="text" placeholder="Location of Incident"
+                <input type="text" name="incident_location" placeholder="Location of Incident"
                   class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                <x-form-error name="incident_location" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Date of Incident</label>
-                <input type="date" placeholder="Location of Incident"
+                <input type="date" name="incident_date" placeholder="Date of Incident"
                   class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                <x-form-error name="incident_location" />
               </div>
             </div>
 
@@ -44,24 +50,28 @@
               </h3>
               <div>
                 <label class="block text-gray-700 font-medium">Type of Animal</label>
-                <input type="text" placeholder="e.g. dog, cat, monkey..."
+                <input type="text" name="species" placeholder="e.g. dog, cat, monkey..."
                   class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                <x-form-error name="species" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Condition of Animal</label>
-                <input type="text" placeholder="Condition of Animal"
+                <input type="text" name="animal_condition" placeholder="Condition of Animal"
                   class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                <x-form-error name="animal_condition" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Additional Notes</label>
-                <textarea placeholder="Additional notes" class="w-full p-3 border rounded-md focus:border-orange-500"
-                  required></textarea>
+                <textarea name="additional_notes" placeholder="Additional notes"
+                  class="w-full p-3 border rounded-md focus:border-orange-500" required></textarea>
+                <x-form-error name="additional_notes" />
               </div>
               <div>
                 <label class="block text-gray-700 font-medium">Upload a Photo of Proof (if there's any)</label>
-                <input type="file"
+                <input type="file" name="incident_photo"
                   class="w-full py-0 border rounded-md focus:border-orange-500 file:bg-gray-400 file:border-0 file:text-white"
                   required />
+                <x-form-error name="incident_photo" />
               </div>
             </div>
           </div>

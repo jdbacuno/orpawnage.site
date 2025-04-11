@@ -63,6 +63,10 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
     Route::patch('/admin/adoption-applications/approve', [AdoptionApplicationController::class, 'approve']);
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
     Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
+
+    Route::get('/admin/abused-or-stray-pets', function () {
+        return view('admin.abused-stray-reports');
+    })->name('Manage Abused or Stray Pet Reports');
 });
 
 // for all undefined routes

@@ -63,7 +63,7 @@
               <span class="px-2 py-1 text-sm rounded 
         {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
         {{ $application->status === 'to be picked up' ? 'bg-green-100 text-green-700' : '' }}
-        {{ $application->status === 'picked up' ? 'bg-blue-100 text-blue-700' : '' }}
+        {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
         {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
                 {{ ucfirst($application->status) }}
               </span>
@@ -112,7 +112,7 @@
                 </button>
                 @else
                 <button
-                  class="flex-1 bg-blue-500 p-1 text-sm text-white w-full rounded-md text-center disabled cursor-not-allowed">
+                  class="flex-1 bg-gray-500 p-1 text-sm text-white w-full rounded-md text-center disabled cursor-not-allowed">
                   Picked Up
                 </button>
                 @endif

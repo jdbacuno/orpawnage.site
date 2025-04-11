@@ -55,10 +55,14 @@ class AdoptionApplicationController extends Controller
                 ->with('submission_error', 'Failed to submit application. Please check the form for errors.');
         }
 
-        // Check if the pet has already been requested for adoption
-        if (AdoptionApplication::where('pet_id', $pet->id)->exists()) {
+        // Check if the pet has already been requested for adoption (excluding rejected ones)
+        if (AdoptionApplication::where('pet_id', $pet->id)
+            ->where('status', '!=', 'rejected')
+            ->exists()
+        ) {
             return back()->with('error_request', 'This pet has already been requested for adoption.');
         }
+
 
         // Normalize input fields
         $validated = $validator->validated();
