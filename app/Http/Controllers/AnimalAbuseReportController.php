@@ -19,6 +19,27 @@ class AnimalAbuseReportController extends Controller
     {
         $query = AnimalAbuseReport::query();
 
+        // Status Filter
+        $status = $request->status;
+        switch ($status) {
+            case 'pending':
+                $query->where('status', 'pending');
+                break;
+
+            case 'acknowledged':
+                $query->where('status', 'acknowledged');
+                break;
+
+            case 'rejected':
+                $query->where('status', 'rejected');
+                break;
+
+            default:
+                // No status filter - show all
+                break;
+        }
+
+        // Sorting
         if ($request->has('sort') && in_array($request->sort, ['incident_date'])) {
             $direction = $request->get('direction', 'asc') === 'desc' ? 'desc' : 'asc';
             $query->orderBy($request->sort, $direction);
@@ -26,7 +47,8 @@ class AnimalAbuseReportController extends Controller
             $query->latest();
         }
 
-        $reports = $query->paginate(10);
+        $reports = $query->paginate(10)
+            ->appends($request->query());
 
         return view('admin.abused-stray-reports', compact('reports'));
     }

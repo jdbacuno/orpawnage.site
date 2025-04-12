@@ -137,12 +137,14 @@
             Reject
           </button>
           @elseif ($application->status === 'rejected')
-          <button class="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+          <button
+            class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
             disabled>
             Rejected
           </button>
           @else
-          <button class="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+          <button
+            class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
             disabled>
             Picked Up
           </button>

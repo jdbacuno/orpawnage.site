@@ -1,31 +1,25 @@
 <x-transactions-layout>
   <div class="flex flex-col flex-wrap gap-x-4 gap-y-6">
-    @if ($abusedReports->isEmpty())
-    <div class="w-full text-center text-gray-500 text-lg">
-      No abused / stray reports found.
-    </div>
-    @else
-
     <!-- Filters Section -->
     <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
-      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
-
+      <form method="GET" action="/transactions/abused-status" class="flex flex-wrap gap-4">
         <!-- Status Filter -->
         <select name="status"
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
           onchange="this.form.submit()">
           <option value="">All Statuses</option>
-          <option value="to be picked up" {{ request('status')=='to be picked up' ? 'selected' : '' }}>To be picked up
-          </option>
-          <option value="to be scheduled" {{ request('status')=='to be scheduled' ? 'selected' : '' }}>To be scheduled
-          </option>
-          <option value="picked up" {{ request('status')=='picked up' ? 'selected' : '' }}>Picked up
-          </option>
+          <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
+          <option value="acknowledged" {{ request('status')=='acknowledged' ? 'selected' : '' }}>Acknowledged</option>
           <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
         </select>
-
       </form>
     </div>
+
+    @if ($abusedReports->isEmpty())
+    <div class="w-full text-center text-gray-500 text-lg">
+      No abused / stray reports found.
+    </div>
+    @else
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
       @foreach($abusedReports as $report)
@@ -85,13 +79,14 @@
           <div class="flex space-x-1">
             <!-- Status Badge -->
             @if($report->status === 'pending')
-            <span class="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm">Pending</span>
+            <span class="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Pending</span>
             @elseif($report->status === 'rejected')
-            <span class="italic bg-gray-500 text-white px-3 py-1 rounded-md text-sm">Rejected</span>
+            <span class="italic bg-gray-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Rejected</span>
             @elseif($report->status === 'acknowledged')
-            <span class="bg-green-500 text-white px-3 py-1 rounded-md text-sm">Acknowledged</span>
+            <span class="bg-green-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Acknowledged</span>
             @else
-            <span class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm">{{ ucfirst($report->status) }}</span>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">{{ ucfirst($report->status)
+              }}</span>
             @endif
 
             <!-- Delete Button (always visible) -->

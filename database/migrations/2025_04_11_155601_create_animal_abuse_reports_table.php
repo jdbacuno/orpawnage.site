@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('animal_condition');
             $table->text('additional_notes');
             $table->string('incident_photo');
-            $table->string('status')->nullable();
+            $table->string('status')->default('pending');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

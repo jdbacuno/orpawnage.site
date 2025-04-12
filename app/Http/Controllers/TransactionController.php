@@ -60,10 +60,34 @@ class TransactionController extends Controller
     public function abused(Request $request)
     {
         $userId = Auth::id();
-        $applications = AnimalAbuseReport::where('user_id', $userId)->latest()->paginate(9);
+        $status = $request->get('status');
+
+        $query = AnimalAbuseReport::where('user_id', $userId);
+
+        // Separate queries for each status
+        switch ($status) {
+            case 'pending':
+                $query->where('status', 'pending');
+                break;
+
+            case 'acknowledged':
+                $query->where('status', 'acknowledged');
+                break;
+
+            case 'rejected':
+                $query->where('status', 'rejected');
+                break;
+
+            default:
+                // No additional filtering for 'all' or empty status
+                break;
+        }
+
+        $reports = $query->latest()->paginate(9);
 
         return view('transactions.abused', [
-            'abusedReports' => $applications,
+            'abusedReports' => $reports,
+            'status' => $status,
         ]);
     }
 

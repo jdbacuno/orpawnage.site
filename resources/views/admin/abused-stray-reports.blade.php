@@ -2,6 +2,24 @@
   <h1 class="text-2xl font-bold text-gray-900">Manage Abused or Stray Pet Reports</h1>
 
   <div class="bg-white p-6 shadow-md rounded-lg mt-4">
+    <!-- Filters Section -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
+        <form method="GET" action="/admin/abused-or-stray-pets" class="flex flex-wrap gap-4">
+          <!-- Status Filter -->
+          <select name="status"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+            onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
+            <option value="acknowledged" {{ request('status')=='acknowledged' ? 'selected' : '' }}>Acknowledged
+            </option>
+            <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
+          </select>
+        </form>
+      </div>
+    </div>
+
     @if($reports->isEmpty())
     <div class="flex items-center justify-center p-6 text-gray-500">
       <p class="text-lg">No reports found.</p>
@@ -77,7 +95,7 @@
               Reject
             </button>
             @elseif ($report->status === 'rejected')
-            <span class="bg-red-500 text-white px-3 py-1 rounded-md">Rejected</span>
+            <span class="bg-gray-500 italic text-white px-3 py-1 rounded-md">Rejected</span>
             @else
             <span class="bg-green-500 text-white px-3 py-1 rounded-md">Acknowledged</span>
             @endif

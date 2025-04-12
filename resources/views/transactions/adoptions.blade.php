@@ -1,12 +1,6 @@
 <x-transactions-layout>
 
   <div class="flex flex-col flex-wrap gap-x-4 gap-y-6">
-    @if ($adoptionApplications->isEmpty())
-    <div class="w-full text-center text-gray-500 text-lg">
-      No adoption applications found.
-    </div>
-    @else
-
     <!-- Filters Section -->
     <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
       <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
@@ -27,6 +21,12 @@
 
       </form>
     </div>
+
+    @if ($adoptionApplications->isEmpty())
+    <div class="w-full text-center text-gray-500 text-lg">
+      No adoption applications found.
+    </div>
+    @else
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
       @foreach($adoptionApplications as $application)
@@ -127,7 +127,8 @@
             </button>
           </div>
           @elseif ($application->status === 'picked up')
-          <button class="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+          <button
+            class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
             disabled>
             Picked Up
           </button>
