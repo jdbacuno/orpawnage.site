@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AbuseReportAcknowledged;
+use App\Mail\AbuseReportRejected;
 use App\Models\AnimalAbuseReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -75,6 +79,54 @@ class AnimalAbuseReportController extends Controller
         AnimalAbuseReport::create($validated);
 
         return redirect()->back()->with('success', 'Report submitted successfully.');
+    }
+
+    public function acknowledge(Request $request)
+    {
+        $request->validate([
+            'report_id' => ['required', 'exists:animal_abuse_reports,id'],
+            'status' => ['required', 'in:acknowledged'],
+        ]);
+
+        $report = AnimalAbuseReport::findOrFail($request->report_id);
+
+        // Send email to the user who reported
+        Mail::to($report->user->email)->send(new AbuseReportAcknowledged($report));
+        $report->update(['status' => 'acknowledged']);
+
+
+        return redirect()->back()
+            ->with('success', 'Report #' . '<strong>' . $report->report_number . '</strong>' . ' has been acknowledged and user notified via email.');
+    }
+
+    public function reject(Request $request)
+    {
+        $request->validate([
+            'report_id' => ['required', 'exists:animal_abuse_reports,id'],
+            'status' => ['required', 'in:rejected']
+        ]);
+
+        $report = AnimalAbuseReport::findOrFail($request->report_id);
+
+        // Send email to the user who reported
+        Mail::to($report->user->email)->send(new AbuseReportRejected($report));
+        $report->update(['status' => 'rejected']);
+
+        return redirect()->back()
+            ->with('success', 'Report has been rejected successfully.');
+    }
+
+    public function destroy(AnimalAbuseReport $abusedReport)
+    {
+        // Delete the associated photo if it exists
+        if ($abusedReport->incident_photo) {
+            Storage::disk('public')->delete($abusedReport->incident_photo);
+        }
+
+        $abusedReport->delete();
+
+        return redirect()->back()
+            ->with('success', 'Report has been deleted successfully.');
     }
 
     private function generateUniqueReportNumber()

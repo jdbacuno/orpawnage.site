@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
         return view('abused-stray-form');
     })->name('Report an Abuse / Stray Animal');
 
+    Route::post('/report/abused-stray-animal', [AnimalAbuseReportController::class, 'store']);
+
     Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
 
     Route::prefix('transactions')->group(function () {
@@ -39,6 +41,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/surrender-status', [TransactionController::class, 'surrender'])->name('Surrender Applications Status');
         Route::get('/missing-status', [TransactionController::class, 'missing'])->name('Missing Reports Status');
         Route::get('/abused-status', [TransactionController::class, 'abused'])->name('Abused/Stray Reports Status');
+
+        Route::delete('/abused-status/{abusedReport}', [AnimalAbuseReportController::class, 'destroy']);
     });
 
     Route::delete('/transactions/{application}', [TransactionController::class, 'destroy']);
@@ -74,9 +78,11 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
     Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
 
     Route::get('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'index'])->name('Manage Abused or Stray Pet Reports');
-    Route::post('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'store']);
-    Route::patch('/admin/abused-or-stray-pets/acknowledge', [AnimalAbuseReportController::class, 'update']);
-    Route::patch('/admin/abused-or-stray-pets/reject', [AnimalAbuseReportController::class, 'destroy']);
+
+    Route::prefix('admin/abused-or-stray-pets')->group(function () {
+        Route::patch('/acknowledge', [AnimalAbuseReportController::class, 'acknowledge']);
+        Route::patch('/reject', [AnimalAbuseReportController::class, 'reject']);
+    });
 });
 
 // for all undefined routes

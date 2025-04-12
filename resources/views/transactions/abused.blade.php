@@ -83,33 +83,22 @@
 
           <!-- Action Buttons on the right -->
           <div class="flex space-x-1">
-            @if ($report->status !== 'acknowledged' && $report->status !== 'rejected')
-            <!-- Acknowledge Button -->
-            <form method="POST" action="/admin/abused-or-stray-pets/acknowledge" class="inline-block">
-              @csrf
-              @method('PATCH')
-              <input type="hidden" name="report_id" value="{{ $report->id }}">
-              <input type="hidden" name="status" value="acknowledged">
-              <button type="submit" class="bg-green-500 text-sm text-white py-1 px-2 hover:bg-green-400 rounded-md">
-                Acknowledge
-              </button>
-            </form>
-
-            <!-- Reject Button -->
-            <form method="POST" action="/admin/abused-or-stray-pets/reject" class="inline-block">
-              @csrf
-              @method('PATCH')
-              <input type="hidden" name="report_id" value="{{ $report->id }}">
-              <input type="hidden" name="status" value="rejected">
-              <button type="submit" class="bg-red-500 text-sm text-white py-1 px-2 hover:bg-red-400 rounded-md">
-                Reject
-              </button>
-            </form>
-            @elseif ($report->status === 'rejected')
-            <span class="bg-red-500 text-white px-3 py-1 rounded-md">Rejected</span>
+            <!-- Status Badge -->
+            @if($report->status === 'pending')
+            <span class="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm">Pending</span>
+            @elseif($report->status === 'rejected')
+            <span class="italic bg-gray-500 text-white px-3 py-1 rounded-md text-sm">Rejected</span>
+            @elseif($report->status === 'acknowledged')
+            <span class="bg-green-500 text-white px-3 py-1 rounded-md text-sm">Acknowledged</span>
             @else
-            <span class="bg-green-500 text-white px-3 py-1 rounded-md">Acknowledged</span>
+            <span class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm">{{ ucfirst($report->status) }}</span>
             @endif
+
+            <!-- Delete Button (always visible) -->
+            <button type="button" class="bg-red-600 text-sm text-white py-1 px-2 hover:bg-red-700 rounded-md delete-btn"
+              data-report-id="{{ $report->id }}" data-report-number="{{ $report->report_number }}">
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -151,6 +140,30 @@
       <!-- Image Container -->
       <div class="w-full mt-2 overflow-hidden rounded-lg">
         <img id="modalImage" alt="Incident Photo" class="w-full h-auto object-cover rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeDeleteModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Deletion</h2>
+      <p id="deleteMessage" class="text-gray-700 mb-6">Are you sure you want to delete this report?</p>
+
+      <div class="flex justify-end gap-3">
+        <button id="cancelDelete" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md">Cancel</button>
+        <form id="deleteForm" method="POST" class="inline-block">
+          @csrf
+          @method('DELETE')
+          <input type="hidden" name="report_id" id="deleteReportId">
+          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md">
+            Delete
+          </button>
+        </form>
       </div>
     </div>
   </div>

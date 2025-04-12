@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->admin()->create([
-            'username' => 'orpawnage_admin',
-            'email' => 'admin@orpawnage.com',
-            'contact_number' => '09053461306',
+            'username' => 'orpawnage_team',
+            'email' => 'orpawnageteam@gmail.com',
+            'contact_number' => '09944318413',
             'password' => '!Admin0329',
             'email_verified_at' => now()
         ]);  // 1 admin

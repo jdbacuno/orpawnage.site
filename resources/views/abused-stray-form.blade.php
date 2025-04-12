@@ -7,7 +7,7 @@
         <h2 class="text-3xl font-bold text-orange-400 mb-6 text-left">
           Report an Incident of Abused/Stray Animal
         </h2>
-        <form action="/admin/abused-or-stray-pets" method="POST" enctype="multipart/form-data">
+        <form action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data">
           @csrf
 
           @if(session('success'))

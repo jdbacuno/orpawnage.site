@@ -65,26 +65,17 @@
           <div class="flex space-x-1">
             @if ($report->status !== 'acknowledged' && $report->status !== 'rejected')
             <!-- Acknowledge Button -->
-            <form method="POST" action="/admin/abused-or-stray-pets/acknowledge" class="inline-block">
-              @csrf
-              @method('PATCH')
-              <input type="hidden" name="report_id" value="{{ $report->id }}">
-              <input type="hidden" name="status" value="acknowledged">
-              <button type="submit" class="bg-green-500 text-sm text-white py-1 px-2 hover:bg-green-400 rounded-md">
-                Acknowledge
-              </button>
-            </form>
+            <button type="button"
+              class="bg-green-500 text-sm text-white py-1 px-2 hover:bg-green-400 rounded-md acknowledge-btn"
+              data-report-id="{{ $report->id }}" data-action-type="acknowledged">
+              Acknowledge
+            </button>
 
             <!-- Reject Button -->
-            <form method="POST" action="/admin/abused-or-stray-pets/reject" class="inline-block">
-              @csrf
-              @method('PATCH')
-              <input type="hidden" name="report_id" value="{{ $report->id }}">
-              <input type="hidden" name="status" value="rejected">
-              <button type="submit" class="bg-red-500 text-sm text-white py-1 px-2 hover:bg-red-400 rounded-md">
-                Reject
-              </button>
-            </form>
+            <button type="button" class="bg-red-500 text-sm text-white py-1 px-2 hover:bg-red-400 rounded-md reject-btn"
+              data-report-id="{{ $report->id }}" data-action-type="rejected">
+              Reject
+            </button>
             @elseif ($report->status === 'rejected')
             <span class="bg-red-500 text-white px-3 py-1 rounded-md">Rejected</span>
             @else
@@ -136,5 +127,29 @@
     </div>
   </div>
 
+  <!-- Add this confirmation modal at the bottom of your template -->
+  <div id="confirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeConfirmationModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Action</h2>
+      <p id="confirmationMessage" class="text-gray-700 mb-6"></p>
+
+      <div class="flex justify-end gap-3">
+        <button id="cancelAction" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md">Cancel</button>
+        <form id="actionForm" method="POST" class="inline-block">
+          @csrf
+          @method('PATCH')
+          <input type="hidden" name="report_id" id="modalReportId">
+          <input type="hidden" name="status" id="modalActionType">
+          <button type="submit" class="px-4 py-2 text-white rounded-md" id="confirmButton">
+            Confirm
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </x-admin-layout>

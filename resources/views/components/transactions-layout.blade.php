@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== ADOPTION REQUESTS SECTION ========== -->
-  <section class="py-20 px-5 lg:px-20">
+  <section class="py-20 px-5 lg:px-20 mb-20">
     <!-- Section Type Selector -->
     <form method="GET" action="{{ url()->current() }}" class="mb-6">
       <select id="sectionSelector"

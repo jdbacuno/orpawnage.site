@@ -1,4 +1,5 @@
 <x-transactions-layout>
+
   <div class="flex flex-col flex-wrap gap-x-4 gap-y-6">
     @if ($adoptionApplications->isEmpty())
     <div class="w-full text-center text-gray-500 text-lg">
