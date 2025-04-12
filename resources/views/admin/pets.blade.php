@@ -91,185 +91,214 @@
       </button>
     </div>
 
-    <!-- Pagination -->
+    <!-- Top Pagination -->
     <div class="my-2">
       {{ $pets->links() }}
-      <!-- Laravel default pagination links -->
     </div>
 
-    <!-- Pet Profiles Table -->
-    <div class="overflow-x-auto z-10">
-      @if($pets->isEmpty())
-      <div class="flex items-center justify-center p-6 text-gray-500">
-        <p class="text-lg">No pets found.</p>
+    <!-- Filter Section -->
+    <div class="mb-6 mt-4 flex flex-col md:flex-row gap-4">
+      <!-- Filter Dropdowns -->
+      <div class="flex flex-wrap gap-2">
+        <form method="GET" action="{{ request()->url() }}#pets" class="flex flex-wrap gap-4">
+          <!-- Species Filter -->
+          <select name="species"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">All Species</option>
+            <option value="feline" {{ request('species')=='feline' ? 'selected' : '' }}>Cats</option>
+            <option value="canine" {{ request('species')=='canine' ? 'selected' : '' }}>Dogs</option>
+          </select>
+
+          <!-- Sex Filter -->
+          <select name="sex"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">All Sexes</option>
+            <option value="male" {{ request('sex')=='male' ? 'selected' : '' }}>Male</option>
+            <option value="female" {{ request('sex')=='female' ? 'selected' : '' }}>Female</option>
+          </select>
+
+          <!-- Reproductive Status Filter -->
+          <select name="reproductive_status"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">Reproductive</option>
+            <option value="intact" {{ request('reproductive_status')=='intact' ? 'selected' : '' }}>Intact</option>
+            <option value="neutered" {{ request('reproductive_status')=='neutered' ? 'selected' : '' }}>Neutered/Spayed
+            </option>
+          </select>
+
+          <!-- Color Filter -->
+          <select name="color"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">All Colors</option>
+            <option value="black" {{ request('color')=='black' ? 'selected' : '' }}>Black</option>
+            <option value="white" {{ request('color')=='white' ? 'selected' : '' }}>White</option>
+            <option value="gray" {{ request('color')=='gray' ? 'selected' : '' }}>Gray</option>
+            <option value="brown" {{ request('color')=='brown' ? 'selected' : '' }}>Brown</option>
+            <option value="brindle" {{ request('color')=='brindle' ? 'selected' : '' }}>Brindle</option>
+            <option value="orange" {{ request('color')=='orange' ? 'selected' : '' }}>Orange</option>
+            <option value="calico" {{ request('color')=='calico' ? 'selected' : '' }}>Calico</option>
+            <option value="tabby" {{ request('color')=='tabby' ? 'selected' : '' }}>Tabby</option>
+            <option value="bi-color" {{ request('color')=='bi-color' ? 'selected' : '' }}>Bi-Color</option>
+            <option value="tri-color" {{ request('color')=='tri-color' ? 'selected' : '' }}>Tri-Color</option>
+            <option value="others" {{ request('color')=='others' ? 'selected' : '' }}>Others</option>
+            <!-- Add more colors as needed -->
+          </select>
+
+          <!-- Source Filter -->
+          <select name="source"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">All Sources</option>
+            <option value="surrendered" {{ request('source')=='surrendered' ? 'selected' : '' }}>Surrendered</option>
+            <option value="rescued" {{ request('source')=='rescued' ? 'selected' : '' }}>Rescued</option>
+          </select>
+
+          <!-- Adoption Status Filter -->
+          <select name="adoption_status"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="available" {{ request('adoption_status')=='available' ? 'selected' : '' }}>Available</option>
+            <option value="in_process" {{ request('adoption_status')=='in_process' ? 'selected' : '' }}>In Process
+            </option>
+          </select>
+
+          <!-- Sort Filter -->
+          <select name="sort_by"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="">Sort By</option>
+            <option value="latest" {{ request('sort_by')=='latest' ? 'selected' : '' }}>Newest Arrivals</option>
+            <option value="oldest" {{ request('sort_by')=='oldest' ? 'selected' : '' }}>Oldest Arrivals</option>
+            <option value="youngest" {{ request('sort_by')=='youngest' ? 'selected' : '' }}>Youngest First
+            </option>
+            <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest First
+            </option>
+          </select>
+        </form>
       </div>
-      @else
-
-      <table class="w-full border border-gray-200 rounded-lg">
-        <thead>
-          <tr class="bg-gray-100 text-gray-700">
-            <th class="py-2 px-4 text-center bg-gray-700 text-gray-100 sticky left-[-1px]">Actions</th>
-            <th class="py-2 px-4 text-center">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'id', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                ID <span>{!! request('sort') === 'id' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'pet_number', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Pet No. <span>{!! request('sort') === 'pet_number' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-center">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'pet_name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Pet Name <span>{!! request('sort') === 'pet_name' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">Image</th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'species', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Species <span>{!! request('sort') === 'species' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'age', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Age <span>{!! request('sort') === 'age' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'sex', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Sex <span>{!! request('sort') === 'sex' ? (request('direction') === 'asc' ? '▲' : '▼') : '' !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'reproductive_status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Reproductive <span>{!! request('sort') === 'reproductive_status' ? (request('direction') ===
-                  'asc' ? '▲' : '▼') : '' !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'color', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Color <span>{!! request('sort') === 'color' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'source', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Source <span>{!! request('sort') === 'source' ? (request('direction') === 'asc' ? '▲' : '▼') : ''
-                  !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Date Added <span>{!! request('sort') === 'created_at' ? (request('direction') === 'asc' ? '▲' : '▼') :
-                  '' !!}</span>
-              </a>
-            </th>
-            <th class="py-2 px-4 text-left">
-              <a href="{{ request()->fullUrlWithQuery(['sort' => 'updated_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}"
-                class="text-blue-500 hover:underline hover:text-blue-600 flex items-center gap-1 whitespace-nowrap">
-                Updated At <span>{!! request('sort') === 'updated_at' ? (request('direction') === 'asc' ? '▲' : '▼') :
-                  '' !!}</span>
-              </a>
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @foreach($pets as $pet)
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="py-2 px-4 text-center bg-gray-100 sticky left-[-1px]">
-              <span class="flex items-center justify-center gap-4">
-                <!-- Eye Icon - View Pet -->
-                <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
-                  class="text-yellow-500 hover:text-yellow-600">
-                  <i class="ph-fill ph-eye"></i>
-                </a>
-
-                <!-- Edit Icon - Opens Edit Modal -->
-                <a href="#" class="text-blue-500 hover:text-blue-600 edit-btn" data-id="{{ $pet->id }}"
-                  data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
-                  data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
-                  data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
-                  data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
-                  data-image="{{ asset('storage/' . $pet->image_path) }}">
-                  <i class="ph-fill ph-pencil-simple"></i>
-                </a>
-
-                <!-- Delete Button (Disabled if pet is in an adoption application) -->
-                @if($pet->adoptionApplication && in_array($pet->adoptionApplication->status, ['to be picked up', 'to be
-                scheduled']))
-                <button class="text-gray-400 cursor-not-allowed relative group" disabled>
-                  <i class="ph-fill ph-trash"></i>
-                  <!-- Tooltip -->
-                  <span
-                    class="absolute left-full -translate-x-100 mb-2 w-max px-2 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition">
-                    {{ $pet->adoptionApplication->status }}
-                  </span>
-                </button>
-
-                @else
-                <button class="text-red-500 hover:text-red-600 delete-btn" data-id="{{ $pet->id }}"
-                  data-number="{{ $pet->pet_number }}">
-                  <i class="ph-fill ph-trash"></i>
-                </button>
-                @endif
-              </span>
-            </td>
-
-
-            <td class="py-2 px-4 text-center">{{ $pet->id }}</td>
-
-            <td class="py-2 px-4">
-              <a href="/services/{{ $pet->slug }}/adoption-form"
-                class="text-black p-2 text-blue-500 hover:text-blue-600 hover:underline whitespace-nowrap"
-                target="_blank">
-                #{{ $pet->pet_number }}
-              </a>
-            </td>
-
-            <td class="py-2 px-4">{{ ucwords($pet->pet_name) }}</td>
-
-            <td class="py-2 px-4">
-              <img src="{{ asset('storage/' . $pet->image_path) }}" alt="Pet Image"
-                class="w-12 h-12 rounded-full object-cover">
-            </td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->species) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) :
-              Str::plural($pet->age_unit) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->sex) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->reproductive_status) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->color) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ ucfirst($pet->source) }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ $pet->created_at->format('M d, Y h:i A') }}</td>
-            <td class="py-2 px-4 whitespace-nowrap">{{ $pet->updated_at->format('M d, Y h:i A') }}</td>
-          </tr>
-          @endforeach
-        </tbody>
-
-      </table>
-      @endif
     </div>
 
+    <!-- Pets Cards Grid -->
+    @if($pets->isEmpty())
+    <div class="flex items-center justify-center p-6 text-gray-500">
+      <p class="text-lg">No pets found.</p>
+    </div>
+    @else
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @foreach($pets as $pet)
+      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col h-96">
+        <!-- Pet Image -->
+        <div class="h-40 overflow-hidden">
+          <img src="{{ asset('storage/' . $pet->image_path) }}" alt="{{ $pet->pet_name }}"
+            class="w-full h-full object-cover">
+        </div>
+
+        <!-- Pet Details -->
+        <div class="p-4 flex-grow">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-semibold text-gray-800">{{ $pet->pet_name !== 'N/A' ? ucwords($pet->pet_name) :
+              'Unnamed' }}</h3>
+            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">#{{ $pet->pet_number }}</span>
+          </div>
+
+          <div class="space-y-1 text-sm text-gray-600">
+            <div class="flex">
+              <span class="w-24 font-medium">Species:</span>
+              <span>{{ ucfirst($pet->species) }}</span>
+            </div>
+            <div class="flex">
+              <span class="w-24 font-medium">Age:</span>
+              <span>{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit)
+                }} old</span>
+            </div>
+            <div class="flex">
+              <span class="w-24 font-medium">Sex:</span>
+              <span>{{ ucfirst($pet->sex) }}</span>
+            </div>
+            <div class="flex">
+              <span class="w-24 font-medium">Fertility:</span>
+              <span>{{ ucfirst($pet->reproductive_status) }}</span>
+            </div>
+            <div class="flex">
+              <span class="w-24 font-medium">Color:</span>
+              <span>{{ ucfirst($pet->color) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="px-4 py-1 border-t border-gray-200 flex justify-end">
+          <!-- View Button -->
+          <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
+            class="text-yellow-500 hover:text-yellow-600 p-2 rounded-full hover:bg-yellow-50 flex items-center justify-center w-10 h-10"
+            title="View">
+            <i class="ph-fill ph-eye text-lg"></i>
+          </a>
+
+          <!-- Edit Button -->
+          <button
+            class="text-blue-500 hover:text-blue-600 p-2 rounded-full hover:bg-blue-50 edit-btn flex items-center justify-center w-10 h-10"
+            data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
+            data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
+            data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
+            data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
+            data-image="{{ asset('storage/' . $pet->image_path) }}" title="Edit">
+            <i class="ph-fill ph-pencil-simple text-lg"></i>
+          </button>
+
+          <!-- Delete Button -->
+          @php
+          $disableDelete = false;
+          $tooltipMessage = 'Delete';
+
+          if ($pet->adoptionApplication) {
+          if (in_array($pet->adoptionApplication->status ?? null, ['to be picked up', 'to be scheduled'])) {
+          $disableDelete = true;
+          $tooltipMessage = 'Cannot delete - ' . ucwords($pet->adoptionApplication->status);
+          }
+          }
+          @endphp
+
+          @if($disableDelete)
+          <button
+            class="text-gray-400 cursor-not-allowed p-2 rounded-full relative group flex items-center justify-center w-10 h-10"
+            disabled title="{{ $tooltipMessage }}" data-tooltip-target="tooltip-delete-{{ $pet->id }}">
+            <i class="ph-fill ph-trash text-lg"></i>
+          </button>
+          <!-- Tooltip element (for more advanced tooltips) -->
+          <div id="tooltip-delete-{{ $pet->id }}" role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+            {{ $tooltipMessage }}
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+          @else
+          <button
+            class="text-red-500 hover:text-red-600 p-2 rounded-full hover:bg-red-50 delete-btn flex items-center justify-center w-10 h-10 transition-colors duration-200"
+            data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" title="{{ $tooltipMessage }}"
+            data-tooltip-target="tooltip-delete-{{ $pet->id }}">
+            <i class="ph-fill ph-trash text-lg"></i>
+          </button>
+          <!-- Tooltip element -->
+          <div id="tooltip-delete-{{ $pet->id }}" role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+            {{ $tooltipMessage }}
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+          @endif
+        </div>
+      </div>
+      @endforeach
+    </div>
+    @endif
 
     <!-- Pagination -->
-    <div class="mt-4">
+    <div class="mt-6">
       {{ $pets->links() }}
-      <!-- Laravel default pagination links -->
     </div>
 
 

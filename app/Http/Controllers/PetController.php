@@ -98,28 +98,83 @@ class PetController extends Controller
                 ->where('status', 'picked up'); // Exclude pets that have been picked up
         });
 
-        // Apply sorting
-        if (request()->has('sort')) {
-            $sortField = request('sort');
-            $sortDirection = request('direction') === 'asc' ? 'asc' : 'desc';
+        // Apply filters
+        if (request()->filled('species')) {
+            $query->where('species', request('species'));
+        }
 
-            // Special case for sorting by age (considering age unit)
-            if ($sortField === 'age') {
-                $query->orderByRaw("CASE 
-                WHEN age_unit = 'years' THEN age * 12 * 4  
-                WHEN age_unit = 'months' THEN age * 4      
-                WHEN age_unit = 'weeks' THEN age            
-                ELSE 0 
-            END $sortDirection");
-            } else {
-                $query->orderBy($sortField, $sortDirection);
+        if (request()->filled('sex')) {
+            $query->where('sex', request('sex'));
+        }
+
+        if (request()->filled('reproductive_status')) {
+            $query->where('reproductive_status', request('reproductive_status'));
+        }
+
+        if (request()->filled('color')) {
+            $query->where('color', request('color'));
+        }
+
+        if (request()->filled('source')) {
+            $query->where('source', request('source'));
+        }
+
+        // Adoption Status Filter
+        if (request()->filled('adoption_status')) {
+            $status = request('adoption_status');
+            if ($status === 'available') {
+                $query->where(function ($q) {
+                    $q->whereDoesntHave('adoptionApplication')
+                        ->orWhereHas('adoptionApplication', function ($q) {
+                            $q->where('status', 'rejected')
+                                ->orWhereNull('status');
+                        });
+                });
+            } elseif ($status === 'in_process') {
+                $query->whereHas('adoptionApplication', function ($q) {
+                    $q->whereIn('status', ['to be picked up', 'to be scheduled']);
+                });
+            }
+        }
+
+        // Apply sorting
+        if (request()->filled('sort_by')) {
+            switch (request('sort_by')) {
+                case 'latest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'youngest':
+                    $query->orderByRaw("
+                    CASE 
+                        WHEN age_unit = 'years' THEN age * 12 * 4  
+                        WHEN age_unit = 'months' THEN age * 4      
+                        WHEN age_unit = 'weeks' THEN age            
+                        ELSE 0 
+                    END ASC
+                ");
+                    break;
+                case 'oldest_age':
+                    $query->orderByRaw("
+                    CASE 
+                        WHEN age_unit = 'years' THEN age * 12 * 4  
+                        WHEN age_unit = 'months' THEN age * 4      
+                        WHEN age_unit = 'weeks' THEN age            
+                        ELSE 0 
+                    END DESC
+                ");
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
             }
         } else {
             // Default sorting: recently added first
             $query->orderBy('created_at', 'desc');
         }
 
-        $pets = $query->paginate(5)->appends(request()->query());
+        $pets = $query->paginate(8)->appends(request()->query());
 
         return view('admin.pets', compact('pets'));
     }

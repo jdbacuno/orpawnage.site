@@ -97,6 +97,7 @@
               <option value="white" {{ request('color')=='white' ? 'selected' : '' }}>White</option>
               <option value="gray" {{ request('color')=='gray' ? 'selected' : '' }}>Gray</option>
               <option value="brown" {{ request('color')=='brown' ? 'selected' : '' }}>Brown</option>
+              <option value="brindle" {{ request('color')=='brindle' ? 'selected' : '' }}>Brindle</option>
               <option value="orange" {{ request('color')=='orange' ? 'selected' : '' }}>Orange</option>
               <option value="calico" {{ request('color')=='calico' ? 'selected' : '' }}>Calico</option>
               <option value="tabby" {{ request('color')=='tabby' ? 'selected' : '' }}>Tabby</option>
