@@ -113,7 +113,7 @@ class AnimalAbuseReportController extends Controller
         $report = AnimalAbuseReport::findOrFail($request->report_id);
 
         // Send email to the user who reported
-        Mail::to($report->user->email)->send(new AbuseReportAcknowledged($report));
+        Mail::to($report->user->email)->queue(new AbuseReportAcknowledged($report));
         $report->update(['status' => 'acknowledged']);
 
 
@@ -131,7 +131,7 @@ class AnimalAbuseReportController extends Controller
         $report = AnimalAbuseReport::findOrFail($request->report_id);
 
         // Send email to the user who reported
-        Mail::to($report->user->email)->send(new AbuseReportRejected($report));
+        Mail::to($report->user->email)->queue(new AbuseReportRejected($report));
         $report->update(['status' => 'rejected']);
 
         return redirect()->back()
