@@ -1,48 +1,33 @@
-<x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900">Manage Pet Adoption Applications</h1>
+<x-transactions-layout>
+  <div class="flex flex-col flex-wrap gap-x-4 gap-y-6">
+    @if ($adoptionApplications->isEmpty())
+    <div class="w-full text-center text-gray-500 text-lg">
+      No adoption applications found.
+    </div>
+    @else
 
-  <div class="bg-white p-6 shadow-md rounded-lg mt-4">
-    {{-- Filter Section --}}
-    <div class="flex flex-wrap gap-2 mb-4">
+    <!-- Filters Section -->
+    <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
       <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+
         <!-- Status Filter -->
         <select name="status"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
           onchange="this.form.submit()">
-          <option value="">All Applications</option>
-          <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
-            To Be Scheduled
+          <option value="">All Statuses</option>
+          <option value="to be picked up" {{ request('status')=='to be picked up' ? 'selected' : '' }}>To be picked up
           </option>
-          <option value="to be picked up" {{ request('status')==='to be picked up' ? 'selected' : '' }}>
-            To Be Picked Up
+          <option value="to be scheduled" {{ request('status')=='to be scheduled' ? 'selected' : '' }}>To be scheduled
           </option>
-          <option value="picked up" {{ request('status')==='picked up' ? 'selected' : '' }}>
-            Picked Up
+          <option value="picked up" {{ request('status')=='picked up' ? 'selected' : '' }}>Picked up
           </option>
-          <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
-            Rejected
-          </option>
+          <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
         </select>
 
-        <select name="direction"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
-          onchange="this.form.submit()">
-          <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>
-            Newest First
-          </option>
-          <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>
-            Oldest First
-          </option>
-        </select>
       </form>
     </div>
 
-    @if($adoptionApplications->isEmpty())
-    <div class="flex items-center justify-center p-6 text-gray-500">
-      <p class="text-lg">No adoption applications found.</p>
-    </div>
-    @else
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
       @foreach($adoptionApplications as $application)
       <div
         class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
@@ -93,10 +78,10 @@
           <div class="flex items-center justify-between">
             <span class="text-sm font-medium text-gray-500">Status</span>
             <span class="px-2 py-1 text-xs rounded 
-                    {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                    {{ $application->status === 'to be picked up' ? 'bg-green-100 text-green-700' : '' }}
-                    {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
-                    {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
+                      {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                      {{ $application->status === 'to be picked up' ? 'bg-green-100 text-green-700' : '' }}
+                      {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
+                      {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
               {{ ucfirst($application->status) }}
             </span>
           </div>
@@ -116,35 +101,39 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="bg-gray-50 px-4 py-3 flex justify-between space-x-2">
-          @if ($application->status === 'to be picked up')
-          <form method="POST" action="/admin/adoption-applications/pickedup" class="w-full">
-            @csrf
-            @method('PATCH')
-            <input type="hidden" name="application_id" value="{{ $application->id }}">
-            <button type="submit" class="w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-400">
-              Mark as Picked Up
+        <!-- Button Section (Fixed at the Bottom) -->
+        <div class="p-4 pt-0">
+          @if ($application->status === 'to be picked up' || $application->status === 'to be scheduled')
+          <div class="flex items-center gap-2">
+            <button
+              class="flex-1 w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm disabled cursor-not-allowed">
+              {{ $application->status === 'to be picked up' ? 'Pick-up on ' . $application->pickup_date->format('M d,
+              Y') : 'To be scheduled' }}
             </button>
-          </form>
-          @elseif ($application->status !== 'picked up' && $application->status !== 'rejected')
-          <button class="flex-1 bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-400 approve-btn"
-            data-id="{{ $application->id }}" data-pickup="{{ $application->pickup_date }}">
-            {{ $application->pickup_date ? 'Reschedule' : 'Approve' }}
-          </button>
-          <button class="flex-1 bg-red-500 text-white px-3 py-2 rounded-md text-sm hover:bg-red-400 reject-btn"
-            data-id="{{ $application->id }}">
-            Reject
-          </button>
+            <button onclick="openCancelModal({{ $application->id }})"
+              class="bg-red-500 text-white px-3 py-2 rounded-md text-sm">
+              Cancel
+            </button>
+          </div>
           @elseif ($application->status === 'rejected')
-          <button class="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
-            disabled>
-            Rejected
-          </button>
-          @else
+          <div class="flex items-center gap-2">
+            <button class="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed">
+              Rejected
+            </button>
+            <button onclick="openCancelModal({{ $application->id }})"
+              class="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm">
+              Delete
+            </button>
+          </div>
+          @elseif ($application->status === 'picked up')
           <button class="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
             disabled>
             Picked Up
+          </button>
+          @else
+          <button class="w-full bg-gray-500 text-white  px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+            disabled>
+            Pending for Approval
           </button>
           @endif
         </div>
@@ -152,12 +141,33 @@
       @endforeach
     </div>
 
-    <!-- Pagination -->
-    <div class="mt-6">
-      {{ $adoptionApplications->links() }}
-    </div>
     @endif
   </div>
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    {{ $adoptionApplications->appends(request()->except('page'))->links() }}
+  </div>
+
+  @if(!$adoptionApplications->isEmpty())
+  <!-- Cancel/Delete Confirmation Modal -->
+  <div id="cancelModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+      <h2 class="text-lg font-semibold mb-4">Confirm Action</h2>
+      <p class="text-sm text-gray-600">Are you sure you want to cancel/delete this adoption request?</p>
+
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="closeCancelModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
+
+        <form id="deleteForm" method="POST" action="{{ url('/transactions/' . $application->id) }}">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  @endif
 
   <!-- Pet Info Modal -->
   <div id="petInfoModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
@@ -188,7 +198,6 @@
     </div>
   </div>
 
-
   <!-- Adopter Info Modal -->
   <div id="adopterInfoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -209,66 +218,4 @@
 
     </div>
   </div>
-
-  <!-- Approve Modal -->
-  <div id="approveModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-
-      <!-- Close Button -->
-      <button type="button" id="closeApproveModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x text-xl"></i> <!-- Phosphor Icons -->
-      </button>
-
-      <h2 class="text-xl font-semibold text-gray-800">Approve Adoption</h2>
-      <p class="mb-4">Contact the adopter and set a pickup schedule:</p>
-
-      <!-- Form -->
-      <form id="approveForm" method="POST" action="/admin/adoption-applications/approve">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="application_id" id="applicationId">
-
-        <!-- Date Input -->
-        <label for="pickupDate" class="block font-medium text-gray-700">Pickup Date:</label>
-        <input type="date" id="pickupDate" name="pickup_date" class="w-full border p-2 rounded-md mb-4" required>
-        <x-form-error name="pickup_date" />
-
-        <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md w-full">
-          Submit
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Reject Modal -->
-  <div id="rejectModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-
-      <!-- Close Button -->
-      <button type="button" id="closeRejectModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x text-xl"></i>
-      </button>
-
-      <h2 class="text-xl font-semibold text-gray-800">Reject Adoption</h2>
-      <p class="mb-4">Please provide a reason for rejecting this application:</p>
-
-      <!-- Form -->
-      <form id="rejectForm" method="POST" action="/admin/adoption-applications/reject">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="application_id" id="rejectApplicationId">
-
-        <!-- Rejection Reason -->
-        <label for="rejectReason" class="block font-medium text-gray-700">Reason:</label>
-        <textarea id="rejectReason" name="reject_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
-        <x-form-error name="reject_reason" />
-
-        <button type="submit" class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md w-full">
-          Submit
-        </button>
-      </form>
-    </div>
-  </div>
-
-
-</x-admin-layout>
+</x-transactions-layout>

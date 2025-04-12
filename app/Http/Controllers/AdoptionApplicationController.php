@@ -8,13 +8,15 @@ use App\Models\Pet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AdoptionApplicationController extends Controller
 {
     public function index()
     {
-        $sort = request('sort', 'created_at'); // Default sorting column
-        $direction = request('direction', 'desc'); // Default sorting direction
+        // Default sorting: newest first (created_at desc)
+        $sort = request('sort', 'created_at');
+        $direction = request('direction', 'desc');
 
         // Ensure only valid columns are used to prevent SQL injection
         $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color', 'status'];
@@ -22,9 +24,22 @@ class AdoptionApplicationController extends Controller
             $sort = 'created_at';
         }
 
-        $adoptionApplications = AdoptionApplication::with(['pet', 'user'])
-            ->orderBy($sort, $direction)
-            ->paginate(10);
+        $query = AdoptionApplication::with(['pet', 'user']);
+
+        // Status Filter - default is 'picked up'
+        if (request()->filled('status')) {
+            $status = request('status');
+            if ($status === 'active') {
+                $query->whereIn('status', ['to be scheduled', 'to be picked up']);
+            } elseif ($status === 'all') {
+                // No status filter applied
+            } else {
+                $query->where('status', $status);
+            }
+        }
+
+        $adoptionApplications = $query->orderBy($sort, $direction)
+            ->paginate(9);
 
         return view('admin.adoption-applications', compact('adoptionApplications'));
     }
@@ -71,6 +86,8 @@ class AdoptionApplicationController extends Controller
         $validated['address'] = ucfirst(trim($validated['address']));
         $validated['civil_status'] = ucfirst(trim($validated['civil_status']));
         $validated['citizenship'] = ucfirst(trim($validated['citizenship']));
+
+        $validated['transaction_number'] = $this->generateUniqueTransactionNumber();
 
         // Create the adoption application
         AdoptionApplication::create([
@@ -135,5 +152,16 @@ class AdoptionApplicationController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Adoption application rejected.');
+    }
+
+    private function generateUniqueTransactionNumber()
+    {
+        do {
+            $date = now()->format('Ymd');
+            $random = strtoupper(Str::random(3)) . rand(100, 999);
+            $transactionNumber = "AP{$date}{$random}";
+        } while (AdoptionApplication::where('transaction_number', $transactionNumber)->exists());
+
+        return $transactionNumber;
     }
 }

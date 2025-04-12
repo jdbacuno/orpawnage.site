@@ -2,39 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\AdoptionApplication;
+use App\Models\AnimalAbuseReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    public function adoption()
+    public function adoption(Request $request)
     {
-        $query = AdoptionApplication::with('pet')
-            ->where('user_id', Auth::id());
+        $status = $request->get('status');
+        $userId = Auth::id();
 
-        if (request()->has('status') && in_array(request('status'), ['to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
-            $query->where('status', request('status'));
+        $query = AdoptionApplication::with('pet')->where('user_id', $userId);
+
+        if ($status && in_array($status, ['to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
+            $query->where('status', $status);
         }
 
-        $adoptionApplications = $query->orderByRaw("
+        $applications = $query->orderByRaw("
             CASE status
                 WHEN 'to be picked up' THEN 0
                 WHEN 'to be scheduled' THEN 1
                 WHEN 'picked up' THEN 2
                 ELSE 3
             END
-        ")->paginate(10);
+        ")->latest()->paginate(9);
 
+        return view('transactions.adoptions', [
+            'adoptionApplications' => $applications,
+            'status' => $status,
+        ]);
+    }
 
-        return view('transactions', compact('adoptionApplications'));
+    public function surrender(Request $request)
+    {
+        // Similar structure for surrender applications
+        $userId = Auth::id();
+        $applications = []; // Replace with your actual query
+
+        return view('transactions.surrender', [
+            'applications' => $applications,
+        ]);
+    }
+
+    public function missing(Request $request)
+    {
+        // Similar structure for missing pet reports
+        $userId = Auth::id();
+        $applications = []; // Replace with your actual query
+
+        return view('transactions.missing', [
+            'applications' => $applications,
+        ]);
+    }
+
+    public function abused(Request $request)
+    {
+        $userId = Auth::id();
+        $applications = AnimalAbuseReport::where('user_id', $userId)->latest()->paginate(9);
+
+        return view('transactions.abused', [
+            'abusedReports' => $applications,
+        ]);
     }
 
     public function destroy(AdoptionApplication $application)
     {
         $application->delete();
-
         return redirect()->back()->with('success', 'Adoption request deleted successfully.');
     }
 }

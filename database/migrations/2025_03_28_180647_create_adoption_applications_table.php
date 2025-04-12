@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('civil_status');
             $table->string('citizenship');
             $table->enum('status', ['to be scheduled', 'to be picked up', 'picked up', 'rejected'])->default('to be scheduled');
+            $table->string('transaction_number')->unique(); // ← Add this line
             $table->text('reject_reason')->nullable();
             $table->date('pickup_date')->nullable(); // Allows NULL for "Not set"
             $table->timestamps();

@@ -237,7 +237,7 @@ class PetController extends Controller
         $pet = Pet::create($validated); // 🔥 FIX: Assign the created pet to a variable
 
         return redirect()->back()->with([
-            'add_success' => '<a class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $pet->pet_number . '</a>',
+            'add_success' => '<a class="text-blue-500" target="_blank" href="/services/' . $pet->slug . '/adoption-form">#' . $pet->pet_number . '</a>',
             'modal_open' => null // Keep modal open on success
         ]);
     }
@@ -313,7 +313,7 @@ class PetController extends Controller
         return redirect()->to(url()->previous()) // Redirect to the previous page
             ->with([
                 'edit_pet_id' => $pet->id,
-                'edit_success' => '<a class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $validated['pet_number'] . '</a>',
+                'edit_success' => '<a target="_blank" class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $validated['pet_number'] . '</a>',
                 'modal_open' => null, // Close the modal
             ]);
     }

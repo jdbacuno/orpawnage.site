@@ -48,19 +48,19 @@
   <!-- ========== END OF HERO SECTION ========== -->
 
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-yellow-500 py-16">
+  <section class="bg-yellow-500/60 py-16">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
-      <div class="text-black flex flex-col justify-center items-center mb-6 gap-10" id="pets">
+      <div class="text-black flex flex-col items-center mb-6 gap-10" id="pets">
         <h2 class="text-4xl font-extrabold text-black">
           Available Pets for Adoption
         </h2>
         <!-- Filters Section -->
-        <div class="flex flex-wrap gap-4 items-center justify-center">
+        <div class="flex flex-wrap gap-4 items-center mr-auto">
           <form method="GET" action="{{ request()->url() }}#pets" class="flex flex-wrap gap-4">
             <!-- Species Filter -->
             <select name="species"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]"
               onchange="this.form.submit()">
               <option value="">All Species</option>
               <option value="feline" {{ request('species')=='feline' ? 'selected' : '' }}>Cats</option>
@@ -69,7 +69,7 @@
 
             <!-- Gender Filter -->
             <select name="sex"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]"
               onchange="this.form.submit()">
               <option value="">All Genders</option>
               <option value="male" {{ request('sex')=='male' ? 'selected' : '' }}>Male</option>
@@ -90,7 +90,7 @@
 
             <!-- Color Filter -->
             <select name="color"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[100px]"
               onchange="this.form.submit()">
               <option value="">All Colors</option>
               <option value="black" {{ request('color')=='black' ? 'selected' : '' }}>Black</option>
@@ -130,6 +130,12 @@
               </select>
             </div>
 
+            <!-- Reset Filters Button -->
+            <a href="{{ request()->url() }}"
+              class="bg-gray-200 hover:bg-gray-300 border border-black text-center text-gray-800 px-4 py-2.5 rounded-lg text-sm min-w-[150px]">
+              Reset Filters
+            </a>
+
             <!-- Filter Button -->
             {{-- <button type="submit"
               class="px-4 py-2 bg-orange-400 text-white font-bold rounded-lg hover:bg-yellow-500 transition">
@@ -149,14 +155,18 @@
         <div
           class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col">
           <a href="/services/{{ $pet->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
-            <img class="rounded-t-lg h-60 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
+            <img class="rounded-t-lg h-40 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
               src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" />
           </a>
           <div class="p-5 flex flex-col flex-grow">
-            <h5 class="text-lg font-bold text-gray-900 dark:text-white">Pet #{{ $pet->pet_number }}</h5>
-            <p class="text-sm text-gray-600">{{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) . ' - ' :
-              '' }}{{
-              ucfirst($pet->species) }}</p>
+            <div class="flex justify-between items-center">
+              <p class="text-lg text-gray-600 font-bold">{{ strtolower($pet->pet_name) !== 'n/a' ?
+                ucwords($pet->pet_name) : 'Unnamed' }}</p>
+              <span
+                class="bg-yellow-500 text-sm text-black py-1 px-2 rounded rounded-lg flex items-center justify-center font-bold">
+                {{ $pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}</span>
+            </div>
+
             <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
               <ul>
                 <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age == 1 ?

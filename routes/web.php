@@ -32,7 +32,15 @@ Route::middleware('auth')->group(function () {
         return view('abused-stray-form');
     })->name('Report an Abuse / Stray Animal');
 
-    Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Transactions Status');
+    Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
+
+    Route::prefix('transactions')->group(function () {
+        Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
+        Route::get('/surrender-status', [TransactionController::class, 'surrender'])->name('Surrender Applications Status');
+        Route::get('/missing-status', [TransactionController::class, 'missing'])->name('Missing Reports Status');
+        Route::get('/abused-status', [TransactionController::class, 'abused'])->name('Abused/Stray Reports Status');
+    });
+
     Route::delete('/transactions/{application}', [TransactionController::class, 'destroy']);
 
     Route::view('/about', 'about')->name('About Us');

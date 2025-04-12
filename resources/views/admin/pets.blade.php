@@ -103,7 +103,7 @@
         <form method="GET" action="{{ request()->url() }}#pets" class="flex flex-wrap gap-4">
           <!-- Species Filter -->
           <select name="species"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] sm:min-w-[120px]"
             onchange="this.form.submit()">
             <option value="">All Species</option>
             <option value="feline" {{ request('species')=='feline' ? 'selected' : '' }}>Cats</option>
@@ -112,7 +112,7 @@
 
           <!-- Sex Filter -->
           <select name="sex"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] sm:min-w-[120px]"
             onchange="this.form.submit()">
             <option value="">All Sexes</option>
             <option value="male" {{ request('sex')=='male' ? 'selected' : '' }}>Male</option>
@@ -131,7 +131,7 @@
 
           <!-- Color Filter -->
           <select name="color"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] sm:min-w-[120px]"
             onchange="this.form.submit()">
             <option value="">All Colors</option>
             <option value="black" {{ request('color')=='black' ? 'selected' : '' }}>Black</option>
@@ -150,7 +150,7 @@
 
           <!-- Source Filter -->
           <select name="source"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] sm:min-w-[120px]"
             onchange="this.form.submit()">
             <option value="">All Sources</option>
             <option value="surrendered" {{ request('source')=='surrendered' ? 'selected' : '' }}>Surrendered</option>
@@ -159,7 +159,7 @@
 
           <!-- Adoption Status Filter -->
           <select name="adoption_status"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] sm:min-w-[120px]"
             onchange="this.form.submit()">
             <option value="">All Statuses</option>
             <option value="available" {{ request('adoption_status')=='available' ? 'selected' : '' }}>Available</option>
@@ -179,6 +179,12 @@
             <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest First
             </option>
           </select>
+
+          <!-- Reset Filters Button -->
+          <a href="{{ request()->url() }}"
+            class="bg-gray-200 hover:bg-gray-300 text-center text-gray-800 px-4 py-2.5 border border-gray-400 rounded-lg text-sm ">
+            Reset Filters
+          </a>
         </form>
       </div>
     </div>
@@ -259,7 +265,7 @@
           if ($pet->adoptionApplication) {
           if (in_array($pet->adoptionApplication->status ?? null, ['to be picked up', 'to be scheduled'])) {
           $disableDelete = true;
-          $tooltipMessage = 'Cannot delete - ' . ucwords($pet->adoptionApplication->status);
+          $tooltipMessage = 'In Process for Adoption';
           }
           }
           @endphp
