@@ -9,7 +9,7 @@
         <select name="status"
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
           onchange="this.form.submit()">
-          <option value="">All Applications</option>
+          <option value="">All Statuses</option>
           <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
             To Be Scheduled
           </option>
