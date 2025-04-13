@@ -1,10 +1,10 @@
 <x-layout>
   <!-- ========== START OF SECTION ========== -->
-  <section class="flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
+  <section class="bg-yellow-500/40 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
     <!-- Left Side: Form -->
     <div class="w-full md:w-1/2 flex justify-center items-center px-2 pt-6 sm:p-4">
-      <div class="max-w-2xl w-full bg-white p-6">
-        <h2 class="text-3xl font-bold text-orange-400 mb-6 text-left">
+      <div class="max-w-2xl w-full p-6">
+        <h2 class="text-3xl font-bold text-black mb-6 text-left">
           Report an Incident of Abused/Stray Animal
         </h2>
         <form action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data">
@@ -35,27 +35,27 @@
           <!-- Two-column layout -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <!-- Reporter's Info -->
-            <div class="space-y-4">
+            <div class="space-y-2">
               <h3 class="text-sm font-semibold text-gray-500 mb-1">Reporter's Information</h3>
 
               <div>
                 <label class="block text-gray-700 font-medium">Reporter's Name (Optional)</label>
                 <input type="text" name="full_name" value="{{ old('full_name') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" placeholder="Fullname (optional)" />
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="Fullname (optional)" />
                 <x-form-error name="full_name" />
               </div>
 
               <div>
                 <label class="block text-gray-700 font-medium">Contact No.</label>
                 <input type="tel" name="contact_no" value="{{ old('contact_no') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" placeholder="Contact number" required />
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="Contact number" required />
                 <x-form-error name="contact_no" />
               </div>
 
               <div>
                 <label class="block text-gray-700 font-medium">Location of Incident</label>
                 <input type="text" name="incident_location" value="{{ old('incident_location') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" placeholder="Location of Incident"
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="Location of Incident"
                   required />
                 <x-form-error name="incident_location" />
               </div>
@@ -63,7 +63,7 @@
               <div>
                 <label class="block text-gray-700 font-medium">Date of Incident</label>
                 <input type="date" name="incident_date" value="{{ old('incident_date') }}" max="{{ date('Y-m-d') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" required />
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" required />
                 <x-form-error name="incident_date" />
               </div>
             </div>
@@ -75,7 +75,7 @@
               <div>
                 <label class="block text-gray-700 font-medium">Type of Animal</label>
                 <input type="text" name="species" value="{{ old('species') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" placeholder="e.g. dog, cat, monkey..."
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="e.g. dog, cat, monkey..."
                   required />
                 <x-form-error name="species" />
               </div>
@@ -83,14 +83,14 @@
               <div>
                 <label class="block text-gray-700 font-medium">Condition of Animal</label>
                 <input type="text" name="animal_condition" value="{{ old('animal_condition') }}"
-                  class="w-full p-3 border rounded-md focus:border-orange-500" placeholder="Condition of Animal"
+                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="Condition of Animal"
                   required />
                 <x-form-error name="animal_condition" />
               </div>
 
               <div>
                 <label class="block text-gray-700 font-medium">Additional Notes</label>
-                <textarea name="additional_notes" class="w-full p-3 border rounded-md focus:border-orange-500"
+                <textarea name="additional_notes" class="w-full px-3 py-2 rounded-lg border focus:border-black"
                   placeholder="Additional notes" required>{{ old('additional_notes') }}</textarea>
                 <x-form-error name="additional_notes" />
               </div>
@@ -98,7 +98,7 @@
               <div>
                 <label class="block text-gray-700 font-medium">Upload a Photo of Proof (if there's any)</label>
                 <input type="file" name="incident_photo"
-                  class="w-full py-0 border rounded-md focus:border-orange-500 file:bg-gray-400 file:border-0 file:text-white"
+                  class="w-full py-0 border rounded-lg border focus:border-black file:bg-gray-400 file:border-0 file:text-white"
                   required />
                 <x-form-error name="incident_photo" />
               </div>
@@ -108,7 +108,7 @@
           <!-- Submit Button -->
           <div class="flex justify-center md:justify-end">
             <button type="submit"
-              class="w-full md:w-auto bg-orange-400 text-white font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition">
+              class="w-full md:w-auto bg-orange-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-orange-400 transition">
               Submit Report
             </button>
           </div>

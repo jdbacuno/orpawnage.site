@@ -65,7 +65,7 @@
                   </div>
                   <!-- Password -->
                   <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                    <label class="mb-1 block text-sm font-medium text-gray-700">
                       Password<span class="text-error-500">*</span>
                     </label>
                     <div x-data="{ showPassword: false }" class="relative">
@@ -91,6 +91,10 @@
                     </div>
                     <x-form-error name="password" />
                   </div>
+
+                  <p class="text-sm font-normal text-right text-gray-700">
+                    <a href="/forgot-password" class="text-brand-500 hover:text-brand-600">Forgot Password?</a>
+                  </p>
 
                   <!-- Button -->
                   <div class="mt-10">

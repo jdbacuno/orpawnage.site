@@ -47,7 +47,7 @@
   <!-- ========== END OF HERO SECTION ========== -->
 
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-yellow-500/60 py-16">
+  <section class="bg-yellow-500 py-16">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex flex-col items-center mb-6 gap-10" id="pets">

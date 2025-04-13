@@ -4,6 +4,7 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AnimalAbuseReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedPetController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -125,6 +126,21 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         Route::patch('/contact', [SettingsController::class, 'adminUpdateContact'])->name('admin.settings.contact.update');
         Route::delete('/', [SettingsController::class, 'adminDeleteAccount'])->name('admin.settings.delete');
     });
+});
+
+// Password Reset Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->name('password.update');
 });
 
 // for all undefined routes
