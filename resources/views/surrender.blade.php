@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="h-screen flex items-center bg-gray-100 dark:bg-gray-900">
+  <section class="h-screen flex items-center bg-gray-100">
     <div class="grid grid-cols-1 md:grid-cols-2 w-full h-full">
       <!-- LEFT SIDE: Pet Image -->
       <div class="h-full w-full overflow-hidden">
@@ -9,11 +9,11 @@
 
       <!-- RIGHT SIDE: Slogan and CTA -->
       <div class="bg-yellow-400 flex flex-col justify-center items-start p-10 md:p-20">
-        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
           Need a <span class="text-orange-500">New Home</span> for Your Pet?
           Lorem ipsum dolor sit amet
         </h1>
-        <!-- <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+        <!-- <p class="mt-4 text-lg text-gray-600">
           Find your pet a new family to love.
         </p>
         <a
@@ -55,12 +55,12 @@
     <form action="#" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Left Side: Surrenderer's Info -->
       <div class="space-y-6">
-        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
           Surrenderer's Information
         </h3>
 
         <div>
-          <label for="surrenderer-name" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="surrenderer-name" class="block text-gray-700 font-semibold mb-1">
             Surrenderer's Name
           </label>
           <input type="text" id="surrenderer-name" name="surrenderer_name" placeholder="Enter your full name"
@@ -68,7 +68,7 @@
         </div>
 
         <div>
-          <label for="address" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="address" class="block text-gray-700 font-semibold mb-1">
             Address
           </label>
           <input type="text" id="address" name="address" placeholder="Enter your address"
@@ -76,7 +76,7 @@
         </div>
 
         <div>
-          <label for="contact" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="contact" class="block text-gray-700 font-semibold mb-1">
             Contact No.
           </label>
           <input type="tel" id="contact" name="contact_no" placeholder="Enter your contact number"
@@ -89,12 +89,12 @@
 
       <!-- Right Side: Pet Info -->
       <div class="space-y-6">
-        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
           Animal's Information
         </h3>
 
         <div>
-          <label for="name" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="name" class="block text-gray-700 font-semibold mb-1">
             Animal's Name (Optional)
           </label>
           <input type="text" id="name" name="name" placeholder="Enter the pet's name (Optional)"
@@ -102,7 +102,7 @@
         </div>
 
         <div>
-          <label for="species" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="species" class="block text-gray-700 font-semibold mb-1">
             Species (Dog, Cat, etc.)
           </label>
           <input type="text" id="species" name="species" placeholder="Enter the species"
@@ -110,7 +110,7 @@
         </div>
 
         <div>
-          <label for="breed" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="breed" class="block text-gray-700 font-semibold mb-1">
             Breed
           </label>
           <input type="text" id="breed" name="breed" placeholder="Enter the breed (optional)"
@@ -118,7 +118,7 @@
         </div>
 
         <div>
-          <label for="sex" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="sex" class="block text-gray-700 font-semibold mb-1">
             Sex
           </label>
           <select id="sex" name="sex" class="w-full p-3 border rounded-md shadow-sm focus:border-orange-500" required>
@@ -130,7 +130,7 @@
         </div>
 
         <div>
-          <label for="reason" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">
+          <label for="reason" class="block text-gray-700 font-semibold mb-1">
             Reason for Surrendering
           </label>
           <textarea id="reason" name="reason" placeholder="Explain the reason"

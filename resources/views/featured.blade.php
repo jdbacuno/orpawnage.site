@@ -19,8 +19,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
           @foreach ($featuredPets as $featured)
           <!-- CARD -->
-          <div
-            class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col">
+          <div class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md flex flex-col">
             <a href="/services/{{ $featured->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
               <img
                 class="rounded-t-lg h-40 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
@@ -35,7 +34,7 @@
                   {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}</span>
               </div>
 
-              <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
+              <div class="mt-2 text-gray-800 text-sm truncate pb-6">
                 <ul>
                   {{-- <li><span class="text-md text-black font-bold">Adoption Likelihood:</span> {{
                     number_format($featured->adoption_probability * 100, 1) }}%</li> --}}

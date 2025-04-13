@@ -1,14 +1,14 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="bg-gray-50 dark:bg-gray-900 py-20 md:pt-28">
+  <section class="bg-gray-50 py-20 md:pt-28">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
       <div class="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
+        <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
           Lorem ipsum dolor
           <span class="text-orange-500">Or<span class="text-yellow-500">PAW</span>nage</span>
         </h1>
-        <p class="mt-4 text-gray-600 dark:text-gray-400">
+        <p class="mt-4 text-gray-600">
           Browse through hundreds of pets looking for a new home. Give them
           a second chance at life.
         </p>
@@ -16,12 +16,11 @@
         <!-- SEARCH BAR -->
         <div class="mt-6">
           <form class="max-w-md mx-auto">
-            <label for="default-search"
-              class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 20 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
@@ -152,8 +151,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
         @foreach ($pets as $pet)
         <!-- CARD -->
-        <div
-          class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 flex flex-col">
+        <div class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md flex flex-col">
           <a href="/services/{{ $pet->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
             <img class="rounded-t-lg h-40 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
               src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" />
@@ -167,7 +165,7 @@
                 {{ $pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}</span>
             </div>
 
-            <div class="mt-2 text-gray-800 dark:text-gray-400 text-sm truncate pb-6">
+            <div class="mt-2 text-gray-800 text-sm truncate pb-6">
               <ul>
                 <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age == 1 ?
                   Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old</li>
@@ -197,7 +195,7 @@
       @endif
 
 
-      <hr class="my-6 border-gray-400/50 sm:mx-auto dark:border-gray-700 lg:my-8" />
+      <hr class="my-6 border-gray-400/50 sm:mx-auto lg:my-8" />
 
       <!-- Tailwind Pagination -->
       @if ($pets->count() > 0)

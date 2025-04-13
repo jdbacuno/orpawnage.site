@@ -1,6 +1,6 @@
 <x-auth-layout>
   <!-- ===== Page Wrapper Start ===== -->
-  <div class="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
+  <div class="relative p-6 bg-white z-1 sm:p-0">
     <div class="flex flex-col justify-center w-full h-screen py-10 lg:flex-row">
       <!-- Form -->
       <div class="flex flex-col flex-1 w-full lg:w-1/2 overflow-y-auto py-8">
@@ -9,10 +9,10 @@
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-20 mx-auto" alt="Flowbite Logo" />
           </div>
           <div class="mb-5 sm:mb-8">
-            <h1 class="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+            <h1 class="mb-2 font-semibold text-gray-800 text-title-sm sm:text-title-md">
               Sign Up
             </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-gray-500">
               Enter your email and password to sign up!
             </p>
           </div>
@@ -20,7 +20,7 @@
           <div>
             <div class="grid grid-cols-1 gap-3">
               <button
-                class="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+                class="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M18.7511 10.1944C18.7511 9.47495 18.6915 8.94995 18.5626 8.40552H10.1797V11.6527H15.1003C15.0011 12.4597 14.4654 13.675 13.2749 14.4916L13.2582 14.6003L15.9087 16.6126L16.0924 16.6305C17.7788 15.1041 18.7511 12.8583 18.7511 10.1944Z"
@@ -40,10 +40,10 @@
             </div>
             <div class="relative py-3 sm:py-5">
               <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                <div class="w-full border-t border-gray-200"></div>
               </div>
               <div class="relative flex justify-center text-sm">
-                <span class="p-2 text-gray-400 bg-white dark:bg-gray-900 sm:px-5 sm:py-2">Or</span>
+                <span class="p-2 text-gray-400 bg-white sm:px-5 sm:py-2">Or</span>
               </div>
             </div>
 
@@ -51,8 +51,7 @@
               @csrf
 
               @if (session('success'))
-              <div id="alert-3"
-                class="flex items-center p-4 my-3 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 sm:col-span-7"
+              <div id="alert-3" class="flex items-center p-4 my-3 text-green-800 rounded-lg bg-green-50 sm:col-span-7"
                 role="alert">
                 <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                   viewBox="0 0 20 20">
@@ -64,7 +63,7 @@
                   {!! session('success') !!}
                 </div>
                 <button type="button"
-                  class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+                  class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
                   data-dismiss-target="#alert-3" aria-label="Close" id="triggerElement">
                   <span class="sr-only">Close</span>
                   <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -79,7 +78,7 @@
               <div class="space-y-5">
                 <!-- User Name -->
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Username<span class="text-error-500">*</span>
                   </label>
                   <input type="text" id="username" name="username" placeholder="Enter your username"
@@ -91,7 +90,7 @@
 
                 <!-- Email -->
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Email<span class="text-error-500">*</span>
                   </label>
                   <input type="email" id="email" name="email" placeholder="Enter your email"
@@ -103,7 +102,7 @@
 
                 <!-- Email -->
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Contact no.<span class="text-error-500">*</span>
                   </label>
                   <input type="tel" id="contactno" name="contact_number"
@@ -115,15 +114,15 @@
                 </div>
                 <!-- Password -->
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Password<span class="text-error-500">*</span>
                   </label>
                   <div x-data="{ showPassword: false }" class="relative">
                     <input :type="showPassword ? 'text' : 'password'" name="password" placeholder="Enter your password"
-                      class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                      class="h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10"
                       value="{{ old('password') }}" required />
                     <span @click="showPassword = !showPassword"
-                      class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-400">
+                      class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2">
                       <svg x-show="!showPassword" class="fill-current" width="20" height="20" viewBox="0 0 20 20"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -143,15 +142,15 @@
 
                 <!-- Confirm Password -->
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Repeat Password<span class="text-error-500">*</span>
                   </label>
                   <div x-data="{ showPassword: false }" class="relative">
                     <input :type="showPassword ? 'text' : 'password'" placeholder="Enter your password"
                       name="password_confirmation"
-                      class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10" />
+                      class="h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10" />
                     <span @click="showPassword = !showPassword"
-                      class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-400">
+                      class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2">
                       <svg x-show="!showPassword" class="fill-current" width="20" height="20" viewBox="0 0 20 20"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -180,9 +179,9 @@
               </div>
             </form>
             <div class="mt-5">
-              <p class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
+              <p class="text-sm font-normal text-center text-gray-700 sm:text-start">
                 Already have an account?
-                <a href="/login" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Sign In</a>
+                <a href="/login" class="text-brand-500 hover:text-brand-600">Sign In</a>
               </p>
             </div>
           </div>

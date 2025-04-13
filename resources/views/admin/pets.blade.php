@@ -5,7 +5,7 @@
     <!-- Successful Add -->
     @if(session('add_success') && !session('modal_open'))
     <div id="alert-3"
-      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 sm:col-span-7 edit-success w-full md:w-1/2"
+      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 sm:col-span-7 edit-success w-full md:w-1/2"
       role="alert">
       <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
         viewBox="0 0 20 20">
@@ -17,7 +17,7 @@
         Pet {!! session('add_success') !!} has been added successfully!
       </div>
       <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
         data-dismiss-target="#alert-3" aria-label="Close" class="dismiss-btn">
         <span class="sr-only">Close</span>
         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -31,7 +31,7 @@
     <!-- Successful Update -->
     @if(session('edit_success') && !session('modal_open'))
     <div id="alert-3"
-      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 sm:col-span-7 edit-success w-full md:w-1/2"
+      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 sm:col-span-7 edit-success w-full md:w-1/2"
       role="alert">
       <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
         viewBox="0 0 20 20">
@@ -43,7 +43,7 @@
         Pet {!! session('edit_success') !!} has been updated!
       </div>
       <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
         data-dismiss-target="#alert-3" aria-label="Close" class="dismiss-btn">
         <span class="sr-only">Close</span>
         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -57,7 +57,7 @@
     <!-- Successful Add -->
     @if(session('delete_success') && !session('modal_open'))
     <div id="alert-3"
-      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 sm:col-span-7 edit-success w-full md:w-1/2"
+      class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 sm:col-span-7 edit-success w-full md:w-1/2"
       role="alert">
       <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
         viewBox="0 0 20 20">
@@ -69,7 +69,7 @@
         {{ session('delete_success') }}
       </div>
       <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
         data-dismiss-target="#alert-3" aria-label="Close" class="dismiss-btn">
         <span class="sr-only">Close</span>
         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">

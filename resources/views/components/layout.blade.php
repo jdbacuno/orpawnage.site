@@ -89,12 +89,11 @@
   <div class="bg-white">
     <header class="absolute inset-x-0 top-0 z-50">
       <!-- ========== START OF NAVBAR ========== -->
-      <nav
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <nav class="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400 dark:text-white">Or<strong
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400">Or<strong
                 class="text-yellow-500">PAW</strong>nage</span>
           </a>
 
@@ -113,12 +112,11 @@
               </svg>
             </button>
             <!-- Dropdown menu -->
-            <div
-              class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-md dark:bg-gray-700 dark:divide-gray-600"
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-md"
               id="user-dropdown">
               <div class="px-4 py-3">
-                <span class="block text-sm text-gray-900 dark:text-white">Your Account</span>
-                <span class="block text-sm text-gray-500 truncate dark:text-gray-400 truncate">
+                <span class="block text-sm text-gray-900">Your Account</span>
+                <span class="block text-sm text-gray-500 truncate truncate">
                   @if (Auth::check())
                   {{ Auth::user()->email }}
                   @endif
@@ -128,23 +126,20 @@
                 @if (Auth::user()->isAdmin)
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-grid-four"></i>
-                  <a href="/admin" target="_blank"
-                    class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Go to
+                  <a href="/admin" target="_blank" class="block py-2 text-sm">Go to
                     Admin Dashboard</a>
                 </li>
                 @endif
 
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-bell"></i>
-                  <a href="/transactions"
-                    class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Transaction
+                  <a href="/transactions" class="block py-2 text-sm">Transaction
                     Status</a>
                 </li>
 
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-gear"></i>
-                  <a href="/settings"
-                    class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile
+                  <a href="/settings" class="block py-2 text-sm">Profile
                     Settings</a>
                 </li>
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
@@ -153,14 +148,14 @@
                     @csrf
                     @method('DELETE')
 
-                    <button class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    <button class="block py-2 text-sm">
                       Sign Out</button>
                   </form>
                 </li>
               </ul>
             </div>
             <button data-collapse-toggle="navbar-user" type="button"
-              class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
               aria-controls="navbar-user" aria-expanded="false">
               <span class="sr-only">Open main menu</span>
               <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -172,24 +167,24 @@
           </div>
           <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
             <ul
-              class="flex flex-col font-normal p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 transition-colors duration-300">
+              class="flex flex-col font-normal p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white transition-colors duration-300">
               <!-- HOME -->
               <li>
                 <a href="/"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/') ? 'active' : '' }}">Home</a>
+                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/') ? 'active' : '' }}">Home</a>
               </li>
 
               <!-- HOME -->
               <li>
                 <a href="/featured-pets"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:rounded-sm md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
+                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
                   Pets</a>
               </li>
 
               <!-- SERVICES -->
               <li>
                 <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
+                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
                   Services
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -199,17 +194,17 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownNavbar1"
-                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 dark:divide-gray-600 transition-colors duration-300">
-                  <ul class="py-2 text-md text-gray-700 dark:text-gray-400 transition-colors duration-300"
+                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 transition-colors duration-300">
+                  <ul class="py-2 text-md text-gray-700 transition-colors duration-300"
                     aria-labelledby="dropdownLargeButton">
                     <li>
                       <a href="/services/adopt-a-pet"
-                        class="block px-4 py-2 hover:bg-orange-500 hover:text-white dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-300">Adopt
+                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Adopt
                         a Pet</a>
                     </li>
                     <li>
                       <a href="/services/surrender-an-animal"
-                        class="block px-4 py-2 hover:bg-orange-500 hover:text-white dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-300">Surrender
+                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Surrender
                         a Pet</a>
                     </li>
                   </ul>
@@ -219,7 +214,7 @@
               <!-- REPORT -->
               <li>
                 <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
+                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
                   Report
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -229,17 +224,17 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownNavbar2"
-                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 dark:bg-gray-700 dark:divide-gray-600 transition-colors duration-300">
-                  <ul class="py-2 text-md text-gray-700 dark:text-gray-400 transition-colors duration-300"
+                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-50 transition-colors duration-300">
+                  <ul class="py-2 text-md text-gray-700 transition-colors duration-300"
                     aria-labelledby="dropdownLargeButton">
                     <li>
                       <a href="/report/missing-pet"
-                        class="block px-4 py-2 hover:bg-orange-500 hover:text-white dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-300">Missing
+                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Missing
                         Pet</a>
                     </li>
                     <li>
                       <a href="/report/abused-stray-animal"
-                        class="block px-4 py-2 hover:bg-orange-500 hover:text-white dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-300">Abused
+                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Abused
                         / Stray Animal</a>
                     </li>
                   </ul>
@@ -249,14 +244,14 @@
               <!-- ABOUT US -->
               <li>
                 <a href="/about"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-blue-700 hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('about') ? 'active' : '' }}">About
+                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:bg-blue-700 hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('about') ? 'active' : '' }}">About
                   Us</a>
               </li>
 
               <!-- DONATE -->
               <li>
                 <a href="/donate"
-                  class="block py-2 px-3 text-gray-900 rounded-sm md:hover:bg-orange-500 md:hover:rounded-sm md:hover:text-orange-400 md:py-1 md:hover:text-white dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
+                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
               </li>
             </ul>
           </div>
@@ -279,7 +274,7 @@
     {{ $slot }}
 
     <!-- ========== START OF FOOTER ========== -->
-    <footer class="bg-yellow-400/10 dark:bg-gray-900 w-full mt-auto">
+    <footer class="bg-yellow-400/10 w-full mt-auto">
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-around">
           <div class="flex items-center space-x-4 mb-6 md:mb-0">
@@ -293,10 +288,10 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">
             <div>
-              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">
                 Services
               </h2>
-              <ul class="text-gray-500 dark:text-gray-400 font-medium">
+              <ul class="text-gray-500 font-medium">
                 <li class="mb-4">
                   <a href="/services/adopt-a-pet" class="hover:text-orange-500 transition-colors duration-300">Adopt</a>
                 </li>
@@ -319,10 +314,10 @@
             </div>
 
             <div>
-              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">
                 Contact Us
               </h2>
-              <ul class="text-gray-500 dark:text-gray-400 font-medium">
+              <ul class="text-gray-500 font-medium">
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-phone text-lg"></i>
                   <a href="#" class="break-all"> 09123456789 </a>
@@ -343,18 +338,16 @@
           </div>
         </div>
 
-        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+        <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
 
         <div class="text-white sm:flex sm:items-center sm:justify-between">
-          <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          <span class="text-sm text-gray-500 sm:text-center">
             © 2025 <strong>OrPAWnage</strong>™. All Rights Reserved.
           </span>
           <div class="flex gap-x-4 mt-4 sm:justify-center sm:mt-0">
-            <a href="#"
-              class="text-gray-500 hover:text-orange-500 transition-colors duration-300 dark:hover:text-white">Terms &
+            <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors duration-300">Terms &
               Conditions</a>
-            <a href="#"
-              class="text-gray-500 hover:text-orange-500 transition-colors duration-300 dark:hover:text-white">Privacy &
+            <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors duration-300">Privacy &
               Policy</a>
           </div>
         </div>

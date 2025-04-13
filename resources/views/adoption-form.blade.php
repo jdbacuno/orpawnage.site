@@ -1,6 +1,6 @@
 <x-layout>
   <!-- START OF THE SECTION -->
-  <section class="py-20 bg-gray-50 dark:bg-gray-900">
+  <section class="py-20 bg-gray-50">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <a href="/services/adopt-a-pet"
         class="text-blue-500 font-bold hover:text-orange-500 text-lg inline-flex items-center">
@@ -22,8 +22,7 @@
 
 
           @if (session('success'))
-          <div id="alert-3"
-            class="flex items-center p-4 mb-3 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 sm:col-span-7"
+          <div id="alert-3" class="flex items-center p-4 mb-3 text-green-800 rounded-lg bg-green-50 sm:col-span-7"
             role="alert">
             <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
               viewBox="0 0 20 20">
@@ -35,7 +34,7 @@
               {!! session('success') !!}
             </div>
             <button type="button"
-              class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+              class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
               data-dismiss-target="#alert-3" aria-label="Close" id="triggerElement">
               <span class="sr-only">Close</span>
               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -48,8 +47,7 @@
           @endif
 
           @if (session('error_request'))
-          <div id="alert-3"
-            class="flex items-center p-4 mb-3 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 sm:col-span-7"
+          <div id="alert-3" class="flex items-center p-4 mb-3 text-red-800 rounded-lg bg-red-50 sm:col-span-7"
             role="alert">
             <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
               viewBox="0 0 20 20">
@@ -74,8 +72,7 @@
           @endif
 
           @if (session('submission_error'))
-          <div id="alert-3"
-            class="flex items-center p-4 mb-3 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 sm:col-span-7"
+          <div id="alert-3" class="flex items-center p-4 mb-3 text-red-800 rounded-lg bg-red-50 sm:col-span-7"
             role="alert">
             <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
               viewBox="0 0 20 20">
@@ -100,46 +97,45 @@
           @endif
 
           <!-- Pet Details -->
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">
             Adopt Pet#{{ $pet->pet_number }} {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : '' }}
           </h2>
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Species</label>
+              <label class="text-sm font-medium text-gray-600">Species</label>
               <input type="text" value="{{ ucfirst($pet->species) }}" readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Age</label>
+              <label class="text-sm font-medium text-gray-600">Age</label>
               <input type="text"
                 value="{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old"
-                readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                readonly class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Sex</label>
+              <label class="text-sm font-medium text-gray-600">Sex</label>
               <input type="text" value="{{ ucfirst($pet->sex) }}" readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Reproductive Status</label>
+              <label class="text-sm font-medium text-gray-600">Reproductive Status</label>
               <input type="text" value="{{ ucfirst($pet->reproductive_status) }}" readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Color</label>
+              <label class="text-sm font-medium text-gray-600">Color</label>
               <input type="text" value="{{ ucfirst($pet->color) }}" readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
             <div>
-              <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Source</label>
+              <label class="text-sm font-medium text-gray-600">Source</label>
               <input type="text" value="{{ ucfirst($pet->source) }}" readonly
-                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 dark:bg-gray-700 dark:text-gray-300" />
+                class="w-full bg-gray-100 border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900" />
             </div>
           </div>
 
           <!-- User Details -->
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">
             Your Information
           </h3>
           <form method="POST" action="/services/{{ $pet->slug }}/adoption-form">

@@ -81,7 +81,7 @@
   <!-- ========== END OF HERO CAROUSEL ========== -->
 
   <!-- ========== START OF A NEW SECTION ========== -->
-  <section class="w-full py-16 bg-yellow-500 dark:bg-gray-800">
+  <section class="w-full py-16 bg-yellow-500">
     <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-10 px-4">
       <!-- Image Section -->
       <div class="w-full md:w-1/2">
