@@ -203,6 +203,7 @@
               </div>
 
               {{-- Account Deletion --}}
+              @if (!auth()->user()->isAdmin)
               <div class="bg-white border border-red-200 rounded-lg shadow-sm p-6">
                 <h3 class="text-lg font-medium text-red-900 mb-4">Delete Account</h3>
                 <p class="text-sm text-gray-600 mb-4">
@@ -238,6 +239,7 @@
                   </div>
                 </form>
               </div>
+              @endif
             </div>
           </div>
         </div>
