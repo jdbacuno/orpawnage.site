@@ -124,7 +124,8 @@
               </div>
               <ul class="py-2 transition-colors duration-300" aria-labelledby="user-menu-button">
                 @if (Auth::user()->isAdmin)
-                <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
+                <li
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-grid-four"></i>
                   <a href="/admin" target="_blank" class="block py-2 text-sm">Go to
                     Admin Dashboard</a>
