@@ -1,7 +1,5 @@
 <x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900">Admin Account Settings</h1>
-
-  <div class="w-full mx-auto mt-4">
+  <div class="w-full mx-auto mt-2">
     <div class="bg-white shadow-xl rounded-lg overflow-hidden">
       {{-- Header --}}
       <div class="bg-gray-800 px-6 py-4">

@@ -119,7 +119,7 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     });
 
     Route::prefix('admin/settings')->group(function () {
-        Route::get('/', [SettingsController::class, 'adminShow'])->name('admin.settings');
+        Route::get('/', [SettingsController::class, 'adminShow'])->name('Admin Profile Settings');
         Route::patch('/email', [SettingsController::class, 'adminUpdateEmail'])->name('admin.settings.email.update');
         Route::patch('/password', [SettingsController::class, 'adminUpdatePassword'])->name('admin.settings.password.update');
         Route::patch('/contact', [SettingsController::class, 'adminUpdateContact'])->name('admin.settings.contact.update');

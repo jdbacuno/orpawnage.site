@@ -156,7 +156,7 @@
           <li class="mr-2">
             <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
           </li>
-          <li class="text-gray-600 mr-2 font-medium">/</li>
+          <li class="text-gray-600 mr-2 font-medium flex items-center"><i class="ph-bold ph-caret-right"></i></li>
           <li class="text-gray-600 mr-2 font-medium">{{ Route::currentRouteName() ? ucfirst(Route::currentRouteName()) :
             '' }}</li>
         </ul>
