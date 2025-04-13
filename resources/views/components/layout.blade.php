@@ -125,7 +125,7 @@
               <ul class="py-2 transition-colors duration-300" aria-labelledby="user-menu-button">
                 @if (Auth::user()->isAdmin)
                 <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-grid-four"></i>
                   <a href="/admin" target="_blank" class="block py-2 text-sm">Go to
                     Admin Dashboard</a>
@@ -133,20 +133,20 @@
                 @endif
 
                 <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-bell"></i>
                   <a href="/transactions" class="block py-2 text-sm">Transaction
                     Status</a>
                 </li>
 
                 <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-gear"></i>
                   <a href="/settings" class="block py-2 text-sm">Profile
                     Settings</a>
                 </li>
                 <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-sign-out"></i>
                   <form action="/logout" method="POST">
                     @csrf
