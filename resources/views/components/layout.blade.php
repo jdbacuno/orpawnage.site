@@ -131,18 +131,21 @@
                 </li>
                 @endif
 
-                <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
+                <li
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-bell"></i>
                   <a href="/transactions" class="block py-2 text-sm">Transaction
                     Status</a>
                 </li>
 
-                <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
+                <li
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-gear"></i>
                   <a href="/settings" class="block py-2 text-sm">Profile
                     Settings</a>
                 </li>
-                <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
+                <li
+                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-sign-out"></i>
                   <form action="/logout" method="POST">
                     @csrf
