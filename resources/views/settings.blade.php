@@ -205,11 +205,11 @@
               {{-- Account Deletion --}}
               <div class="bg-white border border-red-200 rounded-lg shadow-sm p-6">
                 <h3 class="text-lg font-medium text-red-900 mb-4">Delete Account</h3>
-                <p class="text-sm text-gray-600 mb-4">Once you delete your account, there is no going back. Please be
-                  certain.</p>
+                <p class="text-sm text-gray-600 mb-4">
+                  Once you delete your account, there is no going back. Please be certain.
+                </p>
 
-                <form method="POST" action="{{ route('settings.delete') }}"
-                  onsubmit="return confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')">
+                <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
                   @csrf @method('DELETE')
 
                   <div class="space-y-4">
@@ -230,7 +230,7 @@
                     </div>
 
                     <div>
-                      <button type="submit"
+                      <button type="button" onclick="showDeleteModal()"
                         class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         Delete Account Permanently
                       </button>
@@ -245,6 +245,24 @@
     </div>
   </div>
 
+  {{-- Delete Confirmation Modal --}}
+  <div id="deleteConfirmationModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Account Deletion</h3>
+      <p class="text-sm text-gray-700 mb-6">
+        Are you absolutely sure you want to delete your account? This action cannot be undone.
+      </p>
+      <div class="flex justify-end space-x-3">
+        <button onclick="hideDeleteModal()"
+          class="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded hover:bg-gray-300 transition">Cancel</button>
+        <button onclick="submitDeleteForm()"
+          class="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-700 transition">Delete</button>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     function togglePasswordVisibility(id, button) {
       const input = document.getElementById(id);
@@ -254,5 +272,18 @@
         ? '<i class="ph-fill ph-eye text-lg"></i>' 
         : '<i class="ph-fill ph-eye-slash text-lg"></i>';
     }
+
+    function showDeleteModal() {
+      document.getElementById('deleteConfirmationModal').classList.remove('hidden');
+    }
+
+    function hideDeleteModal() {
+      document.getElementById('deleteConfirmationModal').classList.add('hidden');
+    }
+
+    function submitDeleteForm() {
+      document.getElementById('deleteAccountForm').submit();
+    }
   </script>
+
 </x-layout>

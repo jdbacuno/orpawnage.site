@@ -3,7 +3,7 @@
   <section class="flex flex-col gap-x-4 md:flex-row min-h-screen pt-10">
     <!-- Left Side: Full-Screen Image -->
     <div class="w-full md:w-1/2">
-      <img src="{{ asset('images/missing_pet.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
+      <img src="{{ asset('images/missing.jpeg') }}" alt="Missing Pet" class="w-full h-full object-cover blur-sm" />
     </div>
 
     <!-- Right Side: Form -->

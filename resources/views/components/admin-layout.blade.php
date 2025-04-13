@@ -110,7 +110,7 @@
         <ul>
           <!-- Settings Item -->
           <li class="mb-2 group border-b border-gray-300">
-            <a href="#"
+            <a href="/admin/settings"
               class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black">
               <i class="ph-fill ph-gear-six mr-3 text-lg"></i>
               <span class="text-sm">Settings</span>

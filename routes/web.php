@@ -117,6 +117,14 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         Route::patch('/acknowledge', [AnimalAbuseReportController::class, 'acknowledge']);
         Route::patch('/reject', [AnimalAbuseReportController::class, 'reject']);
     });
+
+    Route::prefix('admin/settings')->group(function () {
+        Route::get('/', [SettingsController::class, 'adminShow'])->name('admin.settings');
+        Route::patch('/email', [SettingsController::class, 'adminUpdateEmail'])->name('admin.settings.email.update');
+        Route::patch('/password', [SettingsController::class, 'adminUpdatePassword'])->name('admin.settings.password.update');
+        Route::patch('/contact', [SettingsController::class, 'adminUpdateContact'])->name('admin.settings.contact.update');
+        Route::delete('/', [SettingsController::class, 'adminDeleteAccount'])->name('admin.settings.delete');
+    });
 });
 
 // for all undefined routes

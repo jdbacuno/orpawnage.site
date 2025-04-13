@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Notification;
 
 class SettingsController extends Controller
 {
+    // FOR USER SETTINGS
     public function show()
     {
         return view('settings');
@@ -97,12 +98,80 @@ class SettingsController extends Controller
 
         $user = $request->user();
 
-        // Send account deletion notification
-        $user->notify(new AccountDeleted());
+        // Send immediately (bypass queue)
+        $user->notifyNow(new AccountDeleted());
+        // Or: Notification::sendNow($user, new AccountDeleted());
 
         $user->delete();
         Auth::logout();
 
         return redirect('/')->with('success', 'Your account has been permanently deleted.');
+    }
+
+    // FOR ADMIN SETTINGS
+    public function adminShow()
+    {
+        return view('admin.settings');
+    }
+
+    public function adminUpdateEmail(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'email' => ['required', 'email', 'unique:users,email,' . Auth::id()],
+        ]);
+
+        $user = $request->user();
+        $oldEmail = $user->email;
+        $user->email = $request->email;
+        $user->email_verified_at = null;
+        $user->save();
+
+        $user->sendEmailVerificationNotification();
+
+        if (config('mail.old_email_notification')) {
+            Notification::route('mail', $oldEmail)->notify(new EmailChanged($user));
+        }
+
+        return back()->with('success', 'Email updated successfully! Please verify your new email address.');
+    }
+
+    public function adminUpdatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(6)->letters()->mixedCase()->numbers()->symbols(),
+            ],
+        ]);
+
+        $user = $request->user();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        $user->notify(new PasswordChanged());
+
+        return back()->with('success', 'Password updated successfully!');
+    }
+
+    public function adminUpdateContact(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
+        ]);
+
+        $user = $request->user();
+        $oldContact = $user->contact_number;
+        $user->update([
+            'contact_number' => $request->contact_number
+        ]);
+
+        $user->notify(new ContactNumberChanged($oldContact));
+
+        return back()->with('success', 'Contact number updated successfully!');
     }
 }

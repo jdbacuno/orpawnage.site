@@ -20,9 +20,9 @@ class AccountDeleted extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Account Deletion Confirmation')
-            ->line('We regret to inform you that your account has been deleted.')
+            ->line('We regret to inform you that your account has been deleted permanently.')
             ->line('All your personal data has been removed from our systems.')
-            ->line('If this was a mistake, please contact support within 7 days.')
+            ->line('Your account cannot be recovered at this point.')
             ->action('Contact Support', url('/contact'))
             ->line('Thank you for having been with us.');
     }
