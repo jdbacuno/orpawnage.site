@@ -222,7 +222,9 @@
       </button>
 
       <h2 class="text-xl font-semibold text-gray-800">Approve Adoption</h2>
-      <p class="mb-4">Contact the adopter and set a pickup schedule:</p>
+      <p class="mb-2">Set a pickup date:</p>
+
+      <p class="mb-4 text-green-500 text-sm">This will send an email notification to the user.</p>
 
       <!-- Form -->
       <form id="approveForm" method="POST" action="/admin/adoption-applications/approve">
@@ -252,7 +254,8 @@
       </button>
 
       <h2 class="text-xl font-semibold text-gray-800">Reject Adoption</h2>
-      <p class="mb-4">Please provide a reason for rejecting this application:</p>
+      <p class="mb-2">Please provide a reason for rejecting this application:</p>
+      <p class="my-2 text-green-500 text-sm">This will send an email notification to the user.</p>
 
       <!-- Form -->
       <form id="rejectForm" method="POST" action="/admin/adoption-applications/reject">

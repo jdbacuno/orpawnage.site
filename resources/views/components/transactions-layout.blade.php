@@ -25,11 +25,11 @@
 
     {{ $slot }}
 
-    <script>
-      document.getElementById('sectionSelector').addEventListener('change', function() {
+  </section>
+
+  <script>
+    document.getElementById('sectionSelector').addEventListener('change', function() {
         window.location.href = this.value;
       });
-    </script>
-
-  </section>
+  </script>
 </x-layout>

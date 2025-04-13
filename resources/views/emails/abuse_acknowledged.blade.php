@@ -88,13 +88,15 @@
     <h4>Thank you for reporting animal abuse</h4>
 
     <div class="content">
-      <p>We have received and processed your animal abuse report:</p>
+      <p>We have taken action on your animal abuse report:</p>
 
       <div class="report-box">
         <p class="font-medium">Report Details:</p>
         <p><span class="font-semibold">Report Number:</span> #{{ $report->report_number }}</p>
+        <p><span class="font-semibold">Reported by:</span> {{ $report->user->username }}</p>
         <p><span class="font-semibold">Date Submitted:</span> {{ $report->created_at->format('F j, Y') }}</p>
         <p><span class="font-semibold">Incident Location:</span> {{ $report->incident_location }}</p>
+        <p><span class="font-semibold">Notes:</span> {{ $report->additional_notes }}</p>
       </div>
 
       <p>Our team has reviewed your report and taken appropriate action. We take all reports seriously and appreciate

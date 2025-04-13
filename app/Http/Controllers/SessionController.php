@@ -17,14 +17,13 @@ class SessionController extends Controller
 
     public function store(Request $request)
     {
-        $attributes = $request->validate([
+        $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required']
         ]);
 
-        $attributes['email'] = strtolower($attributes['email']);
-
-        $user = User::where('email', $attributes['email'])->first();
+        $credentials['email'] = strtolower($credentials['email']);
+        $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
             throw ValidationException::withMessages([
@@ -32,13 +31,17 @@ class SessionController extends Controller
             ]);
         }
 
-        if (!Auth::attempt($attributes)) {
+        if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
                 'password' => 'Incorrect password'
             ]);
         }
 
         $request->session()->regenerate();
+
+        if (!$user->hasVerifiedEmail() && !$user->isAdmin) {
+            return redirect()->route('verification.notice');
+        }
 
         return $user->isAdmin ? redirect('/admin') : redirect('/');
     }

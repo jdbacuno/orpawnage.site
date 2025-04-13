@@ -7,10 +7,43 @@ use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Guest Routes (Login/Sign Up)
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisteredUserController::class, 'create']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+
+    Route::get('/login', [SessionController::class, 'create'])->name('login');
+    Route::post('/login', [SessionController::class, 'store']);
+});
+
+// Email Verification Routes
+// These routes handle the email verification process
 Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->middleware('auth')->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return redirect('/');
+    })->middleware(['auth', 'signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('status', 'verification-link-sent');
+    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+});
+
+// Signed In User Routes
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/', 'home')->name('Home');
 
     Route::get('/featured-pets', [FeaturedPetController::class, 'index'])->name('Featured Pets');
@@ -49,20 +82,21 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/about', 'about')->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
-
-    Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisteredUserController::class, 'create']);
-    Route::post('/register', [RegisteredUserController::class, 'store']);
-
-    Route::get('/login', [SessionController::class, 'create'])->name('login');
-    Route::post('/login', [SessionController::class, 'store']);
+// Profile Settings Route
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('settings')->group(function () {
+        Route::get('/', [SettingsController::class, 'show'])->name('settings');
+        Route::patch('/email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
+        Route::patch('/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
+        Route::patch('/contact', [SettingsController::class, 'updateContact'])->name('settings.contact.update');
+        Route::delete('/', [SettingsController::class, 'deleteAccount'])->name('settings.delete');
+    });
 });
 
-
-Route::middleware(['isAdmin', 'auth'])->group(function () {
+// Admin Routes
+Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('Home');
 
     Route::get('/admin/pet-profiles', [PetController::class, 'create'])->name('Manage Pet Profiles');
@@ -89,3 +123,6 @@ Route::middleware(['isAdmin', 'auth'])->group(function () {
 Route::fallback(function () {
     abort(404);
 });
+
+// Logout Route
+Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');

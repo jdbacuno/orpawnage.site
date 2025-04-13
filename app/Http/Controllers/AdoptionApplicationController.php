@@ -96,7 +96,7 @@ class AdoptionApplicationController extends Controller
             ...$validated,
         ]);
 
-        return back()->with('success', 'Adoption application submitted successfully!');
+        return back()->with('success', 'Adoption application submitted successfully! Kindly await for an email update or visit the ' . '<a href="/transactions/adoption-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application.');
     }
 
     public function approve(Request $request)

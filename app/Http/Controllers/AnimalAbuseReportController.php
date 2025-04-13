@@ -100,7 +100,7 @@ class AnimalAbuseReportController extends Controller
         // Create the report and store in the database
         AnimalAbuseReport::create($validated);
 
-        return redirect()->back()->with('success', 'Report submitted successfully.');
+        return redirect()->back()->with('success', 'Report submitted successfully! Kindly await for an email update or visit the ' . '<a href="/transactions/abused-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application.');
     }
 
     public function acknowledge(Request $request)

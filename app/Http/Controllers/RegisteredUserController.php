@@ -18,7 +18,7 @@ class RegisteredUserController extends Controller
     {
         $userAttributes = $request->validate([
             'username' => ['required', 'unique:users,username'],
-            'email' => ['required', 'email', 'unique:users,email'], // check 'users' table, and in the 'email' field
+            'email' => ['required', 'email', 'unique:users,email'],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
             'password' => [
                 'required',
@@ -34,8 +34,11 @@ class RegisteredUserController extends Controller
         $userAttributes['username'] = strtolower($userAttributes['username']);
         $userAttributes['email'] = strtolower($userAttributes['email']);
 
-        User::create($userAttributes);
+        $user = User::create($userAttributes);
 
-        return redirect('/register')->with('success', 'Successfully registered! You may now log in.');
+        // Send verification email
+        $user->sendEmailVerificationNotification();
+
+        return redirect('/register')->with('success', 'Successfully registered! Please check your email for a verification link.');
     }
 }

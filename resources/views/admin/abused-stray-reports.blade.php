@@ -95,9 +95,9 @@
               Reject
             </button>
             @elseif ($report->status === 'rejected')
-            <span class="bg-gray-500 italic text-white px-3 py-1 rounded-md">Rejected</span>
+            <span class="bg-gray-500 text-sm italic text-white px-3 py-1 rounded-md">Rejected</span>
             @else
-            <span class="bg-green-500 text-white px-3 py-1 rounded-md">Acknowledged</span>
+            <span class="bg-green-500 text-sm text-white px-3 py-1 rounded-md">Acknowledged</span>
             @endif
           </div>
         </div>
@@ -146,7 +146,8 @@
   </div>
 
   <!-- Add this confirmation modal at the bottom of your template -->
-  <div id="confirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="confirmationModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden px-1">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
       <button id="closeConfirmationModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>

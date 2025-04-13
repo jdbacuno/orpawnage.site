@@ -143,7 +143,7 @@
 
                 <li class="px-4 flex items-center gap-x-2 text-gray-700 hover:text-white hover:bg-orange-500">
                   <i class="ph-fill ph-gear"></i>
-                  <a href="profile.html"
+                  <a href="/settings"
                     class="block py-2 text-sm dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile
                     Settings</a>
                 </li>
@@ -265,6 +265,17 @@
       <!-- ========== END OF NAVBAR ========== -->
     </header>
 
+
+    @auth
+    @if (! auth()->user()->hasVerifiedEmail())
+    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 p-4 text-center">
+      Your email is not verified.
+      <a href="{{ route('verification.notice') }}" class="underline font-semibold">Click here to verify</a>.
+    </div>
+    @endif
+    @endauth
+
+
     {{ $slot }}
 
     <!-- ========== START OF FOOTER ========== -->
@@ -369,8 +380,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   <script src="{{ asset('js/seemore.js') }}"></script>
   <script src="{{ asset('js/modal.js') }}"></script>
   <script src="{{ asset('js/scrollToTop.js') }}"></script>
-  <script src="{{ asset('js/adoptionStatusModals.js') }}"></script>
-  <script src="{{ asset('js/abusedStatusModals.js') }}"></script>
+
 </body>
 
 </html>

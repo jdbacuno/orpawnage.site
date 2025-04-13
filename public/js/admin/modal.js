@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           reportIdInput.value = reportId;
           actionTypeInput.value = actionType;
-          messageEl.textContent = 'Are you sure you want to acknowledge this report?';
+          messageEl.innerHTML = 'Are you sure you want to acknowledge this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
           confirmBtn.className = 'px-4 py-2 bg-green-500 text-white rounded-md';
           confirmBtn.textContent = 'Acknowledge';
           actionForm.action = '/admin/abused-or-stray-pets/acknowledge';
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           reportIdInput.value = reportId;
           actionTypeInput.value = actionType;
-          messageEl.textContent = 'Are you sure you want to reject this report?';
+          messageEl.innerHTML = 'Are you sure you want to reject this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
           confirmBtn.className = 'px-4 py-2 bg-red-500 text-white rounded-md';
           confirmBtn.textContent = 'Reject';
           actionForm.action = '/admin/abused-or-stray-pets/reject';
