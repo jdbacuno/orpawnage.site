@@ -139,7 +139,7 @@
           <h3 class="text-xl font-semibold text-gray-900 mb-4">
             Your Information
           </h3>
-          <form method="POST" action="/services/{{ $pet->slug }}/adoption-form">
+          <form method="POST" action="/services/{{ $pet->slug }}/adoption-form" id="applicationForm">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -153,8 +153,8 @@
               <div>
                 <label class="text-sm font-medium text-gray-600">Email Address</label>
                 <input type="email" name="email"
-                  class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 focus:border-orange-500"
-                  placeholder="Enter your email address" value="{{ old('email') }}" required />
+                  class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100"
+                  placeholder="Enter your email address" value="{{ auth()->user()->email }}" readonly required />
                 <x-form-error name="email" />
               </div>
               <div>
@@ -174,8 +174,8 @@
               <div>
                 <label class="text-sm font-medium text-gray-600">Contact Number</label>
                 <input type="text" name="contact_number"
-                  class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 focus:border-orange-500"
-                  placeholder="Enter your contact number" value="{{ old('contact_number') }}" required />
+                  class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100"
+                  placeholder="Contact number" value="{{ auth()->user()->contact_number }}" readonly required />
                 <x-form-error name="contact_number" />
               </div>
               <div>

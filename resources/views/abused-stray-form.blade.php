@@ -1,13 +1,14 @@
 <x-layout>
   <!-- ========== START OF SECTION ========== -->
-  <section class="bg-yellow-500/40 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
+  <section class="bg-yellow-500/30 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
     <!-- Left Side: Form -->
     <div class="w-full md:w-1/2 flex justify-center items-center px-2 pt-6 sm:p-4">
       <div class="max-w-2xl w-full p-6">
         <h2 class="text-3xl font-bold text-black mb-6 text-left">
           Report an Incident of Abused/Stray Animal
         </h2>
-        <form action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data">
+        <form id="reportForm" action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data"
+          id="reportForm">
           @csrf
 
           @if(session('success'))
@@ -46,9 +47,10 @@
               </div>
 
               <div>
-                <label class="block text-gray-700 font-medium">Contact No.</label>
-                <input type="tel" name="contact_no" value="{{ old('contact_no') }}"
-                  class="w-full px-3 py-2 rounded-lg border focus:border-black" placeholder="Contact number" required />
+                <label class="block font-medium text-gray-700">Contact No.</label>
+                <input type="tel" name="contact_no" value="{{ auth()->user()->contact_number }}"
+                  class="w-full px-3 py-2 rounded-lg border text-gray-900 bg-gray-200" placeholder="Contact number"
+                  readonly required />
                 <x-form-error name="contact_no" />
               </div>
 

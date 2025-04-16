@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\AdoptionApplication;
 use App\Models\Pet;
+use App\Notifications\AdoptionStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -111,19 +112,25 @@ class AdoptionApplicationController extends Controller
             ],
         ]);
 
+        $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
 
-        $application = AdoptionApplication::findOrFail($request->application_id);
+        // Store the original pickup date before update
+        $oldPickupDate = $application->pickup_date;
+
         $application->update([
             'pickup_date' => $request->pickup_date,
             'status' => 'to be picked up',
         ]);
+
+        // Send approval or reschedule notification with old pickup date
+        $application->user->notify(new AdoptionStatusNotification($application, $oldPickupDate));
 
         return redirect('/admin/adoption-applications')->with('success', 'Pickup date scheduled successfully.');
     }
 
     public function markAsPickedUp(Request $request)
     {
-        $application = AdoptionApplication::findOrFail($request->application_id);
+        $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
 
         if ($application->status !== 'to be picked up') {
             return redirect()->back()->with('error', 'Invalid status change.');
@@ -132,6 +139,9 @@ class AdoptionApplicationController extends Controller
         $application->update([
             'status' => 'picked up',
         ]);
+
+        // Send pickup confirmation notification
+        $application->user->notify(new AdoptionStatusNotification($application));
 
         return redirect()->back()->with('success', 'Adoption marked as picked up.');
     }
@@ -143,13 +153,14 @@ class AdoptionApplicationController extends Controller
             'reject_reason' => ['required', 'string', 'max:500'],
         ]);
 
-        $application = AdoptionApplication::findOrFail($request->application_id);
-
-        // Update status and store the reason
+        $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
         $application->update([
             'status' => 'rejected',
             'reject_reason' => $request->reject_reason,
         ]);
+
+        // Send rejection notification
+        $application->user->notify(new AdoptionStatusNotification($application));
 
         return redirect()->back()->with('success', 'Adoption application rejected.');
     }

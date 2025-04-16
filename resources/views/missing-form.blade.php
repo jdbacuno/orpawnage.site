@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF SECTION ========== -->
-  <section class="bg-yellow-500/40 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
+  <section class="bg-yellow-500/30 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
     <!-- Left Side: Form -->
     <div class="w-full md:w-1/2 flex justify-center items-center px-2 pt-6 sm:p-4">
       <div class="max-w-2xl w-full p-6">

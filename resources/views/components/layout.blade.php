@@ -264,9 +264,8 @@
       <!-- ========== END OF NAVBAR ========== -->
     </header>
 
-
     @auth
-    @if (! auth()->user()->hasVerifiedEmail())
+    @if (!auth()->user()->hasVerifiedEmail())
     <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 p-4 text-center">
       Your email is not verified.
       <a href="{{ route('verification.notice') }}" class="underline font-semibold">Click here to verify</a>.
@@ -274,8 +273,20 @@
     @endif
     @endauth
 
+    @if (session('status') === 'already-verified')
+    <div class="bg-blue-100 border border-blue-400 text-blue-700 p-4 text-center">
+      Your email is already verified.
+    </div>
+    @endif
+
+    @if (session('status') === 'email-verified')
+    <div class="bg-green-100 border border-green-400 text-green-700 p-4 text-center">
+      Your email has already been verified. Welcome back!
+    </div>
+    @endif
 
     {{ $slot }}
+
 
     <!-- ========== START OF FOOTER ========== -->
     <footer class="bg-yellow-400/10 w-full mt-auto">
@@ -367,8 +378,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
     <i class="ph-fill ph-arrow-up"></i>
   </button>
 
-
-
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
@@ -376,6 +385,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   <script src="{{ asset('js/custom.js') }}"></script>
   <script src="{{ asset('js/seemore.js') }}"></script>
   <script src="{{ asset('js/modal.js') }}"></script>
+  <script src="{{ asset('js/disableSubmission.js') }}"></script>
   <script src="{{ asset('js/scrollToTop.js') }}"></script>
 
 </body>

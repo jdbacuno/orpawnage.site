@@ -56,7 +56,7 @@
             </div>
 
             <div class="flex-1 min-w-0">
-              <h3 class="text-lg font-semibold flex items-center"><i class="ph-fill ph-tag mr-2"></i> {{
+              <h3 class="text-lg font-semibold flex items-center truncate"><i class="ph-fill ph-tag mr-2"></i> {{
                 $application->transaction_number }}</h3>
               <p class="text-sm font-medium text-gray-900 truncate">
                 <a href="#" class="pet-info-btn text-blue-500 hover:text-blue-600 hover:underline"
@@ -127,21 +127,39 @@
               Mark as Picked Up
             </button>
           </form>
+
+          <!-- Reschedule Button -->
+          <button class="flex-1 bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-400 approve-btn"
+            data-id="{{ $application->id }}" data-pickup="{{ $application->pickup_date }}">
+            <span class="sm:hidden"><i class="ph-bold ph-calendar"></i></span>
+            <span class="hidden sm:inline">{{ $application->pickup_date ? 'Reschedule' : 'Approve' }}</span>
+          </button>
+
+          <!-- Reject Button -->
+          <button
+            class="flex-1 bg-red-500 text-white p-2 sm:px-3 sm:py-2 rounded-md text-sm hover:bg-red-400 reject-btn"
+            data-id="{{ $application->id }}">
+            <span class="sm:hidden"><i class="ph-bold ph-x"></i></span>
+            <span class="hidden sm:inline">Reject</span>
+          </button>
+
           @elseif ($application->status !== 'picked up' && $application->status !== 'rejected')
           <button class="flex-1 bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-400 approve-btn"
             data-id="{{ $application->id }}" data-pickup="{{ $application->pickup_date }}">
             {{ $application->pickup_date ? 'Reschedule' : 'Approve' }}
           </button>
+
           <button class="flex-1 bg-red-500 text-white px-3 py-2 rounded-md text-sm hover:bg-red-400 reject-btn"
             data-id="{{ $application->id }}">
             Reject
           </button>
+
           @elseif ($application->status === 'rejected')
-          <button
-            class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+          <button class="w-full bg-red-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
             disabled>
             Rejected
           </button>
+
           @else
           <button
             class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
@@ -192,7 +210,8 @@
 
 
   <!-- Adopter Info Modal -->
-  <div id="adopterInfoModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="adopterInfoModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
       <!-- Close Button (X) -->
       <button id="closeAdopterInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
@@ -213,7 +232,7 @@
   </div>
 
   <!-- Approve Modal -->
-  <div id="approveModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="approveModal" class="fixed inset-0  px-1flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
 
       <!-- Close Button -->
@@ -245,7 +264,7 @@
   </div>
 
   <!-- Reject Modal -->
-  <div id="rejectModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="rejectModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
 
       <!-- Close Button -->

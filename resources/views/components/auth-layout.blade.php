@@ -95,6 +95,7 @@
   {{ $slot }}
   <script src="{{ asset('js/custom.js') }}"></script>
   <script defer src="{{ asset('js/auth.js') }}"></script>
+  <script src="{{ asset('js/disableSubmission.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
 </body>
 

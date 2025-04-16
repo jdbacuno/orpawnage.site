@@ -48,7 +48,7 @@
                 </div>
               </div>
 
-              <form method="POST" action="/login">
+              <form method="POST" action="/login" id="loginForm">
                 @csrf
 
                 <div class="space-y-5">
@@ -98,7 +98,7 @@
 
                   <!-- Button -->
                   <div class="mt-10">
-                    <button
+                    <button type="submit"
                       class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                       Sign In
                     </button>

@@ -31,7 +31,7 @@
         <!-- Card Content -->
         <div class="flex-1 overflow-y-auto">
           <div class="flex justify-between items-start">
-            <h3 class="text-xl font-semibold flex items-center"><i class="ph-fill ph-tag mr-2"></i> {{
+            <h3 class="text-xl font-semibold flex items-center truncate"><i class="ph-fill ph-tag mr-2"></i> {{
               $report->report_number }}</h3>
           </div>
           <p class="text-sm text-gray-500 mt-2"><strong>Reported by:</strong> {{ ucwords($report->full_name) ?? 'N/A' }}
@@ -74,9 +74,11 @@
               View Photo
             </a> --}}
             <button type="button" data-image="{{ asset('storage/' . $report->incident_photo) }}"
-              class="text-blue-500 hover:underline text-sm show-image-btn">
-              View Photo
+              class="text-blue-500 hover:underline text-sm show-image-btn flex items-center space-x-1">
+              <i class="ph-fill text-4xl ph-image sm:hidden"></i>
+              <span class="hidden sm:inline">View Photo</span>
             </button>
+
           </div>
 
           <!-- Action Buttons on the right -->
@@ -129,7 +131,7 @@
   </div>
 
   {{-- image modal --}}
-  <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full">
       <!-- Close Button -->
       <button id="closeImageModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">

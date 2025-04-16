@@ -16,6 +16,7 @@
               <p class="text-sm text-gray-500">
                 Enter your new password below
               </p>
+
             </div>
 
             @if ($errors->any())
@@ -28,12 +29,12 @@
             </div>
             @endif
 
-            <form method="POST" action="{{ route('password.update') }}">
+            <form method="POST" action="{{ route('password.update') }}" id="resetPasswordForm">
               @csrf
               <input type="hidden" name="token" value="{{ $token }}">
               <input type="hidden" name="email" value="{{ request('email') }}">
 
-              <div class="space-y-5">
+              <div class="space-y-4">
                 <!-- Email (hidden but shown for reference) -->
                 <div>
                   <label class="mb-1.5 block text-sm font-medium text-gray-700">
@@ -42,6 +43,22 @@
                   <div class="px-4 py-2 bg-gray-100 rounded-lg">
                     {{ request('email') ?? old('email') }}
                   </div>
+                </div>
+
+                <div class="bg-blue-50 p-3 rounded-md">
+                  <h4 class="text-sm font-medium text-blue-800 mb-1">Password Requirements:</h4>
+                  <ul class="text-xs text-blue-700 space-y-1">
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> Minimum
+                      6 characters</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one uppercase letter</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one lowercase letter</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one number</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one symbol</li>
+                  </ul>
                 </div>
 
                 <!-- Password -->
@@ -101,7 +118,7 @@
 
                 <!-- Button -->
                 <div class="mt-10">
-                  <button
+                  <button type="submit"
                     class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                     Reset Password
                   </button>

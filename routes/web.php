@@ -10,9 +10,10 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 // Guest Routes (Login/Sign Up)
 Route::middleware('guest')->group(function () {
@@ -24,24 +25,52 @@ Route::middleware('guest')->group(function () {
 });
 
 // Email Verification Routes
-// These routes handle the email verification process
 Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', function () {
+    Route::get('/email/verify', function (Request $request) {
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/'); // or wherever you want to send verified users
+        }
+
+        // Refresh to make sure email verification is reflected
+        $user->refresh();
+
+        // Check again after refresh
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/'); // email just got verified, redirect them
+        }
+
         return view('auth.verify-email');
-    })->middleware('auth')->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
-
-        return redirect('/');
-    })->middleware(['auth', 'signed'])->name('verification.verify');
+    })->name('verification.notice');
 
     Route::post('/email/verification-notification', function (Request $request) {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->back()->with('status', 'already-verified');
+        }
+
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
+
+
+// allow users to click from their email without being logged in
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    $user = User::findOrFail($id);
+
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        abort(403, 'Invalid verification link.');
+    }
+
+    if (! $user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+    }
+
+    return redirect('/login')->with('verified', true);
+})->middleware(['signed'])->name('verification.verify');
 
 // Signed In User Routes
 Route::middleware(['auth', 'verified'])->group(function () {

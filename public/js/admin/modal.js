@@ -235,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener("DOMContentLoaded", function () {
   const approveModal = document.getElementById("approveModal");
   const closeApproveModal = document.getElementById("closeApproveModal");
-  const approveForm = document.getElementById("approveForm");
   const pickupDateInput = document.getElementById("pickupDate");
   const applicationIdInput = document.getElementById("applicationId");
 
@@ -263,11 +262,12 @@ document.addEventListener("DOMContentLoaded", function () {
       while (isWeekend(adjustedMaxDate)) {
           adjustedMaxDate.setDate(adjustedMaxDate.getDate() - 1);
       }
-
+    
       // Set restrictions
       pickupDateInput.min = formatDate(tomorrow);
       pickupDateInput.max = formatDate(adjustedMaxDate);
-  }
+
+    }
 
   document.querySelectorAll(".approve-btn").forEach(button => {
       button.addEventListener("click", function () {
@@ -354,53 +354,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // report abused acknowledge and reject modal
 document.addEventListener('DOMContentLoaded', function() {
-      const modal = document.getElementById('confirmationModal');
-      const closeBtn = document.getElementById('closeConfirmationModal');
-      const cancelBtn = document.getElementById('cancelAction');
-      const confirmBtn = document.getElementById('confirmButton');
-      const actionForm = document.getElementById('actionForm');
-      const messageEl = document.getElementById('confirmationMessage');
-      const reportIdInput = document.getElementById('modalReportId');
-      const actionTypeInput = document.getElementById('modalActionType');
+  const modal = document.getElementById('confirmationModal');
+  const closeBtn = document.getElementById('closeConfirmationModal');
+  const cancelBtn = document.getElementById('cancelAction');
+  const confirmBtn = document.getElementById('confirmButton');
+  const actionForm = document.getElementById('actionForm');
+  const messageEl = document.getElementById('confirmationMessage');
+  const reportIdInput = document.getElementById('modalReportId');
+  const actionTypeInput = document.getElementById('modalActionType');
 
-      // Handle acknowledge buttons
-      document.querySelectorAll('.acknowledge-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const reportId = this.dataset.reportId;
-          const actionType = this.dataset.actionType;
-          
-          reportIdInput.value = reportId;
-          actionTypeInput.value = actionType;
-          messageEl.innerHTML = 'Are you sure you want to acknowledge this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
-          confirmBtn.className = 'px-4 py-2 bg-green-500 text-white rounded-md';
-          confirmBtn.textContent = 'Acknowledge';
-          actionForm.action = '/admin/abused-or-stray-pets/acknowledge';
-          
-          modal.classList.remove('hidden');
-        });
-      });
-
-      // Handle reject buttons
-      document.querySelectorAll('.reject-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const reportId = this.dataset.reportId;
-          const actionType = this.dataset.actionType;
-          
-          reportIdInput.value = reportId;
-          actionTypeInput.value = actionType;
-          messageEl.innerHTML = 'Are you sure you want to reject this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
-          confirmBtn.className = 'px-4 py-2 bg-red-500 text-white rounded-md';
-          confirmBtn.textContent = 'Reject';
-          actionForm.action = '/admin/abused-or-stray-pets/reject';
-          
-          modal.classList.remove('hidden');
-        });
-      });
-
-      // Close modal handlers
-      [closeBtn, cancelBtn].forEach(btn => {
-        btn.addEventListener('click', () => {
-          modal.classList.add('hidden');
-        });
-      });
+  // Handle acknowledge buttons
+  document.querySelectorAll('.acknowledge-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const reportId = this.dataset.reportId;
+      const actionType = this.dataset.actionType;
+      
+      reportIdInput.value = reportId;
+      actionTypeInput.value = actionType;
+      messageEl.innerHTML = 'Are you sure you want to acknowledge this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
+      confirmBtn.className = 'px-4 py-2 bg-green-500 text-white rounded-md';
+      confirmBtn.textContent = 'Acknowledge';
+      actionForm.action = '/admin/abused-or-stray-pets/acknowledge';
+      
+      modal.classList.remove('hidden');
     });
+  });
+
+  // Handle reject buttons
+  document.querySelectorAll('.reject-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const reportId = this.dataset.reportId;
+      const actionType = this.dataset.actionType;
+      
+      reportIdInput.value = reportId;
+      actionTypeInput.value = actionType;
+      messageEl.innerHTML = 'Are you sure you want to reject this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
+      confirmBtn.className = 'px-4 py-2 bg-red-500 text-white rounded-md';
+      confirmBtn.textContent = 'Reject';
+      actionForm.action = '/admin/abused-or-stray-pets/reject';
+      
+      modal.classList.remove('hidden');
+    });
+  });
+
+  // Close modal handlers
+  [closeBtn, cancelBtn].forEach(btn => {
+    btn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+  });
+});

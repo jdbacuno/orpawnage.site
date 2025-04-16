@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pet;
+use App\Models\User;
+use App\Notifications\NewPetAdded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -207,6 +210,7 @@ class PetController extends Controller
             'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
 
+        // If validation fails, return back with errors
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -217,11 +221,12 @@ class PetController extends Controller
         // Normalize case for specific fields
         $validated = $validator->validated();
 
+        // If pet name is 'n/a', convert it to 'N/A'
         if (strtolower($validated['pet_name']) == 'n/a') {
             $validated['pet_name'] = 'N/A';
         }
 
-        // Upload Image
+        // Upload the image
         if ($request->hasFile('image')) {
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
@@ -231,14 +236,23 @@ class PetController extends Controller
             $validated['image_path'] = $imagePath;
         }
 
-        unset($validated['image']); // Remove 'image' field before saving
+        unset($validated['image']); // Remove the image field from validation data
 
         // Create and store the pet
-        $pet = Pet::create($validated); // 🔥 FIX: Assign the created pet to a variable
+        $pet = Pet::create($validated);
 
+        // Notify all users except admins asynchronously
+        User::whereNotNull('email_verified_at')
+            ->whereNotNull('email') // Optional, just in case
+            ->chunk(100, function ($users) use ($pet) {
+                Notification::send($users, new NewPetAdded($pet));
+            });
+
+
+        // Return success response
         return redirect()->back()->with([
             'add_success' => '<a class="text-blue-500" target="_blank" href="/services/' . $pet->slug . '/adoption-form">#' . $pet->pet_number . '</a>',
-            'modal_open' => null // Keep modal open on success
+            'modal_open' => null // Close modal on success
         ]);
     }
 

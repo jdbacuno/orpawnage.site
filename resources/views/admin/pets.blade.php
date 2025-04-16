@@ -332,7 +332,8 @@
         </div>
 
         <!-- Form Fields -->
-        <form method="POST" action="/admin/pet-profiles" enctype="multipart/form-data" class="space-y-4 relative">
+        <form method="POST" id="addPetForm" action="/admin/pet-profiles" enctype="multipart/form-data"
+          class="space-y-4 relative">
           @csrf
 
           <div>

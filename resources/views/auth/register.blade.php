@@ -47,7 +47,7 @@
               </div>
             </div>
 
-            <form action="/register" method="POST">
+            <form action="/register" method="POST" id="registerForm">
               @csrf
 
               @if (session('success'))
@@ -113,6 +113,23 @@
                   <x-form-error name="contact_number" />
                 </div>
                 <!-- Password -->
+
+                <div class="bg-blue-50 p-3 rounded-md">
+                  <h4 class="text-sm font-medium text-blue-800 mb-1">Password Requirements:</h4>
+                  <ul class="text-xs text-blue-700 space-y-1">
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> Minimum
+                      6 characters</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one uppercase letter</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one lowercase letter</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one number</li>
+                    <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
+                      least one symbol</li>
+                  </ul>
+                </div>
+
                 <div>
                   <label class="mb-1.5 block text-sm font-medium text-gray-700">
                     Password<span class="text-error-500">*</span>
@@ -171,7 +188,7 @@
 
                 <!-- Button -->
                 <div class="mt-10">
-                  <button
+                  <button type="submit"
                     class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                     Sign Up
                   </button>
