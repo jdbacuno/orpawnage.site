@@ -182,7 +182,7 @@
 
           <!-- Reset Filters Button -->
           <a href="{{ request()->url() }}"
-            class="bg-gray-200 hover:bg-gray-300 text-center text-gray-800 px-4 py-2.5 border border-gray-400 rounded-lg text-sm ">
+            class="bg-gray-200 hover:bg-gray-300 text-center text-gray-800 px-4 py-2.5 border border-gray-400 rounded-lg text-sm min-w-[150px] sm:min-w-[120px]">
             Reset Filters
           </a>
         </form>
@@ -605,7 +605,7 @@
   @endif
 
   <!-- Delete Pet Modal -->
-  <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <!-- Modal Content -->
       <h2 class="text-xl font-semibold text-gray-800">Confirm Deletion</h2>

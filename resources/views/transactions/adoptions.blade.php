@@ -153,7 +153,7 @@
 
   @if(!$adoptionApplications->isEmpty())
   <!-- Cancel/Delete Confirmation Modal -->
-  <div id="cancelModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+  <div id="cancelModal" class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Confirm Action</h2>
       <p class="text-sm text-gray-600">Are you sure you want to cancel/delete this adoption request?</p>

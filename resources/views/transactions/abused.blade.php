@@ -123,7 +123,7 @@
   </div>
 
   {{-- image modal --}}
-  <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full">
       <!-- Close Button -->
       <button id="closeImageModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
@@ -140,7 +140,7 @@
   </div>
 
   <!-- Delete Confirmation Modal -->
-  <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
       <button id="closeDeleteModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>

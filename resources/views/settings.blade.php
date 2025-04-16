@@ -262,7 +262,7 @@
 
   {{-- Delete Confirmation Modal --}}
   <div id="deleteConfirmationModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    class="fixed inset-0 px-1 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
       <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Account Deletion</h3>
       <p class="text-sm text-gray-700 mb-6">

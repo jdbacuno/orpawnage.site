@@ -14,7 +14,7 @@
         <div class="h-full w-full">
           {{-- asset('storage/' . $pet->image_path) --}}
           <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
-            class="w-full h-auto object-cover" />
+            class="w-full h-auto object-cover rounded-lg" />
         </div>
 
         <!-- RIGHT SIDE: Pet Details and User Information -->
