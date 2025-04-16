@@ -79,11 +79,11 @@
           <div class="flex space-x-1">
             <!-- Status Badge -->
             @if($report->status === 'pending')
-            <span class="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Pending</span>
+            <span class="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Waiting for Review</span>
             @elseif($report->status === 'rejected')
             <span class="italic bg-gray-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Rejected</span>
             @elseif($report->status === 'acknowledged')
-            <span class="bg-green-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Acknowledged</span>
+            <span class="bg-green-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">Notified via Email</span>
             @else
             <span class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm cursor-pointer">{{ ucfirst($report->status)
               }}</span>

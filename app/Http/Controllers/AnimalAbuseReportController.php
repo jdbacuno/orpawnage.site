@@ -97,6 +97,8 @@ class AnimalAbuseReportController extends Controller
                 ->storeAs('incident_photos', $fileName, 'public');
         }
 
+        $validated['status'] = 'pending';
+
         // Create the report and store in the database
         AnimalAbuseReport::create($validated);
 
