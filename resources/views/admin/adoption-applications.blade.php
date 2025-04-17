@@ -232,7 +232,7 @@
   </div>
 
   <!-- Approve Modal -->
-  <div id="approveModal" class="fixed inset-0  px-1flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="approveModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
 
       <!-- Close Button -->
