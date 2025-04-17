@@ -16,7 +16,7 @@
     </div>
 
     @if ($abusedReports->isEmpty())
-    <div class="w-full text-center text-gray-500 text-lg">
+    <div class="w-full text-left sm:text-center text-gray-500 text-lg">
       No abused / stray reports found.
     </div>
     @else

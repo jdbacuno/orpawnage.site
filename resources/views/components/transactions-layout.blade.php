@@ -2,7 +2,7 @@
   <!-- Main content area with flex-grow to push footer down -->
   <div class="flex-grow">
     <!-- ========== ADOPTION REQUESTS SECTION ========== -->
-    <section class="py-20 px-5 lg:px-20 mb-20 min-h-[calc(100vh-400px)]">
+    <section class="py-20 px-5 lg:px-20 min-h-[calc(100vh-400px)]">
       <!-- Added min-height -->
       <!-- Section Type Selector -->
       <form method="GET" action="{{ url()->current() }}" class="mb-6">

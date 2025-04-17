@@ -23,7 +23,7 @@
     </div>
 
     @if ($adoptionApplications->isEmpty())
-    <div class="w-full text-center text-gray-500 text-lg">
+    <div class="w-full sm:text-center text-left text-gray-500 text-lg">
       No adoption applications found.
     </div>
     @else

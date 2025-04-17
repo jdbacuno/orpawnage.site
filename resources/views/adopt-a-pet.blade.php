@@ -56,156 +56,153 @@
         </h2>
         <!-- Filters Section -->
         <div class="flex flex-wrap gap-4 items-center mr-auto">
-          <form method="GET" action="{{ request()->url() }}#pets" class="flex flex-wrap gap-4">
+          <form id="filterForm" class="flex flex-wrap gap-4">
             <!-- Species Filter -->
             <select name="species"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]"
-              onchange="this.form.submit()">
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]">
               <option value="">All Species</option>
-              <option value="feline" {{ request('species')=='feline' ? 'selected' : '' }}>Cats</option>
-              <option value="canine" {{ request('species')=='canine' ? 'selected' : '' }}>Dogs</option>
+              <option value="feline">Cats</option>
+              <option value="canine">Dogs</option>
             </select>
 
             <!-- Gender Filter -->
             <select name="sex"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]"
-              onchange="this.form.submit()">
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]">
               <option value="">All Genders</option>
-              <option value="male" {{ request('sex')=='male' ? 'selected' : '' }}>Male</option>
-              <option value="female" {{ request('sex')=='female' ? 'selected' : '' }}>Female</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
 
             <!-- Reproductive Status Filter -->
             <select name="reproductive_status"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
-              onchange="this.form.submit()">
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]">
               <option value="">All Reproductive Statuses</option>
-              <option value="intact" {{ request('reproductive_status')=='intact' ? 'selected' : '' }}>Intact</option>
-              <option value="neutered" {{ request('reproductive_status')=='neutered' ? 'selected' : '' }}>Neutered
-              </option>
-              <option value="unknown" {{ request('reproductive_status')=='unknown' ? 'selected' : '' }}>Unknown
-              </option>
+              <option value="intact">Intact</option>
+              <option value="neutered">Neutered</option>
+              <option value="unknown">Unknown</option>
             </select>
 
             <!-- Color Filter -->
             <select name="color"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[100px]"
-              onchange="this.form.submit()">
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[100px]">
               <option value="">All Colors</option>
-              <option value="black" {{ request('color')=='black' ? 'selected' : '' }}>Black</option>
-              <option value="white" {{ request('color')=='white' ? 'selected' : '' }}>White</option>
-              <option value="gray" {{ request('color')=='gray' ? 'selected' : '' }}>Gray</option>
-              <option value="brown" {{ request('color')=='brown' ? 'selected' : '' }}>Brown</option>
-              <option value="brindle" {{ request('color')=='brindle' ? 'selected' : '' }}>Brindle</option>
-              <option value="orange" {{ request('color')=='orange' ? 'selected' : '' }}>Orange</option>
-              <option value="calico" {{ request('color')=='calico' ? 'selected' : '' }}>Calico</option>
-              <option value="tabby" {{ request('color')=='tabby' ? 'selected' : '' }}>Tabby</option>
-              <option value="bi-color" {{ request('color')=='bi-color' ? 'selected' : '' }}>Bi-Color</option>
-              <option value="tri-color" {{ request('color')=='tri-color' ? 'selected' : '' }}>Tri-Color</option>
-              <option value="others" {{ request('color')=='others' ? 'selected' : '' }}>Others</option>
+              <option value="black">Black</option>
+              <option value="white">White</option>
+              <option value="gray">Gray</option>
+              <option value="brown">Brown</option>
+              <option value="brindle">Brindle</option>
+              <option value="orange">Orange</option>
+              <option value="calico">Calico</option>
+              <option value="tabby">Tabby</option>
+              <option value="bi-color">Bi-Color</option>
+              <option value="tri-color">Tri-Color</option>
+              <option value="others">Others</option>
             </select>
 
             <!-- Source Filter -->
             <select name="source"
-              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
-              onchange="this.form.submit()">
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]">
               <option value="">All Sources</option>
-              <option value="surrendered" {{ request('source')=='surrendered' ? 'selected' : '' }}>Surrendered</option>
-              <option value="rescued" {{ request('source')=='rescued' ? 'selected' : '' }}>Rescued</option>
-              <option value="other" {{ request('source')=='other' ? 'selected' : '' }}>Other</option>
+              <option value="surrendered">Surrendered</option>
+              <option value="rescued">Rescued</option>
+              <option value="other">Other</option>
             </select>
 
             <!-- Combined Sort Dropdown -->
             <div>
               <select name="sort_by"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
-                onchange="this.form.submit()">
+                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]">
                 <option value="">Sort By</option>
-                <option value="latest" {{ request('sort_by')=='latest' ? 'selected' : '' }}>Newest Arrivals</option>
-                <option value="oldest" {{ request('sort_by')=='oldest' ? 'selected' : '' }}>Oldest Arrivals</option>
-                <option value="youngest" {{ request('sort_by')=='youngest' ? 'selected' : '' }}>Youngest First
-                </option>
-                <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest First
-                </option>
+                <option value="latest">Newest Arrivals</option>
+                <option value="oldest">Oldest Arrivals</option>
+                <option value="youngest">Youngest First</option>
+                <option value="oldest_age">Oldest First</option>
               </select>
             </div>
 
             <!-- Reset Filters Button -->
-            <a href="{{ request()->url() }}"
+            <button type="button" id="resetFilters"
               class="bg-gray-200 hover:bg-gray-300 border border-black text-center text-gray-800 px-4 py-2.5 rounded-lg text-sm min-w-[150px]">
               Reset Filters
-            </a>
-
-            <!-- Filter Button -->
-            {{-- <button type="submit"
-              class="px-4 py-2 bg-orange-400 text-white font-bold rounded-lg hover:bg-yellow-500 transition">
-              Apply Filters
-            </button> --}}
+            </button>
           </form>
         </div>
-
-
       </div>
 
-      <!-- Pet Cards Grid -->
-      @if ($pets->count() > 0)
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 sm:gap-y-10 justify-center">
-        @foreach ($pets as $pet)
-        <!-- CARD -->
-        <div class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-lg flex flex-col">
-          <a href="/services/{{ $pet->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
-            <img class="rounded-t-lg h-40 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
-              src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" />
-          </a>
-          <div class="p-5 flex flex-col flex-grow">
-            <div class="flex justify-between items-center">
-              <p class="text-lg text-gray-600 font-bold">{{ strtolower($pet->pet_name) !== 'n/a' ?
-                ucwords($pet->pet_name) : 'Unnamed' }}</p>
-              <span
-                class="bg-yellow-500 text-sm text-black py-1 px-2 rounded rounded-lg flex items-center justify-center font-bold">
-                {{ $pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}</span>
-            </div>
-
-            <div class="mt-2 text-gray-800 text-sm truncate pb-6">
-              <ul>
-                <li><span class="text-md text-black font-bold">Age:</span> {{ $pet->age }} {{ $pet->age == 1 ?
-                  Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old</li>
-                <li><span class="text-md text-black font-bold">Sex:</span> {{ ucfirst($pet->sex) }}</li>
-                <li><span class="text-md text-black font-bold">Reproductive Status:</span> {{
-                  ucfirst($pet->reproductive_status) }}</li>
-                <li><span class="text-md text-black font-bold">Color:</span> {{ ucfirst($pet->color) }}</li>
-                <li><span class="text-md text-black font-bold">Source:</span> {{ ucfirst($pet->source) }}</li>
-              </ul>
-            </div>
-            <a href="/services/{{ $pet->slug }}/adoption-form" role="button"
-              class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition">
-              Adopt Now
-            </a>
-          </div>
-        </div>
-        @endforeach
+      <!-- Pet Cards Grid Container -->
+      <div id="petsContainer">
+        <!-- Pets will be loaded here via AJAX -->
       </div>
-      @else
-      <!-- No Pets Found Message -->
-      <div class="text-center text-black mt-10">
-        <p class="text-lg font-semibold">
-          No pets found matching your filters.
-        </p>
-        <p class="text-xl">Try adjusting your search criteria.</p>
-      </div>
-      @endif
 
-      <hr class="my-6 border-gray-400/50 sm:mx-auto lg:my-8" />
-
-      <!-- Tailwind Pagination -->
-      @if ($pets->count() > 0)
-      <div class="mt-8">
-        {{ $pets->appends(request()->query())->links()->withPath(request()->url() . '#pets') }}
-      </div>
-      @endif
-
+      <!-- Pagination Container -->
+      <div id="paginationContainer" class="mt-8"></div>
     </div>
   </section>
   <!-- ========== END OF PET LISTING SECTION ========== -->
+
+  <!-- Add jQuery (you can also use vanilla JS if preferred) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Function to load pets via AJAX
+      function loadPets(page = 1) {
+        const formData = $('#filterForm').serialize() + '&page=' + page;
+        
+        $.ajax({
+          url: '/services/adopt-a-pet', // You'll need to create this route
+          type: 'GET',
+          data: formData,
+          success: function(response) {
+            $('#petsContainer').html(response.html);
+            $('#paginationContainer').html(response.pagination);
+            
+            // Update URL without reloading
+            const queryString = $('#filterForm').serialize();
+            const newUrl = window.location.pathname + (queryString ? '?' + queryString : '') + '#pets';
+            window.history.pushState({ path: newUrl }, '', newUrl);
+          },
+          error: function(xhr) {
+            console.error('Error:', xhr.responseText);
+            $('#petsContainer').html('<div class="text-center text-black mt-10"><p class="text-lg font-semibold">Error loading pets. Please try again.</p></div>');
+          }
+        });
+      }
+      
+      // Initial load
+      loadPets();
+      
+      // Filter form change event
+      $('#filterForm select').on('change', function() {
+        loadPets();
+      });
+      
+      // Reset filters
+      $('#resetFilters').on('click', function() {
+        $('#filterForm')[0].reset();
+        loadPets();
+      });
+      
+      // Handle pagination clicks
+      $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        const page = $(this).attr('href').split('page=')[1];
+        loadPets(page);
+      });
+      
+      // Search form submission
+      $('#applicationForm').on('submit', function(e) {
+        e.preventDefault();
+        const searchTerm = $('#default-search').val();
+        // You can add search functionality here if needed
+        // For now, just reload with search term
+        loadPets();
+      });
+
+      // Check for updates every 10 seconds
+      setInterval(function() {
+          loadPets($('.pagination .active').text() || 1);
+        }, 3000); // 10 seconds
+      });
+  </script>
 </x-layout>

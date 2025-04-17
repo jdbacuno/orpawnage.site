@@ -90,6 +90,17 @@ class PetController extends Controller
 
         $pets = $query->paginate(8)->appends($request->query());
 
+        if ($request->ajax()) {
+            $pet = $pets->fresh();
+            $html = view('partials.pet-cards', compact('pets'))->render();
+            $pagination = $pets->appends($request->except('page'))->links()->toHtml();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $pagination
+            ]);
+        }
+
         return view('adopt-a-pet', compact('pets'));
     }
 
