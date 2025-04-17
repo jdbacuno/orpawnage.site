@@ -3,8 +3,8 @@
   <section class="py-20 bg-gray-50">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <a href="/services/adopt-a-pet"
-        class="text-blue-500 font-bold hover:text-orange-500 text-lg inline-flex items-center">
-        <i class="ph-fill ph-caret-left"></i> <span>Back</span>
+        class="text-white font-bold hover:text-blue-500 text-lg inline-flex items-center rounded-full pl-2 pr-4 bg-blue-500 hover:outline hover:bg-white hover:outline-blue-500">
+        <i class="ph-fill ph-caret-left"></i><span>Back</span>
       </a>
       <h2 class="text-4xl font-bold text-black mt-4 mb-4">
         Adoption Request Form

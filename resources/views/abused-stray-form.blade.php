@@ -71,7 +71,7 @@
             </div>
 
             <!-- Animal Info -->
-            <div class="space-y-4">
+            <div class="space-y-2">
               <h3 class="text-sm font-semibold text-gray-500 mb-1">Animal's Information</h3>
 
               <div>
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Right Side: Full-Screen Image -->
-    <div class="w-full md:w-1/2">
+    <div class="w-full md:w-1/2 hidden sm:block">
       <img src="{{ asset('images/black-dog.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
     </div>
   </section>

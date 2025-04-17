@@ -1,14 +1,14 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="h-screen flex items-center bg-gray-100">
+  <section class="h-auto sm:h-screen mt-14 sm:mt-auto flex items-center bg-gray-100">
     <div class="grid grid-cols-1 md:grid-cols-2 w-full h-full">
       <!-- LEFT SIDE: Pet Image -->
-      <div class="h-full w-full overflow-hidden">
+      <div class="h-full w-full overflow-hidden hidden sm:block">
         <img src="{{ asset('images/black-dog.jpg') }}" alt="Adopt a Pet" class="w-full h-full object-cover" />
       </div>
 
       <!-- RIGHT SIDE: Slogan and CTA -->
-      <div class="bg-yellow-400 flex flex-col justify-center items-start p-10 md:p-20">
+      <div class="bg-yellow-400 flex flex-col justify-center items-start p-10 sm:p-20">
         <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
           Need a <span class="text-orange-500">New Home</span> for Your Pet?
           Lorem ipsum dolor sit amet
@@ -148,9 +148,9 @@
     </form>
 
     <!-- Background Image (Only on Large Screens) -->
-    <div class="hidden lg:block absolute bottom-0 left-1/2 transform -translate-x-1/2">
+    <div class="hidden sm:block absolute bottom-0 left-1/2 transform -translate-x-1/2">
       <img src="{{ asset('images/catdog.svg') }}" alt="Pet illustration"
-        class="w-[300px] h-auto opacity-80 object-cover" />
+        class="w-[300px] h-auto opacity-80 object-cover " />
     </div>
   </section>
   <!-- ========== END OF SURRENDER REQUEST FORM SECTION ========== -->

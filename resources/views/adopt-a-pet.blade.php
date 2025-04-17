@@ -1,10 +1,10 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="bg-gray-50 py-20 md:pt-28">
+  <section class="bg-gray-50 mt-10 py-10 sm:py-20">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
-      <div class="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-        <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+      <div class="lg:w-1/2 sm:mb-10 mb-0 text-left sm:text-center">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
           Lorem ipsum dolor
           <span class="text-orange-500">Or<span class="text-yellow-500">PAW</span>nage</span>
         </h1>
@@ -15,7 +15,7 @@
 
         <!-- SEARCH BAR -->
         <div class="mt-6">
-          <form class="max-w-md mx-auto" id="applicationForm">
+          <form class=" mx-auto" id="applicationForm">
             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -40,18 +40,18 @@
       <!-- RIGHT SIDE IMAGE -->
       <div class="lg:w-1/2">
         <img src="{{ asset('images/catdogBG.jpg') }}" alt="Pet Adoption Hero Image"
-          class="w-full max-w-[500px] mx-auto rounded-lg shadow-lg" />
+          class="hidden sm:block w-full sm:max-w-[500px] mx-auto rounded-xl shadow-lg" />
       </div>
     </div>
   </section>
   <!-- ========== END OF HERO SECTION ========== -->
 
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-yellow-500 py-16">
+  <section class="bg-yellow-400/30 py-8 sm:py-12">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex flex-col items-center mb-6 gap-10" id="pets">
-        <h2 class="text-4xl font-extrabold text-black">
+        <h2 class="text-3xl sm:text-4xl font-extrabold mr-auto text-black">
           Available Pets for Adoption
         </h2>
         <!-- Filters Section -->
@@ -149,10 +149,11 @@
 
       <!-- Pet Cards Grid -->
       @if ($pets->count() > 0)
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 sm:gap-y-10 justify-center">
         @foreach ($pets as $pet)
         <!-- CARD -->
-        <div class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-md flex flex-col">
+        <div class="bg-white card w-full max-w-[350px] mx-auto rounded-lg shadow-lg flex flex-col">
           <a href="/services/{{ $pet->slug }}/adoption-form" class="block overflow-hidden rounded-t-lg">
             <img class="rounded-t-lg h-40 w-full object-cover transition-transform hover:transform-gpu hover:scale-110"
               src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" />
