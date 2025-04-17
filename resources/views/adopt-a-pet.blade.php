@@ -118,13 +118,14 @@
             <!-- Combined Sort Dropdown -->
             <div>
               <select name="sort_by"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
                 onchange="this.form.submit()">
-                <option value="latest" {{ request('sort_by')=='latest' ? 'selected' : '' }}>Recently Added</option>
-                <option value="oldest" {{ request('sort_by')=='oldest' ? 'selected' : '' }}>Oldest (by Date)</option>
-                <option value="youngest" {{ request('sort_by')=='youngest' ? 'selected' : '' }}>Youngest (by Age)
+                <option value="">Sort By</option>
+                <option value="latest" {{ request('sort_by')=='latest' ? 'selected' : '' }}>Newest Arrivals</option>
+                <option value="oldest" {{ request('sort_by')=='oldest' ? 'selected' : '' }}>Oldest Arrivals</option>
+                <option value="youngest" {{ request('sort_by')=='youngest' ? 'selected' : '' }}>Youngest First
                 </option>
-                <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest (by Age)
+                <option value="oldest_age" {{ request('sort_by')=='oldest_age' ? 'selected' : '' }}>Oldest First
                 </option>
               </select>
             </div>
@@ -193,7 +194,6 @@
         <p class="text-xl">Try adjusting your search criteria.</p>
       </div>
       @endif
-
 
       <hr class="my-6 border-gray-400/50 sm:mx-auto lg:my-8" />
 

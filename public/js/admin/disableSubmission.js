@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const submitBtn = createForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = "Submitting...";
+        submitBtn.innerHTML = "Saving...";
       }
     });
   }
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const submitBtn = editForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = "Saving...";
+        submitBtn.innerHTML = "Updating...";
       }
     });
   }

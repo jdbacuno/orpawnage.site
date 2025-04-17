@@ -173,8 +173,17 @@ class PetController extends Controller
                     $query->orderBy('created_at', 'desc');
             }
         } else {
-            // Default sorting: recently added first
-            $query->orderBy('created_at', 'desc');
+            // Default sorting when first visiting the page
+            if (!request()->filled('sort_by')) {
+                $query->orderByRaw("
+            (CASE 
+                WHEN age_unit = 'years' THEN age * 12 
+                WHEN age_unit = 'months' THEN age 
+                ELSE 0 
+            END) ASC
+        ");
+                $query->orderBy('created_at', 'desc'); // Newest pets first if same age
+            }
         }
 
         $pets = $query->paginate(8)->appends(request()->query());

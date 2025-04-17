@@ -387,7 +387,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   <script src="{{ asset('js/modal.js') }}"></script>
   <script src="{{ asset('js/disableSubmission.js') }}"></script>
   <script src="{{ asset('js/scrollToTop.js') }}"></script>
-
 </body>
 
 </html>
