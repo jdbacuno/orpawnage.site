@@ -3,17 +3,11 @@
   <section class="flex flex-col md:flex-row-reverse min-h-screen pt-10">
     <!-- Right Side: Full-Screen Image (Now appears first on mobile) -->
     <div class="w-full md:w-1/2 bg-yellow-500">
-      <img
-        src="{{ asset('images/black-dog.jpg') }}"
-        alt="Missing Pet"
-        class="w-full h-full object-cover mix-blend-multiply"
-      />
+      <img src="{{ asset('images/black-dog.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
     </div>
 
     <!-- Left Side: Text Content -->
-    <div
-      class="bg-yellow-500 w-full md:w-1/2 flex justify-center items-center p-8"
-    >
+    <div class="bg-yellow-500/30 w-full md:w-1/2 flex justify-center items-center p-8">
       <div class="max-w-2xl w-full px-6 py-4">
         <h1 class="text-3xl md:text-4xl font-bold text-black">
           YOUR DONATIONS

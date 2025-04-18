@@ -202,7 +202,7 @@
       // Check for updates every 10 seconds
       setInterval(function() {
           loadPets($('.pagination .active').text() || 1);
-        }, 3000); // 10 seconds
+        }, 10000); // 10 seconds
       });
   </script>
 </x-layout>

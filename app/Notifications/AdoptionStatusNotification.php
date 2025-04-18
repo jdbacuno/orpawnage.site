@@ -62,7 +62,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
                     $mailMessage
                         ->line('🎉 Your adoption application has been approved!')
                         ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
-                        ->line('Location: Angeles City Adoption Center')
+                        ->line('Location: Angeles City Veterinary Office')
                         ->action('View Adoption Details', url('/transactions/adoption-status'))
                         ->line('Please bring:')
                         ->line('- A valid government-issued ID');

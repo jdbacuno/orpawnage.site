@@ -6,7 +6,7 @@
         class="text-white font-bold hover:text-blue-500 text-lg inline-flex items-center rounded-full pl-2 pr-4 bg-blue-500 hover:outline hover:bg-white hover:outline-blue-500">
         <i class="ph-fill ph-caret-left"></i><span>Back</span>
       </a>
-      <h2 class="text-4xl font-bold text-black mt-4 mb-4">
+      <h2 class="text-2xl sm:text-4xl font-bold text-black mt-4 mb-4">
         Adoption Request Form
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2 overflow-hidden">

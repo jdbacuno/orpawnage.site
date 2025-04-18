@@ -146,81 +146,153 @@
               <form method="POST" action="{{ route('admin.settings.password.update') }}" id="settingsForm">
                 @csrf @method('PATCH')
 
-                <div class="space-y-4">
-                  <div class="bg-blue-50 p-3 rounded-md">
-                    <h4 class="text-sm font-medium text-blue-800 mb-1">Password Requirements:</h4>
-                    <ul class="text-xs text-blue-700 space-y-1">
-                      <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> Minimum
-                        6 characters</li>
-                      <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
-                        least one uppercase letter</li>
-                      <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
-                        least one lowercase letter</li>
-                      <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
-                        least one number</li>
-                      <li class="flex items-center"><i class="ph-fill ph-check-circle mr-2 text-blue-500"></i> At
-                        least one symbol</li>
-                    </ul>
+                <div>
+                  <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Current
+                    Password</label>
+                  <div class="relative">
+                    <input type="password" id="current_password" name="current_password" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Current Password">
+                    <button type="button" onclick="togglePasswordVisibility('current_password', this)"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                      <i class="ph-fill ph-eye text-lg"></i>
+                    </button>
                   </div>
+                  <x-form-error name="current_password" />
+                </div>
 
-                  <div>
-                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Current
-                      Password</label>
-                    <div class="relative">
-                      <input type="password" id="current_password" name="current_password" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Current Password">
-                      <button type="button" onclick="togglePasswordVisibility('current_password', this)"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                        <i class="ph-fill ph-eye text-lg"></i>
-                      </button>
-                    </div>
-                    <x-form-error name="current_password" />
+                <div>
+                  <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <div class="relative">
+                    <input type="password" id="password" name="password" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter New Password">
+                    <button type="button" onclick="togglePasswordVisibility('password', this)"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                      <i class="ph-fill ph-eye text-lg"></i>
+                    </button>
                   </div>
+                  <x-form-error name="password" />
 
-                  <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                    <div class="relative">
-                      <input type="password" id="password" name="password" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Enter New Password">
-                      <button type="button" onclick="togglePasswordVisibility('password', this)"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                        <i class="ph-fill ph-eye text-lg"></i>
-                      </button>
-                    </div>
-                    <x-form-error name="password" />
-                  </div>
+                  {{-- Strength text only --}}
+                  <p id="strength-text" class="text-xs mt-2 text-blue-700">Start typing to see strength...</p>
+                </div>
 
-                  <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm
-                      Password</label>
-                    <div class="relative">
-                      <input type="password" id="password_confirmation" name="password_confirmation" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Confirm New Password">
-                      <button type="button" onclick="togglePasswordVisibility('password_confirmation', this)"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                        <i class="ph-fill ph-eye text-lg"></i>
-                      </button>
-                    </div>
-                  </div>
+                <div class="bg-blue-50 p-3 rounded-md">
+                  <h4 class="text-sm font-medium text-blue-800 mb-1">Password Requirements:</h4>
+                  <ul class="text-xs space-y-1">
+                    <li id="req-length" class="flex items-center text-blue-700">
+                      <i class="ph-fill ph-check-circle mr-2"></i> Minimum 6 characters
+                    </li>
+                    <li id="req-uppercase" class="flex items-center text-blue-700">
+                      <i class="ph-fill ph-check-circle mr-2"></i> At least one uppercase letter
+                    </li>
+                    <li id="req-lowercase" class="flex items-center text-blue-700">
+                      <i class="ph-fill ph-check-circle mr-2"></i> At least one lowercase letter
+                    </li>
+                    <li id="req-number" class="flex items-center text-blue-700">
+                      <i class="ph-fill ph-check-circle mr-2"></i> At least one number
+                    </li>
+                    <li id="req-symbol" class="flex items-center text-blue-700">
+                      <i class="ph-fill ph-check-circle mr-2"></i> At least one symbol
+                    </li>
+                  </ul>
+                </div>
 
-                  <div>
-                    <button type="submit"
-                      class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      Update Password
+                <script>
+                  const passwordInput = document.getElementById('password');
+                    const strengthText = document.getElementById('strength-text');
+                    const togglePassword = document.getElementById('toggle-password');
+                    const eyeOpen = document.getElementById('eye-open');
+                    const eyeClosed = document.getElementById('eye-closed');
+                  
+                    const reqLength = document.getElementById('req-length');
+                    const reqUpper = document.getElementById('req-uppercase');
+                    const reqLower = document.getElementById('req-lowercase');
+                    const reqNumber = document.getElementById('req-number');
+                    const reqSymbol = document.getElementById('req-symbol');
+                  
+                    const updateRequirement = (condition, element) => {
+                      if (condition) {
+                        element.classList.add('text-green-600');
+                        element.classList.remove('text-blue-700');
+                      } else {
+                        element.classList.remove('text-green-600');
+                        element.classList.add('text-blue-700');
+                      }
+                    };
+                  
+                    const updateStrength = (password) => {
+                      const hasLength = password.length >= 6;
+                      const hasUpper = /[A-Z]/.test(password);
+                      const hasLower = /[a-z]/.test(password);
+                      const hasNumber = /[0-9]/.test(password);
+                      const hasSymbol = /[^A-Za-z0-9]/.test(password);
+                  
+                      updateRequirement(hasLength, reqLength);
+                      updateRequirement(hasUpper, reqUpper);
+                      updateRequirement(hasLower, reqLower);
+                      updateRequirement(hasNumber, reqNumber);
+                      updateRequirement(hasSymbol, reqSymbol);
+                  
+                      let score = [hasLength, hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
+                  
+                      let text = 'Weak';
+                      let color = 'text-red-600';
+                  
+                      if (score === 5) {
+                        text = 'Strong';
+                        color = 'text-green-600';
+                      } else if (score >= 3) {
+                        text = 'Good';
+                        color = 'text-yellow-500';
+                      }
+                  
+                      strengthText.textContent = text;
+                      strengthText.className = `text-xs mt-2 font-medium ${color}`;
+                    };
+                  
+                    passwordInput.addEventListener('input', () => {
+                      updateStrength(passwordInput.value);
+                    });
+                  
+                    togglePassword.addEventListener('click', () => {
+                      const isPassword = passwordInput.getAttribute('type') === 'password';
+                      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                      eyeOpen.classList.toggle('hidden', !isPassword);
+                      eyeClosed.classList.toggle('hidden', isPassword);
+                    });
+                </script>
+
+                <div>
+                  <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                    Password</label>
+                  <div class="relative">
+                    <input type="password" id="password_confirmation" name="password_confirmation" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Confirm New Password">
+                    <button type="button" onclick="togglePasswordVisibility('password_confirmation', this)"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                      <i class="ph-fill ph-eye text-lg"></i>
                     </button>
                   </div>
                 </div>
-              </form>
+
+                <div>
+                  <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Update Password
+                  </button>
+                </div>
             </div>
-
-
+            </form>
           </div>
+
+
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <script>
