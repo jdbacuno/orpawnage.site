@@ -147,6 +147,13 @@
                   {{-- Strength text only --}}
                   <p id="strength-text" class="text-xs mt-2 text-blue-700">Start typing to see strength...</p>
 
+                  <!-- Password Strength Progress Bar -->
+                  <div class="mt-3">
+                    <div class="h-1 rounded-full w-full bg-gray-300">
+                      <div id="strength-progress" class="h-1 rounded-full w-0 bg-red-600"></div>
+                    </div>
+                  </div>
+
                   <x-form-error name="password" />
                 </div>
 
@@ -177,19 +184,28 @@
                   const togglePassword = document.getElementById('toggle-password');
                   const eyeOpen = document.getElementById('eye-open');
                   const eyeClosed = document.getElementById('eye-closed');
-                
+                  
                   const reqLength = document.getElementById('req-length');
                   const reqUpper = document.getElementById('req-uppercase');
                   const reqLower = document.getElementById('req-lowercase');
                   const reqNumber = document.getElementById('req-number');
                   const reqSymbol = document.getElementById('req-symbol');
+                  
+                  const strengthProgress = document.getElementById('strength-progress');
+                
+                  // Initially hide the progress bar and strength text
+                  strengthProgress.style.width = '0%';
+                  strengthText.innerText = 'Start typing to see strength...';
+                  strengthProgress.style.backgroundColor = '#f44336'; // Red
                 
                   const updateRequirement = (condition, element) => {
                     if (condition) {
                       element.classList.add('text-green-600');
+                      element.classList.add('line-through');
                       element.classList.remove('text-blue-700');
                     } else {
                       element.classList.remove('text-green-600');
+                      element.classList.remove('line-through');
                       element.classList.add('text-blue-700');
                     }
                   };
@@ -200,39 +216,51 @@
                     const hasLower = /[a-z]/.test(password);
                     const hasNumber = /[0-9]/.test(password);
                     const hasSymbol = /[^A-Za-z0-9]/.test(password);
-                
+                    
                     updateRequirement(hasLength, reqLength);
                     updateRequirement(hasUpper, reqUpper);
                     updateRequirement(hasLower, reqLower);
                     updateRequirement(hasNumber, reqNumber);
                     updateRequirement(hasSymbol, reqSymbol);
                 
-                    let score = [hasLength, hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
+                    let strength = 0;
+                    if (hasLength) strength += 1;
+                    if (hasUpper) strength += 1;
+                    if (hasLower) strength += 1;
+                    if (hasNumber) strength += 1;
+                    if (hasSymbol) strength += 1;
                 
-                    let text = 'Weak';
-                    let color = 'text-red-600';
+                    let progressPercentage = (strength / 5) * 100;
+                    strengthProgress.style.width = `${progressPercentage}%`;
                 
-                    if (score === 5) {
-                      text = 'Strong';
-                      color = 'text-green-600';
-                    } else if (score >= 3) {
-                      text = 'Good';
-                      color = 'text-yellow-500';
+                    if (progressPercentage === 0) {
+                      strengthText.innerText = 'Start typing to see strength...';
+                      strengthProgress.style.backgroundColor = '#f44336'; // Red
+                    } else if (progressPercentage < 40) {
+                      strengthText.innerText = 'Weak';
+                      strengthProgress.style.backgroundColor = '#f44336'; // Red
+                    } else if (progressPercentage < 70) {
+                      strengthText.innerText = 'Medium';
+                      strengthProgress.style.backgroundColor = '#ff9800'; // Orange
+                    } else {
+                      strengthText.innerText = 'Strong';
+                      strengthProgress.style.backgroundColor = '#4caf50'; // Green
                     }
-                
-                    strengthText.textContent = text;
-                    strengthText.className = `text-xs mt-2 font-medium ${color}`;
                   };
                 
                   passwordInput.addEventListener('input', () => {
                     updateStrength(passwordInput.value);
+                    // Show the progress bar and strength text when typing starts
+                    strengthProgress.style.display = 'block';
+                    strengthText.style.display = 'block';
                   });
                 
                   togglePassword.addEventListener('click', () => {
-                    const isPassword = passwordInput.getAttribute('type') === 'password';
-                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-                    eyeOpen.classList.toggle('hidden', !isPassword);
-                    eyeClosed.classList.toggle('hidden', isPassword);
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                
+                    eyeOpen.classList.toggle('hidden');
+                    eyeClosed.classList.toggle('hidden');
                   });
                 </script>
 
