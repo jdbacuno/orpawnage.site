@@ -98,10 +98,15 @@ class SettingsController extends Controller
 
         $user = $request->user();
 
-        // Send immediately (bypass queue)
-        $user->notifyNow(new AccountDeleted());
-        // Or: Notification::sendNow($user, new AccountDeleted());
+        // Delete only the adoption applications that are NOT picked up
+        $user->adoptionApplications()
+            ->where('status', '!=', 'picked up')
+            ->delete();
 
+        // Notify the user
+        $user->notifyNow(new AccountDeleted());
+
+        // Soft delete the user
         $user->delete();
         Auth::logout();
 
