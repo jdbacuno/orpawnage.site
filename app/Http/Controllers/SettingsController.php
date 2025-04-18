@@ -98,16 +98,23 @@ class SettingsController extends Controller
 
         $user = $request->user();
 
-        // Delete only the adoption applications that are NOT picked up
+        // Delete all non-picked-up adoption applications
         $user->adoptionApplications()
             ->where('status', '!=', 'picked up')
             ->delete();
 
-        // Notify the user
+        // Delete any related animal abuse reports
+        if (method_exists($user, 'animalAbuseReports')) {
+            $user->animalAbuseReports()->delete();
+        }
+
+        // Notify the user (send email immediately)
         $user->notifyNow(new AccountDeleted());
 
-        // Soft delete the user
+        // Soft delete the user (keeps picked-up adoptions for admin view)
         $user->delete();
+
+        // Logout
         Auth::logout();
 
         return redirect('/')->with('success', 'Your account has been permanently deleted.');
