@@ -1,10 +1,10 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-yellow-500 mt-10 py-16">
+  <section class="bg-gray-50 mt-10 py-16">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex items-center mb-6" id="pets">
-        <h2 class="text-4xl font-extrabold text-black">
+        <h2 class="text-4xl font-extrabold text-black px-4">
           Featured Pets
         </h2>
       </div>

@@ -6,7 +6,8 @@
       data-carousel="static">
       <!-- Item 1 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/catdogBG.jpg') }}" class="absolute block w-full h-full object-cover" alt="Slide 1" />
+        <img src="{{ asset('images/home_image-1.jpg') }}" class="absolute block w-full h-full object-cover"
+          alt="Slide 1" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
             <h1 class="text-5xl font-bold mb-4 text-white cursor-pointer">
@@ -31,11 +32,11 @@
 
       <!-- Item 2 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/panoramadog.jpg') }}" class="absolute block w-full h-full object-cover"
+        <img src="{{ asset('images/home_image-2.jpg') }}" class="absolute block w-full h-full object-cover"
           alt="Slide 2" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-5xl font-bold mb-4 text-orange-400">
+            <h1 class="text-5xl font-bold mb-4 text-yellow-400">
               Explore Our Services
             </h1>
             <p class="text-xl">We offer the best services for you.</p>
@@ -45,10 +46,11 @@
 
       <!-- Item 3 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/dogss.jpg') }}" class="absolute block w-full h-full object-cover" alt="Slide 3" />
+        <img src="{{ asset('images/home_image-3.jpg') }}" class="absolute block w-full h-full object-contain"
+          alt="Slide 3" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-5xl font-bold mb-4 text-orange-400">
+            <h1 class="text-5xl font-bold mb-4 text-yellow-400">
               Join Us Today
             </h1>
             <p class="text-xl">Become a part of our community.</p>
@@ -81,11 +83,11 @@
   <!-- ========== END OF HERO CAROUSEL ========== -->
 
   <!-- ========== START OF A NEW SECTION ========== -->
-  <section class="w-full py-16 bg-yellow-500">
+  <section class="w-full py-16 bg-gray-50">
     <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-10 px-4">
       <!-- Image Section -->
       <div class="w-full md:w-1/2">
-        <img src="{{ asset('images/black-dog.jpg') }}" class="w-full h-96 object-cover rounded-lg shadow-lg" />
+        <img src="{{ asset('images/home_image-0.jpg') }}" class="w-full h-96 object-cover rounded-lg shadow-lg" />
       </div>
 
       <!-- Text Section -->

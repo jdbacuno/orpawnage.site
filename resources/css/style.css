@@ -18,8 +18,8 @@ body {
 }
 
 .active {
-  color: #fff !important;
-  background-color: #ff6600;
+  color: #000 !important;
+  background-color: #ffc800;
 }
 
 /* Make cards stretch full width on mobile */

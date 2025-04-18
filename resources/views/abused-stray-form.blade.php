@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF SECTION ========== -->
-  <section class="bg-white flex flex-col md:flex-row gap-x-1 min-h-screen pt-10 sm:pt-2 my-10 sm:my-4">
+  <section class="bg-white flex flex-col md:flex-row gap-x-1 min-h-screen pt-10 sm:pt-2 my-10 sm:my-4 sm:mb-0">
     <!-- Left Side: Form -->
     <div class="w-full md:w-1/2 flex justify-center items-center px-2 pt-6 sm:p-4">
       <div class="max-w-2xl w-full p-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md">
@@ -121,7 +121,7 @@
 
     <!-- Right Side: Full-Screen Image -->
     <div class="w-full md:w-1/2 hidden sm:block">
-      <img src="{{ asset('images/animal_cruelty.jpg') }}" alt="Missing Pet" class="w-full h-full object-contain" />
+      <img src="{{ asset('images/rescue.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
     </div>
   </section>
   <!-- ========== END OF SECTION ========== -->

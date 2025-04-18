@@ -1,55 +1,50 @@
 <x-layout>
-  <!-- ========== START OF SECTION ========== -->
-  <section class="flex flex-col md:flex-row-reverse min-h-screen pt-10 my-4">
-    <!-- Right Side: Full-Screen Image (Now appears first on mobile) -->
-    <div class="w-full md:w-1/2 bg-yellow-500">
-      <img src="{{ asset('images/donator.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
+  <!-- ========== START OF DONATION SECTION ========== -->
+  <section class="relative min-h-screen flex items-center justify-center bg-black/50">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+      <img src="{{ asset('images/donate.jpg') }}" alt="Donate Background"
+        class="w-full h-full object-cover brightness-75" />
     </div>
 
-    <!-- Left Side: Text Content -->
-    <div class="bg-white w-full md:w-1/2 flex justify-center items-center p-2">
-      <div class="max-w-2xl w-full p-6 rounded-xl bg-yellow-50 border border-gray-300 shadow-md">
-        <h1 class="text-3xl md:text-4xl font-bold text-black">
-          YOUR DONATIONS
-        </h1>
-        <h2 class="text-2xl md:text-3xl mt-2">Makes A Difference</h2>
+    <!-- Overlay Content -->
+    <div
+      class="relative z-10 w-full max-w-2xl bg-white/80 backdrop-blur-md p-10 rounded-2xl shadow-xl border border-gray-200 space-y-6 mx-4">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-orange-500">YOUR DONATIONS</h1>
+        <h2 class="text-2xl font-semibold mt-1 text-gray-800">Make a Difference</h2>
+      </div>
 
-        <h3 class="text-lg md:text-xl font-semibold mt-4">We need:</h3>
-        <ul class="mt-2 space-y-1 text-xl font-medium">
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Food (Dry, Wet,
-            Canned)
+      <div>
+        <h3 class="text-xl font-semibold text-gray-700">We Need:</h3>
+        <ul class="mt-3 space-y-2 text-lg text-gray-700 font-medium">
+          @foreach ([
+          'Food (Dry, Wet, Canned)',
+          'Treats',
+          'Collars / Leashes',
+          'Cat Litter',
+          'Towels',
+          'Toys'
+          ] as $item)
+          <li class="flex items-center gap-3">
+            <i class="ph-fill ph-check-fat text-orange-500"></i> {{ $item }}
           </li>
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Treats
-          </li>
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Collars/Leashes
-          </li>
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Cat Litter
-          </li>
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Towels
-          </li>
-          <li class="flex items-center gap-2">
-            <i class="ph-fill ph-check-fat text-black"></i> Toys
-          </li>
+          @endforeach
         </ul>
+      </div>
 
-        <h3 class="text-lg md:text-xl font-semibold mt-6">
-          Drop Off Location:
-        </h3>
-        <p class="flex items-center text-base mt-2">
-          <i class="ph-fill ph-map-pin mr-2 text-black"></i> Angeles City
-          Municipal Hall, Angeles City Veterinary Office
+      <div>
+        <h3 class="text-xl font-semibold text-gray-700">Drop-Off Location:</h3>
+        <p class="flex items-center mt-2 text-gray-600">
+          <i class="ph-fill ph-map-pin mr-2 text-orange-500"></i>
+          Angeles City Municipal Hall, Angeles City Veterinary Office
         </p>
-        <p class="flex items-center text-base mt-2">
-          <i class="ph-fill ph-map-pin mr-2 text-black"></i> 5J85+64M, City
-          Hall Building, Aniceto Gueco Street, Pulung Maragul, Angeles, 2009
+        <p class="flex items-center mt-2 text-gray-600">
+          <i class="ph-fill ph-map-pin mr-2 text-orange-500"></i>
+          5J85+64M, City Hall Building, Aniceto Gueco St., Pulung Maragul, Angeles, 2009
         </p>
       </div>
     </div>
   </section>
-  <!-- ========== END OF SECTION ========== -->
+  <!-- ========== END OF DONATION SECTION ========== -->
 </x-layout>
