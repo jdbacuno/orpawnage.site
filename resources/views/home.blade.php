@@ -10,7 +10,7 @@
           alt="Slide 1" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-5xl font-bold mb-4 text-white cursor-pointer">
+            <h1 class="text-4xl font-bold mb-4 text-white cursor-pointer">
               <span class="hover:text-yellow-400 transition-colors duration-300">Malaus</span>
               <span class="hover:text-yellow-400 transition-colors duration-300">kayu</span>
               <span class="hover:text-yellow-400 transition-colors duration-300">pu</span>
@@ -22,7 +22,7 @@
                 </span>
               </span>
             </h1>
-            <p class="text-xl/10 mt-10 mx-auto max-w-[700px] px-5 tracking-widest">
+            <p class="text-lg/10 mt-10 mx-auto max-w-[700px] px-5 tracking-widest">
               Save a life — adopt instead of buying, and gain a heart that
               will always love you back.
             </p>
@@ -36,7 +36,7 @@
           alt="Slide 2" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-5xl font-bold mb-4 text-yellow-400">
+            <h1 class="text-4xl font-bold mb-4 text-yellow-400">
               Explore Our Services
             </h1>
             <p class="text-xl">We offer the best services for you.</p>
@@ -46,11 +46,11 @@
 
       <!-- Item 3 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/home_image-3.jpg') }}" class="absolute block w-full h-full object-contain"
-          alt="Slide 3" />
+        <img src="{{ asset('images/home_image-3.jpg') }}"
+          class="absolute block w-full h-full object-cover sm:object-contain" alt="Slide 3" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-5xl font-bold mb-4 text-yellow-400">
+            <h1 class="text-4xl font-bold mb-4 text-yellow-400">
               Join Us Today
             </h1>
             <p class="text-xl">Become a part of our community.</p>
