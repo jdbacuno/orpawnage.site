@@ -1,7 +1,7 @@
 <x-layout>
   <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-10">
     <div class="max-w-6xl mx-auto">
-      <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
         {{-- Header --}}
         <div class="bg-gray-800 px-6 py-4">
           <h2 class="text-2xl font-bold text-white">Account Settings</h2>

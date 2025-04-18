@@ -1,6 +1,6 @@
 <x-layout>
   <!-- START OF THE SECTION -->
-  <section class="py-20 bg-gray-50">
+  <section class="py-20 bg-white">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <a href="/services/adopt-a-pet"
         class="text-white font-bold hover:text-blue-500 text-lg inline-flex items-center rounded-full pl-2 pr-4 bg-blue-500 hover:outline hover:bg-white hover:outline-blue-500">
@@ -9,7 +9,7 @@
       <h2 class="text-2xl sm:text-4xl font-bold text-black mt-4 mb-4">
         Adoption Request Form
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">
         <!-- LEFT SIDE: Pet Image -->
         <div class="h-full w-full">
           {{-- asset('storage/' . $pet->image_path) --}}
@@ -18,7 +18,7 @@
         </div>
 
         <!-- RIGHT SIDE: Pet Details and User Information -->
-        <div class="px-0 sm:px-6 pt-0 sm:pb-6">
+        <div class="p-6 sm:pb-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md">
 
 
           @if (session('success'))
@@ -208,7 +208,7 @@
 
             <!-- Submit Button -->
             <button type="submit"
-              class="w-full mt-6 bg-orange-500 text-white font-medium rounded-lg py-3 hover:bg-yellow-500 transition duration-300">
+              class="w-full mt-6 bg-orange-500 text-white font-medium rounded-lg py-3 hover:bg-yellow-500 hover:text-black transition duration-300">
               Submit Adoption Form
             </button>
           </form>

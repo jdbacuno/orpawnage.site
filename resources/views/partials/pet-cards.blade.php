@@ -28,7 +28,7 @@
         </ul>
       </div>
       <a href="/services/{{ $pet->slug }}/adoption-form" role="button"
-        class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 transition">
+        class="mt-auto inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 hover:text-black transition">
         Adopt Now
       </a>
     </div>

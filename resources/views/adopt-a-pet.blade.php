@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="bg-gray-50 mt-10 py-10 sm:py-20">
+  <section class="bg-gray-60 mt-10 py-10 sm:py-20">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
       <div class="lg:w-1/2 sm:mb-10 mb-0 text-left sm:text-center">

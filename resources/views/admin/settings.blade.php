@@ -1,6 +1,6 @@
 <x-admin-layout>
   <div class="w-full mx-auto mt-2">
-    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
       {{-- Header --}}
       <div class="bg-gray-800 px-6 py-4">
         <h2 class="text-2xl font-bold text-white">Account Settings</h2>

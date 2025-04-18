@@ -1,9 +1,9 @@
 <x-layout>
   <!-- ========== START OF SECTION ========== -->
-  <section class="bg-yellow-500/30 flex flex-col md:flex-row gap-x-6 min-h-screen pt-10 sm:pt-2">
+  <section class="bg-white flex flex-col md:flex-row gap-x-1 min-h-screen pt-10 sm:pt-2 my-10 sm:my-4">
     <!-- Left Side: Form -->
     <div class="w-full md:w-1/2 flex justify-center items-center px-2 pt-6 sm:p-4">
-      <div class="max-w-2xl w-full p-6">
+      <div class="max-w-2xl w-full p-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md">
         <h2 class="text-3xl font-bold text-black mb-6 text-left">
           Report an Incident of Abused/Stray Animal
         </h2>
@@ -110,7 +110,7 @@
           <!-- Submit Button -->
           <div class="flex justify-center md:justify-end">
             <button type="submit"
-              class="w-full md:w-auto bg-orange-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-orange-400 transition">
+              class="w-full md:w-auto bg-orange-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-yellow-500 hover:text-black transition">
               Submit Report
             </button>
           </div>
@@ -121,7 +121,7 @@
 
     <!-- Right Side: Full-Screen Image -->
     <div class="w-full md:w-1/2 hidden sm:block">
-      <img src="{{ asset('images/black-dog.jpg') }}" alt="Missing Pet" class="w-full h-full object-cover" />
+      <img src="{{ asset('images/animal_cruelty.jpg') }}" alt="Missing Pet" class="w-full h-full object-contain" />
     </div>
   </section>
   <!-- ========== END OF SECTION ========== -->

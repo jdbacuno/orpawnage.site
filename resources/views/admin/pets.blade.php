@@ -85,7 +85,7 @@
       <h2 class="text-xl font-semibold text-gray-800">Pet Profiles</h2>
       <!-- Add New Pet Button -->
       <button id="openModal"
-        class="bg-yellow-500 hover:bg-orange-500 text-black font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
+        class="bg-yellow-500 text-black hover:bg-orange-500 hover:text-white font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
         <i class="ph-fill ph-plus-circle"></i>
         <span class="hidden md:inline-flex ml-2">Add a New Pet</span>
       </button>
@@ -435,7 +435,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-orange-500 sticky bottom-0">Add
+            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-500 hover:text-black sticky bottom-0">Add
             Pet</button>
         </form>
       </div>
@@ -596,7 +596,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="w-full bg-yellow-500 text-white py-2 rounded-md hover:bg-orange-500 sticky bottom-0">Update
+            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-500 hover:text-black sticky bottom-0">Update
             Pet</button>
         </form>
       </div>
