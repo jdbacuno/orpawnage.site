@@ -1,9 +1,0 @@
-id,slug,pet_number,pet_name,species,age,age_unit,sex,reproductive_status,color,source,image_path,created_at,updated_at,age_months,log_age_months,was_adopted,adoption_probability
-4,feline-puspin-1743222814-zcjid,5,N/A,feline,2,years,female,unknown,tri-color,rescued,pet-images/pet5_20250329123334.jpg,2025-03-29 12:33:00,2025-03-29 12:33:00,24,3.2188758248682006,0,0.3773700098828257
-33,feline-puspin-1743507085-9x0ax,26,N/A,feline,2,years,female,unknown,bi-color,rescued,pet-images/pet26_20250401193125.jpg,2025-04-01 19:31:00,2025-04-01 19:31:00,24,3.2188758248682006,0,0.3773700098828257
-7,feline-puspin-1743223247-fsofq,8,N/A,feline,2,years,male,unknown,orange,rescued,pet-images/pet8_20250329124047.jpg,2025-03-29 12:40:00,2025-03-29 12:40:00,24,3.2188758248682006,0,0.3926555547294473
-2,feline-puspin-1743221743-kqnz6,3,N/A,feline,1,years,female,unknown,white,rescued,pet-images/pet3_20250329121543.jpg,2025-03-29 12:15:00,2025-03-29 12:15:00,12,2.5649493574615367,0,0.41423915622404556
-1,feline-puspin-1743221604-0q1c2,1,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet1_20250329121323.jpg,2025-03-29 12:13:00,2025-03-29 12:34:00,12,2.5649493574615367,0,0.41423915622404556
-26,feline-puspin-1743506734-zvtjw,19,N/A,feline,1,years,female,unknown,black,rescued,pet-images/pet19_20250401192534.jpg,2025-04-01 19:25:00,2025-04-01 19:25:00,12,2.5649493574615367,0,0.41423915622404556
-27,feline-puspin-1743506840-6e7yd,20,N/A,feline,1,years,female,unknown,bi-color,rescued,pet-images/pet20_20250401192720.jpg,2025-04-01 19:27:00,2025-04-01 19:27:00,12,2.5649493574615367,0,0.41423915622404556
-30,feline-puspin-1743506986-tlxwx,22,N/A,feline,1,years,female,unknown,tri-color,rescued,pet-images/pet22_20250401192945.jpg,2025-04-01 19:29:00,2025-04-01 19:29:00,12,2.5649493574615367,0,0.41423915622404556
