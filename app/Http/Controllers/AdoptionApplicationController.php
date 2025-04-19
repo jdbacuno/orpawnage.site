@@ -8,7 +8,6 @@ use App\Models\ArchivedAdoptionApplication;
 use App\Models\Pet;
 use App\Notifications\AdoptionStatusNotification;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -31,41 +30,37 @@ class AdoptionApplicationController extends Controller
         $activeQuery = AdoptionApplication::with(['pet', 'user']);
         $archivedQuery = ArchivedAdoptionApplication::with('pet');
 
-        // Handle filters for both datasets
         if ($status === 'active') {
-            $activeQuery->whereIn('status', ['to be scheduled', 'to be picked up']);
-            $archivedQuery = collect(); // skip archived if looking only for active
+            $activeQuery->whereIn('status', ['pending', 'to be scheduled', 'to be picked up']);
+            $archivedQuery = collect();
         } elseif ($status && $status !== 'all') {
             $activeQuery->where('status', $status);
-            $archivedQuery = collect(); // skip archived if filtering status not matched
+            $archivedQuery = collect();
         } else {
-            // Keep picked-up for active
-            $activeQuery->where('status', 'picked up');
+            $activeQuery->whereIn('status', ['pending', 'to be scheduled', 'to be picked up', 'picked up', 'rejected']);
         }
 
-        // Get active apps
         $active = $activeQuery->get()->map(function ($item) {
             $item->is_archived = false;
             return $item;
         });
 
-        // Get archived apps if applicable
-        if (!$archivedQuery instanceof Collection) {
+        if ($archivedQuery instanceof \Illuminate\Database\Eloquent\Builder) {
             $archived = $archivedQuery->get()->map(function ($item) {
                 $item->is_archived = true;
                 $item->status = 'picked up';
                 $item->created_at = $item->adopted_at ?? $item->created_at;
-                $item->birthdate = Carbon::parse($item->birthdate); // 👈 this line fixes the error
-                $item->user = null; // no user relation
+                $item->birthdate = Carbon::parse($item->birthdate);
+                $item->user = null;
                 return $item;
             });
         } else {
-            $archived = $archivedQuery; // empty collection
+            $archived = $archivedQuery;
         }
 
-        // Merge, sort, and paginate manually
-        $merged = $active->merge($archived)
-            ->sortBy([$sort => $direction === 'asc' ? SORT_ASC : SORT_DESC]);
+        $merged = $active->merge($archived)->sortBy(function ($item) use ($sort) {
+            return $item->$sort ?? $item->created_at;
+        }, SORT_REGULAR, $direction === 'desc');
 
         $perPage = 9;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
