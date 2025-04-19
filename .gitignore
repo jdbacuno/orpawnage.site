@@ -3,7 +3,6 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-low_probability_pets.csv
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -34,7 +33,7 @@ auth.json
 /node_modules
 /public/build
 /public/hot
-low_probability_pets.csv
+
 /storage/*.key
 /storage/pail
 /vendor
@@ -55,4 +54,4 @@ yarn-error.log
 /.zed
 >>>>>>> a71a53f (First commit)
 /scripts/ml/config.py
-low_probability_pets.csv
+/low_probability_pets.csv
