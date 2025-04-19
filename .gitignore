@@ -34,7 +34,7 @@ auth.json
 /node_modules
 /public/build
 /public/hot
-
+low_probability_pets.csv
 /storage/*.key
 /storage/pail
 /vendor
