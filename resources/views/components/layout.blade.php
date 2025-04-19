@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OrPAWnage | {{ Route::currentRouteName() ? ucfirst(Route::currentRouteName()) : '' }}</title>
+  <title>OrPAWnage | {{ Route::currentRouteName() ? ucwords(Route::currentRouteName()) : '' }}</title>
   <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" type="image/png" sizes="16x16">
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
   @vite(['resources/css/admin/fonts/phosphor/phosphor-fill.css'])

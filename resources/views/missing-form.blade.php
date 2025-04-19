@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF MISSING PET REPORT SECTION ========== -->
-  <section class="relative min-h-screen flex items-center justify-center bg-black/50 pt-20 pb-10">
+  <section class="relative min-h-screen flex items-center justify-center bg-black/50 mt-4 pt-20 pb-10">
     <!-- Background Image -->
     <div class="absolute inset-0">
       <img src="{{ asset('images/missing.jpeg') }}" alt="Missing Pet Background"
@@ -10,7 +10,7 @@
     <!-- Form Container -->
     <div
       class="relative z-10 w-full max-w-3xl bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-200 mx-4">
-      <h2 class="text-3xl font-bold text-black mb-6 text-left sm:text-center">Report a Missing Pet</h2>
+      <h2 class="text-2xl sm:text-3xl font-bold text-black mb-6 text-left sm:text-center">Report a Missing Pet</h2>
 
       <form action="/report/missing-pet" method="POST" enctype="multipart/form-data">
         @csrf

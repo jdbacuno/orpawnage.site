@@ -172,10 +172,15 @@ Route::middleware('guest')->group(function () {
         ->name('password.update');
 });
 
+// Logout Route
+Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
+
+Route::get('/contact', function () {
+    return redirect()->away('mailto:orpawnageteam@gmail.com');
+});
+
+
 // for all undefined routes
 Route::fallback(function () {
     abort(404);
 });
-
-// Logout Route
-Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');

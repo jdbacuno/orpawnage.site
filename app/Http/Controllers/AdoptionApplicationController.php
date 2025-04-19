@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdoptionApplication;
+use App\Models\ArchivedAdoptionApplication;
 use App\Models\Pet;
 use App\Notifications\AdoptionStatusNotification;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -15,34 +19,65 @@ class AdoptionApplicationController extends Controller
 {
     public function index()
     {
-        // Default sorting: newest first (created_at desc)
         $sort = request('sort', 'created_at');
         $direction = request('direction', 'desc');
+        $status = request('status');
 
-        // Ensure only valid columns are used to prevent SQL injection
         $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color', 'status'];
         if (!in_array($sort, $allowedSorts)) {
             $sort = 'created_at';
         }
 
-        $query = AdoptionApplication::with(['pet', 'user']);
+        $activeQuery = AdoptionApplication::with(['pet', 'user']);
+        $archivedQuery = ArchivedAdoptionApplication::with('pet');
 
-        // Status Filter - default is 'picked up'
-        if (request()->filled('status')) {
-            $status = request('status');
-            if ($status === 'active') {
-                $query->whereIn('status', ['to be scheduled', 'to be picked up']);
-            } elseif ($status === 'all') {
-                // No status filter applied
-            } else {
-                $query->where('status', $status);
-            }
+        // Handle filters for both datasets
+        if ($status === 'active') {
+            $activeQuery->whereIn('status', ['to be scheduled', 'to be picked up']);
+            $archivedQuery = collect(); // skip archived if looking only for active
+        } elseif ($status && $status !== 'all') {
+            $activeQuery->where('status', $status);
+            $archivedQuery = collect(); // skip archived if filtering status not matched
+        } else {
+            // Keep picked-up for active
+            $activeQuery->where('status', 'picked up');
         }
 
-        $adoptionApplications = $query->orderBy($sort, $direction)
-            ->paginate(9);
+        // Get active apps
+        $active = $activeQuery->get()->map(function ($item) {
+            $item->is_archived = false;
+            return $item;
+        });
 
-        return view('admin.adoption-applications', compact('adoptionApplications'));
+        // Get archived apps if applicable
+        if (!$archivedQuery instanceof Collection) {
+            $archived = $archivedQuery->get()->map(function ($item) {
+                $item->is_archived = true;
+                $item->status = 'picked up';
+                $item->created_at = $item->adopted_at ?? $item->created_at;
+                $item->birthdate = Carbon::parse($item->birthdate); // 👈 this line fixes the error
+                $item->user = null; // no user relation
+                return $item;
+            });
+        } else {
+            $archived = $archivedQuery; // empty collection
+        }
+
+        // Merge, sort, and paginate manually
+        $merged = $active->merge($archived)
+            ->sortBy([$sort => $direction === 'asc' ? SORT_ASC : SORT_DESC]);
+
+        $perPage = 9;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $paginated = new LengthAwarePaginator(
+            $merged->forPage($currentPage, $perPage),
+            $merged->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('admin.adoption-applications', ['adoptionApplications' => $paginated]);
     }
 
     public function create(Pet $pet)

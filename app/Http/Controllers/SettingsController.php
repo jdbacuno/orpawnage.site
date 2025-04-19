@@ -10,8 +10,10 @@ use App\Notifications\AccountDeleted;
 use App\Notifications\PasswordChanged;
 use App\Notifications\ContactNumberChanged;
 use App\Notifications\EmailChanged;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -98,27 +100,50 @@ class SettingsController extends Controller
 
         $user = $request->user();
 
-        // Delete all non-picked-up adoption applications
-        $user->adoptionApplications()
-            ->where('status', '!=', 'picked up')
-            ->delete();
+        // Archive picked-up applications
+        $pickedUpApps = $user->adoptionApplications()->where('status', 'picked up')->get();
 
-        // Delete any related animal abuse reports
-        if (method_exists($user, 'animalAbuseReports')) {
-            $user->animalAbuseReports()->delete();
+        foreach ($pickedUpApps as $app) {
+            DB::table('archived_adoption_applications')->insert([
+                'original_id' => $app->id,
+                'pet_id' => $app->pet_id,
+                'full_name' => $app->full_name,
+                'email' => $app->email,
+                'age' => $app->age,
+                'birthdate' => $app->birthdate,
+                'contact_number' => $app->contact_number,
+                'address' => $app->address,
+                'civil_status' => $app->civil_status,
+                'citizenship' => $app->citizenship,
+                'transaction_number' => $app->transaction_number,
+                'adopted_at' => $app->updated_at, // or use a specific date field if available
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
-        // Notify the user (send email immediately)
+        // Delete all applications (including picked up after archiving)
+        $user->adoptionApplications()->delete();
+
+        // Delete abuse reports & their images
+        $user->animalAbuseReports()->each(function ($report) {
+            if ($report->incident_photo) {
+                Storage::disk('public')->delete($report->incident_photo);
+            }
+            $report->delete();
+        });
+
+        // Notify and hard delete user
         $user->notifyNow(new AccountDeleted());
 
-        // Soft delete the user (keeps picked-up adoptions for admin view)
-        $user->delete();
+        // Hard delete user
+        $user->forceDelete(); // if you don't want soft deletion at all
 
-        // Logout
         Auth::logout();
 
-        return redirect('/')->with('success', 'Your account has been permanently deleted.');
+        return redirect('/login')->with('success', 'Your account has been permanently deleted.');
     }
+
 
     // FOR ADMIN SETTINGS
     public function adminShow()

@@ -8,7 +8,7 @@
     <!-- Centered Form Card -->
     <div
       class="relative z-10 w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 p-8 sm:p-10 m-4">
-      <h2 class="text-3xl font-bold text-black mb-6 text-left">
+      <h2 class="text-2xl sm:text-3xl font-bold text-black mb-6 text-left">
         Report an Incident of Abused/Stray Animal
       </h2>
 

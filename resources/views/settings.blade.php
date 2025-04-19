@@ -381,6 +381,17 @@
 
 
   <script>
+    // Prevent default form submission for all forms
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          console.log(`Prevented default submit on form with action: ${form.action}`);
+          // Optionally, you can call your AJAX or custom validation function here
+        });
+      });
+    });
+
     function togglePasswordVisibility(id, button) {
       const input = document.getElementById(id);
       const type = input.type === 'password' ? 'text' : 'password';

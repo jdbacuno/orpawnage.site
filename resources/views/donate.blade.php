@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF DONATION SECTION ========== -->
-  <section class="relative min-h-screen flex items-center justify-center bg-black/50">
+  <section class="relative min-h-screen flex items-center justify-center bg-black/50 mt-8">
     <!-- Background Image -->
     <div class="absolute inset-0">
       <img src="{{ asset('images/donate.jpg') }}" alt="Donate Background"

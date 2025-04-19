@@ -19,9 +19,9 @@ class AccountDeleted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Account Deletion Confirmation')
+            ->subject('Account Deletion Successful')
             ->line('We regret to inform you that your account has been deleted permanently.')
-            ->line('All your personal data has been removed from our systems.')
+            ->line('All your personal data including incompleted applications and reports have been removed from our system.')
             ->line('Your account cannot be recovered at this point.')
             ->action('Contact Support', url('/contact'))
             ->line('Thank you for having been with us.');
