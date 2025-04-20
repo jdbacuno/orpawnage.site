@@ -320,7 +320,7 @@
       </button>
 
       <!-- Scrollable Content -->
-      <div class="flex flex-col overflow-y-auto p-2 space-y-4 flex-grow">
+      <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
         <!-- Form Title -->
         <h2 class="text-xl font-semibold text-gray-800">Add a New Pet</h2>
 
@@ -454,7 +454,7 @@
       </button>
 
       <!-- Scrollable Content -->
-      <div class="flex flex-col overflow-y-auto p-2 space-y-4 flex-grow">
+      <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
         <!-- Form Title -->
         <h2 class="text-xl font-semibold text-gray-800">Edit Pet</h2>
 

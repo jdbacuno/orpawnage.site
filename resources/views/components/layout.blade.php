@@ -339,7 +339,7 @@
                 </li>
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-envelope text-lg"></i>
-                  <a href="#" class="break-all"> admin@orpawnage.com </a>
+                  <a href="#" class="break-all"> orpawnageteam@gmail.com </a>
                 </li>
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-facebook-logo text-lg"></i>

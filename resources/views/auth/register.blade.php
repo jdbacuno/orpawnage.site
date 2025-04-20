@@ -3,7 +3,7 @@
   <div class="relative p-6 bg-white z-1 sm:p-0">
     <div class="flex flex-col justify-center w-full h-screen py-10 lg:flex-row">
       <!-- Form -->
-      <div class="flex flex-col flex-1 w-full lg:w-1/2 overflow-y-auto py-8">
+      <div class="flex flex-col flex-1 w-full lg:w-1/2 overflow-y-auto no-scrollbar py-8">
         <div class="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
           <div class="lg:hidden mb-10 sm:mb-10">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-20 mx-auto" alt="Flowbite Logo" />
