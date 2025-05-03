@@ -17,7 +17,7 @@ use App\Models\User;
 
 // Guest Routes (Login/Sign Up)
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisteredUserController::class, 'create']);
+    Route::get('/register', [RegisteredUserController::class, 'create'])->name('Sign Up');
     Route::post('/register', [RegisteredUserController::class, 'store']);
 
     Route::get('/login', [SessionController::class, 'create'])->name('login');

@@ -41,10 +41,18 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
             ->subject("Adoption Application Update")
             ->greeting('Hello ' . $this->application->user->full_name . ',')
             ->line('Transaction #: ' . $this->application->transaction_number)
-            ->line('Pet Name: ' . $this->application->pet->name)
+            ->line('Pet Name: ' . $this->application->pet->pet_name)
             ->line('Application Date: ' . $this->application->created_at->format('F j, Y'));
 
         switch ($this->application->status) {
+            case 'to be confirmed':
+                $mailMessage
+                    ->line('🎉 We have received your application! Please confirm within 24 hours.')
+                    ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
+                    ->line('Location: Angeles City Veterinary Office')
+                    ->action('Confirm', url('/transactions/adoption-status'))
+                    ->line('Failure to confirm within 24 hours will automatically reject your application.');
+                break;
             case 'to be picked up':
                 if (
                     $this->application->pickup_date &&

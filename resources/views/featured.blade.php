@@ -67,7 +67,7 @@
 
       @else
       <!-- No Pets Found Message -->
-      <div class="text-center text-black mt-10">
+      <div class="text-center text-black mt-10 h-dvh">
         <p class="text-lg font-semibold">
           No pets found in the featured list.
         </p>

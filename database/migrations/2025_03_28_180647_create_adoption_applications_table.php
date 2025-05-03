@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('adoption_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // User applying
-            $table->foreignId('pet_id')->constrained()->onDelete('cascade'); // Pet being adopted
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pet_id')->constrained()->onDelete('cascade');
             $table->string('full_name');
             $table->string('email');
             $table->integer('age');
@@ -23,10 +23,14 @@ return new class extends Migration
             $table->text('address');
             $table->string('civil_status');
             $table->string('citizenship');
-            $table->enum('status', ['to be scheduled', 'to be picked up', 'picked up', 'rejected'])->default('to be scheduled');
-            $table->string('transaction_number')->unique(); // ← Add this line
+            $table->text('reason_for_adoption'); // Added for "Why do you want to adopt a pet?"
+            $table->enum('visit_veterinarian', ['Yes', 'No', 'Sometimes']); // Added for veterinarian visits
+            $table->integer('existing_pets'); // Added for existing pets information
+            $table->string('valid_id'); // for storing valid ID file path
+            $table->enum('status', ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going', 'picked up', 'rejected', 'archive'])->default('to be confirmed');
+            $table->string('transaction_number')->unique();
             $table->text('reject_reason')->nullable();
-            $table->date('pickup_date')->nullable(); // Allows NULL for "Not set"
+            $table->date('pickup_date')->nullable();
             $table->timestamps();
         });
     }

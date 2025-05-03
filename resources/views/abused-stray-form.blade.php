@@ -92,10 +92,16 @@
             </div>
             <div>
               <label class="block text-gray-700 font-medium">Upload a Photo of Proof (if there's any)</label>
-              <input type="file" name="incident_photo"
+              <input type="file" name="incident_photo" id="incident_photo"
                 class="w-full py-0 border rounded-lg border focus:border-black file:bg-gray-400 file:border-0 file:text-white"
                 required />
               <x-form-error name="incident_photo" />
+
+              <!-- Image Preview -->
+              <div class="mt-2">
+                <img id="image_preview" src="#" alt="Image Preview"
+                  class="hidden w-40 h-40 object-cover rounded border border-gray-300" />
+              </div>
             </div>
           </div>
         </div>
@@ -110,4 +116,24 @@
       </form>
     </div>
   </section>
+
+  <!-- JavaScript for Image Preview -->
+  <script>
+    document.getElementById('incident_photo').addEventListener('change', function (event) {
+      const preview = document.getElementById('image_preview');
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      } else {
+        preview.src = '#';
+        preview.classList.add('hidden');
+      }
+    });
+  </script>
 </x-layout>

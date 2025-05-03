@@ -287,7 +287,6 @@
 
     {{ $slot }}
 
-
     <!-- ========== START OF FOOTER ========== -->
     <footer class="bg-yellow-400/10 w-full mt-auto">
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">

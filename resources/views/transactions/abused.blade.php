@@ -1,5 +1,5 @@
 <x-transactions-layout>
-  <div class="flex flex-col flex-wrap gap-x-4 gap-y-6">
+  <div class="flex flex-col flex-wrap gap-x-4 gap-y-6 sm:mt-10">
     <!-- Filters Section -->
     <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
       <form method="GET" action="/transactions/abused-status" class="flex flex-wrap gap-4">
@@ -30,7 +30,8 @@
             <h3 class="text-xl font-semibold flex items-center"><i class="ph-fill ph-tag mr-2"></i> {{
               $report->report_number }}</h3>
           </div>
-          <p class="text-sm text-gray-500 mt-2"><strong>Reported by:</strong> {{ ucwords($report->full_name) ?? 'N/A' }}
+          <p class="text-sm text-gray-500 mt-2"><strong>Reported by:</strong> {{ $report->full_name ?
+            ucwords($report->full_name) : 'anonymous' }}
           </p>
           <p class="text-sm text-gray-500 mt-1"><strong>Contact Number:</strong> {{ $report->contact_no }}</p>
           <p class="text-sm text-gray-500 mt-1"><strong>Location of Incident:</strong> {{ $report->incident_location }}
@@ -124,17 +125,17 @@
 
   {{-- image modal --}}
   <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-2xl w-full">
+    <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-3xl w-full max-h-[90vh] overflow-auto">
       <!-- Close Button -->
-      <button id="closeImageModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <button id="closeImageModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
       <h2 class="text-lg font-semibold text-gray-800">Incident Photo</h2>
 
       <!-- Image Container -->
-      <div class="w-full mt-2 overflow-hidden rounded-lg">
-        <img id="modalImage" alt="Incident Photo" class="w-full h-auto object-cover rounded-lg">
+      <div class="w-full mt-2 flex justify-center items-center">
+        <img id="modalImage" alt="Incident Photo" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md" />
       </div>
     </div>
   </div>

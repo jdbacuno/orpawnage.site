@@ -25,7 +25,7 @@
                 </p>
               </div>
               @unless(auth()->user()->hasVerifiedEmail())
-              <form method="POST" action="{{ route('verification.send') }}" id="settingsForm">
+              <form method="POST" action="{{ route('verification.send') }}" class="settings-form" id="settingsForm">
                 @csrf
                 <button type="submit"
                   class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
@@ -42,7 +42,8 @@
               {{-- Email Update --}}
               <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Change Email Address</h3>
-                <form method="POST" action="{{ route('settings.email.update') }}" id="settingsForm">
+                <form method="POST" action="{{ route('settings.email.update') }}" class="settings-form"
+                  id="settingsForm">
                   @csrf @method('PATCH')
 
                   <div class="space-y-4">
@@ -89,7 +90,8 @@
               {{-- Contact Number --}}
               <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Update Contact Number</h3>
-                <form method="POST" action="{{ route('settings.contact.update') }}" id="settingsForm">
+                <form method="POST" action="{{ route('settings.contact.update') }}" class="settings-form"
+                  id="settingsForm">
                   @csrf @method('PATCH')
 
                   <div class="space-y-4">
@@ -142,7 +144,8 @@
               {{-- Password Update --}}
               <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
-                <form method="POST" action="{{ route('settings.password.update') }}" id="settingsForm">
+                <form method="POST" action="{{ route('settings.password.update') }}" class="settings-form"
+                  id="settingsForm">
                   @csrf @method('PATCH')
 
                   <div class="space-y-4">
@@ -324,7 +327,8 @@
                   Once you delete your account, there is no going back. Please be certain.
                 </p>
 
-                <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
+                <form method="POST" action="{{ route('settings.delete') }}" class="settings-form"
+                  id="deleteAccountForm">
                   @csrf @method('DELETE')
 
                   <div class="space-y-4">
@@ -383,7 +387,7 @@
   <script>
     // Prevent default form submission for all forms
     document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('form').forEach(form => {
+      document.querySelectorAll('.settings-form').forEach(form => {
         form.addEventListener('submit', function (e) {
           e.preventDefault();
           console.log(`Prevented default submit on form with action: ${form.action}`);

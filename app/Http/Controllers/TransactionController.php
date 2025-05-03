@@ -6,6 +6,7 @@ use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -16,7 +17,7 @@ class TransactionController extends Controller
 
         $query = AdoptionApplication::with('pet')->where('user_id', $userId);
 
-        if ($status && in_array($status, ['to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
+        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
             $query->where('status', $status);
         }
 
@@ -24,7 +25,9 @@ class TransactionController extends Controller
             CASE status
                 WHEN 'to be picked up' THEN 0
                 WHEN 'to be scheduled' THEN 1
-                WHEN 'picked up' THEN 2
+                WHEN 'confirmed' THEN 2
+                WHEN 'to be confirmed' THEN 3
+                WHEN 'picked up' THEN 4
                 ELSE 3
             END
         ")->latest()->paginate(9);
@@ -93,7 +96,13 @@ class TransactionController extends Controller
 
     public function destroy(AdoptionApplication $application)
     {
+        // Delete the associated photo if it exists
+        if ($application->valid_id) {
+            Storage::disk('public')->delete($application->valid_id);
+        }
+
         $application->delete();
+
         return redirect()->back()->with('success', 'Adoption request deleted successfully.');
     }
 }
