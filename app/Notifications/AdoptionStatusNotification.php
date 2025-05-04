@@ -38,7 +38,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $mailMessage = (new MailMessage)
-            ->subject("Adoption Application Update")
+            ->subject("Adoption Application - " . ucwords($this->application->status) . " - Transaction #{$this->application->transaction_number}")
             ->greeting('Hello ' . $this->application->user->full_name . ',')
             ->line('Transaction #: ' . $this->application->transaction_number)
             ->line('Pet Name: ' . $this->application->pet->pet_name)
@@ -47,34 +47,31 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
         switch ($this->application->status) {
             case 'to be confirmed':
                 $mailMessage
-                    ->line('🎉 We have received your application! Please confirm within 24 hours.')
-                    ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
-                    ->line('Location: Angeles City Veterinary Office')
-                    ->action('Confirm', url('/transactions/adoption-status'))
-                    ->line('Failure to confirm within 24 hours will automatically reject your application.');
+                    ->line('🎉 We have received your application!')
+                    ->line('Please confirm within 24 hours to proceed with the adoption.')
+                    ->action('Confirm Application', url('/confirm-application/' . $this->application->id))
+                    ->line('Failure to confirm within 24 hours will automatically cancel your application.')
+                    ->line('We look forward to helping you adopt a pet!');
+                break;
+            case 'confirmed':
+                $mailMessage
+                    ->line('✅ Your adoption application has been confirmed!')
+                    ->line('We are now preparing the pet for adoption. This may take 3–5 business days.')
+                    ->line('You will receive another email once your pickup schedule is ready.')
+                    ->line('Thank you for your patience and for choosing to adopt!');
                 break;
             case 'to be picked up':
-                if (
-                    $this->application->pickup_date &&
-                    $this->oldPickupDate &&
-                    $this->application->pickup_date != $this->oldPickupDate
-                ) {
-                    $mailMessage
-                        ->line('📅 Your pet pickup schedule has been updated.')
-                        ->line('New Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
-                        ->line('Location: Angeles City Veterinary Office')
-                        ->action('View Updated Details', url('/transactions/adoption-status'))
-                        ->line('Please bring:')
-                        ->line('- A valid government-issued ID');
-                } else {
-                    $mailMessage
-                        ->line('🎉 Your adoption application has been approved!')
-                        ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
-                        ->line('Location: Angeles City Veterinary Office')
-                        ->action('View Adoption Details', url('/transactions/adoption-status'))
-                        ->line('Please bring:')
-                        ->line('- A valid government-issued ID');
-                }
+                $mailMessage
+                    ->line('📅 Your adoption pickup schedule is now available!')
+                    ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
+                    ->line('Location: Angeles City Veterinary Office')
+                    ->action('Confirm Pickup Date', url('/transactions/adoption-status'))
+                    ->line('Please confirm this date within 48 hours. No response will result in automatic cancellation.')
+                    ->line('On your pickup day, bring:')
+                    ->line('- A valid government-issued ID')
+                    ->line('- Your transaction confirmation email')
+                    ->line('Failure to pick up within 3 business days after your scheduled date will cancel the adoption.')
+                    ->line('We’ll take an official photo of you and your new pet during the pickup.');
                 break;
 
             case 'picked up':

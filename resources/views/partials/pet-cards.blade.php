@@ -5,12 +5,12 @@
   <div class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden group">
     <a href="/services/{{ $pet->slug }}/adoption-form" class="block">
       <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
-        class="h-64 w-full object-cover transition-transform duration-300 ease-in group-hover:scale-105" />
+        class="h-64 w-full object-cover" />
     </a>
 
     <!-- Slide-Up Info Panel -->
     <div
-      class="absolute bottom-0 left-0 w-full bg-white/30 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in">
+      class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in">
       <div class="flex justify-between items-center mb-2">
         <p class="text-lg font-bold">{{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
         </p>
@@ -32,7 +32,7 @@
       $timeAgo = \Carbon\Carbon::parse($pet->created_at)->diffForHumans();
       @endphp
 
-      <p class="text-white font-semibold text-sm mt-2 italic text-right">Added {{ $timeAgo }}</p>
+      <p class="text-black font-semibold text-sm mt-2 italic text-right">Added {{ $timeAgo }}</p>
 
       <a href="/services/{{ $pet->slug }}/adoption-form"
         class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 hover:text-black transition-color duration-100 ease-in">

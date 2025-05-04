@@ -8,6 +8,15 @@ function closeCancelModal() {
   document.getElementById('cancelModal').classList.add('hidden');
 }
 
+function openResendModal(applicationId) {
+  document.getElementById('resendForm').action = `/transactions/${applicationId}/resend-email`;
+  document.getElementById('resendModal').classList.remove('hidden');
+}
+
+function closeResendModal() {
+  document.getElementById('resendModal').classList.add('hidden');
+}
+
 // Pet Info Modal
 document.addEventListener('DOMContentLoaded', function () {
   const petInfoModal = document.getElementById('petInfoModal');

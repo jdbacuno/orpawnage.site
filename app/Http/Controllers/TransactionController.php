@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
+use App\Notifications\AdoptionStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
@@ -17,7 +19,7 @@ class TransactionController extends Controller
 
         $query = AdoptionApplication::with('pet')->where('user_id', $userId);
 
-        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be picked up', 'to be scheduled', 'picked up', 'rejected'])) {
+        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be picked up', 'adoption on-going', 'to be scheduled', 'picked up', 'rejected', 'archive'])) {
             $query->where('status', $status);
         }
 
@@ -93,6 +95,17 @@ class TransactionController extends Controller
             'status' => $status,
         ]);
     }
+
+    public function resendEmail($id)
+    {
+        $application = AdoptionApplication::findOrFail($id);
+
+        // Logic to send email...
+        $application->user->notify(new AdoptionStatusNotification($application));
+
+        return back()->with('success', 'Confirmation email resent successfully.');
+    }
+
 
     public function destroy(AdoptionApplication $application)
     {

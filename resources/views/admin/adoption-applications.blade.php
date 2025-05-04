@@ -109,22 +109,16 @@
           <div class="flex items-center justify-between">
             <span class="text-sm font-medium text-gray-500">Status</span>
             <span class="px-2 py-1 text-xs rounded 
-                    {{ $application->status === 'to be confirmed' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                    {{ $application->status === 'confirmed' ? 'bg-orange-100 text-yellow-700' : '' }}
-                    {{ $application->status === 'to be scheduled' ? 'bg-blue-100 text-blue-700' : '' }}
-                    {{ $application->status === 'adoption on-going' ? 'bg-green-100 text-green-700' : '' }}
-                    {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
+                    {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+                    {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+                    {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                    {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+                    {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
                     {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-                    {{ $application->status === 'archive' ? 'bg-purple-100 text-purple-700' : '' }}">
+                    {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
               @switch($application->status)
-              @case('waiting confirmation')
+              @case('to be confirmed')
               Waiting Confirmation
-              @break
-              @case('to be scheduled')
-              To Be Scheduled
-              @break
-              @case('adoption on-going')
-              Adoption On-going
               @break
               @case('picked up')
               Adopted
@@ -158,18 +152,18 @@
                 class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                 id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
                 onclick="toggleDropdown('{{ $application->id }}')">
-                <span class="mr-2">Status</span>
+                <span class="mr-2">Actions</span>
                 <span class="px-2 py-1 text-xs rounded 
-                {{ $application->status === 'to be confirmed' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                {{ $application->status === 'confirmed' ? 'bg-orange-100 text-yellow-700' : '' }}
-                {{ $application->status === 'to be scheduled' ? 'bg-blue-100 text-blue-700' : '' }}
-                {{ $application->status === 'adoption on-going' ? 'bg-green-100 text-green-700' : '' }}
-                {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
+                {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+                {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+                {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+                {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
                 {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-                {{ $application->status === 'archive' ? 'bg-purple-100 text-purple-700' : '' }}">
+                {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
                   @switch($application->status)
                   @case('to be confirmed') Waiting @break
-                  @case('confirmed') Waiting @break
+                  @case('confirmed') Confirmed @break
                   @case('to be scheduled') To Schedule @break
                   @case('adoption on-going') On-going @break
                   @case('picked up') Adopted @break
@@ -192,25 +186,45 @@
               id="dropdown-{{ $application->id }}">
               <div class="py-1" role="menu" aria-orientation="vertical"
                 aria-labelledby="options-menu-{{ $application->id }}">
-                @if($application->status === 'to be confirmed' || $application->status === 'confirmed')
-                <span class="block px-4 py-2 text-sm text-gray-500 italic">Waiting for confirmation</span>
+                @if($application->status === 'to be confirmed')
+                <form method="POST" action="/admin/adoption-applications/resend-confirmation" class="w-full">
+                  @csrf
+                  <input type="hidden" name="application_id" value="{{ $application->id }}">
+                  <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-900"
+                    role="menuitem">
+                    Resend Confirmation Email
+                  </button>
+                </form>
+                @endif
+
+                @if($application->status === 'confirmed')
+                <form method="POST" action="/admin/adoption-applications/move-to-schedule" class="w-full">
+                  @csrf
+                  <input type="hidden" name="application_id" value="{{ $application->id }}">
+                  <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                    role="menuitem">
+                    Move to Scheduling
+                  </button>
+                </form>
                 @endif
 
                 @if($application->status === 'to be scheduled')
                 <button
-                  class="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-100 hover:text-green-900"
+                  class="block w-full text-left px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-100 hover:text-yellow-900"
                   role="menuitem" onclick="showApproveModal('{{ $application->id }}')">
-                  Approve (Send Schedule Link)
+                  Send Schedule Link
                 </button>
                 @endif
 
                 @if($application->status === 'adoption on-going')
-                <form method="POST" action="/admin/adoption-applications/pickedup" class="w-full">
+                <form method="POST" action="/admin/adoption-applications/mark-picked-up" class="w-full">
                   @csrf
                   @method('PATCH')
                   <input type="hidden" name="application_id" value="{{ $application->id }}">
                   <button type="submit"
-                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    class="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-100 hover:text-green-900"
                     role="menuitem">
                     Mark as Adopted
                   </button>
@@ -232,7 +246,7 @@
                   @method('PATCH')
                   <input type="hidden" name="application_id" value="{{ $application->id }}">
                   <button type="submit"
-                    class="block w-full text-left px-4 py-2 text-sm text-purple-700 hover:bg-purple-100 hover:text-purple-900"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     role="menuitem">
                     Archive Application
                   </button>
@@ -240,11 +254,29 @@
                 @endif
 
                 @if($application->status === 'rejected')
-                <span class="block px-4 py-2 text-sm text-gray-500 italic">Application Rejected</span>
+                <form method="POST" action="/admin/adoption-applications/delete" class="w-full">
+                  @csrf
+                  @method('DELETE')
+                  <input type="hidden" name="application_id" value="{{ $application->id }}">
+                  <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                    role="menuitem">
+                    Delete Permanently
+                  </button>
+                </form>
                 @endif
 
                 @if($application->status === 'archive')
-                <span class="block px-4 py-2 text-sm text-gray-500 italic">Application Archived</span>
+                <form method="POST" action="/admin/adoption-applications/restore" class="w-full">
+                  @csrf
+                  @method('PATCH')
+                  <input type="hidden" name="application_id" value="{{ $application->id }}">
+                  <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                    role="menuitem">
+                    Restore Application
+                  </button>
+                </form>
                 @endif
               </div>
             </div>
@@ -417,13 +449,18 @@
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
-      <h2 class="text-xl font-semibold text-gray-800">Approve Adoption</h2>
+      <h2 class="text-xl font-semibold text-gray-800">Send Schedule Link</h2>
       <p class="mb-4 text-green-500 text-sm">This will send an email to the user with a link to schedule pickup.</p>
 
-      <form id="approveForm" method="POST" action="/admin/adoption-applications/approve">
+      <form id="approveForm" method="POST" action="/admin/adoption-applications/send-schedule-link">
         @csrf
-        @method('PATCH')
         <input type="hidden" name="application_id" id="applicationId">
+
+        <div class="mb-4">
+          <label for="pickupDate" class="block text-sm font-medium text-gray-700">Suggested Pickup Date</label>
+          <input type="date" id="pickupDate" name="pickup_date"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+        </div>
 
         <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md w-full">
           Send Schedule Link
@@ -441,7 +478,7 @@
 
       <h2 class="text-xl font-semibold text-gray-800">Reject Adoption</h2>
       <p class="mb-2">Please provide a reason for rejecting this application:</p>
-      <p class="my-2 text-green-500 text-sm">This will send an email notification to the user.</p>
+      <p class="my-2 text-red-500 text-sm">This will send an email notification to the user.</p>
 
       <form id="rejectForm" method="POST" action="/admin/adoption-applications/reject">
         @csrf
@@ -453,7 +490,7 @@
         <x-form-error name="reject_reason" />
 
         <button type="submit" class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md w-full">
-          Submit
+          Reject Application
         </button>
       </form>
     </div>

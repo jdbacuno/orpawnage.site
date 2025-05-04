@@ -106,65 +106,30 @@ class AdoptionApplicationController extends Controller
 
         return back()->with(
             'success',
-            'Adoption application submitted successfully! Please check your email to confirm your application within 24 hours. You can visit the ' . '<a href="/transactions/adoption-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application.'
+            'Adoption application submitted successfully! Please check your email to confirm your application within 24 hours. You can visit the ' . '<a href="/transactions/adoption-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application. You may resend the confirmation email if you did not receive it.'
         );
     }
 
     public function confirmApplication($id)
     {
-        $application = AdoptionApplication::findOrFail($id);
+        $application = AdoptionApplication::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->where('status', 'to be confirmed')
+            ->first();
 
-        if ($application->status !== 'to be confirmed') {
-            return redirect('/')->with('error', 'Invalid application status.');
+        if (!$application) {
+            return redirect()->route('transactions.adoption-status')
+                ->with('error_request', 'Invalid or already confirmed application.');
         }
 
-        $application->update(['status' => 'to be scheduled']);
+        $application->status = 'confirmed';
+        $application->save();
 
-        return redirect('/transactions/adoption-status')
-            ->with('success', 'Application confirmed! Please wait for admin approval.');
-    }
-
-    public function approve(Request $request)
-    {
-        $request->validate([
-            'application_id' => ['required', 'exists:adoption_applications,id'],
-        ]);
-
-        $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
-
-        if ($application->status !== 'to be scheduled') {
-            return redirect()->back()->with('error', 'Invalid application status for approval.');
-        }
-
-        $application->update(['status' => 'to be scheduled']);
-
-        // Send email with scheduling link
+        // Notify user that their application has been confirmed
         $application->user->notify(new AdoptionStatusNotification($application));
 
-        return redirect('/admin/adoption-applications')
-            ->with('success', 'Application approved! User has been sent a scheduling link.');
-    }
-
-    public function schedulePickup(Request $request)
-    {
-        $request->validate([
-            'application_id' => ['required', 'exists:adoption_applications,id'],
-            'pickup_date' => ['required', 'date', 'after:today'],
-        ]);
-
-        $application = AdoptionApplication::findOrFail($request->application_id);
-
-        if ($application->status !== 'to be scheduled') {
-            return redirect()->back()->with('error', 'Invalid application status for scheduling.');
-        }
-
-        $application->update([
-            'pickup_date' => $request->pickup_date,
-            'status' => 'adoption on-going',
-        ]);
-
-        return redirect('/transactions/adoption-status')
-            ->with('success', 'Pickup scheduled successfully!');
+        return redirect()->route('transactions.adoption-status')
+            ->with('success', 'Your adoption application has been successfully confirmed. A confirmation email has been sent.');
     }
 
     public function markAsPickedUp(Request $request)
@@ -177,6 +142,8 @@ class AdoptionApplicationController extends Controller
 
         $application->update(['status' => 'picked up']);
         $application->pet->update(['is_adopted' => true]);
+
+        // send email regarding the photo that will be posted on FB
 
         return redirect()->back()->with('success', 'Adoption marked as completed.');
     }

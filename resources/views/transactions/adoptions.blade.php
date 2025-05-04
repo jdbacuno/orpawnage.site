@@ -9,7 +9,7 @@
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
           onchange="this.form.submit()">
           <option value="">All Statuses</option>
-          <option value="waiting confirmation" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
+          <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
             Waiting Confirmation
           </option>
           <option value="confirmed" {{ request('status')==='confirmed' ? 'selected' : '' }}>
@@ -26,6 +26,9 @@
           </option>
           <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
             Rejected
+          </option>
+          <option value="archive" {{ request('status')==='archive' ? 'selected' : '' }}>
+            Archived
           </option>
         </select>
 
@@ -93,11 +96,23 @@
           <div class="flex items-center justify-between">
             <span class="text-sm font-medium text-gray-500">Status</span>
             <span class="px-2 py-1 text-xs rounded 
-                      {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                      {{ $application->status === 'to be picked up' ? 'bg-green-100 text-green-700' : '' }}
-                      {{ $application->status === 'picked up' ? 'bg-gray-100 text-gray-700' : '' }}
-                      {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-              {{ $application->status === 'picked up' ? 'Adopted' : ucfirst($application->status) }}
+                        {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+                        {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+                        {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                        {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+                        {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
+                        {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+                        {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
+              @switch($application->status)
+              @case('to be confirmed')
+              Waiting Confirmation
+              @break
+              @case('picked up')
+              Adopted
+              @break
+              @default
+              {{ ucfirst($application->status) }}
+              @endswitch
             </span>
           </div>
 
@@ -118,36 +133,76 @@
 
         <!-- Button Section (Fixed at the Bottom) -->
         <div class="p-4 pt-0">
-          @if ($application->status === 'to be picked up' || $application->status === 'to be scheduled')
-          <div class="flex items-center gap-2">
+          @if ($application->status === 'to be scheduled')
+          <div class="flex items-center gap-2 h-10">
             <button
-              class="flex-1 w-full bg-green-500 text-white px-3 py-2 rounded-md text-sm disabled cursor-not-allowed">
-              {{ $application->status === 'to be picked up' ? 'Pick-up on ' . $application->pickup_date->format('M d,
-              Y') : 'To be scheduled' }}
+              class="flex-1 h-full bg-yellow-500 text-white px-2 py-2 rounded-md text-sm disabled cursor-not-allowed truncate">
+              To be scheduled
             </button>
             <button onclick="openCancelModal({{ $application->id }})"
-              class="bg-red-500 text-white px-3 py-2 rounded-md text-sm">
+              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
+              Cancel
+            </button>
+          </div>
+          @elseif ($application->status === 'adoption on-going')
+          <div class="flex items-center gap-2 h-10">
+            <button
+              class="flex-1 h-full bg-indigo-500 text-white px-2 py-2 rounded-md text-sm disabled cursor-not-allowed truncate">
+              Pick-up on {{ $application->pickup_date->format('M d, Y') }}
+            </button>
+            <button onclick="openCancelModal({{ $application->id }})"
+              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
               Cancel
             </button>
           </div>
           @elseif ($application->status === 'rejected')
-          <div class="flex items-center gap-2">
-            <button class="w-full bg-gray-500 text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed">
+          <div class="flex items-center gap-2 h-10">
+            <button
+              class="flex-1 h-full bg-gray-500 text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate">
               Rejected
             </button>
             <button onclick="openCancelModal({{ $application->id }})"
-              class="w-full bg-red-500 text-white px-3 py-2 rounded-md text-sm">
+              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
               Delete
             </button>
           </div>
           @elseif ($application->status === 'picked up')
           <button
-            class="w-full bg-gray-500 italic text-white px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+            class="w-full h-10 bg-green-500 text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate"
             disabled>
-            Picked Up
+            Adopted
+          </button>
+          @elseif ($application->status === 'to be confirmed')
+          <div class="flex items-center gap-2 h-10">
+            <button onclick="openResendModal({{ $application->id }})"
+              class="flex-1 h-full bg-orange-500 hover:bg-orange-600 font-semibold text-white px-2 py-2 rounded-md text-sm transition duration-150 truncate">
+              Resend Confirmation
+            </button>
+            <button onclick="openCancelModal({{ $application->id }})"
+              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
+              Cancel
+            </button>
+          </div>
+          @elseif ($application->status === 'confirmed')
+          <div class="flex items-center gap-2 h-10">
+            <button
+              class="flex-1 h-full bg-blue-500 text-white px-2 py-2 rounded-md text-sm cursor-not-allowed truncate"
+              disabled>
+              Confirmed
+            </button>
+            <button onclick="openCancelModal({{ $application->id }})"
+              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
+              Cancel
+            </button>
+          </div>
+          @elseif ($application->status === 'archive')
+          <button class="w-full h-10 bg-gray-500 text-white px-2 py-2 rounded-md text-sm cursor-not-allowed truncate"
+            disabled>
+            Archived
           </button>
           @else
-          <button class="w-full bg-gray-500 text-white  px-3 py-2 rounded-md text-sm opacity-75 cursor-not-allowed"
+          <button
+            class="w-full h-10 bg-gray-500 text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate"
             disabled>
             Pending for Approval
           </button>
@@ -330,6 +385,24 @@
         <label class="text-sm font-medium text-gray-600">Reason for Adoption</label>
         <textarea id="adopterReason" disabled
           class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  {{-- RESEND CONFIRMATION EMAIL MODAL --}}
+  <div id="resendModal"
+    class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-md p-6 w-96">
+      <h2 class="text-lg font-semibold mb-4">Confirm Resend</h2>
+      <p class="text-sm text-gray-600">Are you sure you want to resend the confirmation email?</p>
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="closeResendModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
+
+        <form id="resendForm" method="POST" action="">
+          @csrf
+          <button type="submit"
+            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Resend</button>
+        </form>
       </div>
     </div>
   </div>

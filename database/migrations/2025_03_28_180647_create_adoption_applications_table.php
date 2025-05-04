@@ -27,7 +27,7 @@ return new class extends Migration
             $table->enum('visit_veterinarian', ['Yes', 'No', 'Sometimes']); // Added for veterinarian visits
             $table->integer('existing_pets'); // Added for existing pets information
             $table->string('valid_id'); // for storing valid ID file path
-            $table->enum('status', ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going', 'picked up', 'rejected', 'archive'])->default('to be confirmed');
+            $table->enum('status', ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going', 'picked up', 'rejected', 'archived'])->default('to be confirmed');
             $table->string('transaction_number')->unique();
             $table->text('reject_reason')->nullable();
             $table->date('pickup_date')->nullable();

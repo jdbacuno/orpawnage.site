@@ -22,9 +22,23 @@ body {
   background-color: #ffc800;
 }
 
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+}
+
 /* Make cards stretch full width on mobile */
 @media (max-width: 640px) {
   .card {
     max-width: 100%;
   }
 }
+
+

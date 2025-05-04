@@ -112,6 +112,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('/about', 'about')->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
+
+    Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
+        ->name('adoption.confirm');
+    Route::post('/transactions/{id}/resend-email', [TransactionController::class, 'resendEmail']);
+    Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
+        ->name('transactions.adoption-status');
 });
 
 // Profile Settings Route

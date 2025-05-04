@@ -16,11 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerifiedExceptSettings::class,
         ]);
 
-        // You might also want to add it to the 'web' middleware group
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\EnsureEmailIsVerifiedExceptSettings::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();
