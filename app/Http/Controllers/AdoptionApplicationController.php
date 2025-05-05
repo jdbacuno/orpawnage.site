@@ -91,7 +91,7 @@ class AdoptionApplicationController extends Controller
 
         // Upload valid ID (after validation passed)
         $extension = $request->valid_id->getClientOriginalExtension();
-        $filename = str_replace(' ', '_', $validated['full_name']) . '_' . $validated['transaction_number'] . '.' . $extension;
+        $filename = str_replace(' ', '_', $validated['email']) . '_' . $validated['transaction_number'] . '.' . $extension;
         $validIdPath = $request->file('valid_id')->storeAs('valid_ids', $filename, 'public');
         $validated['valid_id'] = $validIdPath;
 

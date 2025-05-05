@@ -10,6 +10,7 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
+use App\Livewire\PetListing;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -78,7 +79,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/featured-pets', [FeaturedPetController::class, 'index'])->name('Featured Pets');
 
-    Route::get('/services/adopt-a-pet', [PetController::class, 'index'])->name('Available Pets');
+    // Route::get('/services/adopt-a-pet', [PetController::class, 'index'])->name('Available Pets');
+    Route::get('/services/adopt-a-pet', function () {
+        return view('adopt-a-pet');
+    })->name('Available Pets');
+
+    Route::get('/debug-component', function () {
+        return app(PetListing::class)->render();
+    });
 
     Route::get('/services/surrender-an-animal', function () {
         return view('surrender');

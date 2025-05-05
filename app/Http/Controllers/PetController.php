@@ -14,95 +14,95 @@ use Illuminate\Validation\Rule;
 
 class PetController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Pet::whereNotIn('id', function ($subQuery) {
-            $subQuery->select('pet_id')
-                ->from('adoption_applications')
-                ->whereNotIn('status', ['rejected']); // Exclude only non-rejected applications
-        });
+    // public function index(Request $request)
+    // {
+    //     $query = Pet::whereNotIn('id', function ($subQuery) {
+    //         $subQuery->select('pet_id')
+    //             ->from('adoption_applications')
+    //             ->whereNotIn('status', ['rejected']); // Exclude only non-rejected applications
+    //     });
 
-        // Apply filters
-        if ($request->filled('species')) {
-            $query->where('species', $request->species);
-        }
+    //     // Apply filters
+    //     if ($request->filled('species')) {
+    //         $query->where('species', $request->species);
+    //     }
 
-        if ($request->filled('sex')) {
-            $query->where('sex', $request->sex);
-        }
+    //     if ($request->filled('sex')) {
+    //         $query->where('sex', $request->sex);
+    //     }
 
-        if ($request->filled('reproductive_status')) {
-            $query->where('reproductive_status', $request->reproductive_status);
-        }
+    //     if ($request->filled('reproductive_status')) {
+    //         $query->where('reproductive_status', $request->reproductive_status);
+    //     }
 
-        if ($request->filled('color')) {
-            $query->where('color', $request->color);
-        }
+    //     if ($request->filled('color')) {
+    //         $query->where('color', $request->color);
+    //     }
 
-        if ($request->filled('source')) {
-            $query->where('source', $request->source);
-        }
+    //     if ($request->filled('source')) {
+    //         $query->where('source', $request->source);
+    //     }
 
-        // Default sorting when first visiting the page
-        if (!$request->filled('sort_by')) {
-            $query->orderByRaw("
-            (CASE 
-                WHEN age_unit = 'years' THEN age * 12 
-                WHEN age_unit = 'months' THEN age 
-                ELSE 0 
-            END) ASC
-        ");
-            $query->orderBy('created_at', 'desc'); // Newest pets first if same age
-        }
+    //     // Default sorting when first visiting the page
+    //     if (!$request->filled('sort_by')) {
+    //         $query->orderByRaw("
+    //         (CASE 
+    //             WHEN age_unit = 'years' THEN age * 12 
+    //             WHEN age_unit = 'months' THEN age 
+    //             ELSE 0 
+    //         END) ASC
+    //     ");
+    //         $query->orderBy('created_at', 'desc'); // Newest pets first if same age
+    //     }
 
-        // Sorting based on selection
-        if ($request->filled('sort_by')) {
-            switch ($request->sort_by) {
-                case 'oldest':
-                    $query->orderBy('created_at', 'asc');
-                    break;
-                case 'latest':
-                    $query->orderBy('created_at', 'desc');
-                    break;
-                case 'oldest_age':
-                    $query->orderByRaw("
-                (CASE 
-                    WHEN age_unit = 'years' THEN age * 12 * 4  
-                    WHEN age_unit = 'months' THEN age * 4     
-                    WHEN age_unit = 'weeks' THEN age           
-                    ELSE 0 
-                END) DESC
-            ");
-                    break;
-                case 'youngest':
-                default:
-                    $query->orderByRaw("
-                (CASE 
-                    WHEN age_unit = 'years' THEN age * 12 * 4  
-                    WHEN age_unit = 'months' THEN age * 4     
-                    WHEN age_unit = 'weeks' THEN age            
-                    ELSE 0 
-                END) ASC
-            ");
-                    break;
-            }
-        }
+    //     // Sorting based on selection
+    //     if ($request->filled('sort_by')) {
+    //         switch ($request->sort_by) {
+    //             case 'oldest':
+    //                 $query->orderBy('created_at', 'asc');
+    //                 break;
+    //             case 'latest':
+    //                 $query->orderBy('created_at', 'desc');
+    //                 break;
+    //             case 'oldest_age':
+    //                 $query->orderByRaw("
+    //             (CASE 
+    //                 WHEN age_unit = 'years' THEN age * 12 * 4  
+    //                 WHEN age_unit = 'months' THEN age * 4     
+    //                 WHEN age_unit = 'weeks' THEN age           
+    //                 ELSE 0 
+    //             END) DESC
+    //         ");
+    //                 break;
+    //             case 'youngest':
+    //             default:
+    //                 $query->orderByRaw("
+    //             (CASE 
+    //                 WHEN age_unit = 'years' THEN age * 12 * 4  
+    //                 WHEN age_unit = 'months' THEN age * 4     
+    //                 WHEN age_unit = 'weeks' THEN age            
+    //                 ELSE 0 
+    //             END) ASC
+    //         ");
+    //                 break;
+    //         }
+    //     }
 
-        $pets = $query->paginate(8)->appends($request->query());
+    //     $pets = $query->paginate(8)->appends($request->query());
 
-        if ($request->ajax()) {
-            $pet = $pets->fresh();
-            $html = view('partials.pet-cards', compact('pets'))->render();
-            $pagination = $pets->appends($request->except('page'))->links()->toHtml();
+    //     if ($request->ajax()) {
+    //         $pet = $pets->fresh();
+    //         $html = view('partials.pet-cards', compact('pets'))->render();
+    //         $pagination = $pets->appends($request->except('page'))->links()->toHtml();
 
-            return response()->json([
-                'html' => $html,
-                'pagination' => $pagination
-            ]);
-        }
+    //         return response()->json([
+    //             'html' => $html,
+    //             'pagination' => $pagination
+    //         ]);
+    //     }
 
-        return view('adopt-a-pet', compact('pets'));
-    }
+    //     return view('adopt-a-pet', compact('pets'));
+    // }
 
     public function create()
     {
