@@ -15,18 +15,18 @@
         </p>
 
         <!-- Adoption Process -->
-        <div class="my-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+        <div class="my-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <h3 class="font-bold text-lg text-black mb-4" id="processTitle"><i
               class="ph-fill ph-paw-print text-orange-500"></i> Adoption Process</h3>
 
           <!-- Tab Navigation -->
           <div class="flex space-x-2 mb-4" id="language-tabs">
             <button data-tab="english"
-              class="tab-btn bg-white px-3 py-1 rounded border border-orange-300 text-black font-medium hover:bg-orange-300 active">English</button>
+              class="tab-btn bg-white px-3 py-1 rounded border border-yellow-300 text-black font-medium hover:bg-yellow-300 active">English</button>
             <button data-tab="tagalog"
-              class="tab-btn bg-white px-3 py-1 rounded border border-orange-300 text-black font-medium hover:bg-orange-300">Taglish</button>
+              class="tab-btn bg-white px-3 py-1 rounded border border-yellow-300 text-black font-medium hover:bg-yellow-300">Taglish</button>
             <button data-tab="kapampangan"
-              class="tab-btn bg-white px-3 py-1 rounded border border-orange-300 text-black font-medium hover:bg-orange-300">Kapampangan</button>
+              class="tab-btn bg-white px-3 py-1 rounded border border-yellow-300 text-black font-medium hover:bg-yellow-300">Kapampangan</button>
           </div>
 
           <!-- Tab Contents Container with Fixed Height and Scroll -->
@@ -203,8 +203,8 @@
           }
 
           // Remove active class from all buttons
-          tabButtons.forEach(btn => btn.classList.remove("active", "bg-orange-100"));
-          button.classList.add("active", "bg-orange-100");
+          tabButtons.forEach(btn => btn.classList.remove("active", "bg-yellow-100"));
+          button.classList.add("active", "bg-yellow-100");
 
           // Show correct tab
           tabContents.forEach(content => {

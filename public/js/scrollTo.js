@@ -6,12 +6,3 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   }
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname === "/services/surrender-an-animal") {
-      const section = document.getElementById("surrenderForm");
-      if (section) {
-          section.scrollIntoView({ behavior: "smooth" });
-      }
-  }
-});

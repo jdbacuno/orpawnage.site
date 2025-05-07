@@ -10,21 +10,17 @@
           alt="Slide 1" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
-            <h1 class="text-4xl font-bold mb-4 text-white cursor-pointer">
-              <span class="hover:text-yellow-400 transition-colors duration-300">Malaus</span>
-              <span class="hover:text-yellow-400 transition-colors duration-300">kayu</span>
-              <span class="hover:text-yellow-400 transition-colors duration-300">pu</span>
-              <span class="hover:text-yellow-400 transition-colors duration-300">kening</span>
-              <span class="tracking-widest hover:text-yellow-400 transition-colors duration-300">
-                <span class="text-orange-500 hover:text-yellow-400 transition-colors duration-300">
-                  Or<strong
-                    class="text-yellow-500 hover:text-orange-400 transition-colors duration-300">PAW</strong>nage!
+            <h1 class="text-4xl font-bold mb-2 text-white cursor-pointer relative group">
+              <span class="tracking-widest px-4 py-2 bg-black/20 rounded-lg relative overflow-hidden">
+                <span class="animate-color-change-orange">
+                  Or<strong class="animate-color-change-yellow">PAW</strong>nage
                 </span>
+                <span class="glowing-border"></span>
               </span>
             </h1>
-            <p class="text-lg/10 mt-10 mx-auto max-w-[700px] px-5 tracking-widest">
-              Save a life — adopt instead of buying, and gain a heart that
-              will always love you back.
+            <p
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+              The official online portal of Angeles City Veterinary Office for animal welfare services
             </p>
           </div>
         </div>
@@ -39,7 +35,9 @@
             <h1 class="text-4xl font-bold mb-4 text-yellow-400">
               Explore Our Services
             </h1>
-            <p class="text-xl">We offer the best services for you.</p>
+            <p
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+              We offer the best services for you.</p>
           </div>
         </div>
       </div>
@@ -53,32 +51,50 @@
             <h1 class="text-4xl font-bold mb-4 text-yellow-400">
               Join Us Today
             </h1>
-            <p class="text-xl">Become a part of our community.</p>
+            <p
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+              Become a part of our community.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Slider controls -->
-    <button type="button"
-      class="absolute top-1/2 left-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full hover:bg-yellow-400/50 focus:outline-none"
-      onclick="slidePrev()">
-      <span class="sr-only">Previous</span>
-      <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 6 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
-      </svg>
-    </button>
+    <!-- Slider controls container -->
+    <div class="absolute inset-0 group">
+      <!-- Previous button -->
+      <button type="button"
+        class="absolute top-1/2 left-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none"
+        onclick="slidePrev()">
+        <span class="sr-only">Previous</span>
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5 1 1 5l4 4" />
+        </svg>
+      </button>
 
-    <button type="button"
-      class="absolute top-1/2 right-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full hover:bg-yellow-400/50 focus:outline-none"
-      onclick="slideNext()">
-      <span class="sr-only">Next</span>
-      <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 6 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-      </svg>
-    </button>
+      <!-- Next button -->
+      <button type="button"
+        class="absolute top-1/2 right-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none"
+        onclick="slideNext()">
+        <span class="sr-only">Next</span>
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 9 4-4-4-4" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Slider indicators -->
+    <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center space-x-2">
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+        onclick="goToSlide(0)"></button>
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+        onclick="goToSlide(1)"></button>
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+        onclick="goToSlide(2)"></button>
+    </div>
   </div>
   <!-- ========== END OF HERO CAROUSEL ========== -->
 
@@ -112,5 +128,4 @@
     </div>
   </section>
   <!-- ========== END OF A NEW SECTION ========== -->
-
 </x-layout>

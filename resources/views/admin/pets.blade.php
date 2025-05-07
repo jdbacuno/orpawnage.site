@@ -233,7 +233,7 @@
             <div class="flex flex-wrap gap-2">
               <span
                 class="{{ $pet->reproductive_status == 'neutered' ? 'bg-green-50 text-green-800 border-green-100' : 'bg-amber-50 text-amber-800 border-amber-100' }} text-xs px-2 py-1 rounded-full border cursor-pointer"
-                data-description="Reproductive status" onclick="changeText(this)">
+                data-description="Reproductive Status" onclick="changeText(this)">
                 {{ ucfirst($pet->reproductive_status) }}
               </span>
 

@@ -1,0 +1,55 @@
+@keyframes colorChangeOrange {
+  0% { color: #ff7206; } /* orange-500 */
+  50% { color: #fadb6b; } /* yellow-500 */
+  100% { color: #ff7206; } /* orange-500 */
+}
+
+@keyframes colorChangeYellow {
+  0% { color: #fadb6b; } /* yellow-500 */
+  50% { color: #ff7206; } /* orange-500 */
+  100% { color: #fadb6b; } /* yellow-500 */
+}
+
+.animate-color-change-orange {
+  animation: colorChangeOrange 3s infinite;
+}
+
+.animate-color-change-yellow {
+  animation: colorChangeYellow 3s infinite;
+}
+
+.glowing-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  padding: 2px;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glowing-border::before {
+  content: "";
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent 0%,
+    #fadb6b 20%,
+    #ff7206 50%,
+    #fadb6b 80%,
+    transparent 100%
+  );
+  animation: rotate-border 3s linear infinite;
+}
+
+@keyframes rotate-border {
+  to {
+    transform: rotate(360deg);
+  }
+}

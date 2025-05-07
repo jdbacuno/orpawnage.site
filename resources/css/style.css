@@ -17,10 +17,10 @@ body {
   justify-content: center;
 }
 
-.active {
+/* .active {
   color: #000 !important;
   background-color: #ffc800;
-}
+} */
 
 @layer utilities {
   /* Chrome, Safari and Opera */

@@ -12,6 +12,55 @@
   <script src="{{ asset('js/theme.js') }}"></script>
 
   @vite(['resources/css/preloader.css', 'resources/css/style.css'])
+
+  <style>
+    /* Add this custom CSS for the link animation */
+    .nav-link {
+      position: relative;
+      display: inline-block;
+      color: #1f2937;
+      /* gray-900 */
+      text-decoration: none;
+      padding: 0.25rem 0;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background-color: #f97316;
+      /* orange-500 */
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ff6600;
+      /* orange-500 */
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* For active state */
+    .nav-link.active {
+      font-weight: 500;
+      color: #ff6600;
+      /* orange-500 */
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+      background-color: #ff6600;
+      height: 3px;
+    }
+  </style>
+
+  @vite(['resources/css/orpawnage-animation.css'])
 </head>
 
 <body class="mx-auto max-w-[1920px]">
@@ -124,29 +173,25 @@
               </div>
               <ul class="py-2 transition-colors duration-300" aria-labelledby="user-menu-button">
                 @if (Auth::user()->isAdmin)
-                <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
+                <li class="mx-4 flex items-center gap-x-2 text-gray-700 mx-1 nav-link">
                   <i class="ph-fill ph-grid-four"></i>
                   <a href="/admin" target="_blank" class="block py-2 text-sm">Go to
                     Admin Dashboard</a>
                 </li>
                 @endif
 
-                <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
+                <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-bell"></i>
                   <a href="/transactions" class="block py-2 text-sm">Transaction
                     Status</a>
                 </li>
 
-                <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
+                <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-gear"></i>
                   <a href="/settings" class="block py-2 text-sm">Profile
                     Settings</a>
                 </li>
-                <li
-                  class="px-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 hover:text-white hover:bg-orange-500">
+                <li class="mx-4 mb-2 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-sign-out"></i>
                   <form action="/logout" method="POST">
                     @csrf
@@ -171,24 +216,22 @@
           </div>
           <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
             <ul
-              class="flex flex-col font-normal p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white transition-colors duration-300">
+              class="flex flex-col gap-y-4 font-normal p-4 sm:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 sm:flex-row sm:mt-0 sm:border-0 sm:bg-white transition-colors duration-300">
               <!-- HOME -->
-              <li>
-                <a href="/"
-                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('/') ? 'active' : '' }}">Home</a>
+              <li class="sm:mr-6">
+                <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
               </li>
 
-              <!-- HOME -->
-              <li>
-                <a href="/featured-pets"
-                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
+              <!-- FEATURED PETS -->
+              <li class="sm:mr-6">
+                <a href="/featured-pets" class="nav-link {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
                   Pets</a>
               </li>
 
               <!-- SERVICES -->
-              <li>
+              <li class="sm:mr-6">
                 <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
+                  class="nav-link flex items-center justify-between w-full md:w-auto {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
                   Services
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -199,16 +242,16 @@
                 <!-- Dropdown menu -->
                 <div id="dropdownNavbar1"
                   class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 transition-colors duration-300">
-                  <ul class="py-2 text-md text-gray-700 transition-colors duration-300"
+                  <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
                     aria-labelledby="dropdownLargeButton">
                     <li>
                       <a href="/services/adopt-a-pet"
-                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Adopt
-                        a Pet</a>
+                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Adopt a
+                        Pet</a>
                     </li>
                     <li>
                       <a href="/services/surrender-an-animal"
-                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Surrender
+                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender
                         a Pet</a>
                     </li>
                   </ul>
@@ -216,9 +259,9 @@
               </li>
 
               <!-- REPORT -->
-              <li>
+              <li class="sm:mr-6">
                 <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
-                  class="flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white md:w-auto hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
+                  class="nav-link flex items-center justify-between w-full md:w-auto {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
                   Report
                   <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 10 6">
@@ -229,33 +272,30 @@
                 <!-- Dropdown menu -->
                 <div id="dropdownNavbar2"
                   class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-50 transition-colors duration-300">
-                  <ul class="py-2 text-md text-gray-700 transition-colors duration-300"
+                  <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
                     aria-labelledby="dropdownLargeButton">
                     <li>
                       <a href="/report/missing-pet"
-                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Missing
+                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Missing
                         Pet</a>
                     </li>
                     <li>
                       <a href="/report/abused-stray-animal"
-                        class="block px-4 py-2 hover:bg-orange-500 rounded-full mx-1 hover:text-white transition-colors duration-300">Abused
-                        / Stray Animal</a>
+                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Abused /
+                        Stray Animal</a>
                     </li>
                   </ul>
                 </div>
               </li>
 
               <!-- ABOUT US -->
-              <li>
-                <a href="/about"
-                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:bg-blue-700 hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('about') ? 'active' : '' }}">About
-                  Us</a>
+              <li class="sm:mr-6">
+                <a href="/about" class="nav-link {{ request()->is('about') ? 'active' : '' }}">About Us</a>
               </li>
 
               <!-- DONATE -->
-              <li>
-                <a href="/donate"
-                  class="block py-2 px-3 text-gray-900 rounded-full md:hover:bg-orange-500 md:hover:text-orange-400 md:py-1 md:hover:text-white hover:bg-orange-500 hover:text-white transition-colors duration-300 {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
+              <li class="sm:mr-6">
+                <a href="/donate" class="nav-link {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
               </li>
             </ul>
           </div>
@@ -307,22 +347,25 @@
               </h2>
               <ul class="text-gray-500 font-medium">
                 <li class="mb-4">
-                  <a href="/services/adopt-a-pet" class="hover:text-orange-500 transition-colors duration-300">Adopt</a>
+                  <a href="/services/adopt-a-pet"
+                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Adopt</a>
                 </li>
                 <li class="mb-4">
                   <a href="/services/surrender-an-animal"
-                    class="hover:text-orange-500 transition-colors duration-300">Surrender</a>
+                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Surrender</a>
                 </li>
                 <li class="mb-4">
-                  <a href="/report/missing-pet" class="hover:text-orange-500 transition-colors duration-300">Report a
+                  <a href="/report/missing-pet"
+                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Report a
                     Missing Pet</a>
                 </li>
                 <li class="mb-4">
                   <a href="/report/abused-stray-animal"
-                    class="hover:text-orange-500 transition-colors duration-300">Report an Abused / Stray Pet</a>
+                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Report an Abused / Stray
+                    Pet</a>
                 </li>
                 <li class="mb-4">
-                  <a href="/donate" class="hover:text-orange-500 transition-colors duration-300">Donate</a>
+                  <a href="/donate" class="hover:text-orange-500 transition-colors duration-300 nav-link">Donate</a>
                 </li>
               </ul>
             </div>
@@ -334,17 +377,17 @@
               <ul class="text-gray-500 font-medium">
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-phone text-lg"></i>
-                  <a href="#" class="break-all"> 09123456789 </a>
+                  <a href="#" class="hover:text-orange-500 transition-colors duration-300 nav-link">09123456789</a>
                 </li>
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-envelope text-lg"></i>
-                  <a href="#" class="break-all"> orpawnageteam@gmail.com </a>
+                  <a href="#"
+                    class="hover:text-orange-500 transition-colors duration-300 nav-link">orpawnageteam@gmail.com</a>
                 </li>
                 <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
                   <i class="ph-fill ph-facebook-logo text-lg"></i>
-                  <a href="#" class="break-all">
-                    Angeles City Veterinary Office
-                  </a>
+                  <a href="#" class="hover:text-orange-500 transition-colors duration-300 nav-link">Angeles City
+                    Veterinary Office</a>
                 </li>
               </ul>
 
