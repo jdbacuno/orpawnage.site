@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\AdoptionApplication;
 use App\Models\Pet;
 use App\Notifications\AdoptionStatusNotification;
+use App\Notifications\PetAdoptionAnnouncement;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -41,16 +43,49 @@ class AdoptionApplicationController extends Controller
 
     public function create(Pet $pet)
     {
-        return view('adoption-form', compact('pet'));
+        $hasPendingApplication = AdoptionApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['to be confirmed', 'confirmed', 'adoption on-going', 'to be scheduled'])
+            ->exists();
+
+        return view('adoption-form', [
+            'pet' => $pet,
+            'hasPendingApplication' => $hasPendingApplication
+        ]);
     }
 
     public function store(Request $request, Pet $pet)
     {
+        // Check if user has any pending/ongoing applications
+        $existingApplication = AdoptionApplication::where('user_id', Auth::id())
+            ->whereIn('status', ['to be confirmed', 'confirmed', 'adoption on-going', 'to be scheduled'])
+            ->first();
+
+        if ($existingApplication) {
+            return back()->with(
+                'error_request',
+                'You already have a pending adoption application (Transaction #' . $existingApplication->transaction_number . '). ' .
+                    'Please wait until your current application is completed or rejected before submitting a new one. You may also cancel the on-going application to be able to submit an adoption request for a different pet.'
+            );
+        }
+
         $validator = Validator::make($request->all(), [
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'age' => ['required', 'integer', 'min:18'],
-            'birthdate' => ['required', 'date', 'after_or_equal:1900-01-01', 'before_or_equal:2099-12-31'],
+            'birthdate' => [
+                'required',
+                'date',
+                'before_or_equal:today',
+                function ($attribute, $value, $fail) use ($request) {
+                    $birthdate = new DateTime($value);
+                    $today = new DateTime();
+                    $age = $today->diff($birthdate)->y;
+
+                    if ($age != $request->age) {
+                        $fail('The age does not match the birthdate provided.');
+                    }
+                }
+            ],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
             'address' => ['required', 'string', 'max:500'],
             'civil_status' => ['required', 'string'],
@@ -89,7 +124,7 @@ class AdoptionApplicationController extends Controller
         $validated['reason_for_adoption'] = ucfirst(trim($validated['reason_for_adoption']));
         $validated['transaction_number'] = $this->generateUniqueTransactionNumber();
 
-        // Upload valid ID (after validation passed)
+        // Upload valid ID
         $extension = $request->valid_id->getClientOriginalExtension();
         $filename = str_replace(' ', '_', $validated['email']) . '_' . $validated['transaction_number'] . '.' . $extension;
         $validIdPath = $request->file('valid_id')->storeAs('valid_ids', $filename, 'public');
@@ -101,7 +136,6 @@ class AdoptionApplicationController extends Controller
             ...$validated,
         ]);
 
-        // Notify user
         $application->user->notify(new AdoptionStatusNotification($application));
 
         return back()->with(
@@ -132,20 +166,43 @@ class AdoptionApplicationController extends Controller
             ->with('success', 'Your adoption application has been successfully confirmed. A confirmation email has been sent.');
     }
 
+    public function moveToSchedule(Request $request)
+    {
+        $request->validate([
+            'application_id' => ['required', 'exists:adoption_applications,id']
+        ]);
+
+        $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
+
+        // Update status
+        $application->update(['status' => 'to be scheduled']);
+
+        // Send email with scheduling link
+        $application->user->notify(new AdoptionStatusNotification($application));
+
+        return redirect()->back()->with('success', 'Application moved to scheduling. An email has been sent to the applicant.');
+    }
+
     public function markAsPickedUp(Request $request)
     {
-        $application = AdoptionApplication::with(['pet'])->findOrFail($request->application_id);
+        $application = AdoptionApplication::with(['pet', 'user'])->findOrFail($request->application_id);
 
         if ($application->status !== 'adoption on-going') {
             return redirect()->back()->with('error', 'Invalid status change.');
         }
 
-        $application->update(['status' => 'picked up']);
-        $application->pet->update(['is_adopted' => true]);
+        $application->update(['status' => 'picked up', 'pickup_date' => now()]);
 
-        // send email regarding the photo that will be posted on FB
+        // Send email to adopter
+        $application->user->notify(new AdoptionStatusNotification($application));
 
-        return redirect()->back()->with('success', 'Adoption marked as completed.');
+        // Send general announcement to all users (including admins)
+        $users = \App\Models\User::where('id', '!=', $application->user_id)->get();
+        foreach ($users as $user) {
+            $user->notify(new PetAdoptionAnnouncement($application->pet));
+        }
+
+        return redirect()->back()->with('success', 'Adoption marked as completed and notifications sent.');
     }
 
     public function reject(Request $request)

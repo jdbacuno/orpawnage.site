@@ -109,6 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('transactions')->group(function () {
         Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
+        Route::post('/schedule-pickup/{id}', [TransactionController::class, 'schedulePickup'])->name('schedule.pickup');
         Route::get('/surrender-status', [TransactionController::class, 'surrender'])->name('Surrender Applications Status');
         Route::get('/missing-status', [TransactionController::class, 'missing'])->name('Missing Reports Status');
         Route::get('/abused-status', [TransactionController::class, 'abused'])->name('Abused/Stray Reports Status');
@@ -151,7 +152,8 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
 
     Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
 
-    Route::patch('/admin/adoption-applications/approve', [AdoptionApplicationController::class, 'approve']);
+    Route::post('/admin/adoption-applications/move-to-schedule', [AdoptionApplicationController::class, 'moveToSchedule'])->name('adoption-applications.move-to-schedule');
+
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
     Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
 

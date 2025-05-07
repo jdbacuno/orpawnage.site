@@ -45,9 +45,28 @@ class PetListing extends Component
         $this->resetPage();
     }
 
-    public function updatingSearch()
+    public function updatedSearch($value)
     {
+        if (!empty($value)) {
+            // When searching, reset all filters except sort
+            $this->reset([
+                'species',
+                'sex',
+                'reproductive_status',
+                'color',
+                'source'
+            ]);
+        }
         $this->resetPage();
+    }
+
+    public function updated($property)
+    {
+        // When any filter changes, clear the search
+        if (in_array($property, ['species', 'sex', 'reproductive_status', 'color', 'source'])) {
+            $this->search = '';
+            $this->resetPage();
+        }
     }
 
     protected function normalizeFilterValue($value)
@@ -70,7 +89,7 @@ class PetListing extends Component
                 ->whereNotIn('status', ['rejected']);
         });
 
-        // Apply normalized filters
+        // Apply filters if any are set
         if ($this->species) {
             $query->whereRaw('LOWER(TRIM(species)) = ?', [Str::singular(strtolower($this->species))]);
         }
@@ -91,8 +110,8 @@ class PetListing extends Component
             $query->whereRaw('LOWER(TRIM(source)) = ?', [Str::singular(strtolower($this->source))]);
         }
 
-        // Advanced search logic with distinct sex matching
-        if ($this->search) {
+        // Apply search only if we have search terms and no filters are active
+        if ($this->search && !$this->hasActiveFilters()) {
             $searchTerms = preg_split('/\s+/', trim($this->search));
 
             $query->where(function ($q) use ($searchTerms) {
@@ -100,16 +119,13 @@ class PetListing extends Component
                     $term = strtolower(trim($term));
                     $singularTerm = Str::singular($term);
 
-                    // Check if the term is a sex identifier (male/female)
                     $isSexTerm = in_array($term, ['male', 'female']) || in_array($singularTerm, ['male', 'female']);
 
                     $q->where(function ($subQuery) use ($term, $singularTerm, $isSexTerm) {
                         if ($isSexTerm) {
-                            // If term is a sex identifier, only match against sex field
                             $subQuery->whereRaw('LOWER(TRIM(sex)) = ?', [$term])
                                 ->orWhereRaw('LOWER(TRIM(sex)) = ?', [$singularTerm]);
                         } else {
-                            // Otherwise, search across all other fields
                             $subQuery->whereRaw('LOWER(pet_name) LIKE ?', ['%' . $term . '%'])
                                 ->orWhereRaw('LOWER(pet_name) LIKE ?', ['%' . $singularTerm . '%'])
                                 ->orWhereRaw('LOWER(species) LIKE ?', ['%' . $term . '%'])
@@ -122,12 +138,16 @@ class PetListing extends Component
                                 ->orWhereRaw('LOWER(reproductive_status) LIKE ?', ['%' . $singularTerm . '%'])
                                 ->orWhereRaw('LOWER(pet_number) LIKE ?', ['%' . $term . '%']);
 
-                            // Special handling for cat/dog
                             if ($term === 'cat' || $singularTerm === 'cat') {
                                 $subQuery->orWhereRaw('LOWER(TRIM(species)) = ?', ['feline']);
                             }
+
                             if ($term === 'dog' || $singularTerm === 'dog') {
                                 $subQuery->orWhereRaw('LOWER(TRIM(species)) = ?', ['canine']);
+                            }
+
+                            if ($term === 'unnamed' || $singularTerm === 'unnamed') {
+                                $subQuery->orWhereRaw('LOWER(TRIM(pet_name)) = ?', ['n/a']);
                             }
                         }
                     });
@@ -158,5 +178,14 @@ class PetListing extends Component
         return view('livewire.pet-listing', [
             'pets' => $query->paginate(8)
         ]);
+    }
+
+    protected function hasActiveFilters()
+    {
+        return !empty($this->species) ||
+            !empty($this->sex) ||
+            !empty($this->reproductive_status) ||
+            !empty($this->color) ||
+            !empty($this->source);
     }
 }

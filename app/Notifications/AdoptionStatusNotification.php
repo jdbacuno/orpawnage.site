@@ -37,10 +37,23 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $status = $this->application->status;
+        $transactionNumber = $this->application->transaction_number;
+
+        // Map status to subject line
+        $statusSubjectMap = [
+            'picked up' => 'Adoption Completed',
+            'to be confirmed' => 'Confirm Your Application',
+            'to be scheduled' => 'Set a Pickup Date',
+            'adoption on-going' => 'Scheduled for Pickup',
+        ];
+
+        $customSubject = $statusSubjectMap[$status] ?? ucwords($status); // fallback to default format
+
         $mailMessage = (new MailMessage)
-            ->subject("Adoption Application - " . ucwords($this->application->status) . " - Transaction #{$this->application->transaction_number}")
+            ->subject("Adoption Application - {$customSubject} - Transaction #{$transactionNumber}")
             ->greeting('Hello ' . $this->application->user->full_name . ',')
-            ->line('Transaction #: ' . $this->application->transaction_number)
+            ->line('Transaction #: ' . $transactionNumber)
             ->line('Pet Name: ' . $this->application->pet->pet_name)
             ->line('Application Date: ' . $this->application->created_at->format('F j, Y'));
 
@@ -57,23 +70,31 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
                 $mailMessage
                     ->line('✅ Your adoption application has been confirmed!')
                     ->line('We are now preparing the pet for adoption. This may take 3–5 business days.')
-                    ->line('You will receive another email once your pickup schedule is ready.')
+                    ->line('You will receive another email to select a schedule to bring your pet home.')
                     ->line('Thank you for your patience and for choosing to adopt!');
                 break;
-            case 'to be picked up':
+            case 'to be scheduled':
                 $mailMessage
-                    ->line('📅 Your adoption pickup schedule is now available!')
-                    ->line('Scheduled Pickup Date: ' . $this->application->pickup_date->format('F j, Y'))
+                    ->line('📅 You can now select a schedule to bring your pet home!')
+                    ->line('Your application is now ready for scheduling.')
+                    ->action('Select Schedule', url('/schedule-adoption/' . $this->application->id))
+                    ->line('Please schedule within 48 hours to avoid cancellation.')
+                    ->line('Available time slots are between 8:00 AM to 4:00 PM, Monday to Friday.')
+                    ->line('What to bring on your scheduled date:')
+                    ->line('- Valid government-issued ID')
+                    ->line('- Copy of this confirmation');
+                break;
+            case 'adoption on-going':
+                $mailMessage
+                    ->line('📅 Your new pet is ready to welcome your home!')
+                    ->line('Scheduled Visit Date: ' . $this->application->pickup_date->format('F j, Y'))
                     ->line('Location: Angeles City Veterinary Office')
-                    ->action('Confirm Pickup Date', url('/transactions/adoption-status'))
-                    ->line('Please confirm this date within 48 hours. No response will result in automatic cancellation.')
                     ->line('On your pickup day, bring:')
                     ->line('- A valid government-issued ID')
                     ->line('- Your transaction confirmation email')
-                    ->line('Failure to pick up within 3 business days after your scheduled date will cancel the adoption.')
-                    ->line('We’ll take an official photo of you and your new pet during the pickup.');
+                    ->line('Failure to visit after 3 business days from your scheduled date will cancel the adoption.')
+                    ->line('We\'ll take an official photo of you and your new pet during the handover. The photo will be featured on Angeles City Information Office for documentation.');
                 break;
-
             case 'picked up':
                 $mailMessage
                     ->line('🏡 Congratulations! Your adoption is now complete.')
@@ -81,7 +102,6 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
                     ->line("Thank you for providing a loving home to {$this->application->pet->name}!")
                     ->line('We would love to see how your new pet is doing! Share updates on our [Facebook page](https://www.facebook.com/ACVeterinaryOffice/).');
                 break;
-
             case 'rejected':
                 $mailMessage
                     ->line('We regret to inform you that your adoption application has been rejected.')

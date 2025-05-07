@@ -37,13 +37,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ========= APPROVE =========
-  const approveForm = document.getElementById("approveForm");
-  if (approveForm) {
-    approveForm.addEventListener("submit", function () {
-      const submitBtn = approveForm.querySelector("button[type='submit']");
+  const pickupForm = document.getElementById("pickupForm");
+  if (pickupForm) {
+    pickupForm.addEventListener("submit", function () {
+      const submitBtn = pickupForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = "Approving...";
+        submitBtn.innerHTML = "Completing...";
       }
     });
   }
@@ -80,6 +80,18 @@ document.addEventListener("DOMContentLoaded", function () {
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Submitting...';
+      }
+    });
+  }
+
+  // ========= SETTINGS =========
+  const scheduleForm = document.getElementById("scheduleForm");
+  if (scheduleForm) {
+    scheduleForm.addEventListener("submit", function () {
+      const submitBtn = scheduleForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Sending...';
       }
     });
   }

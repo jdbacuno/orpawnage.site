@@ -146,7 +146,7 @@ class PetController extends Controller
                 });
             } elseif ($status === 'in_process') {
                 $query->whereHas('adoptionApplication', function ($q) {
-                    $q->whereIn('status', ['to be picked up', 'to be scheduled']);
+                    $q->whereIn('status', ['to be confirmed', 'confirmed', 'adoption on-going', 'to be scheduled']);
                 });
             }
         }

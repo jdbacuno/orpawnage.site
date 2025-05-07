@@ -189,7 +189,6 @@
       </div>
     </div>
 
-    <!-- Pets Cards Grid -->
     @if($pets->isEmpty())
     <div class="flex items-center justify-center p-6 text-gray-500">
       <p class="text-lg">No pets found.</p>
@@ -197,105 +196,118 @@
     @else
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       @foreach($pets as $pet)
-      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col h-96">
-        <!-- Pet Image -->
-        <div class="h-40 overflow-hidden">
-          <img src="{{ asset('storage/' . $pet->image_path) }}" alt="{{ $pet->pet_name }}"
-            class="w-full h-full object-cover">
-        </div>
+      <div
+        class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+        wire:poll.10s>
 
-        <!-- Pet Details -->
-        <div class="p-4 flex-grow">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-lg font-semibold text-gray-800">{{ $pet->pet_name !== 'N/A' ? ucwords($pet->pet_name) :
-              'Unnamed' }}</h3>
-            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">#{{ $pet->pet_number }}</span>
-          </div>
-
-          <div class="space-y-1 text-sm text-gray-600">
-            <div class="flex">
-              <span class="w-24 font-medium">Species:</span>
-              <span>{{ ucfirst($pet->species) }}</span>
-            </div>
-            <div class="flex">
-              <span class="w-24 font-medium">Age:</span>
-              <span>{{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit)
-                }} old</span>
-            </div>
-            <div class="flex">
-              <span class="w-24 font-medium">Sex:</span>
-              <span>{{ ucfirst($pet->sex) }}</span>
-            </div>
-            <div class="flex">
-              <span class="w-24 font-medium">Fertility:</span>
-              <span>{{ ucfirst($pet->reproductive_status) }}</span>
-            </div>
-            <div class="flex">
-              <span class="w-24 font-medium">Color:</span>
-              <span>{{ ucfirst($pet->color) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="px-4 py-1 border-t border-gray-200 flex justify-end">
-          <!-- View Button -->
-          <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
-            class="text-yellow-500 hover:text-yellow-600 p-2 rounded-full hover:bg-yellow-50 flex items-center justify-center w-10 h-10"
-            title="View">
-            <i class="ph-fill ph-eye text-lg"></i>
+        <!-- Image container with hover-specific slide-up -->
+        <div class="group relative h-48 overflow-hidden">
+          <a href="/services/{{ $pet->slug }}/adoption-form" class="block h-full">
+            <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
+              class="h-full w-full object-cover transition duration-300" />
           </a>
 
-          <!-- Edit Button -->
-          <button
-            class="text-blue-500 hover:text-blue-600 p-2 rounded-full hover:bg-blue-50 edit-btn flex items-center justify-center w-10 h-10"
-            data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
-            data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
-            data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
-            data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
-            data-image="{{ asset('storage/' . $pet->image_path) }}" title="Edit">
-            <i class="ph-fill ph-pencil-simple text-lg"></i>
-          </button>
+          <!-- Slide-Up Panel (now properly working) -->
+          <div
+            class="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md text-gray-900 p-3 translate-y-full group-hover:translate-y-0 transition duration-300 ease-in-out scrollbar-hidden">
+            <div class="flex flex-wrap gap-2 mb-1">
+              <span
+                class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-200 cursor-pointer"
+                data-description="Age" onclick="changeText(this)">
+                {{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }}
+              </span>
 
-          <!-- Delete Button -->
-          @php
-          $disableDelete = false;
-          $tooltipMessage = 'Delete';
+              <span
+                class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-2 py-1 rounded-full border cursor-pointer"
+                data-description="Sex" onclick="changeText(this)">
+                {{ ucfirst($pet->sex) }}
+              </span>
 
-          if ($pet->adoptionApplication) {
-          if (in_array($pet->adoptionApplication->status ?? null, ['to be picked up', 'to be scheduled'])) {
-          $disableDelete = true;
-          $tooltipMessage = 'In Process for Adoption';
-          }
-          }
-          @endphp
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full border border-green-200 cursor-pointer"
+                data-description="Color" onclick="changeText(this)">
+                {{ ucfirst($pet->color) }}
+              </span>
+            </div>
 
-          @if($disableDelete)
-          <button
-            class="text-gray-400 cursor-not-allowed p-2 rounded-full relative group flex items-center justify-center w-10 h-10"
-            disabled title="{{ $tooltipMessage }}" data-tooltip-target="tooltip-delete-{{ $pet->id }}">
-            <i class="ph-fill ph-trash text-lg"></i>
-          </button>
-          <!-- Tooltip element (for more advanced tooltips) -->
-          <div id="tooltip-delete-{{ $pet->id }}" role="tooltip"
-            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-            {{ $tooltipMessage }}
-            <div class="tooltip-arrow" data-popper-arrow></div>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="{{ $pet->reproductive_status == 'neutered' ? 'bg-green-50 text-green-800 border-green-100' : 'bg-amber-50 text-amber-800 border-amber-100' }} text-xs px-2 py-1 rounded-full border cursor-pointer"
+                data-description="Reproductive status" onclick="changeText(this)">
+                {{ ucfirst($pet->reproductive_status) }}
+              </span>
+
+              <span
+                class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full border border-gray-200 cursor-pointer"
+                data-description="Source" onclick="changeText(this)">
+                {{ ucfirst($pet->source) }}
+              </span>
+            </div>
           </div>
-          @else
-          <button
-            class="text-red-500 hover:text-red-600 p-2 rounded-full hover:bg-red-50 delete-btn flex items-center justify-center w-10 h-10 transition-colors duration-200"
-            data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" title="{{ $tooltipMessage }}"
-            data-tooltip-target="tooltip-delete-{{ $pet->id }}">
-            <i class="ph-fill ph-trash text-lg"></i>
-          </button>
-          <!-- Tooltip element -->
-          <div id="tooltip-delete-{{ $pet->id }}" role="tooltip"
-            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-            {{ $tooltipMessage }}
-            <div class="tooltip-arrow" data-popper-arrow></div>
+        </div>
+
+        <!-- Card footer -->
+        <div class="p-3">
+          <div class="flex justify-between items-center mb-1">
+            <h3 class="text-md font-bold">
+              {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
+            </h3>
+            <span class="bg-yellow-500 text-xs text-black py-1 px-2 rounded font-bold">
+              {{ $pet->species === 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}
+            </span>
           </div>
-          @endif
+
+          <!-- Action Buttons with Timestamp and Three-Dots Menu -->
+          <div class="flex justify-between items-center mt-2">
+            <div class="text-gray-500 text-xs flex items-center">
+              <i class="ph-fill ph-clock mr-1"></i>
+              <span>Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}</span>
+            </div>
+
+            <!-- Three-Dots Menu -->
+            <div class="relative">
+              <button
+                class="menu-toggle flex items-center justify-center p-1.5 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+                data-menu-id="menu-{{ $pet->id }}">
+                <i class="ph-fill ph-dots-three-outline-vertical text-lg text-gray-500 hover:text-gray-700"></i>
+              </button>
+
+              <div id="menu-{{ $pet->id }}"
+                class="hidden absolute bottom-full right-0 mb-2 w-40 bg-white rounded-md shadow-lg z-10 border border-gray-100">
+                <div class="py-1">
+                  <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
+                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <i class="ph-fill ph-eye mr-2 text-yellow-600"></i> View
+                  </a>
+
+                  <button
+                    class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 edit-btn"
+                    data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
+                    data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
+                    data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
+                    data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
+                    data-image="{{ asset('storage/' . $pet->image_path) }}">
+                    <i class="ph-fill ph-pencil-simple mr-2 text-blue-600"></i> Edit
+                  </button>
+
+                  @if($pet->adoptionApplication && in_array($pet->adoptionApplication->status ?? null, ['to be
+                  confirmed', 'confirmed', 'to be picked
+                  up', 'to be scheduled', 'adoption on-going']))
+                  <button class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-400 cursor-not-allowed"
+                    disabled title="Cannot Archive - Adoption In Progress">
+                    <i class="ph-fill ph-archive mr-2"></i> Archive
+                  </button>
+                  @else
+                  <button
+                    class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 delete-btn"
+                    data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}">
+                    <i class="ph-fill ph-archive mr-2 text-red-600"></i> Archive
+                  </button>
+                  @endif
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       @endforeach
@@ -306,8 +318,6 @@
     <div class="mt-6">
       {{ $pets->links() }}
     </div>
-
-
   </div>
 
   <!-- Add a New Pet Modal (Initially Hidden) -->
@@ -608,8 +618,8 @@
   <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <!-- Modal Content -->
-      <h2 class="text-xl font-semibold text-gray-800">Confirm Deletion</h2>
-      <p class="text-gray-600 mt-2">Are you sure you want to delete Pet#<span id="deletePetIdText"></span>?</p>
+      <h2 class="text-xl font-semibold text-gray-800">Archive this Pet?</h2>
+      <p class="text-gray-600 mt-2">Are you sure you want to archive Pet#<span id="deletePetIdText"></span>?</p>
 
       <div class="flex justify-end mt-4 space-x-2">
         <button id="closeDeleteModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">
@@ -619,7 +629,7 @@
           @csrf
           @method('DELETE')
           <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">
-            Delete
+            Archive
           </button>
         </form>
       </div>

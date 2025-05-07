@@ -18,41 +18,53 @@
         <!-- Pet Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
           @foreach ($featuredPets as $featured)
-          <!-- CARD -->
-          <div class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden group">
+          <!-- ENHANCED CARD DESIGN -->
+          <div
+            class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
             <a href="/services/{{ $featured->slug }}/adoption-form" class="block">
               <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
-                class="h-64 w-full object-cover" />
+                class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
             </a>
 
-            <!-- Slide-Up Info Panel -->
+            <!-- Enhanced Slide-Up Panel -->
             <div
-              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in">
-              <div class="flex justify-between items-center mb-2">
-                <p class="text-lg font-bold">
+              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+
+              <!-- Name & ID -->
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-bold">
                   {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
-                </p>
-                <span class="bg-yellow-500 text-sm text-black py-1 px-2 rounded font-bold">
+                </h3>
+                <span class="bg-yellow-500 text-xs text-black py-1 px-2 rounded font-bold">
                   {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}
                 </span>
               </div>
 
-              <ul class="text-sm space-y-1">
-                <li><span class="font-semibold">Age:</span> {{ $featured->age }}
-                  {{ $featured->age == 1 ? Str::singular($featured->age_unit) : Str::plural($featured->age_unit) }} old
-                </li>
-                <li><span class="font-semibold">Sex:</span> {{ ucfirst($featured->sex) }}</li>
-                <li><span class="font-semibold">Reproductive:</span> {{ ucfirst($featured->reproductive_status) }}</li>
-                <li><span class="font-semibold">Color:</span> {{ ucfirst($featured->color) }}</li>
-                <li><span class="font-semibold">Source:</span> {{ ucfirst($featured->source) }}</li>
-              </ul>
+              <!-- Colorized Badges -->
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200">
+                  {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
+                  Str::plural($featured->age_unit) }} old
+                </span>
+                <span
+                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border">
+                  {{ ucfirst($featured->sex) }}
+                </span>
+                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200">
+                  {{ ucfirst($featured->color) }}
+                </span>
+              </div>
 
-              @php
-              $timeAgo = \Carbon\Carbon::parse($featured->created_at)->diffForHumans();
-              @endphp
+              <!-- Highlighted Timestamp -->
+              <div class="flex justify-end">
+                <span
+                  class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-sm inline-flex items-center">
+                  <i class="ph ph-clock mr-1"></i> Added {{
+                  \Carbon\Carbon::parse($featured->created_at)->diffForHumans() }}
+                </span>
+              </div>
 
-              <p class="text-black font-semibold text-sm mt-2 italic text-right">Added {{ $timeAgo }}</p>
-
+              <!-- Original Button -->
               <a href="/services/{{ $featured->slug }}/adoption-form"
                 class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 hover:text-black transition-color duration-100 ease-in">
                 <i class="ph-fill ph-paw-print mr-2"></i> Adopt this {{ $featured->species === 'feline' ? 'Cat' : 'Dog'
@@ -61,14 +73,12 @@
             </div>
           </div>
           @endforeach
-
         </div>
 
         <!-- Pagination Controls -->
         <div class="mt-6">
           {{ $featuredPets->links() }}
         </div>
-
       </div>
 
       @else
@@ -80,7 +90,6 @@
         <p class="text-xl">Check back later!</p>
       </div>
       @endif
-
     </div>
   </section>
 </x-layout>

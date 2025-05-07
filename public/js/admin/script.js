@@ -204,3 +204,70 @@ function generateRandomData(n) {
   return data;
 }
 // end: Chart
+
+// Badge Texts
+function changeText(element) {
+  const description = element.getAttribute('data-description');
+  element.setAttribute('data-original-text', element.textContent);
+  element.textContent = description;
+
+  // Optional: If you want to toggle back to the original text on next click
+  element.setAttribute('onclick', 'resetText(this)');
+}
+
+function resetText(element) {
+  const originalText = element.getAttribute('data-original-text');
+  element.textContent = originalText;
+
+  // Re-enable click event to change text again
+  element.setAttribute('onclick', 'changeText(this)');
+}
+
+// Save the original text when the page loads (before any click)
+document.querySelectorAll('span[data-description]').forEach(function(span) {
+  span.setAttribute('data-original-text', span.textContent);
+});
+
+// ACTION BUTTONS
+document.addEventListener('DOMContentLoaded', function() {
+  // Track currently open menu
+  let currentOpenMenu = null;
+  
+  // Handle menu toggle clicks
+  document.querySelectorAll('.menu-toggle').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const menuId = this.getAttribute('data-menu-id');
+      const menu = document.getElementById(menuId);
+      
+      // Close any currently open menu
+      if (currentOpenMenu && currentOpenMenu !== menu) {
+        currentOpenMenu.classList.add('hidden');
+      }
+      
+      // Toggle current menu
+      menu.classList.toggle('hidden');
+      currentOpenMenu = menu.classList.contains('hidden') ? null : menu;
+    });
+  });
+  
+  // Close menu when clicking anywhere else
+  document.addEventListener('click', function(e) {
+    if (currentOpenMenu && !currentOpenMenu.contains(e.target)) {
+      // Check if click was on a menu toggle button
+      const isMenuToggle = e.target.closest('.menu-toggle');
+      if (!isMenuToggle) {
+        currentOpenMenu.classList.add('hidden');
+        currentOpenMenu = null;
+      }
+    }
+  });
+  
+  // Close menu when clicking Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && currentOpenMenu) {
+      currentOpenMenu.classList.add('hidden');
+      currentOpenMenu = null;
+    }
+  });
+});

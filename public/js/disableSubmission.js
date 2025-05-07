@@ -84,7 +84,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  
+  // ========= SCHEDULE =========
+  const scheduleForm = document.getElementById("scheduleForm");
+  if (scheduleForm) {
+    scheduleForm.addEventListener("submit", function () {
+      const submitBtn = scheduleForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Scheduling...";
+      }
+    });
+  }
 
   // ========= LOGIN =========
   const loginForm = document.getElementById("loginForm");

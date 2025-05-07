@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
 use App\Notifications\AdoptionStatusNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -106,6 +107,37 @@ class TransactionController extends Controller
         return back()->with('success', 'Confirmation email resent successfully.');
     }
 
+    public function schedulePickup(Request $request, $id)
+    {
+        $application = AdoptionApplication::findOrFail($id);
+
+        $validated = $request->validate([
+            'pickup_date' => 'required|date|after_or_equal:today'
+        ]);
+
+        $pickupDate = Carbon::parse($validated['pickup_date']);
+
+        // Build 7 business day window (including today if not weekend)
+        $start = Carbon::now();
+        $end = $start->copy();
+        $businessDays = 0;
+        while ($businessDays < 7) {
+            if (!$end->isWeekend()) $businessDays++;
+            if ($businessDays < 7) $end->addDay();
+        }
+
+        if ($pickupDate->gt($end) || $pickupDate->isWeekend()) {
+            return redirect()->back()->withErrors(['pickup_date' => 'Date must be a weekday within 7 business days.']);
+        }
+
+        $application->pickup_date = $pickupDate;
+        $application->status = 'adoption on-going';
+        $application->save();
+
+        $application->user->notify(new AdoptionStatusNotification($application));
+
+        return redirect()->back()->with('success', 'Pickup scheduled successfully!');
+    }
 
     public function destroy(AdoptionApplication $application)
     {
