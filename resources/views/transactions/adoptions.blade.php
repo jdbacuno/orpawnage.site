@@ -1,232 +1,192 @@
 <x-transactions-layout>
-  <div class="flex flex-col flex-wrap gap-x-4 gap-y-2 mt-0 sm:mt-10">
-    <!-- Filters Section -->
-    <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
-      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+  <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mt-0 sm:mt-10">Adoption Applications</h1>
 
-        <!-- Status Filter -->
-        <select name="status"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
-          onchange="this.form.submit()">
-          <option value="">All Statuses</option>
-          <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
-            Waiting Confirmation
-          </option>
-          <option value="confirmed" {{ request('status')==='confirmed' ? 'selected' : '' }}>
-            Confirmed
-          </option>
-          <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
-            To Be Scheduled
-          </option>
-          <option value="adoption on-going" {{ request('status')==='adoption on-going' ? 'selected' : '' }}>
-            Adoption On-going
-          </option>
-          <option value="picked up" {{ request('status')==='picked up' ? 'selected' : '' }}>
-            Adopted
-          </option>
-          <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
-            Rejected
-          </option>
-          <option value="archive" {{ request('status')==='archive' ? 'selected' : '' }}>
-            Archived
-          </option>
-        </select>
+  <!-- Filters Section -->
+  <div class="flex flex-wrap gap-2 my-4">
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+      <!-- Status Filter -->
+      <select name="status"
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+        onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
+          Waiting Confirmation
+        </option>
+        <option value="confirmed" {{ request('status')==='confirmed' ? 'selected' : '' }}>
+          Confirmed
+        </option>
+        <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
+          To Be Scheduled
+        </option>
+        <option value="adoption on-going" {{ request('status')==='adoption on-going' ? 'selected' : '' }}>
+          Adoption On-going
+        </option>
+        <option value="picked up" {{ request('status')==='picked up' ? 'selected' : '' }}>
+          Adopted
+        </option>
+        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
+          Rejected
+        </option>
+        <option value="archive" {{ request('status')==='archive' ? 'selected' : '' }}>
+          Archived
+        </option>
+      </select>
+    </form>
+  </div>
 
-      </form>
-    </div>
-
-    @if ($adoptionApplications->isEmpty())
-    <div class="w-full sm:text-center text-left text-gray-500 text-lg">
-      No adoption applications found.
-    </div>
-    @else
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
-      @foreach($adoptionApplications as $application)
-      <div
-        class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 hover:shadow-md transition-shadow duration-300">
-        <!-- Pet and Adopter Info Header -->
-        <div class="p-4 border-b border-gray-200">
-          <div class="flex items-start space-x-2">
-            <!-- Pet Image (placeholder if no image) -->
-            <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
-              <img src="{{ asset('storage/' . $application->pet->image_path) }}" alt="{{ $application->pet->pet_name }}"
-                class="w-full h-full object-cover">
-            </div>
-
-            <div class="flex-1 min-w-0">
-              <h3 class="text-lg font-semibold flex items-center"><i class="ph-fill ph-tag mr-2"></i> {{
-                $application->transaction_number }}</h3>
-              <p class="text-sm font-medium text-gray-900 truncate">
-                <a href="#" class="pet-info-btn text-blue-500 hover:text-blue-600 hover:underline"
-                  data-id="{{ $application->id }}" data-image="{{ asset('storage/' . $application->pet->image_path) }}"
-                  data-number="{{ $application->pet->pet_number }}"
-                  data-name="{{ strtolower($application->pet->pet_name) !== 'n/a' ? ucwords($application->pet->pet_name) : 'Unnamed' }}"
-                  data-species="{{ $application->pet->species }}" data-age="{{ $application->pet->age }}"
-                  data-age-unit="{{ $application->pet->age == 1 ? Str::singular($application->pet->age_unit) : Str::plural($application->pet->age_unit) }}"
-                  data-color="{{ ucfirst($application->pet->color) }}" data-sex="{{ $application->pet->sex }}"
-                  data-repro-status="{{ $application->pet->reproductive_status }}"
-                  data-source="{{ ucfirst($application->pet->source) }}"
-                  data-created-at="{{ $application->created_at }}">
-                  {{ strtolower($application->pet->pet_name) !== 'n/a' ? ucwords($application->pet->pet_name) :
-                  'Unnamed' }} ({{ $application->pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{
-                  $application->pet->pet_number }})
-                </a>
-              </p>
-              <p class="text-sm mt-1 truncate">
-                <span class="text-gray-500">Adopter:</span> <a href="#"
-                  class="adopter-info-btn text-blue-500 hover:text-blue-600 hover:underline"
-                  data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
-                  data-email="{{ $application->email }}" data-age="{{ $application->age }}"
-                  data-birthdate="{{ $application->birthdate->format('F j, Y') }}"
-                  data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
-                  data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
-                  data-reason="{{ $application->reason_for_adoption }}"
-                  data-visitvet="{{ $application->visit_veterinarian }}"
-                  data-existingpets="{{ $application->existing_pets }}"
-                  data-validid="{{ asset('storage/' . $application->valid_id) }}">
-                  {{ $application->full_name }}
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Application Details -->
-        <div class="p-4 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-500">Status</span>
-            <span class="px-2 py-1 text-xs rounded 
-                        {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
-                        {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
-                        {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                        {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
-                        {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
-                        {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-                        {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
-              @switch($application->status)
-              @case('to be confirmed')
-              Waiting Confirmation
-              @break
-              @case('picked up')
-              Adopted
-              @break
-              @default
-              {{ ucfirst($application->status) }}
-              @endswitch
-            </span>
+  @if($adoptionApplications->isEmpty())
+  <div class="flex items-center justify-center p-6 text-gray-500">
+    <p class="text-lg">No adoption applications found.</p>
+  </div>
+  @else
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+    @foreach($adoptionApplications as $application)
+    <div
+      class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      <!-- Pet and Adopter Info Header -->
+      <div class="p-4 border-b border-gray-200">
+        <div class="flex items-start space-x-2">
+          <!-- Pet Image (placeholder if no image) -->
+          <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+            <img src="{{ asset('storage/' . $application->pet->image_path) }}" alt="{{ $application->pet->pet_name }}"
+              class="w-full h-full object-cover">
           </div>
 
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-500">Pickup Date</span>
-            <span class="text-sm text-gray-900">
-              {{ $application->pickup_date ? $application->pickup_date->format('F j, Y') : 'Not set' }}
-            </span>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-semibold flex items-center truncate"><i class="ph-fill ph-tag mr-2"></i> {{
+              $application->transaction_number }}</h3>
+            <p class="text-sm font-medium text-gray-900 truncate">
+              <a href="#" class="pet-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                data-id="{{ $application->id }}" data-image="{{ asset('storage/' . $application->pet->image_path) }}"
+                data-number="{{ $application->pet->pet_number }}"
+                data-name="{{ strtolower($application->pet->pet_name) !== 'n/a' ? ucwords($application->pet->pet_name) : 'Unnamed' }}"
+                data-species="{{ $application->pet->species }}" data-age="{{ $application->pet->age }}"
+                data-age-unit="{{ $application->pet->age == 1 ? Str::singular($application->pet->age_unit) : Str::plural($application->pet->age_unit) }}"
+                data-color="{{ ucfirst($application->pet->color) }}" data-sex="{{ $application->pet->sex }}"
+                data-repro-status="{{ $application->pet->reproductive_status }}"
+                data-source="{{ ucfirst($application->pet->source) }}"
+                data-created-at="{{ $application->pet->created_at }}">
+                {{ strtolower($application->pet->pet_name) !== 'n/a' ? ucwords($application->pet->pet_name) :
+                'Unnamed' }} ({{ $application->pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{
+                $application->pet->pet_number }})
+              </a>
+            </p>
+            <p class="text-sm mt-1 truncate">
+              <span class="text-gray-500">Adopter:</span>
+              <a href="#" class="adopter-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
+                data-email="{{ $application->email }}" data-age="{{ $application->age }}"
+                data-birthdate="{{ $application->birthdate->format('F j, Y') }}"
+                data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
+                data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
+                data-reason="{{ $application->reason_for_adoption }}"
+                data-visitvet="{{ $application->visit_veterinarian }}"
+                data-existingpets="{{ $application->existing_pets }}"
+                data-validid="{{ asset('storage/' . $application->valid_id) }}">
+                {{ $application->full_name }}
+              </a>
+            </p>
           </div>
-
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-500">Date Applied</span>
-            <span class="text-sm text-gray-900">
-              {{ $application->created_at->format('M d, Y h:i A') }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Button Section (Fixed at the Bottom) -->
-        <div class="p-4 pt-0">
-          @if ($application->status === 'to be scheduled')
-          <div class="flex items-center gap-2 h-10">
-            <button onclick="openScheduleModal({{ $application->id }})"
-              class="flex-1 h-full bg-yellow-500 hover:bg-yellow-500 text-black px-2 py-2 rounded-md text-sm truncate">
-              <i class="ph-fill ph-calendar mr-1"></i> Schedule
-            </button>
-            <button onclick="openCancelModal({{ $application->id }})"
-              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
-              Cancel
-            </button>
-          </div>
-          @elseif ($application->status === 'adoption on-going')
-          <div class="flex items-center gap-2 h-10">
-            <button id="scheduledButton"
-              class="flex-1 h-full bg-green-500 text-white px-2 py-2 rounded-md text-sm cursor-pointer truncate"
-              onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('F j, Y') }}')">
-              <i class="ph-fill ph-calendar mr-1"></i> Scheduled
-            </button>
-
-            <button onclick="openCancelModal({{ $application->id }})"
-              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
-              Cancel
-            </button>
-          </div>
-          @elseif ($application->status === 'rejected')
-          <div class="flex items-center gap-2 h-10">
-            <button
-              class="flex-1 h-full bg-gray-500 text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate">
-              Rejected
-            </button>
-            <button onclick="openCancelModal({{ $application->id }})"
-              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
-              Delete
-            </button>
-          </div>
-          @elseif ($application->status === 'picked up')
-          <button
-            class="w-full h-10 bg-gray-500 italic text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate"
-            disabled>
-            Adopted
-          </button>
-          @elseif ($application->status === 'to be confirmed')
-          <div class="flex items-center gap-2 h-10">
-            <button onclick="openResendModal({{ $application->id }})"
-              class="flex-1 h-full bg-orange-500 hover:bg-orange-600 font-semibold text-white px-2 py-2 rounded-md text-sm transition duration-150 truncate">
-              Resend Confirmation
-            </button>
-            <button onclick="openCancelModal({{ $application->id }})"
-              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
-              Cancel
-            </button>
-          </div>
-          @elseif ($application->status === 'confirmed')
-          <div class="flex items-center gap-2 h-10">
-            <button
-              class="flex-1 h-full bg-blue-500 text-white px-2 py-2 rounded-md text-sm cursor-not-allowed truncate"
-              disabled>
-              Confirmed
-            </button>
-            <button onclick="openCancelModal({{ $application->id }})"
-              class="flex-1 h-full bg-red-500 text-white px-2 py-2 rounded-md text-sm truncate">
-              Cancel
-            </button>
-          </div>
-          @elseif ($application->status === 'archive')
-          <button class="w-full h-10 bg-gray-500 text-white px-2 py-2 rounded-md text-sm cursor-not-allowed truncate"
-            disabled>
-            Archived
-          </button>
-          @else
-          <button
-            class="w-full h-10 bg-gray-500 text-white px-2 py-2 rounded-md text-sm opacity-75 cursor-not-allowed truncate"
-            disabled>
-            Pending for Approval
-          </button>
-          @endif
         </div>
       </div>
-      @endforeach
+
+      <!-- Application Details -->
+      <div class="p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-500">Status</span>
+          <span class="px-2 py-1 text-xs rounded 
+                    {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-600' : '' }}
+                    {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+                    {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                    {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+                    {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
+                    {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+                    {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
+            @switch($application->status)
+            @case('to be confirmed')
+            Waiting Confirmation
+            @break
+            @case('picked up')
+            Adopted
+            @break
+            @default
+            {{ ucfirst($application->status) }}
+            @endswitch
+          </span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-500">Pickup Date</span>
+          <span class="text-sm text-gray-900">
+            {{ $application->pickup_date ? $application->pickup_date->format('F j, Y') : 'Not set' }}
+          </span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-500">Date Applied</span>
+          <span class="text-sm text-gray-900">
+            {{ $application->created_at->format('M d, Y h:i A') }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Action Buttons - User Side -->
+      <div class="bg-gray-50 px-4 py-3 flex justify-end">
+        @if ($application->status === 'to be scheduled')
+        <button onclick="openScheduleModal({{ $application->id }})"
+          class="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 rounded-md text-sm mr-2">
+          <i class="ph-fill ph-calendar mr-1"></i> Schedule
+        </button>
+        <button onclick="openCancelModal({{ $application->id }})"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+          Cancel
+        </button>
+        @elseif ($application->status === 'adoption on-going')
+        <button onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('F j, Y') }}')"
+          class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm mr-2">
+          <i class="ph-fill ph-calendar mr-1"></i> View Schedule
+        </button>
+        <button onclick="openCancelModal({{ $application->id }})"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+          Cancel
+        </button>
+        @elseif ($application->status === 'to be confirmed')
+        <button onclick="openResendModal({{ $application->id }})"
+          class="bg-orange-100 hover:bg-orange-200 text-orange-600 border border-transparent hover:border-orange-400 px-3 py-1 rounded-md text-sm mr-2">
+          Resend Confirmation
+        </button>
+        <button onclick="openCancelModal({{ $application->id }})"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+          Cancel
+        </button>
+        @elseif ($application->status === 'confirmed')
+        <button onclick="openCancelModal({{ $application->id }})"
+          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+          Cancel
+        </button>
+        @elseif ($application->status === 'archive')
+        <button class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm opacity-75 cursor-not-allowed" disabled>
+          Archived
+        </button>
+        @endif
+      </div>
     </div>
-    @endif
+    @endforeach
   </div>
 
   <!-- Pagination -->
   <div class="mt-6">
     {{ $adoptionApplications->appends(request()->except('page'))->links() }}
   </div>
+  @endif
 
   @if(!$adoptionApplications->isEmpty())
-  <!-- Cancel/Delete Confirmation Modal -->
-  <div id="cancelModal" class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+  <!-- Cancel Confirmation Modal -->
+  <div id="cancelModal"
+    class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Confirm Action</h2>
-      <p class="text-sm text-gray-600">Are you sure you want to cancel/delete this adoption request?</p>
+      <p class="text-sm text-gray-600">Are you sure you want to cancel this adoption request?</p>
 
       <div class="mt-4 flex justify-end gap-2">
         <button onclick="closeCancelModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
@@ -234,7 +194,7 @@
         <form id="deleteForm" method="POST" action="{{ url('/transactions/' . $application->id) }}">
           @csrf
           @method('DELETE')
-          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Confirm</button>
+          <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg">Confirm</button>
         </form>
       </div>
     </div>
@@ -427,8 +387,7 @@
 
         <form id="resendForm" method="POST" action="">
           @csrf
-          <button type="submit"
-            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Resend</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400">Resend</button>
         </form>
       </div>
     </div>
@@ -438,19 +397,22 @@
   <div id="scheduleModal" class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Select Pickup Date</h2>
-      <p class="text-sm text-gray-600">Please select a date within the next 7 business days (excluding weekends).
-        Failure to schedule within 48 hours will result in automatic cancellation.</p>
+      <p class="text-sm text-gray-600 mb-4">Please select a weekday (Monday-Friday) within the next 7 business days.</p>
 
       <form id="scheduleForm" method="POST" action="{{ url('/transactions/schedule-pickup') }}" class="space-y-4">
         @csrf
         <input type="hidden" name="application_id" id="scheduleAppId">
 
-        <input type="date" name="pickup_date" id="pickupDateInput" class="w-full border px-3 py-2 rounded" required>
+        <input type="date" name="pickup_date" id="pickupDateInput" class="w-full border px-3 py-2 rounded" required
+          min="" max="">
 
         <div class="mt-4 flex justify-end gap-2">
-          <button type="button" onclick="closeScheduleModal()"
-            class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg">Submit</button>
+          <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg">
+            Submit
+          </button>
         </div>
       </form>
     </div>
@@ -483,33 +445,67 @@
       const formAction = `/transactions/schedule-pickup/${appId}`;
       document.getElementById('scheduleForm').action = formAction;
 
-      // Set the min and max dates for the pickup date input
-      const input = document.getElementById('pickupDateInput');
+      // Get the next 7 business days
       const allowedDates = getNext7BusinessDays();
+      const input = document.getElementById('pickupDateInput');
+      
+      // Set min and max dates
       input.min = allowedDates[0];
       input.max = allowedDates[allowedDates.length - 1];
+      
+      // Clear any previous value
+      input.value = '';
+      
+      // Add event listener to prevent weekend selection
+      input.addEventListener('input', function() {
+        const selectedDate = new Date(this.value);
+        if (isWeekend(selectedDate)) {
+          alert('Weekends are not allowed. Please select a weekday (Monday-Friday).');
+          this.value = '';
+        }
+      });
     }
 
-    function closeScheduleModal() {
-      // Hide the modal
-      document.getElementById('scheduleModal').classList.add('hidden');
-    }
+    // Disable weekends in the date picker
+    document.getElementById('pickupDateInput').addEventListener('focus', function() {
+      const allowedDates = getNext7BusinessDays();
+      this.setAttribute('min', allowedDates[0]);
+      this.setAttribute('max', allowedDates[allowedDates.length - 1]);
+    });
 
     function isWeekend(date) {
       const day = date.getDay();
-      return (day === 0 || day === 6);
+      return (day === 0 || day === 6); // 0 = Sunday, 6 = Saturday
     }
 
     function getNext7BusinessDays() {
       const days = [];
       let date = new Date();
-      while (days.length < 7) {
+      let daysAdded = 0;
+      
+      // Skip weekends and get the next 7 business days
+      while (daysAdded < 7) {
+        // Skip weekends
         if (!isWeekend(date)) {
-          days.push(date.toISOString().split('T')[0]);
+          days.push(formatDate(date));
+          daysAdded++;
         }
         date.setDate(date.getDate() + 1);
       }
+      
       return days;
+    }
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function closeScheduleModal() {
+      // Hide the modal
+      document.getElementById('scheduleModal').classList.add('hidden');
     }
 
     function openPickupModal(pickupDate) {
@@ -529,6 +525,118 @@
       // Hide the modal
       document.getElementById('pickupModal').classList.add('hidden');
     }
-  </script>
 
+    function openCancelModal(appId) {
+      document.getElementById('cancelModal').classList.remove('hidden');
+      document.getElementById('deleteForm').action = `/transactions/${appId}`;
+    }
+
+    function closeCancelModal() {
+      document.getElementById('cancelModal').classList.add('hidden');
+    }
+
+    function openResendModal(appId) {
+      document.getElementById('resendModal').classList.remove('hidden');
+      document.getElementById('resendForm').action = `/transactions/resend-confirmation/${appId}`;
+    }
+
+    function closeResendModal() {
+      document.getElementById('resendModal').classList.add('hidden');
+    }
+
+    // Pet Info Modal functionality
+    document.querySelectorAll('.pet-info-btn').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const modal = document.getElementById('petInfoModal');
+        
+        // Set pet data
+        document.getElementById('petImage').src = this.dataset.image;
+        document.getElementById('petName').textContent = this.dataset.name;
+        document.getElementById('petNumber').textContent = '#' + this.dataset.number;
+        document.getElementById('petSpecies').textContent = this.dataset.species === 'feline' ? 'Cat' : 'Dog';
+        document.getElementById('petAge').textContent = `${this.dataset.age} ${this.dataset.ageUnit} old`;
+        document.getElementById('petSex').textContent = this.dataset.sex;
+        document.getElementById('petReproStatus').textContent = this.dataset.reproStatus;
+        document.getElementById('petColor').textContent = this.dataset.color;
+        document.getElementById('petSource').textContent = this.dataset.source;
+        
+        // Set species icon
+        const speciesIcon = document.getElementById('speciesIcon');
+        speciesIcon.className = this.dataset.species === 'feline' ? 'ph-fill ph-cat mr-1' : 'ph-fill ph-dog mr-1';
+        
+        // Set sex icon and colors
+        const sexContainer = document.getElementById('sexContainer');
+        const sexLabel = document.getElementById('sexLabel');
+        if (this.dataset.sex === 'Male') {
+          sexContainer.className = 'bg-blue-50 text-blue-800 border-blue-100 px-4 py-3 rounded-lg border flex flex-col';
+          sexLabel.innerHTML = '<i class="ph-fill ph-gender-male mr-1"></i> Sex';
+        } else {
+          sexContainer.className = 'bg-pink-50 text-pink-800 border-pink-100 px-4 py-3 rounded-lg border flex flex-col';
+          sexLabel.innerHTML = '<i class="ph-fill ph-gender-female mr-1"></i> Sex';
+        }
+        
+        // Set reproductive status icon
+        const reproStatusIcon = document.getElementById('reproStatusIcon');
+        if (this.dataset.reproStatus === 'Neutered' || this.dataset.reproStatus === 'Spayed') {
+          reproStatusIcon.className = 'ph-fill ph-scissors mr-1 text-green-500';
+        } else {
+          reproStatusIcon.className = 'ph-fill ph-scissors mr-1 text-gray-500';
+        }
+        
+        // Calculate time ago
+        const createdAt = new Date(this.dataset.createdAt);
+        const now = new Date();
+        const diffInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
+        
+        let timeAgo;
+        if (diffInDays === 0) {
+          timeAgo = 'Today';
+        } else if (diffInDays === 1) {
+          timeAgo = 'Yesterday';
+        } else {
+          timeAgo = `${diffInDays} days ago`;
+        }
+        
+        document.getElementById('petTimeAgo').textContent = timeAgo;
+        
+        // Show modal
+        modal.classList.remove('hidden');
+      });
+    });
+
+    // Adopter Info Modal functionality
+    document.querySelectorAll('.adopter-info-btn').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const modal = document.getElementById('adopterInfoModal');
+        
+        // Set adopter data
+        document.getElementById('adopterName').value = this.dataset.name;
+        document.getElementById('adopterEmail').value = this.dataset.email;
+        document.getElementById('adopterAge').value = this.dataset.age;
+        document.getElementById('adopterBirthdate').value = this.dataset.birthdate;
+        document.getElementById('adopterPhone').value = this.dataset.phone;
+        document.getElementById('adopterAddress').value = this.dataset.address;
+        document.getElementById('adopterCivilStatus').value = this.dataset.civil;
+        document.getElementById('adopterCitizenship').value = this.dataset.citizenship;
+        document.getElementById('adopterVisitVet').value = this.dataset.visitvet;
+        document.getElementById('adopterExistingPets').value = this.dataset.existingpets;
+        document.getElementById('adopterReason').value = this.dataset.reason;
+        document.getElementById('adopterValidId').href = this.dataset.validid;
+        
+        // Show modal
+        modal.classList.remove('hidden');
+      });
+    });
+
+    // Close modals
+    document.getElementById('closePetInfoModal').addEventListener('click', function() {
+      document.getElementById('petInfoModal').classList.add('hidden');
+    });
+
+    document.getElementById('closeAdopterInfoModal').addEventListener('click', function() {
+      document.getElementById('adopterInfoModal').classList.add('hidden');
+    });
+  </script>
 </x-transactions-layout>

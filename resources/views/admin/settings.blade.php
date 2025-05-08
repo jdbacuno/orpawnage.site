@@ -262,16 +262,19 @@
                 
                     if (progressPercentage === 0) {
                       strengthText.innerText = 'Start typing to see strength...';
-                      strengthProgress.style.backgroundColor = '#f44336'; // Red
+                      strengthProgress.style.backgroundColor = '#ef4444'; // Red
                     } else if (progressPercentage < 40) {
                       strengthText.innerText = 'Weak';
-                      strengthProgress.style.backgroundColor = '#f44336'; // Red
+                      strengthText.style.color = '#ef4444';
+                      strengthProgress.style.backgroundColor = '#ef4444'; // Red
                     } else if (progressPercentage < 70) {
                       strengthText.innerText = 'Medium';
-                      strengthProgress.style.backgroundColor = '#ff9800'; // Orange
+                      strengthText.style.color = '#f59e0b';
+                      strengthProgress.style.backgroundColor = '#f59e0b'; // Orange
                     } else {
                       strengthText.innerText = 'Strong';
-                      strengthProgress.style.backgroundColor = '#4caf50'; // Green
+                      strengthText.style.color = '#10b981';
+                      strengthProgress.style.backgroundColor = '#10b981'; // Green
                     }
                   };
                 

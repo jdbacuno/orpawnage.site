@@ -85,7 +85,7 @@
       <h2 class="text-xl font-semibold text-gray-800">Pet Profiles</h2>
       <!-- Add New Pet Button -->
       <button id="openModal"
-        class="bg-yellow-500 text-black hover:bg-orange-500 hover:text-white font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
+        class="bg-yellow-400 text-black hover:bg-orange-500 hover:text-white font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
         <i class="ph-fill ph-plus-circle"></i>
         <span class="hidden md:inline-flex ml-2">Add a New Pet</span>
       </button>
@@ -252,7 +252,7 @@
             <h3 class="text-md font-bold">
               {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
             </h3>
-            <span class="bg-yellow-500 text-xs text-black py-1 px-2 rounded font-bold">
+            <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
               {{ $pet->species === 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}
             </span>
           </div>
@@ -355,7 +355,7 @@
           <div>
             <label class="block text-gray-700 text-sm font-medium">Pet No.</label>
             <input type="number" name="pet_number" placeholder="Pet No."
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('pet_number') }}"
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('pet_number') }}"
               required>
             <x-form-error name="pet_number" />
           </div>
@@ -363,14 +363,14 @@
           <div>
             <label class="block text-gray-700 text-sm font-medium">Pet Name (If Any)</label>
             <input type="text" name="pet_name" placeholder="Type &quot;N/A&quot; if none"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('pet_name') }}"
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('pet_name') }}"
               required>
             <x-form-error name="pet_name" />
           </div>
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Species</label>
-            <select name="species" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+            <select name="species" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="feline" {{ old('species')==='feline' ? 'selected' : '' }}>Feline</option>
               <option value="canine" {{ old('species')==='canine' ? 'selected' : '' }}>Canine</option>
             </select>
@@ -381,12 +381,12 @@
             <div class="w-1/2">
               <label class="block text-gray-700 text-sm font-medium">Age</label>
               <input type="number" name="age" placeholder="Age"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" value="{{ old('age') }}" required>
+                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('age') }}" required>
               <x-form-error name="age" />
             </div>
             <div class="w-1/2">
               <label class="block text-gray-700 text-sm font-medium">Unit</label>
-              <select name="age_unit" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+              <select name="age_unit" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
                 <option value="months" {{ old('age_unit')==='months' ? 'selected' : '' }}>Months</option>
                 <option value="years" {{ old('age_unit')==='years' ? 'selected' : '' }}>Years</option>
                 <option value="weeks" {{ old('age_unit')==='weeks' ? 'selected' : '' }}>Weeks</option>
@@ -397,7 +397,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Sex</label>
-            <select name="sex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+            <select name="sex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="male" {{ old('sex')==='male' ? 'selected' : '' }}>Male</option>
               <option value="female" {{ old('sex')==='female' ? 'selected' : '' }}>Female</option>
             </select>
@@ -406,7 +406,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Reproductive Status</label>
-            <select name="reproductive_status" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+            <select name="reproductive_status" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
               required>
               <option value="intact" {{ old('reproductive_status')==='intact' ? 'selected' : '' }}>Intact</option>
               <option value="neutered" {{ old('reproductive_status')==='neutered' ? 'selected' : '' }}>Neutered</option>
@@ -417,7 +417,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Color</label>
-            <select name="color" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+            <select name="color" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="black" {{ old('color')==='black' ? 'selected' : '' }}>Black</option>
               <option value="white" {{ old('color')==='white' ? 'selected' : '' }}>White</option>
               <option value="gray" {{ old('color')==='gray' ? 'selected' : '' }}>Gray</option>
@@ -435,7 +435,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Source of Pet</label>
-            <select name="source" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+            <select name="source" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="surrendered" {{ old('source')==='surrendered' ? 'selected' : '' }}>Surrendered</option>
               <option value="rescued" {{ old('source')==='rescued' ? 'selected' : '' }}>Rescued</option>
               <option value="other" {{ old('source')==='other' ? 'selected' : '' }}>Other</option>
@@ -445,7 +445,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-500 hover:text-black sticky bottom-0">Add
+            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-400 hover:text-black sticky bottom-0">Add
             Pet</button>
         </form>
       </div>
@@ -500,14 +500,14 @@
             <label class="block text-gray-700 text-sm font-medium">Pet No.</label>
             <input type="number" name="pet_number" id="editPetNumber"
               value="{{ old('pet_number', $editPetData->pet_number) }}"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
             <x-form-error name="pet_number" />
           </div>
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Pet Name</label>
             <input type="text" name="pet_name" id="editPetName" value="{{ old('pet_name', $editPetData->pet_name) }}"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
               placeholder="Type &quot;N/A&quot; if none" required>
             <x-form-error name="pet_name" />
           </div>
@@ -515,7 +515,7 @@
           <div>
             <label class="block text-gray-700 text-sm font-medium">Species</label>
             <select name="species" id="editSpecies"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="feline" {{ old('species', $editPetData->species) == 'feline' ? 'selected' : '' }}>Feline
               </option>
               <option value="canine" {{ old('species', $editPetData->species) == 'canine' ? 'selected' : '' }}>Canine
@@ -528,13 +528,13 @@
             <div class="w-1/2">
               <label class="block text-gray-700 text-sm font-medium">Age</label>
               <input type="number" name="age" id="editAge" value="{{ old('age', $editPetData->age) }}"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <x-form-error name="age" />
             </div>
             <div class="w-1/2">
               <label class="block text-gray-700 text-sm font-medium">Unit</label>
               <select name="age_unit" id="editAgeUnit"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
                 <option value="months" {{ old('age_unit', $editPetData->age_unit) == 'months' ? 'selected' : ''
                   }}>Months
                 </option>
@@ -549,7 +549,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Sex</label>
-            <select name="sex" id="editSex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+            <select name="sex" id="editSex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
               required>
               <option value="male" {{ old('sex', $editPetData->sex) == 'male' ? 'selected' : '' }}>Male</option>
               <option value="female" {{ old('sex', $editPetData->sex) == 'female' ? 'selected' : '' }}>Female</option>
@@ -560,7 +560,7 @@
           <div>
             <label class="block text-gray-700 text-sm font-medium">Reproductive Status</label>
             <select name="reproductive_status" id="editReproStatus"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500" required>
+              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
               <option value="intact" {{ old('reproductive_status', $editPetData->reproductive_status) == 'intact' ?
                 'selected' : ''
                 }}>Intact</option>
@@ -576,7 +576,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Color</label>
-            <select name="color" id="editColor" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+            <select name="color" id="editColor" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
               required>
               @foreach (["black", "white", "gray", "brown", "orange", "brindle", "calico", "tabby", "bi-color",
               "tri-color",
@@ -591,7 +591,7 @@
 
           <div>
             <label class="block text-gray-700 text-sm font-medium">Source of Pet</label>
-            <select name="source" id="editSource" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-500"
+            <select name="source" id="editSource" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
               required>
               <option value="surrendered" {{ old('source', $editPetData->source) == 'surrendered' ?
                 'selected' : ''
@@ -606,7 +606,7 @@
 
           <!-- Submit Button -->
           <button type="submit"
-            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-500 hover:text-black sticky bottom-0">Update
+            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-400 hover:text-black sticky bottom-0">Update
             Pet</button>
         </form>
       </div>

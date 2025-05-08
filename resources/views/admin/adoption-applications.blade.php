@@ -164,7 +164,7 @@
                   @switch($application->status)
                   @case('to be confirmed') Waiting @break
                   @case('confirmed') Confirmed @break
-                  @case('to be scheduled') To Schedule @break
+                  @case('to be scheduled') To be Scheduled @break
                   @case('adoption on-going') On-going @break
                   @case('picked up') Adopted @break
                   @case('rejected') Rejected @break
@@ -191,7 +191,7 @@
                   @csrf
                   <input type="hidden" name="application_id" value="{{ $application->id }}">
                   <button type="submit"
-                    class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-900"
+                    class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-700"
                     role="menuitem">
                     Resend Confirmation Email
                   </button>
@@ -223,7 +223,7 @@
                 </button>
                 @endif
 
-                @if($application->status === 'picked up' || $application->status === 'rejected')
+                @if($application->status === 'picked up')
                 <form method="POST" action="/admin/adoption-applications/archive" class="w-full">
                   @csrf
                   @method('PATCH')

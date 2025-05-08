@@ -423,7 +423,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>
   <script src="{{ asset('js/preloader.js') }}"></script>
-  <script src="{{ asset('js/scrollTo.js') }}"></script>
   <script src="{{ asset('js/custom.js') }}"></script>
   <script src="{{ asset('js/seemore.js') }}"></script>
   <script src="{{ asset('js/modal.js') }}"></script>

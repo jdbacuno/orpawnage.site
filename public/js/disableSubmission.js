@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const submitBtn = forgotPasswordForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Submitting...';
+        submitBtn.innerHTML = 'Sending...';
       }
     });
   }
@@ -149,6 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
   if (verificationForm) {
     verificationForm.addEventListener("submit", function () {
       const submitBtn = verificationForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Resending...';
+      }
+    });
+  }
+
+  // ========= RESENDING CONFIRMATION EMAIL =========
+  const resendForm = document.getElementById("resendForm");
+  if (resendForm) {
+    resendForm.addEventListener("submit", function () {
+      const submitBtn = resendForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Resending...';

@@ -15,5 +15,10 @@ class ScheduleServiceProvider extends ServiceProvider
       ->everyMinute()
       ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-reject.log'));
+
+    $schedule->command('applications:reject-unscheduled')
+      ->everyMinute()
+      ->onOneServer()
+      ->appendOutputTo(storage_path('logs/auto-reject-unscheduled.log'));
   }
 }

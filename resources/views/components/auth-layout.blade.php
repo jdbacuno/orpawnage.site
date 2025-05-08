@@ -14,7 +14,7 @@
   <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" />
 
   @vite(['resources/css/auth.css','resources/css/preloader.css',
-  'resources/css/admin/fonts/phosphor/phosphor-fill.css'])
+  'resources/css/admin/fonts/phosphor/phosphor-fill.css', 'resources/css/orpawnage-animation.css'])
 </head>
 
 <body

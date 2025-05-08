@@ -32,14 +32,14 @@
         <ul class="mt-4">
           <li class="mb-1 group {{ request()->is('admin') ? 'active' : '' }}">
             <a href="/admin"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
               <i class="ph-fill ph-squares-four mr-3 text-lg"></i>
               <span class="text-sm">Dashboard</span>
             </a>
           </li>
           <li class="mb-1 group {{ request()->is('admin/pet-profiles') ? 'active' : '' }}">
             <a href="/admin/pet-profiles"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
               <i class=" ph-fill ph-paw-print mr-3 text-lg"></i>
               <span class="text-sm">Manage Pet Profiles</span>
             </a>
@@ -47,7 +47,7 @@
           {{-- will put or "admin/surrender-applications" later --}}
           <li class="mb-1 group {{ request()->is('admin/adoption-applications') ? 'selected' : '' }}">
             <a href="#"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-500/60 group-[.selected]:text-black sidebar-dropdown-toggle">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-400/60 group-[.selected]:text-black sidebar-dropdown-toggle">
               <i class="ph-fill ph-mailbox mr-3 text-lg"></i>
               <span class="text-sm">Applications</span>
               <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
@@ -55,13 +55,13 @@
             <ul class="pl-7 mt-2 hidden group-[.selected]:block">
               <li class="mb-1 group {{ request()->is('admin/adoption-applications') ? 'active' : '' }}">
                 <a href="/admin/adoption-applications"
-                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-400 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-400 group-[.active]:text-black">
                   Adoption Applications
                 </a>
 
               </li>
               <li class="mb-1">
-                <a href="#" class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500
+                <a href="#" class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-400
                 hover:text-black hover:font-semibold p-2 rounded-full">
                   Surrender Applications
                 </a>
@@ -72,7 +72,7 @@
           {{-- will put or "admin/missing-pets" later --}}
           <li class="mb-1 group {{ request()->is('admin/abused-or-stray-pets') ? 'selected' : '' }}">
             <a href="#"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-500/60 group-[.selected]:text-black sidebar-dropdown-toggle">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-400/60 group-[.selected]:text-black sidebar-dropdown-toggle">
               <i class="ph-fill ph-warning mr-3 text-lg"></i>
               <span class="text-sm">Reports</span>
               <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
@@ -80,14 +80,14 @@
             <ul class="pl-7 mt-2 hidden group-[.selected]:block">
               <li class="mb-1 group">
                 <a href="#"
-                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-400 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-400 group-[.active]:text-black">
                   Missing Pets
                 </a>
 
               </li>
               <li class="mb-1 group {{ request()->is('admin/abused-or-stray-pets') ? 'active' : '' }}">
                 <a href="/admin/abused-or-stray-pets"
-                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-500 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-500 group-[.active]:text-black group-[.active]:font-bold">
+                  class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-400 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-400 group-[.active]:text-black">
                   Abused / Stray Pets
                 </a>
 
@@ -97,7 +97,7 @@
 
           <li class="mb-1 group">
             <a href="/" target="_blank"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
               <i class="ph-fill ph-globe-hemisphere-east mr-3 text-lg"></i>
               <span class="text-sm">OrPAWnage.com</span>
             </a>
@@ -109,9 +109,9 @@
       <div class="pt-4">
         <ul>
           <!-- Settings Item -->
-          <li class="mb-2 group border-b border-gray-300">
+          <li class="mb-2 pb-2 group border-b border-gray-300 {{ request()->is('admin/settings') ? 'active' : '' }}">
             <a href="/admin/settings"
-              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-500 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-500 group-[.active]:text-black">
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
               <i class="ph-fill ph-gear-six mr-3 text-lg"></i>
               <span class="text-sm">Settings</span>
             </a>
@@ -134,7 +134,7 @@
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                  class="w-10 h-10 rounded-full text-gray-900 flex items-center justify-center text-xl hover:bg-yellow-500 hover:text-black transition-colors">
+                  class="w-10 h-10 rounded-full text-gray-900 flex items-center justify-center text-xl hover:bg-yellow-400 hover:text-black transition-colors">
                   <i class="ph-fill ph-sign-out"></i>
                 </button>
               </form>
