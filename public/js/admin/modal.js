@@ -1,3 +1,5 @@
+// ADMIN MODAL.JS
+
 // CREATE
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modal");
@@ -5,18 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const closeModalButton = document.getElementById("closeModal");
 
   // Show modal when clicking "Add a New Pet"
-  openModalButton.addEventListener("click", function () {
-      modal.classList.remove("hidden");
+  openModalButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    modal.classList.remove("hidden");
   });
 
   // Hide modal when clicking the close button
-  closeModalButton.addEventListener("click", function () {
-      modal.classList.add("hidden");
+  closeModalButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    modal.classList.add("hidden");
 
-      const successMessage = document.querySelector(".add-success");
-      if (successMessage) {
-        successMessage.classList.add("hidden");
-      }
+    const successMessage = document.querySelector(".add-success");
+    if (successMessage) {
+      successMessage.classList.add("hidden");
+    }
   });
 
   // Preview selected image to upload (CREATE)
@@ -25,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const imagePlaceholder = document.getElementById("imagePlaceholder");
 
   imageInput.addEventListener("change", function (event) {
+    event.preventDefault();
     const file = event.target.files[0];
 
     if (file) {
@@ -44,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if ("{{ session('modal_open') }}" === "add") {
     document.getElementById("modal").classList.remove("hidden");
-  } 
+  }
 });
 
 // EDIT
@@ -59,70 +64,73 @@ document.addEventListener("DOMContentLoaded", function () {
   editImagePlaceholder.classList.add("hidden");
 
   editButtons.forEach(button => {
-      button.addEventListener("click", function() {
-          const petId = this.getAttribute("data-id");
-          const petImagePath = this.getAttribute("data-image");
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
+      const petId = this.getAttribute("data-id");
+      const petImagePath = this.getAttribute("data-image");
 
-          document.getElementById("editPetId").value = petId;
-          document.getElementById("editPetNumber").value = this.getAttribute("data-number");
-          document.getElementById("editPetName").value = this.getAttribute("data-name");
-          document.getElementById("editSpecies").value = this.getAttribute("data-species");
-          document.getElementById("editAge").value = this.getAttribute("data-age");
-          document.getElementById("editAgeUnit").value = this.getAttribute("data-age-unit");
-          document.getElementById("editSex").value = this.getAttribute("data-sex");
-          document.getElementById("editReproStatus").value = this.getAttribute("data-repro-status");
-          document.getElementById("editColor").value = this.getAttribute("data-color");
-          document.getElementById("editSource").value = this.getAttribute("data-source");
+      document.getElementById("editPetId").value = petId;
+      document.getElementById("editPetNumber").value = this.getAttribute("data-number");
+      document.getElementById("editPetName").value = this.getAttribute("data-name");
+      document.getElementById("editSpecies").value = this.getAttribute("data-species");
+      document.getElementById("editAge").value = this.getAttribute("data-age");
+      document.getElementById("editAgeUnit").value = this.getAttribute("data-age-unit");
+      document.getElementById("editSex").value = this.getAttribute("data-sex");
+      document.getElementById("editReproStatus").value = this.getAttribute("data-repro-status");
+      document.getElementById("editColor").value = this.getAttribute("data-color");
+      document.getElementById("editSource").value = this.getAttribute("data-source");
 
-          const successMessage = document.querySelector(".edit-success");
-          if (successMessage) {
-              successMessage.classList.add("hidden");
-          }
+      const successMessage = document.querySelector(".edit-success");
+      if (successMessage) {
+        successMessage.classList.add("hidden");
+      }
 
-          // Update Image Preview
-          if (petImagePath && petImagePath.trim() !== "") {
-              editImagePreview.src = petImagePath;
-              editImagePreview.classList.remove("hidden");
-              editImagePlaceholder.classList.add("hidden"); // Hide placeholder
-          } else {
-              editImagePreview.src = "";
-              editImagePreview.classList.add("hidden");
-              editImagePlaceholder.classList.remove("hidden"); // Show placeholder
-          }
+      // Update Image Preview
+      if (petImagePath && petImagePath.trim() !== "") {
+        editImagePreview.src = petImagePath;
+        editImagePreview.classList.remove("hidden");
+        editImagePlaceholder.classList.add("hidden"); // Hide placeholder
+      } else {
+        editImagePreview.src = "";
+        editImagePreview.classList.add("hidden");
+        editImagePlaceholder.classList.remove("hidden"); // Show placeholder
+      }
 
-          // Set form action dynamically
-          document.getElementById('editPetForm').action = `/admin/pet-profiles/${petId}`;
+      // Set form action dynamically
+      document.getElementById('editPetForm').action = `/admin/pet-profiles/${petId}`;
 
-          editModal.classList.remove("hidden");
-      });
+      editModal.classList.remove("hidden");
+    });
   });
 
-  closeEditModal.addEventListener("click", function() {
-      editModal.classList.add("hidden");
+  closeEditModal.addEventListener("click", function(e) {
+    e.preventDefault();
+    editModal.classList.add("hidden");
   });
 
   // Handle image preview when selecting a new image
   editImageInput.addEventListener("change", function (event) {
-      const file = event.target.files[0];
+    event.preventDefault();
+    const file = event.target.files[0];
 
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-              editImagePreview.src = e.target.result;
-              editImagePreview.classList.remove("hidden");
-              editImagePlaceholder.classList.add("hidden");
-          };
-          reader.readAsDataURL(file);
-      } else {
-          editImagePreview.classList.add("hidden");
-          editImagePlaceholder.classList.remove("hidden");
-          editImagePreview.src = "";
-      }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        editImagePreview.src = e.target.result;
+        editImagePreview.classList.remove("hidden");
+        editImagePlaceholder.classList.add("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      editImagePreview.classList.add("hidden");
+      editImagePlaceholder.classList.remove("hidden");
+      editImagePreview.src = "";
+    }
   });
 
   // Ensure modal remains open if session indicates so
   if ("{{ session('modal_open') }}" === "edit") {
-      document.getElementById("editModal").classList.remove("hidden");
+    document.getElementById("editModal").classList.remove("hidden");
   }
 });
 
@@ -135,23 +143,25 @@ document.addEventListener("DOMContentLoaded", function () {
   const deletePetIdText = document.getElementById("deletePetIdText");
 
   deleteButtons.forEach(button => {
-      button.addEventListener("click", function() {
-          const petId = this.getAttribute("data-id");
-          const petNumber = this.getAttribute("data-number");
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
+      const petId = this.getAttribute("data-id");
+      const petNumber = this.getAttribute("data-number");
 
-          // Set the Pet ID in the modal text
-          deletePetIdText.textContent = petNumber;
+      // Set the Pet ID in the modal text
+      deletePetIdText.textContent = petNumber;
 
-          // Set the correct form action dynamically
-          deletePetForm.action = `/admin/pet-profiles/${petId}`;
+      // Set the correct form action dynamically
+      deletePetForm.action = `/admin/pet-profiles/${petId}`;
 
-          // Show delete modal
-          deleteModal.classList.remove("hidden");
-      });
+      // Show delete modal
+      deleteModal.classList.remove("hidden");
+    });
   });
 
-  closeDeleteModal.addEventListener("click", function() {
-      deleteModal.classList.add("hidden");
+  closeDeleteModal.addEventListener("click", function(e) {
+    e.preventDefault();
+    deleteModal.classList.add("hidden");
   });
 });
 
@@ -161,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const closePetInfoModal = document.getElementById('closePetInfoModal');
 
   document.querySelectorAll(".pet-info-btn").forEach(button => {
-    button.addEventListener("click", function () {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+
       // Calculate and display humanized time ago
       const createdAt = this.getAttribute("data-created-at");
       if (createdAt) {
@@ -233,7 +245,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  closePetInfoModal.addEventListener('click', function () {
+  closePetInfoModal.addEventListener('click', function (e) {
+    e.preventDefault();
     petInfoModal.classList.add('hidden');
   });
 
@@ -241,9 +254,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function timeSince(date) {
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
-    
+
     if (seconds < 60) return "just now";
-    
+
     const intervals = {
       year: 31536000,
       month: 2592000,
@@ -252,9 +265,9 @@ document.addEventListener('DOMContentLoaded', function () {
       hour: 3600,
       minute: 60
     };
-    
+
     let parts = [];
-    
+
     // Calculate years first
     const years = Math.floor(seconds / intervals.year);
     if (years > 0) {
@@ -264,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       seconds -= years * intervals.year;
     }
-    
+
     // Calculate remaining months (max 11)
     const months = Math.floor(seconds / intervals.month);
     if (months > 0) {
@@ -280,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     }
-    
+
     // For durations less than 1 month
     if (parts.length === 0) {
       const weeks = Math.floor(seconds / intervals.week);
@@ -300,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     }
-    
+
     // For durations less than 1 day
     if (parts.length === 0) {
       const hours = Math.floor(seconds / intervals.hour);
@@ -313,14 +326,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
       }
     }
-    
+
     // Format the output
     if (parts.length === 0) return "just now";
-    
+
     const formattedParts = parts.slice(0, 2).map(part => {
       return `${part.value} ${part.unit}${part.value !== 1 ? 's' : ''}`;
     });
-    
+
     return formattedParts.join(' and ') + ' ago';
   }
 });
@@ -331,27 +344,29 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeAdopterInfoModal = document.getElementById('closeAdopterInfoModal');
 
   document.querySelectorAll(".adopter-info-btn").forEach(button => {
-    button.addEventListener("click", function() {
-        // Assign to modal
-        document.getElementById("adopterName").value = this.getAttribute("data-name");
-        document.getElementById("adopterEmail").value = this.getAttribute("data-email");
-        document.getElementById("adopterAge").value = this.getAttribute("data-age") + " years old";
-        document.getElementById("adopterBirthdate").value = this.getAttribute("data-birthdate");
-        document.getElementById("adopterAddress").value = this.getAttribute("data-address");
-        document.getElementById("adopterPhone").value = this.getAttribute("data-phone");
-        document.getElementById("adopterCivilStatus").value = this.getAttribute("data-civil");
-        document.getElementById("adopterCitizenship").value = this.getAttribute("data-citizenship");
-        document.getElementById("adopterReason").value = this.getAttribute("data-reason");
-        document.getElementById("adopterVisitVet").value = this.getAttribute("data-visitvet");
-        document.getElementById("adopterExistingPets").value = this.getAttribute("data-existingpets");
-        document.getElementById("adopterValidId").href = this.getAttribute("data-validid");
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
+      // Assign to modal
+      document.getElementById("adopterName").value = this.getAttribute("data-name");
+      document.getElementById("adopterEmail").value = this.getAttribute("data-email");
+      document.getElementById("adopterAge").value = this.getAttribute("data-age") + " years old";
+      document.getElementById("adopterBirthdate").value = this.getAttribute("data-birthdate");
+      document.getElementById("adopterAddress").value = this.getAttribute("data-address");
+      document.getElementById("adopterPhone").value = this.getAttribute("data-phone");
+      document.getElementById("adopterCivilStatus").value = this.getAttribute("data-civil");
+      document.getElementById("adopterCitizenship").value = this.getAttribute("data-citizenship");
+      document.getElementById("adopterReason").value = this.getAttribute("data-reason");
+      document.getElementById("adopterVisitVet").value = this.getAttribute("data-visitvet");
+      document.getElementById("adopterExistingPets").value = this.getAttribute("data-existingpets");
+      document.getElementById("adopterValidId").href = this.getAttribute("data-validid");
 
-        adopterInfoModal.classList.remove("hidden");
+      adopterInfoModal.classList.remove("hidden");
     });
   });
 
-  closeAdopterInfoModal.addEventListener('click', function () {
-      adopterInfoModal.classList.add('hidden');
+  closeAdopterInfoModal.addEventListener('click', function (e) {
+    e.preventDefault();
+    adopterInfoModal.classList.add('hidden');
   });
 });
 
@@ -363,56 +378,56 @@ document.addEventListener("DOMContentLoaded", function () {
   const applicationIdInput = document.getElementById("applicationId");
 
   function setPickupDateRange() {
-      const today = new Date();
-      let tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
+    const today = new Date();
+    let tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
-      const maxDate = new Date(today);
-      maxDate.setDate(today.getDate() + 7);
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 7);
 
-      // Function to format date as YYYY-MM-DD
-      const formatDate = (date) => date.toISOString().split("T")[0];
+    // Function to format date as YYYY-MM-DD
+    const formatDate = (date) => date.toISOString().split("T")[0];
 
-      // Function to check if a date falls on a weekend (Saturday or Sunday)
-      const isWeekend = (date) => date.getDay() === 0 || date.getDay() === 6;
+    // Function to check if a date falls on a weekend (Saturday or Sunday)
+    const isWeekend = (date) => date.getDay() === 0 || date.getDay() === 6;
 
-      // Ensure the initial minimum date is not a weekend
-      while (isWeekend(tomorrow)) {
-          tomorrow.setDate(tomorrow.getDate() + 1);
-      }
-
-      // Ensure the max date doesn't include weekends
-      let adjustedMaxDate = new Date(maxDate);
-      while (isWeekend(adjustedMaxDate)) {
-          adjustedMaxDate.setDate(adjustedMaxDate.getDate() - 1);
-      }
-    
-      // Set restrictions
-      pickupDateInput.min = formatDate(tomorrow);
-      pickupDateInput.max = formatDate(adjustedMaxDate);
-
+    // Ensure the initial minimum date is not a weekend
+    while (isWeekend(tomorrow)) {
+      tomorrow.setDate(tomorrow.getDate() + 1);
     }
 
+    // Ensure the max date doesn't include weekends
+    let adjustedMaxDate = new Date(maxDate);
+    while (isWeekend(adjustedMaxDate)) {
+      adjustedMaxDate.setDate(adjustedMaxDate.getDate() - 1);
+    }
+
+    // Set restrictions
+    pickupDateInput.min = formatDate(tomorrow);
+    pickupDateInput.max = formatDate(adjustedMaxDate);
+  }
+
   document.querySelectorAll(".approve-btn").forEach(button => {
-      button.addEventListener("click", function () {
-          const applicationId = this.getAttribute("data-id");
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const applicationId = this.getAttribute("data-id");
 
-          applicationIdInput.value = applicationId;
-          pickupDateInput.value = ""; // Reset date input
+      applicationIdInput.value = applicationId;
+      pickupDateInput.value = ""; // Reset date input
 
-          // Set date range restrictions
-          setPickupDateRange();
+      // Set date range restrictions
+      setPickupDateRange();
 
-          // Show the modal
-          approveModal.classList.remove("hidden");
-      });
+      // Show the modal
+      approveModal.classList.remove("hidden");
+    });
   });
 
-  closeApproveModal.addEventListener("click", function () {
-      approveModal.classList.add("hidden");
+  closeApproveModal.addEventListener("click", function (e) {
+    e.preventDefault();
+    approveModal.classList.add("hidden");
   });
 });
-
 
 // Reject Adoption Application
 document.addEventListener("DOMContentLoaded", function () {
@@ -422,15 +437,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const rejectApplicationIdInput = document.getElementById("rejectApplicationId");
 
   document.querySelectorAll(".reject-btn").forEach(button => {
-      button.addEventListener("click", function () {
-          const applicationId = this.getAttribute("data-id");
-          rejectApplicationIdInput.value = applicationId;
-          rejectModal.classList.remove("hidden");
-      });
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const applicationId = this.getAttribute("data-id");
+      rejectApplicationIdInput.value = applicationId;
+      rejectModal.classList.remove("hidden");
+    });
   });
 
-  closeRejectModal.addEventListener("click", function () {
-      rejectModal.classList.add("hidden");
+  closeRejectModal.addEventListener("click", function (e) {
+    e.preventDefault();
+    rejectModal.classList.add("hidden");
   });
 });
 
@@ -444,27 +461,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Replace this selector with your actual button class/selector
   document.querySelectorAll("[data-action='move-to-schedule']").forEach(button => {
-      button.addEventListener("click", function () {
-          const applicationId = this.getAttribute("data-id");
-          scheduleApplicationIdInput.value = applicationId;
-          scheduleModal.classList.remove("hidden");
-      });
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const applicationId = this.getAttribute("data-id");
+      scheduleApplicationIdInput.value = applicationId;
+      scheduleModal.classList.remove("hidden");
+    });
   });
 
   // Close modal handlers
-  closeScheduleModal.addEventListener("click", function () {
-      scheduleModal.classList.add("hidden");
+  closeScheduleModal.addEventListener("click", function (e) {
+    e.preventDefault();
+    scheduleModal.classList.add("hidden");
   });
 
-  cancelSchedule.addEventListener("click", function () {
-      scheduleModal.classList.add("hidden");
-  });
-
-  // Close when clicking outside modal
-  window.addEventListener('click', function(event) {
-      if (event.target === scheduleModal) {
-          scheduleModal.classList.add("hidden");
-      }
+  cancelSchedule.addEventListener("click", function (e) {
+    e.preventDefault();
+    scheduleModal.classList.add("hidden");
   });
 });
 
@@ -476,14 +489,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeNotesModal = document.getElementById('closeNotesModal');
 
   showMoreButtons.forEach(button => {
-    button.addEventListener('click', function () {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
       const fullNotes = this.getAttribute('data-notes');
       fullNotesText.textContent = fullNotes;
       notesModal.classList.remove('hidden');
     });
   });
 
-  closeNotesModal.addEventListener('click', function () {
+  closeNotesModal.addEventListener('click', function (e) {
+    e.preventDefault();
     notesModal.classList.add('hidden');
   });
 });
@@ -496,7 +511,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const modalImage = document.getElementById('modalImage'); // ✅ define this!
 
   showImageButtons.forEach(button => {
-    button.addEventListener('click', function () {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
       const imageSrc = this.getAttribute('data-image');
       console.log(imageSrc);
       modalImage.src = imageSrc;
@@ -504,7 +520,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  closeImageModal.addEventListener('click', function () {
+  closeImageModal.addEventListener('click', function (e) {
+    e.preventDefault();
     imageModal.classList.add('hidden');
     modalImage.src = ''; // optional: reset image
   });
@@ -523,10 +540,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Handle acknowledge buttons
   document.querySelectorAll('.acknowledge-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
       const reportId = this.dataset.reportId;
       const actionType = this.dataset.actionType;
-      
+
       reportIdInput.value = reportId;
       actionTypeInput.value = actionType;
       messageEl.innerHTML = 'Are you sure you want to acknowledge this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
@@ -540,10 +558,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Handle reject buttons
   document.querySelectorAll('.reject-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
       const reportId = this.dataset.reportId;
       const actionType = this.dataset.actionType;
-      
+
       reportIdInput.value = reportId;
       actionTypeInput.value = actionType;
       messageEl.innerHTML = 'Are you sure you want to reject this report?<br><span style="color: green; font-size: 0.875rem;">The user will be notifed via email.</span>';
@@ -557,7 +576,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Close modal handlers
   [closeBtn, cancelBtn].forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       modal.classList.add('hidden');
     });
   });

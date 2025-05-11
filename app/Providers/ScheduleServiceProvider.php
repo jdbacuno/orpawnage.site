@@ -9,7 +9,10 @@ class ScheduleServiceProvider extends ServiceProvider
 {
   public function boot(Schedule $schedule): void
   {
-    $schedule->command('app:update-featured-pets')->everyMinute();
+    $schedule->command('app:update-featured-pets')
+      ->everyMinute()
+      ->onOneServer()
+      ->appendOutputTo(storage_path('logs/update-featured-pets.log'));
 
     $schedule->command('applications:reject-unconfirmed')
       ->everyMinute()
@@ -20,5 +23,10 @@ class ScheduleServiceProvider extends ServiceProvider
       ->everyMinute()
       ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-reject-unscheduled.log'));
+
+    $schedule->command('applications:reject-unpicked')
+      ->daily()
+      ->onOneServer()
+      ->appendOutputTo(storage_path('logs/auto-reject-unpicked.log'));
   }
 }

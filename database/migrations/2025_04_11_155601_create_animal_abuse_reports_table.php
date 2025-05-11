@@ -21,8 +21,10 @@ return new class extends Migration
             $table->string('species');
             $table->string('animal_condition');
             $table->text('additional_notes');
-            $table->string('incident_photo');
+            $table->string('valid_id_path')->nullable();
+            $table->json('incident_photos')->nullable();
             $table->string('status')->default('pending');
+            $table->string('reject_reason')->default('');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

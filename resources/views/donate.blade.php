@@ -1,6 +1,7 @@
 <x-layout>
   <!-- ========== START OF DONATION SECTION ========== -->
-  <section class="relative flex items-center justify-center bg-black/50 pb-12 pt-24">
+  <section class="relative flex items-center justify-center min-h-screen bg-black/50 pb-9 pt-24">
+
     <!-- Adjusted pt-24 for navbar -->
     <!-- Background Image -->
     <div class="absolute inset-0 overflow-hidden">

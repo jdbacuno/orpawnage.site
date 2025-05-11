@@ -113,4 +113,5 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'old_email_notification' => env('OLD_EMAIL_NOTIFICATION', true),
 ];

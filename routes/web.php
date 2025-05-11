@@ -101,7 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/report/abused-stray-animal', function () {
         return view('abused-stray-form');
-    })->name('Report an Abuse / Stray Animal');
+    })->name('report.animal.abuse');
 
     Route::post('/report/abused-stray-animal', [AnimalAbuseReportController::class, 'store']);
 
@@ -159,9 +159,9 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
 
     Route::get('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'index'])->name('Manage Abused or Stray Pet Reports');
 
-    Route::prefix('admin/abused-or-stray-pets')->group(function () {
-        Route::patch('/acknowledge', [AnimalAbuseReportController::class, 'acknowledge']);
-        Route::patch('/reject', [AnimalAbuseReportController::class, 'reject']);
+    Route::prefix('admin/abused-or-stray-pets')->name('admin.abused-reports.')->group(function () {
+        Route::patch('/acknowledge', [AnimalAbuseReportController::class, 'acknowledge'])->name('acknowledge');
+        Route::patch('/reject', [AnimalAbuseReportController::class, 'reject'])->name('reject');
     });
 
     Route::prefix('admin/settings')->group(function () {
@@ -169,7 +169,6 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         Route::patch('/email', [SettingsController::class, 'adminUpdateEmail'])->name('admin.settings.email.update');
         Route::patch('/password', [SettingsController::class, 'adminUpdatePassword'])->name('admin.settings.password.update');
         Route::patch('/contact', [SettingsController::class, 'adminUpdateContact'])->name('admin.settings.contact.update');
-        Route::delete('/', [SettingsController::class, 'adminDeleteAccount'])->name('admin.settings.delete');
     });
 });
 

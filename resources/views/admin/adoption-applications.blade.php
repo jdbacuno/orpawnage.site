@@ -28,9 +28,6 @@
           <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
             Rejected
           </option>
-          <option value="archive" {{ request('status')==='archive' ? 'selected' : '' }}>
-            Archived
-          </option>
         </select>
 
         <select name="direction"
@@ -144,7 +141,7 @@
           </div>
         </div>
 
-        <!-- Action Buttons Dropdown - Shows upward -->
+        <!-- Action Buttons Dropdown - Admin Side -->
         <div class="bg-gray-50 px-4 py-3 flex justify-end relative z-10">
           <div class="relative inline-block text-left">
             <div>
@@ -154,13 +151,13 @@
                 onclick="toggleDropdown('{{ $application->id }}')">
                 <span class="mr-2">Actions</span>
                 <span class="px-2 py-1 text-xs rounded 
-                {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
-                {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
-                {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
-                {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
-                {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-                {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
+        {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+        {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+        {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+        {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+        {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
+        {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+        {{ $application->status === 'archived' ? 'bg-gray-100 text-gray-700' : '' }}">
                   @switch($application->status)
                   @case('to be confirmed') Waiting @break
                   @case('confirmed') Confirmed @break
@@ -186,23 +183,12 @@
               id="dropdown-{{ $application->id }}">
               <div class="py-1" role="menu" aria-orientation="vertical"
                 aria-labelledby="options-menu-{{ $application->id }}">
-                @if($application->status === 'to be confirmed')
-                <form method="POST" action="/admin/adoption-applications/resend-confirmation" class="w-full">
-                  @csrf
-                  <input type="hidden" name="application_id" value="{{ $application->id }}">
-                  <button type="submit"
-                    class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-700"
-                    role="menuitem">
-                    Resend Confirmation Email
-                  </button>
-                </form>
-                @endif
 
                 @if($application->status === 'confirmed')
                 <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-100 hover:text-blue-900"
                   role="menuitem" data-action="move-to-schedule" data-id="{{ $application->id }}">
-                  Move to Scheduling
+                  <i class="ph-fill ph-calendar-plus mr-2"></i> Move to Scheduling
                 </button>
                 @endif
 
@@ -210,16 +196,16 @@
                 <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-100 hover:text-green-900"
                   role="menuitem" onclick="showPickupModal('{{ $application->id }}')">
-                  Mark as Adopted
+                  <i class="ph-fill ph-check-circle mr-2"></i> Mark as Adopted
                 </button>
                 @endif
 
                 @if(in_array($application->status, ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption
                 on-going']))
-                <button
+                <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
                   role="menuitem" onclick="showRejectModal('{{ $application->id }}')">
-                  Reject Application
+                  <i class="ph-fill ph-x-circle mr-2"></i> Reject Application
                 </button>
                 @endif
 
@@ -231,7 +217,7 @@
                   <button type="submit"
                     class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     role="menuitem">
-                    Archive
+                    <i class="ph-fill ph-archive mr-2"></i> Archive
                   </button>
                 </form>
                 @endif
@@ -244,7 +230,7 @@
                   <button type="submit"
                     class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
                     role="menuitem">
-                    Delete Permanently
+                    <i class="ph-fill ph-trash mr-2"></i> Delete Permanently
                   </button>
                 </form>
                 @endif
@@ -257,7 +243,7 @@
                   <button type="submit"
                     class="block w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-100 hover:text-blue-900"
                     role="menuitem">
-                    Restore Application
+                    <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i> Restore Application
                   </button>
                 </form>
                 @endif

@@ -7,7 +7,7 @@
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
           {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
         </h2>
-        <span class="bg-yellow-500 text-black py-1 px-3 rounded-full text-2xl font-bold shadow-sm">
+        <span class="bg-yellow-400 text-black py-1 px-3 rounded-full text-2xl font-bold shadow-sm">
           {{ $pet->species === 'feline' ? '🐱 Cat' : '🐶 Dog' }} #{{ $pet->pet_number }}
         </span>
       </div>
@@ -311,37 +311,18 @@
 
                 <!-- Documentation -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Upload Valid ID <span
-                      class="text-red-500">*</span></label>
+                  <div class="flex justify-between items-center mb-1">
+                    <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
+                        class="text-red-500">*</span></label>
+                    <button type="button" onclick="openValidIdModal()"
+                      class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">
+                      View Accepted Valid IDs
+                    </button>
+                  </div>
                   <input type="file" name="valid_id"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
                     required />
                   <x-form-error name="valid_id" />
-                  <details class="rounded-md text-sm text-gray-600 mt-2">
-                    <summary class="cursor-pointer font-medium text-orange-600">Accepted Valid IDs</summary>
-                    <div class="mt-2 p-3 bg-gray-50 rounded-lg">
-                      <strong>Primary IDs:</strong>
-                      <ul class="list-disc list-inside ml-4 mt-1">
-                        <li>Philippine Identification (PhilID/ePhilID)</li>
-                        <li>Passport</li>
-                        <li>Driver's License</li>
-                        <li>UMID</li>
-                        <li>PRC ID</li>
-                        <li>Voter's ID</li>
-                      </ul>
-                      <strong class="block mt-2">Secondary IDs:</strong>
-                      <ul class="list-disc list-inside ml-4 mt-1">
-                        <li>PhilHealth ID</li>
-                        <li>Postal ID</li>
-                        <li>Senior Citizen ID</li>
-                        <li>PWD ID</li>
-                        <li>School ID</li>
-                        <li>TIN</li>
-                        <li>Company ID</li>
-                        <li>Baptismal Certificate</li>
-                      </ul>
-                    </div>
-                  </details>
                 </div>
 
                 <!-- Oath Declaration -->
@@ -369,7 +350,7 @@
           <!-- Submit Button -->
           <div class="flex justify-end">
             <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-500 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
               <i class="ph-fill ph-paw-print mr-2"></i>Submit Adoption Request
             </button>
           </div>
@@ -379,6 +360,46 @@
 
     </div>
   </section>
+
+  <!-- Valid ID Modal -->
+  <div id="validIdModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-1">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
+      <!-- Close Button -->
+      <button onclick="closeValidIdModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold">Accepted Valid IDs</h2>
+
+      <div class="text-sm text-gray-600 space-y-4">
+        <div>
+          <strong class="block mb-2">Primary IDs:</strong>
+          <ul class="list-disc list-inside ml-4 space-y-1">
+            <li>Philippine Identification (PhilID/ePhilID)</li>
+            <li>Passport</li>
+            <li>Driver's License</li>
+            <li>UMID</li>
+            <li>PRC ID</li>
+            <li>Voter's ID</li>
+          </ul>
+        </div>
+
+        <div>
+          <strong class="block mb-2">Secondary IDs:</strong>
+          <ul class="list-disc list-inside ml-4 space-y-1">
+            <li>PhilHealth ID</li>
+            <li>Postal ID</li>
+            <li>Senior Citizen ID</li>
+            <li>PWD ID</li>
+            <li>School ID</li>
+            <li>TIN</li>
+            <li>Company ID</li>
+            <li>Baptismal Certificate</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     // OATH DATA AUTO-FILL

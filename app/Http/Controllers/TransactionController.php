@@ -76,8 +76,8 @@ class TransactionController extends Controller
                 $query->where('status', 'pending');
                 break;
 
-            case 'acknowledged':
-                $query->where('status', 'acknowledged');
+            case 'action taken':
+                $query->where('status', 'action taken');
                 break;
 
             case 'rejected':

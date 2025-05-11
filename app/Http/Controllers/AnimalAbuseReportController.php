@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Mail\AbuseReportAcknowledged;
-use App\Mail\AbuseReportRejected;
 use App\Models\AnimalAbuseReport;
+use App\Notifications\AbuseReportAcknowledged;
+use App\Notifications\AbuseReportReceived;
+use App\Notifications\AbuseReportRejected;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -26,8 +26,8 @@ class AnimalAbuseReportController extends Controller
                 $query->where('status', 'pending');
                 break;
 
-            case 'acknowledged':
-                $query->where('status', 'acknowledged');
+            case 'action taken':
+                $query->where('status', 'action taken');
                 break;
 
             case 'rejected':
@@ -63,7 +63,9 @@ class AnimalAbuseReportController extends Controller
             'species' => ['required', 'string'],
             'animal_condition' => ['required', 'string'],
             'additional_notes' => ['required', 'string'],
-            'incident_photo' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:10240'],
+            'incident_photos' => ['required', 'array', 'max:10'],
+            'incident_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
 
         if ($validator->fails()) {
@@ -73,34 +75,37 @@ class AnimalAbuseReportController extends Controller
         }
 
         $validated = $validator->validated();
-
-        // Add user_id and report_number to validated data
         $validated['user_id'] = Auth::id();
         $validated['report_number'] = $this->generateUniqueReportNumber();
 
-        // Determine filename based on full_name or auth username
-        $fileNameBase = $validated['full_name'] ?? Auth::user()->name;
+        // Upload Valid ID
+        if ($request->hasFile('valid_id')) {
+            $validIdFile = $request->file('valid_id');
+            $validIdName = "valid_id_{$validated['report_number']}." . $validIdFile->getClientOriginalExtension();
+            $validated['valid_id_path'] = $validIdFile->storeAs('valid_ids', $validIdName, 'public');
 
-        // Replace spaces with underscores if full_name exists
-        if ($validated['full_name']) {
-            $fileNameBase = str_replace(' ', '_', $fileNameBase);
-            $fileNameBase = strtolower($fileNameBase);
+            // Remove the file object from validated data
+            unset($validated['valid_id']);
         }
 
-        $timestamp = now()->format('YmdHis');
-        $extension = $request->file('incident_photo')->getClientOriginalExtension();
-        $fileName = "{$validated['report_number']}_abuse_report_{$timestamp}.{$extension}";
+        // Upload Incident Photos
+        $incidentPhotos = [];
+        if ($request->hasFile('incident_photos')) {
+            foreach ($request->file('incident_photos') as $index => $photo) {
+                $photoName = "incident_photo_{$validated['report_number']}_{$index}." . $photo->getClientOriginalExtension();
+                $path = $photo->storeAs('incident_photos', $photoName, 'public');
+                $incidentPhotos[] = $path;
+            }
 
-        // Upload and rename photo
-        if ($request->hasFile('incident_photo')) {
-            $validated['incident_photo'] = $request->file('incident_photo')
-                ->storeAs('incident_photos', $fileName, 'public');
+            // Remove the files array from validated data
+            unset($validated['incident_photos']);
         }
 
+        $validated['incident_photos'] = json_encode($incidentPhotos);
         $validated['status'] = 'pending';
 
-        // Create the report and store in the database
-        AnimalAbuseReport::create($validated);
+        $report = AnimalAbuseReport::create($validated);
+        $report->user->notify(new AbuseReportReceived($report));
 
         return redirect()->back()->with('success', 'Report submitted successfully! Kindly await for an email update or visit the ' . '<a href="/transactions/abused-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application.');
     }
@@ -108,43 +113,57 @@ class AnimalAbuseReportController extends Controller
     public function acknowledge(Request $request)
     {
         $request->validate([
-            'report_id' => ['required', 'exists:animal_abuse_reports,id'],
-            'status' => ['required', 'in:acknowledged'],
+            'report_id' => ['required', 'exists:animal_abuse_reports,id']
         ]);
 
         $report = AnimalAbuseReport::findOrFail($request->report_id);
+        $report->update(['status' => 'action taken']);
 
-        // Send email to the user who reported
-        Mail::to($report->user->email)->queue(new AbuseReportAcknowledged($report));
-        $report->update(['status' => 'acknowledged']);
-
-
-        return redirect()->back()
-            ->with('success', 'Report #' . '<strong>' . $report->report_number . '</strong>' . ' has been acknowledged and user notified via email.');
+        try {
+            $report->user->notify(new AbuseReportAcknowledged($report));
+            return redirect()->back()
+                ->with('success', 'Report #' . $report->report_number . ' has been acknowledged and user notified.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Report acknowledged but failed to send notification.');
+        }
     }
 
     public function reject(Request $request)
     {
         $request->validate([
             'report_id' => ['required', 'exists:animal_abuse_reports,id'],
-            'status' => ['required', 'in:rejected']
+            'reject_reason' => ['required', 'string']
         ]);
 
         $report = AnimalAbuseReport::findOrFail($request->report_id);
+        $report->update([
+            'status' => 'rejected',
+            'reject_reason' => $request->reject_reason
+        ]);
 
-        // Send email to the user who reported
-        Mail::to($report->user->email)->queue(new AbuseReportRejected($report));
-        $report->update(['status' => 'rejected']);
-
-        return redirect()->back()
-            ->with('success', 'Report has been rejected successfully.');
+        try {
+            $report->user->notify(new AbuseReportRejected($report));
+            return redirect()->back()
+                ->with('success', 'Report has been rejected and user notified.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Report rejected but failed to send notification.');
+        }
     }
 
     public function destroy(AnimalAbuseReport $abusedReport)
     {
-        // Delete the associated photo if it exists
-        if ($abusedReport->incident_photo) {
-            Storage::disk('public')->delete($abusedReport->incident_photo);
+        // Delete the associated valid ID if it exists
+        if ($abusedReport->valid_id_path) {
+            Storage::disk('public')->delete($abusedReport->valid_id_path);
+        }
+
+        // Delete all incident photos
+        if ($abusedReport->incident_photos) {
+            foreach (json_decode($abusedReport->incident_photos) as $photo) {
+                Storage::disk('public')->delete($photo);
+            }
         }
 
         $abusedReport->delete();

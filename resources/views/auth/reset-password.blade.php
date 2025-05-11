@@ -61,23 +61,25 @@
                 </div>
 
                 <!-- Password Requirements -->
-                <div class="p-3 mt-2 bg-blue-50 rounded-lg border border-blue-100">
-                  <h4 class="text-sm font-medium text-blue-800 mb-2">Password Requirements:</h4>
-                  <ul class="text-xs space-y-1.5">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-2">
+                  <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                    <i class="ph-fill ph-info mr-2"></i>Password Requirements
+                  </h4>
+                  <ul class="text-xs space-y-1">
                     <li id="req-length" class="flex items-center text-blue-700">
-                      <i class="ph-fill ph-check-circle mr-2 text-sm"></i> Minimum 6 characters
+                      <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
                     </li>
                     <li id="req-uppercase" class="flex items-center text-blue-700">
-                      <i class="ph-fill ph-check-circle mr-2 text-sm"></i> At least one uppercase letter
+                      <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
                     </li>
                     <li id="req-lowercase" class="flex items-center text-blue-700">
-                      <i class="ph-fill ph-check-circle mr-2 text-sm"></i> At least one lowercase letter
+                      <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
                     </li>
                     <li id="req-number" class="flex items-center text-blue-700">
-                      <i class="ph-fill ph-check-circle mr-2 text-sm"></i> At least one number
+                      <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
                     </li>
                     <li id="req-symbol" class="flex items-center text-blue-700">
-                      <i class="ph-fill ph-check-circle mr-2 text-sm"></i> At least one symbol
+                      <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
                     </li>
                   </ul>
                 </div>

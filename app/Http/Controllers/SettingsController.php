@@ -11,7 +11,6 @@ use App\Notifications\PasswordChanged;
 use App\Notifications\ContactNumberChanged;
 use App\Notifications\EmailChanged;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +25,7 @@ class SettingsController extends Controller
     public function updateEmail(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
+            'email_current_password' => ['required', 'current_password'],
             'email' => ['required', 'email', 'unique:users,email,' . Auth::id()]
         ]);
 
@@ -41,7 +40,7 @@ class SettingsController extends Controller
 
         // Notify old email address about the change
         if (config('mail.old_email_notification')) {
-            Notification::route('mail', $oldEmail)->notify(new EmailChanged($user)); // ✅ correct
+            Notification::route('mail', $oldEmail)->notify(new EmailChanged($user));
         }
 
         return back()->with('success', 'Email updated successfully! Please verify your new email address.');
@@ -76,7 +75,7 @@ class SettingsController extends Controller
     public function updateContact(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
+            'contact_current_password' => ['required', 'current_password'],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11']
         ]);
 
@@ -95,7 +94,7 @@ class SettingsController extends Controller
     public function deleteAccount(Request $request)
     {
         $request->validate([
-            'password_for_account_closure' => ['required', 'current_password']
+            'delete_current_password' => ['required', 'current_password']
         ]);
 
         $user = $request->user();
@@ -116,7 +115,7 @@ class SettingsController extends Controller
                 'civil_status' => $app->civil_status,
                 'citizenship' => $app->citizenship,
                 'transaction_number' => $app->transaction_number,
-                'adopted_at' => $app->updated_at, // or use a specific date field if available
+                'adopted_at' => $app->updated_at,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -137,13 +136,12 @@ class SettingsController extends Controller
         $user->notifyNow(new AccountDeleted());
 
         // Hard delete user
-        $user->forceDelete(); // if you don't want soft deletion at all
+        $user->forceDelete();
 
         Auth::logout();
 
         return redirect('/login')->with('success', 'Your account has been permanently deleted.');
     }
-
 
     // FOR ADMIN SETTINGS
     public function adminShow()
@@ -154,7 +152,7 @@ class SettingsController extends Controller
     public function adminUpdateEmail(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
+            'email_current_password' => ['required', 'current_password'],
             'email' => ['required', 'email', 'unique:users,email,' . Auth::id()],
         ]);
 
@@ -197,7 +195,7 @@ class SettingsController extends Controller
     public function adminUpdateContact(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
+            'contact_current_password' => ['required', 'current_password'],
             'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11'],
         ]);
 

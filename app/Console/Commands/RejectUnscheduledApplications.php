@@ -14,7 +14,7 @@ class RejectUnscheduledApplications extends Command
 
   public function handle()
   {
-    $cutoff = Carbon::now()->subMinutes(30);
+    $cutoff = Carbon::now()->subHours(48); // subMinute() to test
 
     $applications = AdoptionApplication::with('user')
       ->where('status', 'to be scheduled')

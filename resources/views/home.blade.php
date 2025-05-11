@@ -103,12 +103,16 @@
     <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-10 px-4">
       <!-- Image Section -->
       <div class="w-full md:w-1/2">
-        <img src="{{ asset('images/home_image-0.jpg') }}" class="w-full h-96 object-cover rounded-lg shadow-lg" />
+        <img src="{{ asset('images/home_image-0.jpg') }}"
+          class="w-full h-96 object-cover rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300" />
       </div>
 
       <!-- Text Section -->
       <div class="w-full md:w-1/2 text-black flex flex-col justify-between gap-y-6">
-        <h2 class="text-4xl font-bold mb-4 text-black">Lorem Ipsum</h2>
+        <div>
+          <h2 class="text-4xl font-bold mb-4 text-black">Lorem Ipsum</h2>
+          <div class="w-20 h-1 bg-orange-400 rounded-full mt-1"></div>
+        </div>
         <div class="text-lg/10 text-justify">
           <p class="leading-relaxed">
             At OrPAWnage, we believe that every animal deserves a loving

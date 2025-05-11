@@ -14,7 +14,7 @@
         <h1
           class="text-4xl font-bold mb-2 text-white cursor-pointer relative group flex flex-col sm:flex-row justify-center items-center gap-4">
           <span>About</span>
-          <span class="tracking-widest px-4 py-2 bg-black/20 rounded-lg relative overflow-hidden">
+          <span class="tracking-widest px-4 py-3 bg-black/20 rounded-lg relative overflow-hidden">
             <span class="animate-color-change-orange">
               Or<strong class="animate-color-change-yellow">PAW</strong>nage
             </span>
@@ -119,15 +119,15 @@
           <h3 class="text-xl font-bold text-gray-900 mb-3">Our Values</h3>
           <ul class="space-y-2 text-gray-600">
             <li class="flex items-start">
-              <i class="ph-fill ph-check-circle text-yellow-500 mr-2 mt-1"></i>
+              <i class="ph-fill ph-check-circle text-yellow-400 mr-2 mt-1"></i>
               <span>Compassion for all living creatures</span>
             </li>
             <li class="flex items-start">
-              <i class="ph-fill ph-check-circle text-yellow-500 mr-2 mt-1"></i>
+              <i class="ph-fill ph-check-circle text-yellow-400 mr-2 mt-1"></i>
               <span>Integrity in all our actions</span>
             </li>
             <li class="flex items-start">
-              <i class="ph-fill ph-check-circle text-yellow-500 mr-2 mt-1"></i>
+              <i class="ph-fill ph-check-circle text-yellow-400 mr-2 mt-1"></i>
               <span>Commitment to excellence in animal care</span>
             </li>
           </ul>
@@ -155,7 +155,7 @@
           <!-- Adoption Services -->
           <div
             class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-            <div class="flex items-start">
+            <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <i class="ph-fill ph-heart text-orange-500 text-xl"></i>
@@ -174,7 +174,7 @@
           <!-- Surrender Services -->
           <div
             class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-            <div class="flex items-start">
+            <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <i class="ph-fill ph-hand-heart text-orange-500 text-xl"></i>
@@ -196,7 +196,7 @@
           <!-- Wildlife Services -->
           <div
             class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-            <div class="flex items-start">
+            <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <i class="ph-fill ph-tree text-orange-500 text-xl"></i>
@@ -215,7 +215,7 @@
           <!-- Reporting Services -->
           <div
             class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-            <div class="flex items-start">
+            <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <i class="ph-fill ph-megaphone text-orange-500 text-xl"></i>
@@ -238,7 +238,7 @@
         <!-- Medical Services -->
         <div
           class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-          <div class="flex items-start">
+          <div class="flex flex-col gap-y-4 sm:flex-row items-start">
             <div class="flex-shrink-0 mr-6">
               <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                 <i class="ph-fill ph-stethoscope text-orange-500 text-xl"></i>
@@ -257,7 +257,7 @@
         <!-- Emergency Services -->
         <div
           class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
-          <div class="flex items-start">
+          <div class="flex flex-col gap-y-4 sm:flex-row items-start">
             <div class="flex-shrink-0 mr-6">
               <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                 <i class="ph-fill ph-ambulance text-orange-500 text-xl"></i>
@@ -369,12 +369,12 @@
         the OrPAWnage family.
       </p>
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="/adopt-a-pet"
-          class="px-6 py-3 bg-orange-500 hover:bg-yellow-500 hover:text-black rounded-md font-medium transition-colors duration-200 flex items-center">
+        <a href="/services/adopt-a-pet"
+          class="px-6 py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-colors duration-200 flex items-center justify-center">
           <i class="ph-fill ph-paw-print mr-2"></i> Adopt a Pet
         </a>
         <a href="/donate"
-          class="px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-colors duration-200 flex items-center">
+          class="px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-colors duration-200 flex items-center justify-center">
           <i class="ph-fill ph-hand-heart mr-2"></i> Donate Now
         </a>
       </div>

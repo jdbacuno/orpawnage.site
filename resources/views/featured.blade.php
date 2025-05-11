@@ -1,11 +1,11 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-gray-50 mt-10 py-16">
+  <section class="bg-gray-50 mt-10 py-16 min-h-screen">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex items-center mb-6" id="pets">
-        <h2 class="text-4xl font-extrabold text-black px-4">
-          Featured Pets
+        <h2 class="text-4xl font-extrabold text-black px-4 flex items-center">
+          <i class="ph-fill ph-paw-print mr-2 text-orange-400"></i>Featured Pets
         </h2>
       </div>
 
@@ -28,14 +28,14 @@
 
             <!-- Enhanced Slide-Up Panel -->
             <div
-              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
 
               <!-- Name & ID -->
               <div class="flex justify-between items-center mb-3">
                 <h3 class="text-lg font-bold">
                   {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
                 </h3>
-                <span class="bg-yellow-500 text-xs text-black py-1 px-2 rounded font-bold">
+                <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
                   {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}
                 </span>
               </div>
@@ -58,17 +58,16 @@
               <!-- Highlighted Timestamp -->
               <div class="flex justify-end">
                 <span
-                  class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-sm inline-flex items-center">
-                  <i class="ph ph-clock mr-1"></i> Added {{
+                  class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-lg inline-flex items-center">
+                  <i class="ph-fill ph-clock mr-1"></i> Added {{
                   \Carbon\Carbon::parse($featured->created_at)->diffForHumans() }}
                 </span>
               </div>
 
               <!-- Original Button -->
               <a href="/services/{{ $featured->slug }}/adoption-form"
-                class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 hover:text-black transition-color duration-100 ease-in">
-                <i class="ph-fill ph-paw-print mr-2"></i> Adopt this {{ $featured->species === 'feline' ? 'Cat' : 'Dog'
-                }}
+                class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-400 hover:text-black transition-color duration-100 ease-in">
+                <i class="ph-fill ph-paw-print mr-1"></i> View More Details
               </a>
             </div>
           </div>
@@ -85,7 +84,7 @@
       <!-- No Pets Found Message -->
       <div class="text-center text-black mt-10 h-dvh">
         <p class="text-lg font-semibold">
-          No pets found in the featured list.
+          No featured pets at the moment.
         </p>
         <p class="text-xl">Check back later!</p>
       </div>

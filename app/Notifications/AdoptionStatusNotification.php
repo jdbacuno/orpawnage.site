@@ -110,7 +110,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
             case 'rejected':
                 $mailMessage
                     ->line('We regret to inform you that your adoption application has been **rejected**.')
-                    ->line('**Reason:** ' . $this->application->reject_reason)
+                    ->line('**Reason for Rejecting:** ' . $this->application->reject_reason)
                     ->line('We encourage you to:')
                     ->line('- Review our adoption requirements')
                     ->line('- Consider other available pets')

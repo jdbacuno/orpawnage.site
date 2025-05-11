@@ -73,8 +73,6 @@
                   <label class="block text-sm font-medium text-gray-700">
                     Password
                   </label>
-                  <a href="/forgot-password" class="text-sm font-medium text-blue-600 hover:text-blue-500">Forgot
-                    password?</a>
                 </div>
                 <div x-data="{ showPassword: false }" class="relative">
                   <input :type="showPassword ? 'text' : 'password'" placeholder="Enter your password" name="password"
@@ -95,6 +93,9 @@
                     </svg>
                   </span>
                 </div>
+                <a href="/forgot-password"
+                  class="text-sm font-medium text-blue-600 hover:text-blue-500 flex justify-end">Forgot
+                  password?</a>
                 <x-form-error name="password" />
               </div>
 

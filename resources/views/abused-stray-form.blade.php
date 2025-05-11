@@ -39,8 +39,30 @@
         @endif
 
         <!-- Form Start -->
-        <form id="reportForm" action="/report/abused-stray-animal" method="POST" enctype="multipart/form-data">
+        <form id="reportForm" action="{{ route('report.animal.abuse') }}" method="POST" enctype="multipart/form-data">
           @csrf
+
+          <!-- Add this note section -->
+          <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-orange-700">
+                  <strong>Important Notice:</strong> While we review all reports, please understand that we may not be
+                  able to immediately investigate or resolve every case due to resource limitations. Some reports may be
+                  grouped with similar cases in your area. You will receive a confirmation when your report is received,
+                  and may receive a generic notification when action is taken. For urgent cases requiring immediate
+                  intervention, please contact local authorities directly.
+                </p>
+              </div>
+            </div>
+          </div>
 
           <div class="mb-6">
             <!-- Reporter Information -->
@@ -73,14 +95,14 @@
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Location of Incident</label>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Where did it happen?</label>
                   <input type="text" name="incident_location" value="{{ old('incident_location') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     placeholder="Where the incident occurred" required />
                   <x-form-error name="incident_location" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Date of Incident</label>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">When did it happen?</label>
                   <input type="date" name="incident_date" value="{{ old('incident_date') }}" max="{{ date('Y-m-d') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     required />
@@ -103,10 +125,20 @@
                   <x-form-error name="species" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Condition of Animal</label>
-                  <input type="text" name="animal_condition" value="{{ old('animal_condition') }}"
+                  <label class="block text-sm font-medium text-gray-600 mb-1">What happened to the animal?</label>
+                  <select name="animal_condition"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Animal's current condition" required />
+                    required>
+                    <option value="" disabled selected>Select condition</option>
+                    <option value="Illegal Meat Trading" {{ old('animal_condition')=='Illegal Trading' ? 'selected' : ''
+                      }}>
+                      Illegal Meat Trading</option>
+                    <option value="Wounded" {{ old('animal_condition')=='Wounded' ? 'selected' : '' }}>Wounded</option>
+                    <option value="Physically Abused" {{ old('animal_condition')=='Physically Abused' ? 'selected' : ''
+                      }}>Physically Abused</option>
+                    <option value="Stray" {{ old('animal_condition')=='Stray' ? 'selected' : '' }}>Stray</option>
+                    <option value="Other" {{ old('animal_condition')=='Other' ? 'selected' : '' }}>Other</option>
+                  </select>
                   <x-form-error name="animal_condition" />
                 </div>
                 <div class="md:col-span-2">
@@ -120,22 +152,47 @@
               </div>
             </div>
 
-            <!-- Photo Upload -->
+            <!-- Photos of Evidence -->
             <div class="mb-6">
               <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-                <i class="ph-fill ph-camera mr-2"></i>Photo Evidence
+                <i class="ph-fill ph-camera mr-2"></i>Valid ID and Photos of Incident
               </h4>
               <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Upload Photo of Incident</label>
-                <input type="file" name="incident_photo" id="incident_photo"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                  required />
-                <x-form-error name="incident_photo" />
+                <!-- Valid ID Upload -->
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
+                        class="text-red-500">*</span></label>
+                    <button type="button" onclick="openValidIdModal()"
+                      class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">
+                      View Accepted Valid IDs
+                    </button>
+                  </div>
+                  <input type="file" name="valid_id"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                    required />
+                  <x-form-error name="valid_id" />
+                </div>
 
-                <!-- Image Preview -->
-                <div class="mt-3">
-                  <img id="image_preview" src="#" alt="Image Preview"
-                    class="hidden max-w-full h-48 object-contain rounded-lg border border-gray-300" />
+                <!-- Incident Photos Upload -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Upload Photos of Incident and Its Location
+                    (Max 10) <span class="text-red-500">*</span></label>
+
+                  <!-- Hidden Input -->
+                  <input type="file" name="incident_photos[]" id="incident_photos_input" multiple accept="image/*"
+                    class="hidden" />
+
+                  <!-- Preview Container -->
+                  <div id="imagePreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+
+                  <!-- Add More Button -->
+                  <button type="button" id="addMoreBtn"
+                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+                    <i class="ph-fill ph-plus-circle"></i> Add More Photos
+                  </button>
+
+                  <x-form-error name="incident_photos" />
                 </div>
               </div>
             </div>
@@ -144,7 +201,7 @@
           <!-- Submit Button -->
           <div class="flex justify-end">
             <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-500 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
               <i class="ph-fill ph-warning mr-2"></i>Submit Report
             </button>
           </div>
@@ -153,23 +210,107 @@
     </div>
   </section>
 
-  <!-- JavaScript for Image Preview -->
-  <script>
-    document.getElementById('incident_photo').addEventListener('change', function (event) {
-      const preview = document.getElementById('image_preview');
-      const file = event.target.files[0];
+  <!-- Valid ID Modal -->
+  <div id="validIdModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-1">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
+      <!-- Close Button -->
+      <button onclick="closeValidIdModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
 
-      if (file) {
+      <h2 class="text-xl font-semibold">Accepted Valid IDs</h2>
+
+      <div class="text-sm text-gray-600 space-y-4">
+        <div>
+          <strong class="block mb-2">Primary IDs:</strong>
+          <ul class="list-disc list-inside ml-4 space-y-1">
+            <li>Philippine Identification (PhilID/ePhilID)</li>
+            <li>Passport</li>
+            <li>Driver's License</li>
+            <li>UMID</li>
+            <li>PRC ID</li>
+            <li>Voter's ID</li>
+          </ul>
+        </div>
+
+        <div>
+          <strong class="block mb-2">Secondary IDs:</strong>
+          <ul class="list-disc list-inside ml-4 space-y-1">
+            <li>PhilHealth ID</li>
+            <li>Postal ID</li>
+            <li>Senior Citizen ID</li>
+            <li>PWD ID</li>
+            <li>School ID</li>
+            <li>TIN</li>
+            <li>Company ID</li>
+            <li>Baptismal Certificate</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('incident_photos_input');
+    const previewContainer = document.getElementById('imagePreviews');
+    const addMoreBtn = document.getElementById('addMoreBtn');
+    const dataTransfer = new DataTransfer();
+
+    addMoreBtn.addEventListener('click', () => input.click());
+
+    input.addEventListener('change', (event) => {
+      const newFiles = Array.from(event.target.files);
+
+      if (dataTransfer.files.length + newFiles.length > 10) {
+        alert('You can upload a maximum of 10 images.');
+        return;
+      }
+
+      newFiles.forEach((file, index) => {
+        if (!file.type.match('image.*')) return;
+
         const reader = new FileReader();
         reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.classList.remove('hidden');
-        }
+          const previewDiv = document.createElement('div');
+          previewDiv.className = 'relative';
+
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'h-24 w-full object-cover rounded-lg border border-gray-300';
+
+          const removeBtn = document.createElement('i');
+          removeBtn.className = 'absolute top-[-2px] right-[-2px] text-white bg-black/70 rounded-full p-1 text-sm ph-fill ph-x-circle hover:text-red-400 cursor-pointer';
+          removeBtn.onclick = function () {
+            previewDiv.remove();
+
+            // Remove from DataTransfer
+            const updated = new DataTransfer();
+            for (let i = 0; i < dataTransfer.items.length; i++) {
+              if (dataTransfer.items[i].getAsFile() !== file) {
+                updated.items.add(dataTransfer.items[i].getAsFile());
+              }
+            }
+
+            dataTransfer.items.clear();
+            for (let i = 0; i < updated.items.length; i++) {
+              dataTransfer.items.add(updated.items[i].getAsFile());
+            }
+
+            input.files = dataTransfer.files;
+          };
+
+          previewDiv.appendChild(img);
+          previewDiv.appendChild(removeBtn);
+          previewContainer.appendChild(previewDiv);
+        };
         reader.readAsDataURL(file);
-      } else {
-        preview.src = '#';
-        preview.classList.add('hidden');
-      }
+
+        dataTransfer.items.add(file);
+      });
+
+      input.files = dataTransfer.files;
     });
   </script>
+
+
 </x-layout>

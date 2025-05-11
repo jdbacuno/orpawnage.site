@@ -1,178 +1,411 @@
 <x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900">Manage Abused or Stray Pet Reports</h1>
+  <h1 class="text-2xl font-bold text-gray-900">Manage Abused / Stray Reports</h1>
 
-  <div class="bg-white p-6 shadow-md rounded-lg mt-4">
-    <!-- Filters Section -->
-    <div class="flex flex-wrap gap-2 mb-4">
-      <div class="flex flex-wrap gap-4 items-center justify-start mb-1">
-        <form method="GET" action="/admin/abused-or-stray-pets" class="flex flex-wrap gap-4">
-          <!-- Status Filter -->
-          <select name="status"
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
-            onchange="this.form.submit()">
-            <option value="">All Statuses</option>
-            <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
-            <option value="acknowledged" {{ request('status')=='acknowledged' ? 'selected' : '' }}>Acknowledged
-            </option>
-            <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
-          </select>
-        </form>
-      </div>
-    </div>
+  <!-- Filters Section -->
+  <div class="flex flex-wrap gap-2 my-4">
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+      <!-- Status Filter -->
+      <select name="status"
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+        onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
+        <option value="action taken" {{ request('status')==='acknowledged' ? 'selected' : '' }}>Action Taken</option>
+        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
+      </select>
 
-    @if($reports->isEmpty())
-    <div class="flex items-center justify-center p-6 text-gray-500">
-      <p class="text-lg">No reports found.</p>
-    </div>
-    @else
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      @foreach($reports as $report)
-      <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-[320px]">
-        <!-- Card Content -->
-        <div class="flex-1 overflow-y-auto">
-          <div class="flex justify-between items-start">
-            <h3 class="text-xl font-semibold flex items-center truncate"><i class="ph-fill ph-tag mr-2"></i> {{
-              $report->report_number }}</h3>
-          </div>
-          <p class="text-sm text-gray-500 mt-2"><strong>Reported by:</strong> {{ $report->full_name ?
-            ucwords($report->full_name) : 'anonymous' }}
-          </p>
-          <p class="text-sm text-gray-500 mt-1"><strong>Contact Number:</strong> {{ $report->contact_no }}</p>
-          <p class="text-sm text-gray-500 mt-1"><strong>Location of Incident:</strong> {{ $report->incident_location }}
-          </p>
-          <p class="text-sm text-gray-500 mt-1"><strong>Date of Incident:</strong> {{
-            \Carbon\Carbon::parse($report->incident_date)->format('F j, Y')
-            }}</p>
-          <p class="text-sm text-gray-500 mt-1"><strong>Type of Animal:</strong> {{ $report->species }}</p>
-          <p class="text-sm text-gray-500 mt-1"><strong>Condition:</strong> {{ $report->animal_condition }}</p>
+      <!-- Sort Direction -->
+      <select name="direction"
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+        onchange="this.form.submit()">
+        <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>Newest First</option>
+        <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>Oldest First</option>
+      </select>
+    </form>
+  </div>
 
-          @php
-          $notePreviewLimit = 20;
-          $noteIsLong = Str::length($report->additional_notes) > $notePreviewLimit;
-          @endphp
-
-          <div class="mt-1">
-            <p class="text-sm text-gray-500"><strong>Notes:</strong>
-              {{ $noteIsLong ?
-              Str::limit($report->additional_notes,
-              $notePreviewLimit) : $report->additional_notes }}
-
-              @if ($noteIsLong)
-              <button type="button" class="text-blue-500 hover:underline text-sm mt-1 show-more-btn"
-                data-notes="{{ $report->additional_notes }}">
-                Show more
+  @if($reports->isEmpty())
+  <div class="flex items-center justify-center p-6 text-gray-500">
+    <p class="text-lg">No reports found.</p>
+  </div>
+  @else
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+    @foreach($reports as $report)
+    <div
+      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+      <!-- Card Header -->
+      <div class="p-3 border-b border-gray-200 flex items-start justify-between">
+        <div class="flex items-center space-x-1">
+          <div>
+            <!-- Valid ID Photo -->
+            <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-md overflow-hidden border border-gray-300">
+              @if($report->valid_id_path)
+              <button type="button" class="show-image-btn w-full h-full" data-image-title="Valid ID"
+                data-image="{{ asset('storage/' . $report->valid_id_path) }}">
+                <img src="{{ asset('storage/' . $report->valid_id_path) }}" alt="Reporter's ID"
+                  class="w-full h-full object-cover">
               </button>
+              @else
+              <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                <i class="ph-fill ph-user text-xl text-gray-400"></i>
+              </div>
               @endif
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold flex items-center">
+              <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $report->report_number }}
+            </h3>
+            <p class="text-sm text-gray-500 truncate max-w-[120px]">
+              {{ $report->full_name ?: 'Anonymous' }}
             </p>
           </div>
         </div>
 
-        <div class="mt-2 flex justify-between items-center">
-          <!-- View Photo on the left -->
+        <!-- Status Badge -->
+        <div class="text-right space-y-1">
+          <span class="px-2 py-1 text-[10px] rounded 
+    {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+    {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
+    {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
+            {{ ucwords($report->status) }}
+          </span>
+          <span class="flex justify-end items-center text-[10px] text-gray-500"><i class="ph-fill ph-clock mr-1"></i>{{
+            $report->created_at->diffForHumans()
+            }}</span>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="p-3 flex-1">
+        <!-- Basic Info -->
+        <div class="grid grid-cols-2 gap-2 text-sm mb-2">
           <div>
-            {{-- <a href="{{ asset('storage/' . $report->incident_photo) }}" target="_blank"
-              class="text-blue-500 hover:underline text-sm">
-              View Photo
-            </a> --}}
-            <button type="button" data-image="{{ asset('storage/' . $report->incident_photo) }}"
-              class="text-blue-500 hover:underline text-sm show-image-btn flex items-center space-x-1">
-              <i class="ph-fill text-4xl ph-image sm:hidden"></i>
-              <span class="hidden sm:inline">View Photo</span>
-            </button>
-
+            <p class="text-gray-500 font-medium">Animal</p>
+            <p>{{ ucfirst($report->species) }}</p>
           </div>
-
-          <!-- Action Buttons on the right -->
-          <div class="flex space-x-1">
-            @if ($report->status !== 'acknowledged' && $report->status !== 'rejected')
-            <!-- Acknowledge Button -->
-            <button type="button"
-              class="bg-green-500 text-sm text-white py-1 px-2 hover:bg-green-400 rounded-md acknowledge-btn"
-              data-report-id="{{ $report->id }}" data-action-type="acknowledged">
-              Acknowledge
-            </button>
-
-            <!-- Reject Button -->
-            <button type="button" class="bg-red-500 text-sm text-white py-1 px-2 hover:bg-red-400 rounded-md reject-btn"
-              data-report-id="{{ $report->id }}" data-action-type="rejected">
-              Reject
-            </button>
-            @elseif ($report->status === 'rejected')
-            <span class="bg-gray-500 text-sm italic text-white px-3 py-1 rounded-md">Rejected</span>
-            @else
-            <span class="bg-green-500 text-sm text-white px-3 py-1 rounded-md">Acknowledged</span>
-            @endif
+          <div>
+            <p class="text-gray-500 font-medium">What</p>
+            <p>{{ ucfirst($report->animal_condition) }}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 font-medium">When</p>
+            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M j, Y') }}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 font-medium">Where</p>
+            <p onclick="showTextModal(`{{ $report->incident_location }}`)"
+              class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
+              {{ Str::limit($report->incident_location, 20) }}
+            </p>
           </div>
         </div>
 
+        <!-- Collapsible Sections -->
+        <div class="space-y-2">
+          <!-- Notes -->
+          <div>
+            <button
+              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
+              <span class="flex items-center">
+                <i class="ph-fill ph-note-pencil mr-2 text-sm"></i>
+                Notes
+              </span>
+              <i class="ph-fill ph-caret-down text-sm"></i>
+            </button>
+            <div class="hidden text-sm text-gray-700 mt-1 px-1">
+              {{ $report->additional_notes ?: 'No notes provided' }}
+            </div>
+          </div>
+
+          <!-- Photos -->
+          <div>
+            <button
+              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
+              <span class="flex items-center">
+                <i class="ph-fill ph-images mr-2 text-sm"></i>
+                Photos ({{ count(json_decode($report->incident_photos)) }})
+              </span>
+              <i class="ph-fill ph-caret-down text-sm"></i>
+            </button>
+            <div class="hidden mt-2">
+              <div class="flex flex-wrap gap-1">
+                @foreach(json_decode($report->incident_photos) as $photo)
+                <button type="button" class="show-image-btn" data-image-title="Incident Photo"
+                  data-image="{{ asset('storage/' . $photo) }}">
+                  <img src="{{ asset('storage/' . $photo) }}" alt="Evidence photo"
+                    class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
+                </button>
+                @endforeach
+              </div>
+            </div>
+          </div>
+
+          <!-- Reporter Info -->
+          <div>
+            <button
+              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
+              <span class="flex items-center">
+                <i class="ph-fill ph-user-circle mr-2 text-sm"></i>
+                Reporter Info
+              </span>
+              <i class="ph-fill ph-caret-down text-sm"></i>
+            </button>
+            <div class="hidden text-sm mt-1">
+              <div class="space-y-1 px-1">
+                <p><span class="text-gray-500">Name:</span> {{ $report->full_name ?: 'Anonymous' }}</p>
+                <p><span class="text-gray-500">Contact:</span> {{ $report->contact_no ?: 'Not provided' }}</p>
+                <p><span class="text-gray-500">Email:</span> {{ $report->user->email ?? 'Not provided' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      @endforeach
-    </div>
-    @endif
+      <!-- Card Footer -->
+      <div class="px-4 py-2 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+        <div class="flex justify-end items-center text-xs text-gray-500">
+          <div class="relative inline-block text-left">
+            <div>
+              <button type="button"
+                class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                id="options-menu-{{ $report->id }}" aria-expanded="true" aria-haspopup="true"
+                onclick="toggleDropdown('{{ $report->id }}')">
+                <span class="mr-2">Actions</span>
+                <span class="px-2 py-1 text-xs rounded 
+                  {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                  {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
+                  {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
+                  @switch($report->status)
+                  @case('pending') Pending @break
+                  @case('action taken') Action Taken @break
+                  @case('rejected') Rejected @break
+                  @endswitch
+                </span>
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
 
-    <!-- Pagination -->
-    <div class="mt-4">
-      {{ $reports->links() }}
+            <!-- Dropdown menu positioned upward -->
+            <div
+              class="origin-bottom-right absolute right-0 bottom-full mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50"
+              id="dropdown-{{ $report->id }}">
+              <div class="py-1" role="menu" aria-orientation="vertical"
+                aria-labelledby="options-menu-{{ $report->id }}">
+
+                @if($report->status === 'pending')
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-100 hover:text-green-900"
+                  role="menuitem" onclick="showAcknowledgeModal('{{ $report->id }}')">
+                  <i class="ph-fill ph-check-circle mr-2"></i> Action Taken
+                </button>
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                  role="menuitem" onclick="showRejectModal('{{ $report->id }}')">
+                  <i class="ph-fill ph-x-circle mr-2"></i> Reject Report
+                </button>
+                @elseif($report->status === 'action taken' || $report->status === 'rejected')
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem" onclick="showArchive('{{ $report->id }}')">
+                  <i class="ph-fill ph-archive mr-2"></i> Archive
+                </button>
+                @endif
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    @endforeach
+  </div>
+  @endif
+
+  <!-- Pagination -->
+  <div class="mt-6">
+    {{ $reports->appends(request()->except('page'))->links() }}
   </div>
 
-  {{-- Note Modal for Long Text --}}
-  <div id="notesModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-
-      <!-- Close Button -->
-      <button id="closeNotesModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-bold ph-x text-xl"></i>
-      </button>
-
-      <h2 class="text-lg font-semibold text-gray-800">Additional Notes</h2>
-      <p id="fullNotesText" class="text-sm text-gray-700 whitespace-pre-wrap mt-2"></p>
-    </div>
-  </div>
-
-  {{-- image modal --}}
+  <!-- Image Modal -->
   <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg relative max-w-3xl w-full max-h-[90vh] overflow-auto">
-      <!-- Close Button -->
-      <button id="closeImageModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x text-xl"></i>
+    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-3xl w-full max-h-[90vh] overflow-auto">
+      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
       </button>
-
-      <h2 class="text-lg font-semibold text-gray-800">Incident Photo</h2>
-
-      <!-- Image Container -->
+      <h2 class="text-md font-semibold text-gray-800" id="imageModalTitle"></h2>
       <div class="w-full mt-2 flex justify-center items-center">
-        <img id="modalImage" alt="Incident Photo" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md" />
+        <img id="modalImage" alt="" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
       </div>
     </div>
   </div>
 
-
-  <!-- Add this confirmation modal at the bottom of your template -->
-  <div id="confirmationModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden px-1">
+  <!-- Action Taken Confirmation Modal -->
+  <div id="acknowledgeModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-      <button id="closeConfirmationModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <button id="closeAcknowledgeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
-
-      <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Action</h2>
-      <p id="confirmationMessage" class="text-gray-700 mb-6"></p>
-
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Acknowledge Report</h2>
+      <p id="confirmationMessage" class="text-gray-700 mb-6">Notify user that action has been taken on their report?</p>
       <div class="flex justify-end gap-3">
-        <button id="cancelAction" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md">Cancel</button>
-        <form id="actionForm" method="POST" class="inline-block">
+        <button id="cancelAcknowledge"
+          class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+        <form id="actionForm" method="POST" action="{{ route('admin.abused-reports.acknowledge') }}"
+          class="inline-block">
           @csrf
           @method('PATCH')
-          <input type="hidden" name="report_id" id="modalReportId">
-          <input type="hidden" name="status" id="modalActionType">
-          <button type="submit" class="px-4 py-2 text-white rounded-md" id="confirmButton">
-            Confirm
+          <input type="hidden" name="report_id" id="acknowledgeReportId">
+          <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+            Notify
           </button>
         </form>
       </div>
     </div>
   </div>
 
+  <!-- Reject Confirmation Modal -->
+  <div id="rejectModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeRejectModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Reject Report</h2>
+      <p class="mb-2">Please provide a reason for rejecting this report:</p>
+      <p class="my-2 text-red-500 text-sm">This will send an email notification to the reporter.</p>
+      <form id="actionForm" method="POST" action="{{ route('admin.abused-reports.reject') }}">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="report_id" id="rejectReportId">
+        <label for="rejectReason" class="block font-medium text-gray-700">Reason:</label>
+        <textarea id="rejectReason" name="reject_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
+        <x-form-error name="reject_reason" />
+        <div class="flex justify-end gap-3">
+          <button type="button" id="cancelReject"
+            class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+            Reject Report
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Incident Location Modal -->
+  <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
+      <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
+      </button>
+      <h2 class="text-md font-semibold text-gray-800">Incident Location</h2>
+      <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // incident location
+    function showTextModal(text) {
+      document.getElementById('textModalContent').textContent = text;
+      document.getElementById('textModal').classList.remove('hidden');
+    }
+
+    function closeTextModal() {
+      document.getElementById('textModal').classList.add('hidden');
+    }
+
+    // Toggle collapsible sections
+    document.querySelectorAll('.toggle-section-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const icon = this.querySelector('.ph-caret-down');
+        
+        content.classList.toggle('hidden');
+        icon.classList.toggle('ph-caret-down');
+        icon.classList.toggle('ph-caret-up');
+        
+        // Close other open sections in this card
+        const card = this.closest('.bg-white');
+        card.querySelectorAll('.toggle-section-btn').forEach(otherBtn => {
+          if (otherBtn !== this) {
+            otherBtn.nextElementSibling.classList.add('hidden');
+            otherBtn.querySelector('.ph-caret-down').classList.remove('ph-caret-up');
+            otherBtn.querySelector('.ph-caret-down').classList.add('ph-caret-down');
+          }
+        });
+      });
+    });
+
+    // Image modal
+    document.querySelectorAll('.show-image-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        document.getElementById('imageModalTitle').textContent = this.dataset.imageTitle;
+        document.getElementById('modalImage').src = this.dataset.image;
+        document.getElementById('modalImage').alt = this.dataset.imageTitle;
+        document.getElementById('imageModal').classList.remove('hidden');
+      });
+    });
+
+    document.getElementById('closeImageModal').addEventListener('click', function() {
+      document.getElementById('imageModal').classList.add('hidden');
+    });
+
+    // Improved toggle function for upward dropdown
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(`dropdown-${id}`);
+      dropdown.classList.toggle('hidden');
+      
+      // Close other open dropdowns
+      document.querySelectorAll('[id^="dropdown-"]').forEach(otherDropdown => {
+        if (otherDropdown.id !== `dropdown-${id}` && !otherDropdown.classList.contains('hidden')) {
+          otherDropdown.classList.add('hidden');
+        }
+      });
+      
+      // Prevent the click from propagating to document
+      event.stopPropagation();
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+      document.querySelectorAll('[id^="dropdown-"]').forEach(dropdown => {
+        dropdown.classList.add('hidden');
+      });
+    });
+
+    // Show acknowledge modal
+    function showAcknowledgeModal(id) {
+      document.getElementById('acknowledgeReportId').value = id;
+      document.getElementById('acknowledgeModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeAcknowledgeModal').addEventListener('click', function() {
+      document.getElementById('acknowledgeModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelAcknowledge').addEventListener('click', function() {
+      document.getElementById('acknowledgeModal').classList.add('hidden');
+    });
+
+    // Show reject modal
+    function showRejectModal(id) {
+      document.getElementById('rejectReportId').value = id;
+      document.getElementById('rejectModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeRejectModal').addEventListener('click', function() {
+      document.getElementById('rejectModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelReject').addEventListener('click', function() {
+      document.getElementById('rejectModal').classList.add('hidden');
+    });
+  </script>
 </x-admin-layout>

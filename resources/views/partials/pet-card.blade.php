@@ -8,14 +8,14 @@
 
   <!-- Slide-Up Panel with Blur -->
   <div
-    class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-translate duration-300 ease-in-out">
+    class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-translate duration-300 ease-in-out">
 
     <!-- Name & ID -->
     <div class="flex justify-between items-center mb-3">
       <h3 class="text-lg font-bold">
         {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
       </h3>
-      <span class="bg-yellow-500 text-xs text-black py-1 px-2 rounded font-bold">
+      <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
         {{ $pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}
       </span>
     </div>
@@ -36,15 +36,15 @@
 
     <!-- HIGHLIGHTED TIMESTAMP - Now more visible -->
     <div class="flex justify-end">
-      <span class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-sm inline-flex items-center">
+      <span class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-lg inline-flex items-center">
         <i class="ph-fill ph-clock mr-1"></i> Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}
       </span>
     </div>
 
     <!-- YOUR ORIGINAL BUTTON -->
     <a href="/services/{{ $pet->slug }}/adoption-form"
-      class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-500 hover:text-black transition-color duration-100 ease-in">
-      <i class="ph-fill ph-paw-print mr-2"></i> Adopt this {{ $pet->species === 'feline' ? 'Cat' : 'Dog' }}
+      class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-400 hover:text-black transition-color duration-100 ease-in">
+      <i class="ph-fill ph-paw-print mr-1"></i> View More Details
     </a>
   </div>
 </div>

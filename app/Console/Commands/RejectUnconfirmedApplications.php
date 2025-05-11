@@ -14,7 +14,7 @@ class RejectUnconfirmedApplications extends Command
 
     public function handle()
     {
-        $cutoff = Carbon::now()->subSeconds(24); // subSeconds(15) to test
+        $cutoff = Carbon::now()->subHours(24); // subMinute() to test
 
         $applications = AdoptionApplication::with('user')
             ->where('status', 'to be confirmed')

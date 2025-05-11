@@ -8,23 +8,9 @@ use Symfony\Component\Process\Process;
 
 class UpdateFeaturedPets extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:update-featured-pets';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Update featured pets based on adoption prediction';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         // Use the correct path to Python and your script
@@ -55,17 +41,5 @@ class UpdateFeaturedPets extends Command
         }
 
         return $process->isSuccessful() ? 0 : 1;
-    }
-
-    /**
-     * Define the command's schedule.
-     */
-    protected function schedule(Schedule $schedule)
-    {
-        // Run the command monthly on the first day of the month at midnight
-        $schedule->command('app:update-featured-pets')->everySecond();
-
-        // Alternatively, you could specify a specific day and time like this:
-        // $schedule->command('app:update-featured-pets')->monthlyOn(1, '00:00');
     }
 }

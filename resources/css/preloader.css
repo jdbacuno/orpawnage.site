@@ -40,8 +40,10 @@ body{
   position: fixed;
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Vertically centers the dog */
+  justify-content: center; /* Horizontally centers the dog */
+  top: 0;
+  left: 0;
 }
 
 .dog {

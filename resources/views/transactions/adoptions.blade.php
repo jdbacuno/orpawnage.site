@@ -131,44 +131,104 @@
       </div>
 
       <!-- Action Buttons - User Side -->
-      <div class="bg-gray-50 px-4 py-3 flex justify-end">
-        @if ($application->status === 'to be scheduled')
-        <button onclick="openScheduleModal({{ $application->id }})"
-          class="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 rounded-md text-sm mr-2">
-          <i class="ph-fill ph-calendar mr-1"></i> Schedule
-        </button>
-        <button onclick="openCancelModal({{ $application->id }})"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-          Cancel
-        </button>
-        @elseif ($application->status === 'adoption on-going')
-        <button onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('F j, Y') }}')"
-          class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm mr-2">
-          <i class="ph-fill ph-calendar mr-1"></i> View Schedule
-        </button>
-        <button onclick="openCancelModal({{ $application->id }})"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-          Cancel
-        </button>
-        @elseif ($application->status === 'to be confirmed')
-        <button onclick="openResendModal({{ $application->id }})"
-          class="bg-orange-100 hover:bg-orange-200 text-orange-600 border border-transparent hover:border-orange-400 px-3 py-1 rounded-md text-sm mr-2">
-          Resend Confirmation
-        </button>
-        <button onclick="openCancelModal({{ $application->id }})"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-          Cancel
-        </button>
-        @elseif ($application->status === 'confirmed')
-        <button onclick="openCancelModal({{ $application->id }})"
-          class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-          Cancel
-        </button>
-        @elseif ($application->status === 'archive')
-        <button class="bg-gray-500 text-white px-3 py-1 rounded-md text-sm opacity-75 cursor-not-allowed" disabled>
-          Archived
-        </button>
-        @endif
+      <div class="bg-gray-50 px-4 py-3 flex justify-end relative">
+        <div class="relative inline-block text-left">
+          <div>
+            <button type="button"
+              class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+              id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
+              onclick="toggleDropdown('{{ $application->id }}')">
+              <span class="mr-2">Actions</span>
+              <span class="px-2 py-1 text-xs rounded 
+        {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+        {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+        {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+        {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+        {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
+        {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+        {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
+                @switch($application->status)
+                @case('to be confirmed') Waiting @break
+                @case('confirmed') Confirmed @break
+                @case('to be scheduled') To be Scheduled @break
+                @case('adoption on-going') On-going @break
+                @case('picked up') Adopted @break
+                @case('rejected') Rejected @break
+                @case('archive') Archived @break
+                @endswitch
+              </span>
+              <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Dropdown menu positioned upward -->
+          <div
+            class="origin-bottom-right absolute right-0 bottom-full mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50"
+            id="dropdown-{{ $application->id }}">
+            <div class="py-1" role="menu" aria-orientation="vertical"
+              aria-labelledby="options-menu-{{ $application->id }}">
+
+              @if($application->status === 'to be scheduled')
+              <button type="button"
+                class="block w-full text-left px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-100 hover:text-yellow-900"
+                role="menuitem" onclick="openScheduleModal({{ $application->id }})">
+                <i class="ph-fill ph-calendar mr-2"></i> Schedule Pickup
+              </button>
+              @endif
+
+              @if($application->status === 'adoption on-going')
+              <button type="button"
+                class="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900"
+                role="menuitem"
+                onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('F j, Y') }}')">
+                <i class="ph-fill ph-calendar-check mr-2"></i> View Schedule
+              </button>
+              @endif
+
+              @if($application->status === 'to be confirmed')
+              <button type="button"
+                class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-900"
+                role="menuitem" onclick="openResendModal({{ $application->id }})">
+                <i class="ph-fill ph-envelope-simple-open mr-2"></i> Resend Confirmation
+              </button>
+              @endif
+
+              @if(in_array($application->status, ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption
+              on-going']))
+              <button type="button"
+                class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                role="menuitem" onclick="openCancelModal({{ $application->id }})">
+                <i class="ph-fill ph-x-circle mr-2"></i> Cancel Application
+              </button>
+              @endif
+
+              @if($application->status === 'rejected')
+              <button type="button"
+                class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                role="menuitem" onclick="openCancelModal({{ $application->id }})">
+                <i class="ph-fill ph-trash mr-2"></i> Delete Application
+              </button>
+              @endif
+
+              @if($application->status === 'picked up')
+              <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
+                <i class="ph-fill ph-check-circle mr-2"></i> Adoption Completed
+              </div>
+              @endif
+
+              @if($application->status === 'archive')
+              <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
+                <i class="ph-fill ph-archive mr-2"></i> Archived
+              </div>
+              @endif
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     @endforeach
@@ -394,7 +454,8 @@
   </div>
 
   <!-- Schedule Pickup Modal -->
-  <div id="scheduleModal" class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+  <div id="scheduleModal"
+    class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-100">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Select Pickup Date</h2>
       <p class="text-sm text-gray-600 mb-4">Please select a weekday (Monday-Friday) within the next 7 business days.</p>
@@ -434,6 +495,29 @@
   </div>
 
   <script>
+    // Improved toggle function for upward dropdown
+    function toggleDropdown(id) {
+      const dropdown = document.getElementById(`dropdown-${id}`);
+      dropdown.classList.toggle('hidden');
+      
+      // Close other open dropdowns
+      document.querySelectorAll('[id^="dropdown-"]').forEach(otherDropdown => {
+        if (otherDropdown.id !== `dropdown-${id}` && !otherDropdown.classList.contains('hidden')) {
+          otherDropdown.classList.add('hidden');
+        }
+      });
+      
+      // Prevent the click from propagating to document
+      event.stopPropagation();
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+      document.querySelectorAll('[id^="dropdown-"]').forEach(dropdown => {
+        dropdown.classList.add('hidden');
+      });
+    });
+
     function openScheduleModal(appId) {
       // Show the schedule modal
       document.getElementById('scheduleModal').classList.remove('hidden');
