@@ -277,7 +277,7 @@
                 <div class="py-1">
                   <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                    <i class="ph-fill ph-eye mr-2 text-yellow-600"></i> View
+                    <i class="ph-fill ph-eye mr-2 text-yellow-500"></i> View
                   </a>
 
                   <button

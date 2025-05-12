@@ -55,9 +55,11 @@
               </div>
               <div class="ml-3">
                 <p class="text-sm text-orange-700">
-                  <strong>Please note:</strong> Our team does not actively search for missing pets. After your report is
-                  reviewed and approved, it will be shared with other registered users in this website via email to help
-                  spread awareness.
+                  <strong>Please note:</strong> Our team does not actively search for missing pets. Once your report is
+                  reviewed and approved, it will be shared with other registered users on this website via email to help
+                  spread awareness. You may also contact us through our official Facebook page, <strong>Angeles City
+                    Veterinary
+                    Office</strong>, to request that your missing pet poster be posted on their page.
                 </p>
               </div>
             </div>

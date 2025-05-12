@@ -328,7 +328,7 @@
                 <!-- Oath Declaration -->
                 <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
                   <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
-                    <i class="ph-fill ph-hand-soap mr-2"></i>Oath Declaration
+                    <i class="ph-fill ph-hand-palm mr-2"></i>Oath Declaration
                   </h4>
                   <div class="text-sm text-gray-700 leading-relaxed">
                     I, <span id="inserted_name" class="font-semibold text-orange-600">[Your Full Name]</span>, do

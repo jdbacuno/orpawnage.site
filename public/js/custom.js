@@ -24,8 +24,6 @@ const instanceOptions = {
     override: true,
 };
 
-console.log("Hello");
-
 /*
  * $targetEl (required)
  * $triggerEl (optional)

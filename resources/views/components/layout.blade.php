@@ -34,13 +34,13 @@
       bottom: 0;
       width: 0;
       height: 2px;
-      background-color: #f97316;
+      background-color: #ff7206;
       /* orange-500 */
       transition: width 0.3s ease;
     }
 
     .nav-link:hover {
-      color: #ff6600;
+      color: #ff7206;
       /* orange-500 */
     }
 
@@ -51,14 +51,27 @@
     /* For active state */
     .nav-link.active {
       font-weight: 500;
-      color: #ff6600;
+      color: #ff7206;
       /* orange-500 */
     }
 
     .nav-link.active::after {
       width: 100%;
-      background-color: #ff6600;
-      height: 3px;
+      background-color: #ff7206;
+      height: 2px;
+    }
+
+    /* Add this to your existing styles */
+    .mobile-dropdown {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .mobile-dropdown.open {
+      max-height: 500px;
+      /* Adjust based on your content */
+      transition: max-height 0.5s ease-in;
     }
   </style>
 
@@ -142,14 +155,14 @@
       <!-- ========== START OF NAVBAR ========== -->
       <nav class="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-sm">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <a href="/" class="flex items-center space-x-3">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400">Or<strong
                 class="text-yellow-400">PAW</strong>nage</span>
           </a>
 
           <!-- Dropdown Menu Button -->
-          <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse transition duration-300">
+          <div class="flex items-center md:order-2 space-x-3 md:space-x-0 transition duration-300">
             <button type="button"
               class="flex items-center justify-center text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 relative"
               id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
@@ -174,7 +187,8 @@
             </button>
 
             <!-- Dropdown menu -->
-            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-md"
+            <div
+              class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 border-t border-t-orange-400 rounded-lg shadow-md"
               id="user-dropdown">
               <div class="px-4 py-3">
                 <span class="block text-sm text-gray-900">Your Account</span>
@@ -243,61 +257,119 @@
 
               <!-- SERVICES -->
               <li class="sm:mr-6">
-                <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
-                  class="nav-link flex items-center justify-between w-full md:w-auto {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
-                  Services
-                  <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m1 1 4 4 4-4" />
-                  </svg>
-                </button>
-                <!-- Dropdown menu -->
-                <div id="dropdownNavbar1"
-                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-44 transition-colors duration-300">
-                  <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
-                    aria-labelledby="dropdownLargeButton">
-                    <li>
-                      <a href="/services/adopt-a-pet"
-                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Adopt a
-                        Pet</a>
-                    </li>
-                    <li>
-                      <a href="/services/surrender-an-animal"
-                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender
-                        a Pet</a>
-                    </li>
-                  </ul>
+                <div class="relative">
+                  <!-- Desktop dropdown trigger (button) -->
+                  <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
+                    class="hidden md:flex nav-link items-center justify-between w-full md:w-auto {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
+                    Services
+                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+
+                  <!-- Mobile dropdown trigger (button) -->
+                  <button id="mobileDropdownNavbarLink1" onclick="toggleMobileDropdown('mobileDropdownNavbar1')"
+                    class="md:hidden flex nav-link items-center justify-between w-full {{ request()->is('services/adopt-a-pet') || request()->is('services/surrender-an-animal') ? 'active' : '' }}">
+                    Services
+                    <svg id="mobileDropdownNavbarLink1Icon"
+                      class="w-2.5 h-2.5 ms-2.5 transform transition-transform duration-300" aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+
+                  <!-- Desktop dropdown menu -->
+                  <div id="dropdownNavbar1"
+                    class="z-10 hidden font-normal bg-white divide-y divide-gray-100 border-t border-t-orange-400 rounded-lg shadow-md w-56 transition-colors duration-300">
+                    <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
+                      aria-labelledby="dropdownLargeButton">
+                      <li>
+                        <a href="/services/adopt-a-pet"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Adopt a Pet</a>
+                      </li>
+                      <li>
+                        <a href="/services/surrender-an-animal"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender a Pet</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Mobile dropdown menu -->
+                  <div id="mobileDropdownNavbar1" class="mobile-dropdown md:hidden">
+                    <ul class="py-2 pl-4 text-md text-gray-700 space-y-2">
+                      <li>
+                        <a href="/services/adopt-a-pet"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Adopt a Pet</a>
+                      </li>
+                      <li>
+                        <a href="/services/surrender-an-animal"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender a Pet</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </li>
 
               <!-- REPORT -->
               <li class="sm:mr-6">
-                <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
-                  class="nav-link flex items-center justify-between w-full md:w-auto {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
-                  Report
-                  <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m1 1 4 4 4-4" />
-                  </svg>
-                </button>
-                <!-- Dropdown menu -->
-                <div id="dropdownNavbar2"
-                  class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-50 transition-colors duration-300">
-                  <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
-                    aria-labelledby="dropdownLargeButton">
-                    <li>
-                      <a href="/report/missing-pet"
-                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Missing
-                        Pet</a>
-                    </li>
-                    <li>
-                      <a href="/report/abused-stray-animal"
-                        class="nav-link block rounded-full mx-1 transition-colors duration-300">Abused /
-                        Stray Animal</a>
-                    </li>
-                  </ul>
+                <div class="relative">
+                  <!-- Desktop dropdown trigger (button) -->
+                  <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
+                    class="hidden md:flex nav-link items-center justify-between w-full md:w-auto {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
+                    Report
+                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+
+                  <!-- Mobile dropdown trigger (button) -->
+                  <button id="mobileDropdownNavbarLink2" onclick="toggleMobileDropdown('mobileDropdownNavbar2')"
+                    class="md:hidden flex nav-link items-center justify-between w-full {{ request()->is('report/missing-pet') || request()->is('report/abused-stray-animal') ? 'active' : '' }}">
+                    Report
+                    <svg id="mobileDropdownNavbarLink2Icon"
+                      class="w-2.5 h-2.5 ms-2.5 transform transition-transform duration-300" aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+
+                  <!-- Desktop dropdown menu -->
+                  <div id="dropdownNavbar2"
+                    class="z-10 hidden font-normal bg-white divide-y divide-gray-100 border-t border-t-orange-400 rounded-lg shadow-md w-56 transition-colors duration-300">
+                    <ul class="p-4 text-md text-gray-700 transition-colors duration-300 space-y-2"
+                      aria-labelledby="dropdownLargeButton">
+                      <li>
+                        <a href="/report/missing-pet"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Missing Pet</a>
+                      </li>
+                      <li>
+                        <a href="/report/abused-stray-animal"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Abused / Stray
+                          Animal</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Mobile dropdown menu -->
+                  <div id="mobileDropdownNavbar2" class="mobile-dropdown md:hidden">
+                    <ul class="py-2 pl-4 text-md text-gray-700 space-y-2">
+                      <li>
+                        <a href="/report/missing-pet"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Missing Pet</a>
+                      </li>
+                      <li>
+                        <a href="/report/abused-stray-animal"
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Abused / Stray
+                          Animal</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </li>
 
@@ -448,6 +520,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   <script src="{{ asset('js/modal.js') }}"></script>
   <script src="{{ asset('js/disableSubmission.js') }}"></script>
   <script src="{{ asset('js/scrollToTop.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
 </body>
 
 </html>

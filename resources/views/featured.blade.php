@@ -28,11 +28,11 @@
 
             <!-- Enhanced Slide-Up Panel -->
             <div
-              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-sm text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+              class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
 
               <!-- Name & ID -->
               <div class="flex justify-between items-center mb-3">
-                <h3 class="text-lg font-bold">
+                <h3 class="text-lg font-bold text-black">
                   {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
                 </h3>
                 <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">

@@ -3,7 +3,7 @@
   <section class="relative w-full h-[70vh] max-h-[800px] overflow-hidden">
     <!-- Background image -->
     <img src="{{ asset('images/banner.jpg') }}" alt="Angeles City Veterinary Office staff with animals"
-      class="w-full h-full object-cover object-center" />
+      class="w-full h-full object-cover object-top" />
 
     <!-- Solid dark overlay -->
     <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
