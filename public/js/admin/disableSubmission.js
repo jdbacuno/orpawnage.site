@@ -72,6 +72,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ========= ARCHIVING/UNARCHIVING =========
+  const archiveForm = document.getElementById("archiveForm");
+  if (archiveForm) {
+    archiveForm.addEventListener("submit", function () {
+      const submitBtn = archiveForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Archiving...';
+      }
+    });
+  }
+
+  const archivePetForm = document.getElementById("archivePetForm");
+  if (archivePetForm) {
+    archivePetForm.addEventListener("submit", function () {
+      const submitBtn = archivePetForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Archiving...';
+      }
+    });
+  }
+
+  const unarchiveForm = document.getElementById("unarchiveForm");
+  if (unarchiveForm) {
+    unarchiveForm.addEventListener("submit", function () {
+      const submitBtn = unarchiveForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Unarchiving...';
+      }
+    });
+  }
+
   // ========= SETTINGS =========
   const settingsForm = document.getElementById("settingsForm");
   if (settingsForm) {

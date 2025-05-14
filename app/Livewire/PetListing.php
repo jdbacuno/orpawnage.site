@@ -87,7 +87,8 @@ class PetListing extends Component
             $subQuery->select('pet_id')
                 ->from('adoption_applications')
                 ->whereNotIn('status', ['rejected']);
-        });
+        })
+            ->whereNull('archived_at'); // Exclude pets with non-null archived_at
 
         // Apply filters if any are set
         if ($this->species) {

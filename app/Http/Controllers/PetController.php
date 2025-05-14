@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pet;
 use App\Models\User;
 use App\Notifications\NewPetAdded;
+use App\Notifications\PetArchivedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -106,11 +107,12 @@ class PetController extends Controller
 
     public function create()
     {
-        $query = Pet::whereNotIn('id', function ($subQuery) {
-            $subQuery->select('pet_id')
-                ->from('adoption_applications')
-                ->where('status', 'picked up'); // Exclude pets that have been picked up
-        });
+        $query = Pet::whereNull('archived_at') // Only non-archived pets
+            ->whereNotIn('id', function ($subQuery) {
+                $subQuery->select('pet_id')
+                    ->from('adoption_applications')
+                    ->whereIn('status', ['picked up', 'archived']); // Exclude pets with picked up OR archived adoption apps
+            });
 
         // Apply filters
         if (request()->filled('species')) {
@@ -184,23 +186,21 @@ class PetController extends Controller
                     $query->orderBy('created_at', 'desc');
             }
         } else {
-            // Default sorting when first visiting the page
-            if (!request()->filled('sort_by')) {
-                $query->orderByRaw("
+            $query->orderByRaw("
             (CASE 
                 WHEN age_unit = 'years' THEN age * 12 
                 WHEN age_unit = 'months' THEN age 
                 ELSE 0 
             END) ASC
         ");
-                $query->orderBy('created_at', 'desc'); // Newest pets first if same age
-            }
+            $query->orderBy('created_at', 'desc');
         }
 
         $pets = $query->paginate(8)->appends(request()->query());
 
         return view('admin.pets', compact('pets'));
     }
+
 
     public function store(Request $request)
     {
@@ -352,19 +352,37 @@ class PetController extends Controller
             ]);
     }
 
-    public function destroy(Pet $pet)
+    public function archive(Request $request, Pet $pet)
     {
-        // Delete pet image if exists
-        if ($pet->image_path && Storage::disk('public')->exists($pet->image_path)) {
-            Storage::disk('public')->delete($pet->image_path);
+        $validator = Validator::make($request->all(), [
+            'archive_reason' => ['required', 'string', 'max:255'],
+            'archive_notes' => [
+                Rule::requiredIf(fn() => $request->archive_reason === 'Other'),
+                'nullable',
+                'string',
+                'max:1000',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('archive_pet_number', $pet->pet_number);
         }
 
-        // Delete pet record
-        $pet->delete();
-
-        return redirect('/admin/pet-profiles')->with([
-            'delete_success' => "Pet #{$pet->pet_number} has been deleted!",
-            'modal_open' => null, // Close the modal
+        $pet->update([
+            'archive_reason' => $request->archive_reason,
+            'archive_notes' => $request->archive_notes,
+            'archived_at' => now(),
         ]);
+
+        User::chunk(100, function ($users) use ($pet) {
+            foreach ($users as $user) {
+                $user->notify(new PetArchivedNotification($pet));
+            }
+        });
+
+        return back()->with('success', 'Pet archived successfully.');
     }
 }

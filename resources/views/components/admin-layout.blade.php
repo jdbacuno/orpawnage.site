@@ -41,7 +41,7 @@
             <a href="/admin/pet-profiles"
               class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
               <i class=" ph-fill ph-paw-print mr-3 text-lg"></i>
-              <span class="text-sm">Manage Pet Profiles</span>
+              <span class="text-sm">Pet Profiles</span>
             </a>
           </li>
           {{-- will put or "admin/surrender-applications" later --}}
@@ -101,6 +101,14 @@
               class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
               <i class=" ph-fill ph-archive mr-3 text-lg"></i>
               <span class="text-sm">Archives</span>
+            </a>
+          </li>
+
+          <li class="mb-1 group {{ request()->is('admin/users') ? 'active' : '' }}">
+            <a href="/admin/users"
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
+              <i class=" ph-fill ph-user mr-3 text-lg"></i>
+              <span class="text-sm">Users</span>
             </a>
           </li>
 
@@ -166,8 +174,10 @@
             <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
           </li>
           <li class="text-gray-600 mr-2 font-medium flex items-center"><i class="ph-bold ph-caret-right"></i></li>
-          <li class="text-gray-600 mr-2 font-medium">{{ Route::currentRouteName() ? ucfirst(Route::currentRouteName()) :
-            '' }}</li>
+          <li class="text-gray-600 mr-2 font-medium">{{ Route::currentRouteName() ? ucwords(str_replace('.', ' ',
+            Route::currentRouteName())) : '' }}
+            </title>
+          </li>
         </ul>
 
       </div>

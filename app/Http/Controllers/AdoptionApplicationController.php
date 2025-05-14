@@ -30,6 +30,7 @@ class AdoptionApplicationController extends Controller
         }
 
         $query = AdoptionApplication::with(['pet', 'user'])
+            ->where('status', '!=', 'archived') // Exclude archived applications by default
             ->orderBy($sort, $direction);
 
         if ($status && $status !== 'all') {
@@ -227,13 +228,20 @@ class AdoptionApplicationController extends Controller
 
     public function archive(Request $request)
     {
+        $request->validate([
+            'application_id' => 'required|exists:adoption_applications,id'
+        ]);
+
         $application = AdoptionApplication::findOrFail($request->application_id);
 
-        if ($application->status !== 'picked up') {
-            return redirect()->back()->with('error', 'Only completed adoptions can be archived.');
+        if (!in_array($application->status, ['picked up', 'rejected'])) {
+            return redirect()->back()->with('error', 'Only completed or rejected adoptions can be archived.');
         }
 
-        $application->update(['status' => 'archive']);
+        $application->update([
+            'previous_status' => $application->status,
+            'status' => 'archived'
+        ]);
 
         return redirect()->back()->with('success', 'Adoption application archived.');
     }

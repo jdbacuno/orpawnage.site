@@ -22,6 +22,9 @@ class MissingPetReportController extends Controller
     {
         $query = MissingPetReport::query();
 
+        // Exclude archived reports
+        $query->where('status', '!=', 'archived');
+
         // Status Filter
         $status = $request->status;
         switch ($status) {
@@ -38,7 +41,7 @@ class MissingPetReportController extends Controller
                 break;
 
             default:
-                // No status filter - show all
+                // No additional status filter
                 break;
         }
 
@@ -65,7 +68,7 @@ class MissingPetReportController extends Controller
             'last_seen_location' => ['required', 'string'],
             'last_seen_date' => ['required', 'date', 'before_or_equal:today'],
             'pet_description' => ['required', 'string'],
-            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:10240'],
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:10240'],
             'pet_photos' => ['required', 'array', 'max:5'],
             'pet_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
             'location_photos' => ['nullable', 'array', 'max:5'],
@@ -207,6 +210,27 @@ class MissingPetReportController extends Controller
         return redirect()->back()
             ->with('success', 'Missing pet report has been deleted successfully.');
     }
+
+    public function archive(Request $request)
+    {
+        $request->validate([
+            'report_id' => 'required|exists:missing_pet_reports,id'
+        ]);
+
+        $report = MissingPetReport::findOrFail($request->report_id);
+
+        if ($report->status !== 'acknowledged' && $report->status !== 'rejected') {
+            return redirect()->back()->with('error', 'Only acknowledged or rejected reports can be archived.');
+        }
+
+        $report->update([
+            'previous_status' => $report->status,
+            'status' => 'archived'
+        ]);
+
+        return redirect()->back()->with('success', 'Missing pet report archived.');
+    }
+
 
     private function generateUniqueReportNumber()
     {

@@ -236,7 +236,7 @@
                 @elseif($report->status === 'acknowledged' || $report->status === 'rejected')
                 <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem" onclick="showArchive('{{ $report->id }}')">
+                  role="menuitem" onclick="showArchiveModal('{{ $report->id }}')">
                   <i class="ph-fill ph-archive mr-2"></i> Archive
                 </button>
                 @endif
@@ -329,6 +329,35 @@
       </button>
       <h2 class="text-md font-semibold text-gray-800">Last Seen Location</h2>
       <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Archive Confirmation Modal -->
+  <div id="archiveModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button type="button" id="closeArchiveModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800">Confirm Archive</h2>
+      <p class="mb-4">Are you sure you want to archive this missing pet report?</p>
+      <p class="mb-4 text-gray-500 text-sm">Archived reports will be moved to a separate section and won't appear in the
+        main list.</p>
+
+      <form id="archiveForm" method="POST" action="{{ route('admin.missing-reports.archive') }}">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="report_id" id="archiveReportId">
+
+        <div class="flex justify-end space-x-3 mt-4">
+          <button type="button" id="cancelArchive" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="submit" class="bg-gray-600 px-4 py-2 text-white hover:bg-gray-500 rounded-md">
+            Confirm Archive
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -428,6 +457,22 @@
 
     document.getElementById('cancelReject').addEventListener('click', function() {
       document.getElementById('rejectModal').classList.add('hidden');
+    });
+
+    // Show archive modal
+    function showArchiveModal(id) {
+        document.getElementById('archiveReportId').value = id;
+        document.getElementById('archiveModal').classList.remove('hidden');
+    }
+
+    // Close archive modal
+    document.getElementById('closeArchiveModal').addEventListener('click', function() {
+        document.getElementById('archiveModal').classList.add('hidden');
+    });
+
+    // Cancel archive
+    document.getElementById('cancelArchive').addEventListener('click', function() {
+        document.getElementById('archiveModal').classList.add('hidden');
     });
   </script>
 </x-admin-layout>

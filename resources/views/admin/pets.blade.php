@@ -614,26 +614,92 @@
   </div>
   @endif
 
-  <!-- Delete Pet Modal -->
-  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-      <!-- Modal Content -->
-      <h2 class="text-xl font-semibold text-gray-800">Archive this Pet?</h2>
-      <p class="text-gray-600 mt-2">Are you sure you want to archive Pet#<span id="deletePetIdText"></span>?</p>
+  {{-- ARCHIVE MODAL --}}
+  <div id="archiveModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 {{ $errors->has('archive_reason') || $errors->has('archive_notes') ? '' : 'hidden' }}">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button type="button" id="closeArchiveModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
 
-      <div class="flex justify-end mt-4 space-x-2">
-        <button id="closeDeleteModal" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400">
-          Cancel
-        </button>
-        <form id="deletePetForm" method="POST">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">
-            Archive
+      <h2 class="text-xl font-semibold text-gray-800">Archive this Pet?</h2>
+      <p class="text-gray-600 mt-2">
+        Are you sure you want to archive Pet#<span id="archivePetIdText">{{ old('pet_number',
+          session('archive_pet_number')) }}</span>?
+      </p>
+
+      <form id="archivePetForm" method="POST"
+        action="{{ old('pet_id') ? url('/admin/pet-profiles/' . old('pet_id') . '/archive') : '' }}">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="pet_id" id="archivePetId" value="{{ old('pet_id') }}">
+
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Reason for Archiving</label>
+          <select name="archive_reason" id="archiveReason" class="w-full border p-2 rounded-md" required>
+            <option value="">Select a reason</option>
+            <option value="Pet has passed away" {{ old('archive_reason')=='Pet has passed away' ? 'selected' : '' }}>Pet
+              has passed away</option>
+            <option value="Pet has health issues" {{ old('archive_reason')=='Pet has health issues' ? 'selected' : ''
+              }}>Pet has health issues</option>
+            <option value="Other" {{ old('archive_reason')=='Other' ? 'selected' : '' }}>Other (please specify)</option>
+          </select>
+          <x-form-error name="archive_reason" />
+        </div>
+
+        <div class="mb-4" id="archiveNotesContainer"
+          style="{{ old('archive_reason') == 'Other' ? '' : 'display: none;' }}">
+          <label class="block text-gray-700 text-sm font-medium mb-2">Additional Notes</label>
+          <textarea name="archive_notes" id="archiveNotes" class="w-full border p-2 rounded-md"
+            rows="3">{{ old('archive_notes') }}</textarea>
+          <x-form-error name="archive_notes" />
+        </div>
+
+        <div class="flex justify-end mt-4 space-x-2">
+          <button type="button" id="cancelArchive" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            Cancel
           </button>
-        </form>
-      </div>
+          <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">
+            Archive Pet
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Open modal on delete button click
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const petId = this.getAttribute('data-id');
+        const petNumber = this.getAttribute('data-number');
+
+        const form = document.getElementById('archivePetForm');
+        form.action = `/admin/pet-profiles/${petId}/archive`;
+
+        document.getElementById('archivePetId').value = petId;
+        document.getElementById('archivePetIdText').textContent = petNumber;
+
+        document.getElementById('archiveModal').classList.remove('hidden');
+      });
+    });
+
+    // Close modal
+    document.getElementById('closeArchiveModal').addEventListener('click', function () {
+      document.getElementById('archiveModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelArchive').addEventListener('click', function () {
+      document.getElementById('archiveModal').classList.add('hidden');
+    });
+
+    // Show/hide notes field based on reason
+    document.getElementById('archiveReason').addEventListener('change', function () {
+      const notesContainer = document.getElementById('archiveNotesContainer');
+      notesContainer.style.display = this.value === 'Other' ? 'block' : 'none';
+    });
+  });
+  </script>
 
 </x-admin-layout>

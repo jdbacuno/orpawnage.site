@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('valid_id_path');
             $table->json('incident_photos');
             $table->string('status')->default('pending');
+            $table->string('previous_status')->nullable();
             $table->string('reject_reason')->default('');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

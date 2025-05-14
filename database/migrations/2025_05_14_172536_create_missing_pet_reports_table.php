@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('pet_photos');
             $table->json('location_photos')->nullable();
             $table->string('status')->default('pending');
+            $table->string('previous_status')->nullable();
             $table->string('reject_reason')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

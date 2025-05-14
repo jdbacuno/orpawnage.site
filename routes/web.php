@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AnimalAbuseReportController;
+use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\MissingPetReportController;
@@ -153,7 +154,20 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('Manage Pet Profiles');
 
     Route::patch('/admin/pet-profiles/{pet}', [PetController::class, 'update']);
-    Route::delete('/admin/pet-profiles/{pet}', [PetController::class, 'destroy']);
+    Route::patch('/admin/pet-profiles/{pet}/archive', [PetController::class, 'archive'])
+        ->name('pets.archive');
+
+    Route::patch('/admin/adoption-applications/archive', [AdoptionApplicationController::class, 'archive'])
+        ->name('admin.adoption-applications.archive');
+    // Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])
+    //     ->name('admin.surrender-applications.archive');
+    Route::patch('/admin/missing-pets/archive', [MissingPetReportController::class, 'archive'])
+        ->name('admin.missing-reports.archive');
+    Route::patch('/admin/abused-reports/archive', [AnimalAbuseReportController::class, 'archive'])
+        ->name('admin.abused-reports.archive');
+
+    Route::get('/admin/archives', [ArchiveController::class, 'index'])->name('archives');
+    Route::patch('/admin/archives/{type}/{id}/restore', [ArchiveController::class, 'restore'])->name('admin.archives.restore');
 
     Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
 

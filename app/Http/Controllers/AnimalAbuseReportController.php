@@ -19,6 +19,11 @@ class AnimalAbuseReportController extends Controller
     {
         $query = AnimalAbuseReport::query();
 
+        // Exclude archived reports by default
+        if ($request->status !== 'archived') {
+            $query->where('status', '!=', 'archived');
+        }
+
         // Status Filter
         $status = $request->status;
         switch ($status) {
@@ -63,7 +68,7 @@ class AnimalAbuseReportController extends Controller
             'species' => ['required', 'string'],
             'animal_condition' => ['required', 'string'],
             'additional_notes' => ['required', 'string'],
-            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:10240'],
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:10240'],
             'incident_photos' => ['required', 'array', 'max:10'],
             'incident_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
@@ -181,5 +186,25 @@ class AnimalAbuseReportController extends Controller
         } while (AnimalAbuseReport::where('report_number', $reportNumber)->exists());
 
         return $reportNumber;
+    }
+
+    public function archive(Request $request)
+    {
+        $request->validate([
+            'report_id' => 'required|exists:animal_abuse_reports,id'
+        ]);
+
+        $report = AnimalAbuseReport::findOrFail($request->report_id);
+
+        if ($report->status !== 'action taken' && $report->status !== 'rejected') {
+            return redirect()->back()->with('error', 'Only reports with action taken or rejected status can be archived.');
+        }
+
+        $report->update([
+            'previous_status' => $report->status,
+            'status' => 'archived'
+        ]);
+
+        return redirect()->back()->with('success', 'Report has been archived.');
     }
 }

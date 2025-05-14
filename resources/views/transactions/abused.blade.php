@@ -55,17 +55,25 @@
           </div>
         </div>
 
+        @php
+        $displayStatus = $report->status === 'archived' ? $report->previous_status : $report->status;
+
+        $statusClasses = match ($displayStatus) {
+        'pending' => 'bg-yellow-100 text-yellow-700',
+        'action taken' => 'bg-green-100 text-green-700',
+        'rejected' => 'bg-red-100 text-red-700',
+        default => 'bg-gray-100 text-gray-700',
+        };
+        @endphp
+
         <!-- Status Badge -->
         <div class="text-right space-y-1">
-          <span class="px-2 py-1 text-[10px] rounded 
-    {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-    {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
-    {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-            {{ ucwords($report->status) }}
+          <span class="px-2 py-1 text-[10px] rounded {{ $statusClasses }}">
+            {{ ucwords($displayStatus) }}
           </span>
-          <span class="flex justify-end items-center text-[10px] text-gray-500"><i class="ph-fill ph-clock mr-1"></i> {{
-            $report->created_at->diffForHumans()
-            }}</span>
+          <span class="flex justify-end items-center text-[10px] text-gray-500">
+            <i class="ph-fill ph-clock mr-1"></i> {{ $report->created_at->diffForHumans() }}
+          </span>
         </div>
       </div>
 
@@ -268,13 +276,12 @@
       document.getElementById('imageModal').classList.add('hidden');
     });
 
-    // Delete confirmation
-    document.querySelectorAll('.delete-btn').forEach(button => {
+     document.querySelectorAll('.delete-btn').forEach(button => {
       button.addEventListener('click', function() {
         document.getElementById('deleteReportId').value = this.dataset.reportId;
         document.getElementById('reportNumberToDelete').textContent = this.dataset.reportNumber;
         document.getElementById('deleteForm').action = `/transactions/abused-status/${this.dataset.reportId}`;
-        document.getElementById('deleteModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.remove('hidden');
       });
     });
 

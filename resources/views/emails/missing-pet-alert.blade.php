@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>MISSING PET ALERT</title>
   <style>
     body {
@@ -17,7 +16,7 @@
     }
 
     .container {
-      max-width: 600px;
+      width: 500px;
       margin: 0 auto;
       padding: 20px;
       background-color: #ffffff;
@@ -76,35 +75,49 @@
       color: #333;
     }
 
-    .photo-gallery {
-      display: flex;
-      flex-direction: column;
-    }
-
     h3 {
       text-align: left;
       color: #d9534f;
+      margin-top: 30px;
+    }
+
+    .photo-gallery {
+      margin-top: 10px;
     }
 
     .photo-gallery .images-container {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start;
-      margin: 5px 5px 10px 0;
       gap: 10px;
+      justify-content: flex-start;
+      margin: 10px 0;
     }
 
     .photo-gallery img {
-      width: 180px;
-      height: 180px;
+      width: calc(50% - 10px);
+      height: auto;
+      aspect-ratio: 1/1;
       object-fit: cover;
       border: 1px solid #ddd;
+      border-radius: 4px;
       cursor: pointer;
       transition: transform 0.2s;
     }
 
     .photo-gallery img:hover {
       transform: scale(1.05);
+    }
+
+    @media only screen and (min-width: 768px) {
+      .photo-gallery img {
+        width: calc(33.33% - 10px);
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      .photo-gallery img {
+        width: calc(50% - 5px);
+      }
     }
 
     .modal {
@@ -172,17 +185,6 @@
       margin: 20px 0;
       border-radius: 4px;
       color: #31708f;
-    }
-
-    @media only screen and (max-width: 480px) {
-      .container {
-        padding: 10px;
-      }
-
-      .photo-gallery img {
-        width: 100px;
-        height: 100px;
-      }
     }
   </style>
 </head>
@@ -281,8 +283,7 @@
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    // Close modal when clicking outside the image
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       const modal = document.getElementById('imageModal');
       if (event.target == modal) {
         closeModal();

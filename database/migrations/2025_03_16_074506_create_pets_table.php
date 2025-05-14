@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('color');
             $table->enum('source', ['surrendered', 'rescued', 'other'])->default('other');
             $table->string('image_path');
+            $table->string('archive_reason')->nullable();
+            $table->text('archive_notes')->nullable();
+            $table->timestamp('archived_at')->nullable();
             $table->timestamps();
         });
     }
