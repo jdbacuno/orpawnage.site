@@ -1,5 +1,5 @@
 <x-transactions-layout>
-  <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mt-0 sm:mt-10">Abused/Stray Reports</h1>
+  <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mt-0 sm:mt-10">Missing Pet Reports</h1>
 
   <!-- Filters Section -->
   <div class="flex flex-wrap gap-2 my-4">
@@ -10,19 +10,19 @@
         onchange="this.form.submit()">
         <option value="">All Statuses</option>
         <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
-        <option value="action taken" {{ request('status')==='action taken' ? 'selected' : '' }}>Action Taken</option>
+        <option value="acknowledged" {{ request('status')==='acknowledged' ? 'selected' : '' }}>Acknowledged</option>
         <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
       </select>
     </form>
   </div>
 
-  @if ($abusedReports->isEmpty())
+  @if ($missingReports->isEmpty())
   <div class="flex items-center justify-center p-6 text-gray-500">
-    <p class="text-lg">No abused/stray reports found.</p>
+    <p class="text-lg">No missing pet reports found.</p>
   </div>
   @else
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-    @foreach($abusedReports as $report)
+    @foreach($missingReports as $report)
     <div
       class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       <!-- Card Header -->
@@ -50,7 +50,7 @@
               <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $report->report_number }}
             </h3>
             <p class="text-sm text-gray-500 truncate max-w-[120px]">
-              {{ $report->full_name ?: 'Anonymous' }}
+              {{ $report->owner_name ?: 'Anonymous' }}
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@
         <div class="text-right space-y-1">
           <span class="px-2 py-1 text-[10px] rounded 
     {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-    {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
+    {{ $report->status === 'acknowledged' ? 'bg-green-100 text-green-700' : '' }}
     {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
             {{ ucwords($report->status) }}
           </span>
@@ -74,60 +74,60 @@
         <!-- Basic Info -->
         <div class="grid grid-cols-2 gap-2 text-sm mb-2">
           <div>
-            <p class="text-gray-500 font-medium">Animal</p>
-            <p>{{ ucfirst($report->species) }}</p>
+            <p class="text-gray-500 font-medium">Pet Name</p>
+            <p>{{ $report->pet_name }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">What</p>
-            <p>{{ ucfirst($report->animal_condition) }}</p>
+            <p class="text-gray-500 font-medium">Last Seen</p>
+            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M j, Y') }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">When</p>
-            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M j, Y') }}</p>
+            <p class="text-gray-500 font-medium">Contact</p>
+            <p>{{ $report->contact_no ?: 'Not provided' }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">Where</p>
+            <p class="text-gray-500 font-medium">Location</p>
             <!-- Trigger Text -->
-            <p onclick="showTextModal(`{{ $report->incident_location }}`)"
+            <p onclick="showTextModal(`{{ $report->last_seen_location }}`)"
               class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-              {{ Str::limit($report->incident_location, 20) }}
+              {{ Str::limit($report->last_seen_location, 20) }}
             </p>
           </div>
         </div>
 
         <!-- Collapsible Sections -->
         <div class="space-y-2">
-          <!-- Notes -->
+          <!-- Pet Description -->
           <div>
             <button
               class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
               <span class="flex items-center">
                 <i class="ph-fill ph-note-pencil mr-2 text-sm"></i>
-                Notes
+                Pet Description
               </span>
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              {{ $report->additional_notes ?: 'No notes provided' }}
+              {{ $report->pet_description ?: 'No description provided' }}
             </div>
           </div>
 
-          <!-- Photos -->
+          <!-- Pet Photos -->
           <div>
             <button
               class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
               <span class="flex items-center">
                 <i class="ph-fill ph-images mr-2 text-sm"></i>
-                Photos ({{ count(json_decode($report->incident_photos)) }})
+                Pet Photos ({{ count(json_decode($report->pet_photos)) }})
               </span>
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden mt-2">
               <div class="flex flex-wrap gap-1">
-                @foreach(json_decode($report->incident_photos) as $photo)
-                <button type="button" class="show-image-btn" data-image-title="Incident Photo"
+                @foreach(json_decode($report->pet_photos) as $photo)
+                <button type="button" class="show-image-btn" data-image-title="Pet Photo"
                   data-image="{{ asset('storage/' . $photo) }}">
-                  <img src="{{ asset('storage/' . $photo) }}" alt="Evidence photo"
+                  <img src="{{ asset('storage/' . $photo) }}" alt="Pet photo"
                     class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
                 </button>
                 @endforeach
@@ -135,21 +135,27 @@
             </div>
           </div>
 
-          <!-- Reporter Info -->
+          <!-- Location Photos -->
           <div>
             <button
               class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
               <span class="flex items-center">
-                <i class="ph-fill ph-user-circle mr-2 text-sm"></i>
-                Reporter Info
+                <i class="ph-fill ph-map-pin mr-2 text-sm"></i>
+                Location Photos ({{ count(json_decode($report->location_photos ?? '[]')) }})
               </span>
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
-            <div class="hidden text-sm mt-1">
-              <div class="space-y-1 px-1">
-                <p><span class="text-gray-500">Name:</span> {{ $report->full_name ?: 'Anonymous' }}</p>
-                <p><span class="text-gray-500">Contact:</span> {{ $report->contact_no ?: 'Not provided' }}</p>
-                <p><span class="text-gray-500">Email:</span> {{ $report->user->email ?? 'Not provided' }}</p>
+            <div class="hidden mt-2">
+              <div class="flex flex-wrap gap-1">
+                @if($report->location_photos)
+                @foreach(json_decode($report->location_photos) as $photo)
+                <button type="button" class="show-image-btn" data-image-title="Location Photo"
+                  data-image="{{ asset('storage/' . $photo) }}">
+                  <img src="{{ asset('storage/' . $photo) }}" alt="Location photo"
+                    class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
+                </button>
+                @endforeach
+                @endif
               </div>
             </div>
           </div>
@@ -171,7 +177,7 @@
 
   <!-- Pagination -->
   <div class="mt-6">
-    {{ $abusedReports->appends(request()->except('page'))->links() }}
+    {{ $missingReports->appends(request()->except('page'))->links() }}
   </div>
   @endif
 
@@ -196,7 +202,7 @@
       </button>
       <h2 class="font-semibold text-gray-800 mb-3">Confirm Deletion</h2>
       <p id="deleteMessage" class="text-gray-700 mb-4">
-        Delete report <span id="reportNumberToDelete" class="font-semibold"></span>?
+        Delete missing report <span id="reportNumberToDelete" class="font-semibold"></span>?
       </p>
       <div class="flex justify-end gap-2">
         <button id="cancelDelete" class="px-3 py-1 bg-gray-300 text-gray-800 rounded">Cancel</button>
@@ -210,13 +216,13 @@
     </div>
   </div>
 
-  <!-- Incident Location Modal -->
+  <!-- Location Text Modal -->
   <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
       <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x"></i>
       </button>
-      <h2 class="text-md font-semibold text-gray-800">Incident Location</h2>
+      <h2 class="text-md font-semibold text-gray-800">Last Seen Location</h2>
       <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
     </div>
   </div>
@@ -268,13 +274,12 @@
       document.getElementById('imageModal').classList.add('hidden');
     });
 
-    // Delete confirmation
     document.querySelectorAll('.delete-btn').forEach(button => {
       button.addEventListener('click', function() {
         document.getElementById('deleteReportId').value = this.dataset.reportId;
         document.getElementById('reportNumberToDelete').textContent = this.dataset.reportNumber;
-        document.getElementById('deleteForm').action = `/transactions/abused-status/${this.dataset.reportId}`;
-        document.getElementById('deleteModal').classList.add('hidden');
+        document.getElementById('deleteForm').action = `/transactions/missing-status/${this.dataset.reportId}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
       });
     });
 

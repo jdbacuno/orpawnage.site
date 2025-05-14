@@ -209,7 +209,7 @@
                 </button>
                 @endif
 
-                @if($application->status === 'picked up')
+                @if($application->status === 'picked up' || $application->status === 'rejected')
                 <form method="POST" action="/admin/adoption-applications/archive" class="w-full">
                   @csrf
                   @method('PATCH')
@@ -218,19 +218,6 @@
                     class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     role="menuitem">
                     <i class="ph-fill ph-archive mr-2"></i> Archive
-                  </button>
-                </form>
-                @endif
-
-                @if($application->status === 'rejected')
-                <form method="POST" action="/admin/adoption-applications/delete" class="w-full">
-                  @csrf
-                  @method('DELETE')
-                  <input type="hidden" name="application_id" value="{{ $application->id }}">
-                  <button type="submit"
-                    class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
-                    role="menuitem">
-                    <i class="ph-fill ph-trash mr-2"></i> Delete Permanently
                   </button>
                 </form>
                 @endif

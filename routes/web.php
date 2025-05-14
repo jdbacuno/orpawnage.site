@@ -4,6 +4,7 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AnimalAbuseReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedPetController;
+use App\Http\Controllers\MissingPetReportController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
 use App\Livewire\PetListing;
+use App\Models\AdoptionApplication;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +101,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('missing-form');
     })->name('Report a Missing Pet');
 
+    Route::post('/report/missing-pet', [MissingPetReportController::class, 'store'])->name('report.missing.pet');
+
     Route::get('/report/abused-stray-animal', function () {
         return view('abused-stray-form');
     })->name('report.animal.abuse');
@@ -109,22 +113,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('transactions')->group(function () {
         Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
-        Route::post('/schedule-pickup/{id}', [TransactionController::class, 'schedulePickup'])->name('schedule.pickup');
+        Route::post('/schedule-pickup/{id}', [AdoptionApplication::class, 'schedulePickup'])->name('schedule.pickup');
         Route::get('/surrender-status', [TransactionController::class, 'surrender'])->name('Surrender Applications Status');
         Route::get('/missing-status', [TransactionController::class, 'missing'])->name('Missing Reports Status');
         Route::get('/abused-status', [TransactionController::class, 'abused'])->name('Abused/Stray Reports Status');
 
+        Route::delete('/missing-status/{missingReport}', [MissingPetReportController::class, 'destroy']);
         Route::delete('/abused-status/{abusedReport}', [AnimalAbuseReportController::class, 'destroy']);
+        Route::delete('/adoption-status/{application}', [AdoptionApplication::class, 'destroy']);
     });
 
-    Route::delete('/transactions/{application}', [TransactionController::class, 'destroy']);
 
     Route::view('/about', 'about')->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
 
     Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
         ->name('adoption.confirm');
-    Route::post('/transactions/{id}/resend-email', [TransactionController::class, 'resendEmail']);
+    Route::post('/transactions/{id}/resend-email', [AdoptionApplication::class, 'resendEmail']);
     Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
         ->name('transactions.adoption-status');
 });
@@ -158,10 +163,15 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/adoption-applications/reject', [AdoptionApplicationController::class, 'reject']);
 
     Route::get('/admin/abused-or-stray-pets', [AnimalAbuseReportController::class, 'index'])->name('Manage Abused or Stray Pet Reports');
-
     Route::prefix('admin/abused-or-stray-pets')->name('admin.abused-reports.')->group(function () {
         Route::patch('/acknowledge', [AnimalAbuseReportController::class, 'acknowledge'])->name('acknowledge');
         Route::patch('/reject', [AnimalAbuseReportController::class, 'reject'])->name('reject');
+    });
+
+    Route::get('/admin/missing-pets', [MissingPetReportController::class, 'index'])->name('Manage Missing Pet Reports');
+    Route::prefix('admin/missing-pet-reports')->name('admin.missing-reports.')->group(function () {
+        Route::patch('/acknowledge', [MissingPetReportController::class, 'acknowledge'])->name('acknowledge');
+        Route::patch('/reject', [MissingPetReportController::class, 'reject'])->name('reject');
     });
 
     Route::prefix('admin/settings')->group(function () {

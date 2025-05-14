@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const submitBtn = actionForm.querySelector("button[type='submit']");
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = "Notifiying user...";
+        submitBtn.innerHTML = "Notifiying...";
       }
     });
   }

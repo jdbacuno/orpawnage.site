@@ -1,16 +1,18 @@
 <x-layout>
-  <!-- ========== START OF MISSING PET REPORT SECTION ========== -->
-  <section class="relative min-h-screen flex items-center justify-center mt-4 pt-20 pb-10">
-    <!-- Background Image -->
-    <div class="absolute inset-0">
-      <img src="{{ asset('images/missing.jpeg') }}" alt="Missing Pet Background"
-        class="w-full h-full object-cover brightness-75" />
-    </div>
+  <section class="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center pt-20 pb-10"
+    style="background-image: url('{{ asset('images/missing.jpeg') }}')">
 
-    <!-- Form Container -->
-    <div class="relative z-10 w-full max-w-3xl mx-4">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/40 z-0"></div>
+
+    <!-- Centered Form Card -->
+    <div class="relative z-10 w-full max-w-4xl m-4">
       <div class="p-6 rounded-xl bg-gray-50/90 border border-gray-300 shadow-md backdrop-blur-sm">
-        <!-- Alerts -->
+        <h3 class="text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200 flex items-center">
+          <i class="ph-fill ph-magnifying-glass mr-2 text-orange-500"></i>Missing Pet Report Form
+        </h3>
+
+        <!-- Success Alert -->
         @if(session('success'))
         <div id="alert-3"
           class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
@@ -36,14 +38,11 @@
         </div>
         @endif
 
-        <h3 class="text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200 flex items-center">
-          <i class="ph-fill ph-magnifying-glass mr-2 text-orange-500"></i>Missing Pet Report Form
-        </h3>
-
-        <form action="/report/missing-pet" method="POST" enctype="multipart/form-data">
+        <!-- Form Start -->
+        <form id="reportForm" action="{{ route('report.missing.pet') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
-          <!-- Add this note -->
+          <!-- Add this note section -->
           <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
@@ -58,40 +57,82 @@
                   <strong>Please note:</strong> Our team does not actively search for missing pets. Once your report is
                   reviewed and approved, it will be shared with other registered users on this website via email to help
                   spread awareness. You may also contact us through our official Facebook page, <strong>Angeles City
-                    Veterinary
-                    Office</strong>, to request that your missing pet poster be posted on their page.
+                    Veterinary Office</strong>, to request that your missing pet poster be posted on their page.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Two-column grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- Owner Info -->
-            <div>
+          <div class="mb-6">
+            <!-- Owner Information -->
+            <div class="mb-6">
               <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
                 <i class="ph-fill ph-user-circle mr-2"></i>Owner's Information
               </h4>
-
-              <div class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">Owner's Name</label>
                   <input type="text" name="owner_name" value="{{ old('owner_name') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Full name" required />
+                    placeholder="Your full name" required />
                   <x-form-error name="owner_name" />
                 </div>
-
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
-                  <input type="tel" name="contact_no" value="{{ old('contact_no') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Contact number" required />
+                  <input type="tel" name="contact_no" value="{{ auth()->user()->contact_number }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly
+                    required />
                   <x-form-error name="contact_no" />
                 </div>
+              </div>
+            </div>
 
-                <!-- Added Valid ID Field -->
+            <!-- Pet Information -->
+            <div class="mb-6">
+              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Pet's Name</label>
+                  <input type="text" name="pet_name" value="{{ old('pet_name') }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    placeholder="Pet's name" required />
+                  <x-form-error name="pet_name" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Last Seen Location</label>
+                  <input type="text" name="last_seen_location" value="{{ old('last_seen_location') }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    placeholder="Where the pet was last seen" required />
+                  <x-form-error name="last_seen_location" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Last Seen Date</label>
+                  <input type="date" name="last_seen_date" value="{{ old('last_seen_date') }}" max="{{ date('Y-m-d') }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    required />
+                  <x-form-error name="last_seen_date" />
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Pet Description</label>
+                  <textarea name="pet_description"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    rows="4" placeholder="Breed, color, distinguishing marks, etc."
+                    required>{{ old('pet_description') }}</textarea>
+                  <x-form-error name="pet_description" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Photos Section -->
+            <div class="mb-6">
+              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-camera mr-2"></i>Photos
+              </h4>
+              <div>
+                <!-- Valid ID Upload -->
+                <div class="mb-4">
                   <div class="flex justify-between items-center mb-1">
                     <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
                         class="text-red-500">*</span></label>
@@ -105,65 +146,49 @@
                     required />
                   <x-form-error name="valid_id" />
                 </div>
-              </div>
-            </div>
 
-            <!-- Pet Info -->
-            <div>
-              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-                <i class="ph-fill ph-paw-print mr-2"></i>Pet's Information
-              </h4>
+                <!-- Pet Photos Upload -->
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Upload Photos of Your Pet (Max 5) <span
+                      class="text-red-500">*</span></label>
 
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Pet's Name</label>
-                  <input type="text" name="pet_name" value="{{ old('pet_name') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Pet's name" required />
-                  <x-form-error name="pet_name" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Last Seen Location</label>
-                  <input type="text" name="last_seen_location" value="{{ old('last_seen_location') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Location" required />
-                  <x-form-error name="last_seen_location" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Last Seen Date</label>
-                  <input type="date" name="last_seen_date" value="{{ old('last_seen_date') }}" max="{{ date('Y-m-d') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  <!-- Hidden Input -->
+                  <input type="file" name="pet_photos[]" id="pet_photos_input" multiple accept="image/*" class="hidden"
                     required />
-                  <x-form-error name="last_seen_date" />
+
+                  <!-- Preview Container -->
+                  <div id="petPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+
+                  <!-- Add More Button -->
+                  <button type="button" id="addPetPhotosBtn"
+                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+                    <i class="ph-fill ph-plus-circle"></i> Add Pet Photos
+                  </button>
+
+                  <x-form-error name="pet_photos" />
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="mb-6">
-            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-              <i class="ph-fill ph-note-pencil mr-2"></i>Additional Details
-            </h4>
+                <!-- Location Photos Upload -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Upload Photos of Last Seen Location or
+                    Possible Locations Your Pet Might Go (Max
+                    5) (Optional)</label>
 
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Pet Description</label>
-                <textarea name="pet_description"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  rows="4" placeholder="Breed, color, distinguishing marks, etc."
-                  required>{{ old('pet_description') }}</textarea>
-                <x-form-error name="pet_description" />
-              </div>
+                  <!-- Hidden Input -->
+                  <input type="file" name="location_photos[]" id="location_photos_input" multiple accept="image/*"
+                    class="hidden" />
 
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Upload Pet's Photo <span
-                    class="text-red-500">*</span></label>
-                <input type="file" name="pet_photo"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                  required />
-                <x-form-error name="pet_photo" />
+                  <!-- Preview Container -->
+                  <div id="locationPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+
+                  <!-- Add More Button -->
+                  <button type="button" id="addLocationPhotosBtn"
+                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+                    <i class="ph-fill ph-plus-circle"></i> Add Location Photos
+                  </button>
+
+                  <x-form-error name="location_photos" />
+                </div>
               </div>
             </div>
           </div>
@@ -171,7 +196,7 @@
           <!-- Submit Button -->
           <div class="flex justify-end">
             <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
               <i class="ph-fill ph-paper-plane-tilt mr-2"></i>Submit Report
             </button>
           </div>
@@ -179,7 +204,6 @@
       </div>
     </div>
   </section>
-  <!-- ========== END OF MISSING PET REPORT SECTION ========== -->
 
   <!-- Valid ID Modal -->
   <div id="validIdModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-1">
@@ -220,4 +244,84 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Function to handle image uploads and previews
+    function setupImageUpload(inputId, previewContainerId, addButtonId, maxFiles = 5) {
+      const input = document.getElementById(inputId);
+      const previewContainer = document.getElementById(previewContainerId);
+      const addMoreBtn = document.getElementById(addButtonId);
+      const dataTransfer = new DataTransfer();
+
+      addMoreBtn.addEventListener('click', () => input.click());
+
+      input.addEventListener('change', (event) => {
+        const newFiles = Array.from(event.target.files);
+
+        if (dataTransfer.files.length + newFiles.length > maxFiles) {
+          alert(`You can upload a maximum of ${maxFiles} images.`);
+          return;
+        }
+
+        newFiles.forEach((file, index) => {
+          if (!file.type.match('image.*')) return;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'relative';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'h-24 w-full object-cover rounded-lg border border-gray-300';
+
+            const removeBtn = document.createElement('i');
+            removeBtn.className = 'absolute top-[-3px] right-[-1px] text-white rounded-full p-1 text-sm ph-fill ph-x-circle hover:text-red-400 cursor-pointer';
+            removeBtn.onclick = function () {
+              previewDiv.remove();
+
+              // Remove from DataTransfer
+              const updated = new DataTransfer();
+              for (let i = 0; i < dataTransfer.items.length; i++) {
+                if (dataTransfer.items[i].getAsFile() !== file) {
+                  updated.items.add(dataTransfer.items[i].getAsFile());
+                }
+              }
+
+              dataTransfer.items.clear();
+              for (let i = 0; i < updated.items.length; i++) {
+                dataTransfer.items.add(updated.items[i].getAsFile());
+              }
+
+              input.files = dataTransfer.files;
+            };
+
+            previewDiv.appendChild(img);
+            previewDiv.appendChild(removeBtn);
+            previewContainer.appendChild(previewDiv);
+          };
+          reader.readAsDataURL(file);
+
+          dataTransfer.items.add(file);
+        });
+
+        input.files = dataTransfer.files;
+      });
+    }
+
+    // Initialize both upload fields
+    document.addEventListener('DOMContentLoaded', function() {
+      setupImageUpload('pet_photos_input', 'petPhotosPreviews', 'addPetPhotosBtn');
+      setupImageUpload('location_photos_input', 'locationPhotosPreviews', 'addLocationPhotosBtn');
+    });
+
+    // Valid ID Modal functions
+    function openValidIdModal() {
+      document.getElementById('validIdModal').classList.remove('hidden');
+    }
+
+    function closeValidIdModal() {
+      document.getElementById('validIdModal').classList.add('hidden');
+    }
+  </script>
 </x-layout>

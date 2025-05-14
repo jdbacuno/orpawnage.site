@@ -82,7 +82,7 @@ class AnimalAbuseReportController extends Controller
         if ($request->hasFile('valid_id')) {
             $validIdFile = $request->file('valid_id');
             $validIdName = "valid_id_{$validated['report_number']}." . $validIdFile->getClientOriginalExtension();
-            $validated['valid_id_path'] = $validIdFile->storeAs('valid_ids', $validIdName, 'public');
+            $validated['valid_id_path'] = $validIdFile->storeAs('abuse_report_valid_ids', $validIdName, 'public');
 
             // Remove the file object from validated data
             unset($validated['valid_id']);

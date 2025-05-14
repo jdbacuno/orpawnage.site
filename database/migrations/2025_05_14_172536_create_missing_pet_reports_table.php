@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('animal_abuse_reports', function (Blueprint $table) {
+        Schema::create('missing_pet_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('report_number')->unique(); // ← Add this line
-            $table->string('full_name')->nullable();
+            $table->string('report_number')->unique();
+            $table->string('owner_name');
             $table->string('contact_no');
-            $table->string('incident_location');
-            $table->date('incident_date');
-            $table->string('species');
-            $table->string('animal_condition');
-            $table->text('additional_notes');
+            $table->string('pet_name');
+            $table->string('last_seen_location');
+            $table->date('last_seen_date');
+            $table->text('pet_description');
             $table->string('valid_id_path');
-            $table->json('incident_photos');
+            $table->json('pet_photos');
+            $table->json('location_photos')->nullable();
             $table->string('status')->default('pending');
-            $table->string('reject_reason')->default('');
+            $table->string('reject_reason')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('animal_abuse_reports');
+        Schema::dropIfExists('missing_pet_reports');
     }
 };

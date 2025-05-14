@@ -12,6 +12,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -246,5 +247,59 @@ class AdoptionApplicationController extends Controller
         } while (AdoptionApplication::where('transaction_number', $transactionNumber)->exists());
 
         return $transactionNumber;
+    }
+
+    public function resendEmail($id)
+    {
+        $application = AdoptionApplication::findOrFail($id);
+
+        // Logic to send email...
+        $application->user->notify(new AdoptionStatusNotification($application));
+
+        return back()->with('success', 'Confirmation email resent successfully.');
+    }
+
+    public function schedulePickup(Request $request, $id)
+    {
+        $application = AdoptionApplication::findOrFail($id);
+
+        $validated = $request->validate([
+            'pickup_date' => 'required|date|after_or_equal:today'
+        ]);
+
+        $pickupDate = Carbon::parse($validated['pickup_date']);
+
+        // Build 7 business day window (including today if not weekend)
+        $start = Carbon::now();
+        $end = $start->copy();
+        $businessDays = 0;
+        while ($businessDays < 7) {
+            if (!$end->isWeekend()) $businessDays++;
+            if ($businessDays < 7) $end->addDay();
+        }
+
+        if ($pickupDate->gt($end) || $pickupDate->isWeekend()) {
+            return redirect()->back()->withErrors(['pickup_date' => 'Date must be a weekday within 7 business days.']);
+        }
+
+        $application->pickup_date = $pickupDate;
+        $application->status = 'adoption on-going';
+        $application->save();
+
+        $application->user->notify(new AdoptionStatusNotification($application));
+
+        return redirect()->back()->with('success', 'Pickup scheduled successfully!');
+    }
+
+    public function destroy(AdoptionApplication $application)
+    {
+        // Delete the associated photo if it exists
+        if ($application->valid_id) {
+            Storage::disk('public')->delete($application->valid_id);
+        }
+
+        $application->delete();
+
+        return redirect()->back()->with('success', 'Adoption request deleted successfully.');
     }
 }

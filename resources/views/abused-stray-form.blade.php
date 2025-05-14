@@ -279,7 +279,7 @@
           img.className = 'h-24 w-full object-cover rounded-lg border border-gray-300';
 
           const removeBtn = document.createElement('i');
-          removeBtn.className = 'absolute top-[-2px] right-[-2px] text-white bg-black/70 rounded-full p-1 text-sm ph-fill ph-x-circle hover:text-red-400 cursor-pointer';
+          removeBtn.className = 'absolute top-[-3px] right-[-1px] text-white rounded-full p-1 text-sm ph-fill ph-x-circle hover:text-red-400 cursor-pointer';
           removeBtn.onclick = function () {
             previewDiv.remove();
 

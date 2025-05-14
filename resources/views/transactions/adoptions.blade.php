@@ -137,7 +137,7 @@
             <button type="button"
               class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
               id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
-              onclick="toggleDropdown('{{ $application->id }}')">
+              onclick="toggleDropdownMenu('{{ $application->id }}')">
               <span class="mr-2">Actions</span>
               <span class="px-2 py-1 text-xs rounded 
         {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
@@ -496,7 +496,7 @@
 
   <script>
     // Improved toggle function for upward dropdown
-    function toggleDropdown(id) {
+    function toggleDropdownMenu(id) {
       const dropdown = document.getElementById(`dropdown-${id}`);
       dropdown.classList.toggle('hidden');
       
@@ -612,7 +612,7 @@
 
     function openCancelModal(appId) {
       document.getElementById('cancelModal').classList.remove('hidden');
-      document.getElementById('deleteForm').action = `/transactions/${appId}`;
+      document.getElementById('deleteForm').action = `/transactions/adoption-status/${appId}`;
     }
 
     function closeCancelModal() {

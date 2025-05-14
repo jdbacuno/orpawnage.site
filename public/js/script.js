@@ -1,3 +1,8 @@
+function toggleDropdown(id) {
+  const element = document.getElementById(id);
+  element.classList.toggle('hidden');
+}
+
 function toggleMobileDropdown(dropdownId) {
   const dropdown = document.getElementById(dropdownId);
   const buttonId = dropdownId.replace('mobileDropdownNavbar', 'mobileDropdownNavbarLink');
@@ -7,9 +12,3 @@ function toggleMobileDropdown(dropdownId) {
   icon.classList.toggle('rotate-180');
 }
 
-console.log('HELLO');
-
-function toggleDropdown(id) {
-  const element = document.getElementById(id);
-  element.classList.toggle('hidden');
-}

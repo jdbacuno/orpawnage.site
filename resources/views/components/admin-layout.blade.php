@@ -70,7 +70,8 @@
           </li>
 
           {{-- will put or "admin/missing-pets" later --}}
-          <li class="mb-1 group {{ request()->is('admin/abused-or-stray-pets') ? 'selected' : '' }}">
+          <li
+            class="mb-1 group {{ request()->is('admin/abused-or-stray-pets') || request()->is('admin/missing-pets') ? 'selected' : '' }}">
             <a href="#"
               class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-yellow-400/60 group-[.selected]:text-black sidebar-dropdown-toggle">
               <i class="ph-fill ph-warning-circle mr-3 text-lg"></i>
@@ -78,8 +79,8 @@
               <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
             </a>
             <ul class="pl-7 mt-2 hidden group-[.selected]:block">
-              <li class="mb-1 group">
-                <a href="#"
+              <li class="mb-1 group {{ request()->is('admin/missing-pets') ? 'active' : '' }}">
+                <a href="/admin/missing-pets"
                   class="text-gray-900 text-sm flex items-center before:contents-[''] before:w-1 hover:bg-yellow-400 hover:text-black hover:font-semibold p-2 rounded-full group-[.active]:bg-yellow-400 group-[.active]:text-black">
                   Missing Pets
                 </a>
@@ -93,6 +94,14 @@
 
               </li>
             </ul>
+          </li>
+
+          <li class="mb-1 group {{ request()->is('admin/archives') ? 'active' : '' }}">
+            <a href="/admin/archives"
+              class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
+              <i class=" ph-fill ph-archive mr-3 text-lg"></i>
+              <span class="text-sm">Archives</span>
+            </a>
           </li>
 
           <li class="mb-1 group">

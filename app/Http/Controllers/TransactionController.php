@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
+use App\Models\MissingPetReport;
 use App\Notifications\AdoptionStatusNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -54,12 +55,32 @@ class TransactionController extends Controller
 
     public function missing(Request $request)
     {
-        // Similar structure for missing pet reports
         $userId = Auth::id();
-        $applications = []; // Replace with your actual query
+        $status = $request->get('status');
+
+        $query = MissingPetReport::where('user_id', $userId);
+
+        // Status filter
+        switch ($status) {
+            case 'pending':
+                $query->where('status', 'pending');
+                break;
+            case 'acknowledged':
+                $query->where('status', 'acknowledged');
+                break;
+            case 'rejected':
+                $query->where('status', 'rejected');
+                break;
+            default:
+                // No additional filtering for 'all' or empty status
+                break;
+        }
+
+        $reports = $query->latest()->paginate(9);
 
         return view('transactions.missing', [
-            'applications' => $applications,
+            'missingReports' => $reports,
+            'status' => $status,
         ]);
     }
 
@@ -95,59 +116,5 @@ class TransactionController extends Controller
             'abusedReports' => $reports,
             'status' => $status,
         ]);
-    }
-
-    public function resendEmail($id)
-    {
-        $application = AdoptionApplication::findOrFail($id);
-
-        // Logic to send email...
-        $application->user->notify(new AdoptionStatusNotification($application));
-
-        return back()->with('success', 'Confirmation email resent successfully.');
-    }
-
-    public function schedulePickup(Request $request, $id)
-    {
-        $application = AdoptionApplication::findOrFail($id);
-
-        $validated = $request->validate([
-            'pickup_date' => 'required|date|after_or_equal:today'
-        ]);
-
-        $pickupDate = Carbon::parse($validated['pickup_date']);
-
-        // Build 7 business day window (including today if not weekend)
-        $start = Carbon::now();
-        $end = $start->copy();
-        $businessDays = 0;
-        while ($businessDays < 7) {
-            if (!$end->isWeekend()) $businessDays++;
-            if ($businessDays < 7) $end->addDay();
-        }
-
-        if ($pickupDate->gt($end) || $pickupDate->isWeekend()) {
-            return redirect()->back()->withErrors(['pickup_date' => 'Date must be a weekday within 7 business days.']);
-        }
-
-        $application->pickup_date = $pickupDate;
-        $application->status = 'adoption on-going';
-        $application->save();
-
-        $application->user->notify(new AdoptionStatusNotification($application));
-
-        return redirect()->back()->with('success', 'Pickup scheduled successfully!');
-    }
-
-    public function destroy(AdoptionApplication $application)
-    {
-        // Delete the associated photo if it exists
-        if ($application->valid_id) {
-            Storage::disk('public')->delete($application->valid_id);
-        }
-
-        $application->delete();
-
-        return redirect()->back()->with('success', 'Adoption request deleted successfully.');
     }
 }
