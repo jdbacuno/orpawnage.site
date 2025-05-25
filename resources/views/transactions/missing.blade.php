@@ -94,9 +94,9 @@
             <p>{{ $report->contact_no ?: 'Not provided' }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">Location</p>
+            <p class="text-gray-500 font-medium">Last Seen Location</p>
             <!-- Trigger Text -->
-            <p onclick="showTextModal(`{{ $report->last_seen_location }}`)"
+            <p data-title="Last Seen Location" onclick="showTextModal(this, `{{ $report->last_seen_location }}`)"
               class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
               {{ Str::limit($report->last_seen_location, 20) }}
             </p>
@@ -116,7 +116,18 @@
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              {{ $report->pet_description ?: 'No description provided' }}
+              @if($report->pet_description)
+              {{ Str::limit($report->pet_description, 20) }}
+              @if(strlen($report->pet_description) > 20)
+              <button data-title="Pet Description"
+                onclick="showTextModal(this, {{ json_encode($report->pet_description) }})"
+                class="text-blue-500 hover:text-blue-700 text-xs ml-1">
+                Read More
+              </button>
+              @endif
+              @else
+              No notes provided
+              @endif
             </div>
           </div>
 
@@ -230,14 +241,16 @@
       <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x"></i>
       </button>
-      <h2 class="text-md font-semibold text-gray-800">Last Seen Location</h2>
+      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Last Seen Location
+      </h2>
       <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
     </div>
   </div>
 
   <script>
     // incident location
-    function showTextModal(text) {
+    function showTextModal(el, text) {
+      document.getElementById('textTitle').textContent = el.dataset.title;
       document.getElementById('textModalContent').textContent = text;
       document.getElementById('textModal').classList.remove('hidden');
     }

@@ -17,7 +17,7 @@ class FeaturedPetController extends Controller
                 $query->whereNull('archived_at'); // Exclude pets that are archived (archived_at is not null)
             })
             ->orderBy('adoption_probability') // Show lowest probability first
-            ->paginate(8); // Paginate with 8 per page
+            ->paginate(50); // Paginate with 8 per page
 
         return view('featured', compact('featuredPets'));
     }

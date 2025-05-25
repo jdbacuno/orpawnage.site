@@ -138,7 +138,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Profile Settings Route
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('settings')->group(function () {
-        Route::get('/', [SettingsController::class, 'show'])->name('settings');
         Route::patch('/email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
         Route::patch('/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
         Route::patch('/contact', [SettingsController::class, 'updateContact'])->name('settings.contact.update');

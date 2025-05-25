@@ -97,26 +97,10 @@
 
         <!-- Details Section -->
         <div class="p-4 space-y-3">
-          <!-- Status and Date Archived -->
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-500">Status</span>
-            <span class="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700">
-              Archived
-            </span>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-500">Date Archived</span>
-            <span class="text-sm text-gray-900">
-              {{ \Carbon\Carbon::parse($type === 'pets' ? $item->archived_at : $item->updated_at)->format('M d, Y h:i
-              A') }}
-            </span>
-          </div>
-
           <!-- Type-Specific Information -->
           @if($type === 'pets')
           <!-- Pet Details -->
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Species</span>
               <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
@@ -153,7 +137,7 @@
 
           @elseif($type === 'adoption')
           <!-- Adoption Application Details -->
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Pet</span>
               <span class="text-sm text-gray-900">{{ $item->pet->pet_name }} ({{ ucfirst($item->species == 'feline' ?
@@ -169,18 +153,11 @@
               <span class="text-sm font-medium text-gray-500">Contact</span>
               <span class="text-sm text-gray-900">{{ $item->contact_number }}</span>
             </div>
-
-            @if($item->previous_status)
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Previous Status</span>
-              <span class="text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $item->previous_status)) }}</span>
-            </div>
-            @endif
           </div>
 
           @elseif($type === 'surrender')
           <!-- Surrender Application Details -->
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Pet Name</span>
               <span class="text-sm text-gray-900">{{ $item->pet_name }}</span>
@@ -195,58 +172,53 @@
               <span class="text-sm font-medium text-gray-500">Reason</span>
               <span class="text-sm text-gray-900">{{ Str::limit($item->surrender_reason, 20) }}</span>
             </div>
-
-            @if($item->previous_status)
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Previous Status</span>
-              <span class="text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $item->previous_status)) }}</span>
-            </div>
-            @endif
           </div>
 
           @elseif($type === 'missing')
           <!-- Missing Pet Report Details -->
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Pet Description</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->pet_description, 20) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Location</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->last_seen_location, 20) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Last Seen</span>
-              <span class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($item->last_seen_date)->format('M d, Y') }}
+              <span class="text-sm font-medium text-gray-500">Additional Info</span>
+              <span data-title="Additional Info" onclick="showTextModal(this, `{{ $item->pet_description }}`)"
+                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
+                {{ Str::limit($item->pet_description, 20) }}
               </span>
             </div>
 
-            @if($item->previous_status)
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Previous Status</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->previous_status) }}</span>
+              <span class="text-sm font-medium text-gray-500">Last Seen Location</span>
+              <span data-title="Last Seen Location" onclick="showTextModal(this, `{{ $item->last_seen_location }}`)"
+                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
+                {{ Str::limit($item->last_seen_location, 20) }}
+              </span>
             </div>
-            @endif
+
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-500">Last Seen Date</span>
+              <span class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($item->last_seen_date)->format('M d, Y') }}
+              </span>
+            </div>
           </div>
 
           @elseif($type === 'abused')
           <!-- Animal Abuse Report Details -->
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Species</span>
               <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Condition</span>
+              <span class="text-sm font-medium text-gray-500">Incident</span>
               <span class="text-sm text-gray-900">{{ ucfirst($item->animal_condition) }}</span>
             </div>
 
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Incident Location</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->incident_location, 20) }}</span>
+              <span data-title="Incident Location" onclick="showTextModal(this, `{{ $item->incident_location }}`)"
+                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
+                {{ Str::limit($item->incident_location, 20) }}
+              </span>
             </div>
 
             <div class="flex items-center justify-between">
@@ -257,15 +229,12 @@
 
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Additional Notes</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->additional_notes, 20) }}</span>
-            </div>
 
-            @if($item->previous_status)
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Previous Status</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->previous_status) }}</span>
+              <span data-title="Notes" onclick="showTextModal(this, `{{ $item->additional_notes }}`)"
+                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
+                {{ Str::limit($item->additional_notes, 20) }}
+              </span>
             </div>
-            @endif
           </div>
           @endif
         </div>
@@ -348,7 +317,28 @@
     </div>
   </div>
 
+  {{-- TEXT MODAL --}}
+  <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
+      <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
+      </button>
+      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Incident Location</h2>
+      <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
+    </div>
+  </div>
+
   <script>
+    function showTextModal(el, text) {
+      document.getElementById('textTitle').textContent = el.dataset.title;
+      document.getElementById('textModalContent').textContent = text;
+      document.getElementById('textModal').classList.remove('hidden');
+    }
+
+    function closeTextModal() {
+      document.getElementById('textModal').classList.add('hidden');
+    }
+
     // Improved toggle function for upward dropdown
     function toggleDropdown(id) {
       const dropdown = document.getElementById(`dropdown-${id}`);

@@ -73,6 +73,22 @@
       /* Adjust based on your content */
       transition: max-height 0.5s ease-in;
     }
+
+    .tab-button.border-orange-500 {
+      border-color: #ff7206;
+    }
+
+    .tab-button.text-orange-600 {
+      color: #ea580c;
+    }
+
+    .tab-button.border-transparent {
+      border-color: transparent;
+    }
+
+    .tab-button.text-gray-500 {
+      color: #6b7280;
+    }
   </style>
 
   @vite(['resources/css/orpawnage-animation.css'])
@@ -213,10 +229,10 @@
                     Status</a>
                 </li>
 
+                <!-- Add this near the user dropdown menu items in layout.blade.php -->
                 <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-gear"></i>
-                  <a href="/settings" class="block py-2 text-sm">Profile
-                    Settings</a>
+                  <button onclick="openSettingsModal()" class="block py-2 text-sm">Profile Settings</button>
                 </li>
                 <li class="mx-4 mb-2 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-sign-out"></i>
@@ -511,6 +527,555 @@
 text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full transition-opacity duration-300">
     <i class="ph-fill ph-arrow-up"></i>
   </button>
+
+  @php
+  // Determine which tab should be active based on the errors
+  $activeTab = 'account-tab';
+  if ($errors->has('current_password') || $errors->has('password')) {
+  $activeTab = 'password-tab';
+  } elseif ($errors->has('delete_current_password')) {
+  $activeTab = 'danger-tab';
+  } elseif ($errors->has('email') || $errors->has('email_current_password') ||
+  $errors->has('contact_number') || $errors->has('contact_current_password')) {
+  $activeTab = 'account-tab';
+  }
+
+  // Check if modal should be open
+  $modalOpen = $errors->has('email') || $errors->has('email_current_password') ||
+  $errors->has('contact_number') || $errors->has('contact_current_password') ||
+  $errors->has('current_password') || $errors->has('password') ||
+  $errors->has('delete_current_password');
+  @endphp
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+
+      <!-- Modal content -->
+      <div
+        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-4xl sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="w-full">
+              <!-- Header -->
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">
+                  <i class="ph-fill ph-gear mr-2 text-orange-400"></i>Account Settings
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-500">
+                  <i class="ph-fill ph-x text-2xl"></i>
+                </button>
+              </div>
+
+              <!-- Tabs -->
+              <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                  <button onclick="switchTab('account-tab')" id="account-tab-btn"
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'account-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    Account
+                  </button>
+                  <button onclick="switchTab('password-tab')" id="password-tab-btn"
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    Password
+                  </button>
+                  @if (!auth()->user()->isAdmin)
+                  <button onclick="switchTab('danger-tab')" id="danger-tab-btn"
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'danger-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    Danger Zone
+                  </button>
+                  @endif
+                </nav>
+              </div>
+
+              <!-- Tab content -->
+              <div class="py-4">
+                <!-- Success Alert -->
+                @if(session('success'))
+                <div id="alert-3"
+                  class="flex items-center pl-4 pr-6 py-3 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
+                  role="alert">
+                  <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div class="ms-3 text-sm font-medium">
+                    {!! session('success') !!}
+                  </div>
+                  <button type="button"
+                    class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+                    data-dismiss-target="#alert-3" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                  </button>
+                </div>
+                @endif
+
+                <!-- Account Tab -->
+                <div id="account-tab" class="tab-content {{ $activeTab === 'account-tab' ? 'activeTab' : 'hidden' }}">
+                  <!-- Email Verification Status -->
+                  <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4 mb-6">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-start">
+                        <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
+                        <div>
+                          <h3 class="text-lg font-medium text-gray-900">Email Verification</h3>
+                          <p class="text-sm text-gray-700">
+                            Status: <span
+                              class="{{ auth()->user()->hasVerifiedEmail() ? 'text-green-600 font-medium' : 'text-red-600 font-medium' }}">
+                              {{ auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Not Verified' }}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      @unless(auth()->user()->hasVerifiedEmail())
+                      <form method="POST" action="{{ route('verification.send') }}#settingsModal">
+                        @csrf
+                        <button type="submit"
+                          class="text-sm bg-orange-400 hover:bg-orange-500 text-white px-4 py-2 rounded-md transition">
+                          Resend Verification
+                        </button>
+                      </form>
+                      @endunless
+                    </div>
+                  </div>
+
+                  <!-- Email Update -->
+                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-envelope mr-2 text-orange-400"></i>Change Email Address
+                    </h3>
+                    <form method="POST" action="{{ route('settings.email.update') }}" id="emailUpdateForm">
+                      @csrf
+                      @method('PATCH')
+
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Email</label>
+                          <input type="email" value="{{ auth()->user()->email }}"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
+                          <input type="email" name="email" value="{{ old('email') }}" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="New email address">
+                          <x-form-error name="email" />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                          <div class="relative">
+                            <input type="password" name="email_current_password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Enter your current password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="email_current_password" />
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                          <button type="submit"
+                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Update Email
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Contact Number Update -->
+                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-phone mr-2 text-orange-400"></i>Update Contact Number
+                    </h3>
+                    <form method="POST" action="{{ route('settings.contact.update') }}" id="contactUpdateForm">
+
+                      @csrf
+                      @method('PATCH')
+
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
+                          <input type="tel" value="{{ auth()->user()->contact_number }}"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
+                          <input type="tel" name="contact_number" value="{{ old('contact_number') }}"
+                            pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
+                          <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
+                          <x-form-error name="contact_number" />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                          <div class="relative">
+                            <input type="password" name="contact_current_password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Enter your current password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="contact_current_password" />
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                          <button type="submit"
+                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Update Contact
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Password Tab -->
+                <div id="password-tab" class="tab-content {{ $activeTab === 'password-tab' ? 'activeTab' : 'hidden' }}">
+                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-lock mr-2 text-orange-400"></i>Change Password
+                    </h3>
+                    <form method="POST" action="{{ route('settings.password.update') }}" id="passwordChangeForm">
+                      @csrf
+                      @method('PATCH')
+
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                          <div class="relative">
+                            <input type="password" name="current_password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Current password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="current_password" />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
+                          <div class="relative">
+                            <input type="password" id="password" name="password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="New password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="password" />
+
+                          <!-- Password Strength Meter -->
+                          <div class="mt-2 space-y-2">
+                            <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
+                            <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
+                              <div id="strength-progress"
+                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                            </div>
+                          </div>
+
+                          <!-- Password Requirements -->
+                          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
+                            <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                              <i class="ph-fill ph-info mr-2"></i>Password Requirements
+                            </h4>
+                            <ul class="text-xs space-y-1">
+                              <li id="req-length" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
+                              </li>
+                              <li id="req-uppercase" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
+                              </li>
+                              <li id="req-lowercase" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
+                              </li>
+                              <li id="req-number" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
+                              </li>
+                              <li id="req-symbol" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
+                          <div class="relative">
+                            <input type="password" name="password_confirmation" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Confirm new password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                          <button type="submit"
+                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Update Password
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Danger Zone Tab -->
+                <div id="danger-tab" class="tab-content {{ $activeTab === 'danger-tab' ? 'activeTab' : 'hidden' }}">
+                  @if (!auth()->user()->isAdmin)
+                  <div class="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-red-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-trash mr-2 text-red-500"></i>Delete Account
+                    </h3>
+                    <p class="text-sm text-gray-700 mb-4">
+                      Once you delete your account, there is no going back. Please be certain.
+                    </p>
+
+                    <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
+                      @csrf
+                      @method('DELETE')
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                        <div class="relative">
+                          <input type="password" name="delete_current_password" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
+                            placeholder="Enter your current password">
+                          <button type="button" onclick="togglePasswordVisibility(this)"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <i class="ph-fill ph-eye text-lg"></i>
+                          </button>
+                        </div>
+                        <x-form-error name="delete_current_password" />
+                      </div>
+
+                      <div class="pt-2 flex justify-end">
+                        <button type="submit"
+                          class="px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                          <i class="ph-fill ph-warning-circle mr-2"></i>Delete Account Permanently
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  @endif
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Settings Modal Functions
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+      // Reset to first tab when opening
+      switchTab('account-tab');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    // Update your DOMContentLoaded event listener
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if we should open the modal (from URL hash)
+      if (window.location.hash.includes('settingsModal')) {
+        openSettingsModal();
+        
+        // Parse the tab parameter from the URL
+        const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+        const tab = urlParams.get('tab');
+        
+        // Switch to the specified tab if valid
+        if (tab && ['account-tab', 'password-tab', 'danger-tab'].includes(tab)) {
+            switchTab(tab);
+        }
+      }
+    });
+
+    // Modify your switchTab function to update URL
+    function switchTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.add('hidden');
+          tab.classList.remove('activeTab');
+      });
+      
+      // Deactivate all tab buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+          button.classList.remove('border-orange-500', 'text-orange-600');
+          button.classList.add('border-transparent', 'text-gray-500');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById(tabId).classList.add('activeTab');
+      
+      // Activate selected tab button
+      const tabButton = document.getElementById(tabId + '-btn');
+      tabButton.classList.remove('border-transparent', 'text-gray-500');
+      tabButton.classList.add('border-orange-500', 'text-orange-600');
+      
+      // Update URL without reloading
+      history.replaceState(null, null, '#settingsModal?tab=' + tabId);
+    }
+
+    // Password strength checker
+    const passwordInput = document.getElementById('password');
+    const strengthText = document.getElementById('strength-text');
+    const strengthProgress = document.getElementById('strength-progress');
+
+    const reqLength = document.getElementById('req-length');
+    const reqUpper = document.getElementById('req-uppercase');
+    const reqLower = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+    const reqSymbol = document.getElementById('req-symbol');
+
+    const updateRequirement = (condition, element) => {
+      if (condition) {
+        element.classList.remove('text-blue-700');
+        element.classList.add('text-green-600');
+        element.querySelector('i').classList.replace('ph-circle', 'ph-check-circle');
+      } else {
+        element.classList.remove('text-green-600');
+        element.classList.add('text-blue-700');
+        element.querySelector('i').classList.replace('ph-check-circle', 'ph-circle');
+      }
+    };
+
+    const updateStrength = (password) => {
+      const hasLength = password.length >= 6;
+      const hasUpper = /[A-Z]/.test(password);
+      const hasLower = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSymbol = /[^A-Za-z0-9]/.test(password);
+
+      updateRequirement(hasLength, reqLength);
+      updateRequirement(hasUpper, reqUpper);
+      updateRequirement(hasLower, reqLower);
+      updateRequirement(hasNumber, reqNumber);
+      updateRequirement(hasSymbol, reqSymbol);
+
+      let strength = 0;
+      if (hasLength) strength += 1;
+      if (hasUpper) strength += 1;
+      if (hasLower) strength += 1;
+      if (hasNumber) strength += 1;
+      if (hasSymbol) strength += 1;
+
+      let progressPercentage = (strength / 5) * 100;
+      strengthProgress.style.width = `${progressPercentage}%`;
+
+      if (progressPercentage === 0) {
+        strengthText.innerText = 'Start typing to see strength...';
+        strengthProgress.style.backgroundColor = '#ef4444'; // Red
+      } else if (progressPercentage < 40) {
+        strengthText.innerText = 'Weak';
+        strengthText.className = 'text-xs text-red-600';
+        strengthProgress.style.backgroundColor = '#ef4444'; // Red
+      } else if (progressPercentage < 70) {
+        strengthText.innerText = 'Medium';
+        strengthText.className = 'text-xs text-yellow-600';
+        strengthProgress.style.backgroundColor = '#f59e0b'; // Orange
+      } else {
+        strengthText.innerText = 'Strong';
+        strengthText.className = 'text-xs text-green-600';
+        strengthProgress.style.backgroundColor = '#10b981'; // Green
+      }
+    };
+
+    passwordInput.addEventListener('input', () => {
+      updateStrength(passwordInput.value);
+    });
+
+    // Toggle password visibility
+    function togglePasswordVisibility(button) {
+      const input = button.parentElement.querySelector('input');
+      const type = input.type === 'password' ? 'text' : 'password';
+      input.type = type;
+      button.innerHTML = type === 'password' 
+        ? '<i class="ph-fill ph-eye text-lg"></i>' 
+        : '<i class="ph-fill ph-eye-slash text-lg"></i>';
+    }
+
+    // Prevent default form submission and handle it manually
+    document.getElementById('emailUpdateForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // You can add validation or other logic here before submission
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
+      
+      // Submit the form after validation
+      this.submit();
+    });
+
+    document.getElementById('contactUpdateForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // You can add validation or other logic here before submission
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
+      
+      // Submit the form after validation
+      this.submit();
+    });
+
+    document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // You can add validation or other logic here before submission
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
+      
+      // Submit the form after validation
+      this.submit();
+    });
+
+    document.getElementById('deleteAccountForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // You can add validation or other logic here before submission
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
+      
+      // Submit the form after validation
+      this.submit();
+    });
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>

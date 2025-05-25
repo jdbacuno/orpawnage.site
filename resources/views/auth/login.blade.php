@@ -93,10 +93,10 @@
                     </svg>
                   </span>
                 </div>
+                <x-form-error name="password" />
                 <a href="/forgot-password"
                   class="text-sm font-medium text-blue-600 hover:text-blue-500 flex justify-end">Forgot
                   password?</a>
-                <x-form-error name="password" />
               </div>
 
               <!-- Submit Button -->

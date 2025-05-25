@@ -115,10 +115,10 @@
                   <x-form-error name="last_seen_date" />
                 </div>
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Pet Description</label>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Additional Info</label>
                   <textarea name="pet_description"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    rows="4" placeholder="Breed, color, distinguishing marks, etc."
+                    rows="4" placeholder="Breed, color, distinguishing marks, reward amount etc."
                     required>{{ old('pet_description') }}</textarea>
                   <x-form-error name="pet_description" />
                 </div>

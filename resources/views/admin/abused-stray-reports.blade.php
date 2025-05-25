@@ -95,7 +95,7 @@
           </div>
           <div>
             <p class="text-gray-500 font-medium">Where</p>
-            <p onclick="showTextModal(`{{ $report->incident_location }}`)"
+            <p data-title="Incident Location" onclick="showTextModal(this, `{{ $report->incident_location }}`)"
               class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
               {{ Str::limit($report->incident_location, 20) }}
             </p>
@@ -115,7 +115,17 @@
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              {{ $report->additional_notes ?: 'No notes provided' }}
+              @if($report->additional_notes)
+              {{ Str::limit($report->additional_notes, 20) }}
+              @if(strlen($report->additional_notes) > 20)
+              <button data-title="Notes" onclick="showTextModal(this, {{ json_encode($report->additional_notes) }})"
+                class="text-blue-500 hover:text-blue-700 text-xs ml-1">
+                Read More
+              </button>
+              @endif
+              @else
+              No notes provided
+              @endif
             </div>
           </div>
 
@@ -305,7 +315,7 @@
       <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x"></i>
       </button>
-      <h2 class="text-md font-semibold text-gray-800">Incident Location</h2>
+      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Incident Location</h2>
       <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
     </div>
   </div>
@@ -341,7 +351,8 @@
 
   <script>
     // incident location
-    function showTextModal(text) {
+    function showTextModal(el, text) {
+      document.getElementById('textTitle').textContent = el.dataset.title;
       document.getElementById('textModalContent').textContent = text;
       document.getElementById('textModal').classList.remove('hidden');
     }

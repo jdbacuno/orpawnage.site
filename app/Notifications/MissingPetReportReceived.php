@@ -38,7 +38,7 @@ class MissingPetReportReceived extends Notification implements ShouldQueue
   public function toMail(object $notifiable): MailMessage
   {
     return (new MailMessage)
-      ->subject('Missing Pet Report Received - ' . $this->report->report_number)
+      ->subject('Missing Pet Report - Received - ' . $this->report->report_number)
       ->greeting('Hello ' . $notifiable->full_name . ',')
       ->line('Thank you for submitting a missing pet report. We understand this is a difficult time, and we appreciate your trust in our system.')
       ->line('Your report has been received and is under review by our team.')

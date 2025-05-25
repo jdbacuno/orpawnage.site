@@ -85,16 +85,16 @@
             <p>{{ $report->pet_name }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">Species</p>
-            <p>{{ ucfirst($report->species) }}</p>
-          </div>
-          <div>
             <p class="text-gray-500 font-medium">Last Seen</p>
             <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M j, Y') }}</p>
           </div>
           <div>
-            <p class="text-gray-500 font-medium">Location</p>
-            <p onclick="showTextModal(`{{ $report->last_seen_location }}`)"
+            <p class="text-gray-500 font-medium">Contact</p>
+            <p>{{ $report->contact_no ?: 'Not provided' }}</p>
+          </div>
+          <div>
+            <p class="text-gray-500 font-medium">Last Seen Location</p>
+            <p data-title="Last Seen Location" onclick="showTextModal(this, `{{ $report->last_seen_location }}`)"
               class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
               {{ Str::limit($report->last_seen_location, 20) }}
             </p>
@@ -109,12 +109,23 @@
               class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
               <span class="flex items-center">
                 <i class="ph-fill ph-note-pencil mr-2 text-sm"></i>
-                Pet Description
+                Additional Info
               </span>
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              {{ $report->pet_description ?: 'No description provided' }}
+              @if($report->pet_description)
+              {{ Str::limit($report->pet_description, 20) }}
+              @if(strlen($report->pet_description) > 20)
+              <button data-title="Additional Info"
+                onclick="showTextModal(this, {{ json_encode($report->pet_description) }})"
+                class="text-blue-500 hover:text-blue-700 text-xs ml-1">
+                Read More
+              </button>
+              @endif
+              @else
+              No notes provided
+              @endif
             </div>
           </div>
 
@@ -142,18 +153,18 @@
           </div>
 
           <!-- Location Photos -->
-          @if($report->location_photos && count(json_decode($report->location_photos)) > 0)
           <div>
             <button
               class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
               <span class="flex items-center">
                 <i class="ph-fill ph-map-pin mr-2 text-sm"></i>
-                Location Photos ({{ count(json_decode($report->location_photos)) }})
+                Location Photos ({{ count(json_decode($report->location_photos ?? '[]')) }})
               </span>
               <i class="ph-fill ph-caret-down text-sm"></i>
             </button>
             <div class="hidden mt-2">
               <div class="flex flex-wrap gap-1">
+                @if($report->location_photos)
                 @foreach(json_decode($report->location_photos) as $photo)
                 <button type="button" class="show-image-btn" data-image-title="Location Photo"
                   data-image="{{ asset('storage/' . $photo) }}">
@@ -161,26 +172,7 @@
                     class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
                 </button>
                 @endforeach
-              </div>
-            </div>
-          </div>
-          @endif
-
-          <!-- Reporter Info -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-user-circle mr-2 text-sm"></i>
-                Reporter Info
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden text-sm mt-1">
-              <div class="space-y-1 px-1">
-                <p><span class="text-gray-500">Name:</span> {{ $report->owner_name }}</p>
-                <p><span class="text-gray-500">Contact:</span> {{ $report->contact_no ?: 'Not provided' }}</p>
-                <p><span class="text-gray-500">Email:</span> {{ $report->user->email ?? 'Not provided' }}</p>
+                @endif
               </div>
             </div>
           </div>
@@ -327,7 +319,7 @@
       <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x"></i>
       </button>
-      <h2 class="text-md font-semibold text-gray-800">Last Seen Location</h2>
+      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Last Seen Location</h2>
       <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
     </div>
   </div>
@@ -363,7 +355,8 @@
 
   <script>
     // location modal
-    function showTextModal(text) {
+    function showTextModal(el, text) {
+      document.getElementById('textTitle').textContent = el.dataset.title;
       document.getElementById('textModalContent').textContent = text;
       document.getElementById('textModal').classList.remove('hidden');
     }

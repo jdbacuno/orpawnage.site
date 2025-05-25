@@ -52,7 +52,7 @@
     }
 
     .main-image img {
-      max-width: 100%;
+      width: 100%;
       height: auto;
       border: 1px solid #ddd;
       border-radius: 4px;
@@ -85,11 +85,12 @@
       margin-top: 10px;
     }
 
-    .photo-gallery .images-container {
+    .photo-gallery {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      justify-content: flex-start;
+      justify-content: space-between;
+      align-items: baseline;
       margin: 10px 0;
     }
 
@@ -209,7 +210,7 @@
         <span class="detail-label">Last Seen:</span> {{ date('F j, Y', strtotime($report->last_seen_date)) }}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Location:</span> {{ $report->last_seen_location }}
+        <span class="detail-label">Last Seen Location:</span> {{ $report->last_seen_location }}
       </div>
       <div class="detail-row">
         <span class="detail-label">Description:</span> {{ $report->pet_description }}
@@ -219,30 +220,26 @@
     @if(count($allPetPhotos) > 0)
     <h3>More Photos of {{ $report->pet_name }}:</h3>
     <div class="photo-gallery">
-      <div class="images-container">
-        @foreach($allPetPhotos as $photo)
-        @php
-        $embeddedUrl = $message->embed(storage_path('app/public/' . str_replace('storage/', '', $photo)));
-        @endphp
-        <img src="{{ $embeddedUrl }}" alt="Additional photos of {{ $report->pet_name }}"
-          onclick="openModal('{{ $embeddedUrl }}')">
-        @endforeach
-      </div>
+      @foreach($allPetPhotos as $photo)
+      @php
+      $embeddedUrl = $message->embed(storage_path('app/public/' . str_replace('storage/', '', $photo)));
+      @endphp
+      <img src="{{ $embeddedUrl }}" alt="Additional photos of {{ $report->pet_name }}"
+        onclick="openModal('{{ $embeddedUrl }}')">
+      @endforeach
     </div>
     @endif
 
     @if(count($locationPhotos) > 0)
     <h3>Where Our Pet Was Last Seen or Might Have Gone:</h3>
     <div class="photo-gallery">
-      <div class="images-container">
-        @foreach($locationPhotos as $photo)
-        @php
-        $embeddedUrl = $message->embed(storage_path('app/public/' . str_replace('storage/', '', $photo)));
-        @endphp
-        <img src="{{ $embeddedUrl }}" alt="Location photos where {{ $report->pet_name }} was last seen"
-          onclick="openModal('{{ $embeddedUrl }}')">
-        @endforeach
-      </div>
+      @foreach($locationPhotos as $photo)
+      @php
+      $embeddedUrl = $message->embed(storage_path('app/public/' . str_replace('storage/', '', $photo)));
+      @endphp
+      <img src="{{ $embeddedUrl }}" alt="Location photos where {{ $report->pet_name }} was last seen"
+        onclick="openModal('{{ $embeddedUrl }}')">
+      @endforeach
     </div>
     @endif
 
