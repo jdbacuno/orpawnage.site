@@ -339,8 +339,9 @@
         <div class="flex gap-x-2 items-center">
           <label class="text-sm font-medium text-gray-600">Valid ID</label>
           <div>
-            <a id="adopterValidId" href="#" target="_blank" class="text-blue-500 underline text-sm">View Uploaded
-              ID</a>
+            <button id="viewValidId" class="text-blue-500 underline text-sm hover:text-blue-600 cursor-pointer">
+              View Uploaded ID
+            </button>
           </div>
         </div>
       </div>
@@ -503,7 +504,8 @@
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
-      <h2 class="text-xl font-semibold text-gray-800">Confirm Archive</h2>
+      <h2 class="text-xl font-semibold text-gray-800 flex items-center"> <i class="ph-fill ph-archive mr-2"></i>Confirm
+        Archive</h2>
       <p class="mb-4">Are you sure you want to archive this adoption application?</p>
       <p class="mb-4 text-gray-500 text-sm">Archived applications will be moved to a separate section and won't appear
         in the main list.</p>
@@ -517,11 +519,24 @@
           <button type="button" id="cancelArchive" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
             Cancel
           </button>
-          <button type="submit" class="bg-gray-600 px-4 py-2 text-white hover:bg-gray-500 rounded-md">
-            Confirm Archive
+          <button type="submit" class="bg-gray-600 px-4 py-2 text-white hover:bg-gray-500 rounded-md flex items-center">
+            <i class="ph-fill ph-archive mr-2"></i>Confirm Archive
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  {{-- VALID ID --}}
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
+      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
+      </button>
+      <h2 class="text-md font-semibold text-gray-800 mb-2">Uploaded Valid ID</h2>
+      <div class="w-full mt-2 flex justify-center items-center">
+        <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+      </div>
     </div>
   </div>
 
@@ -587,6 +602,20 @@
     // Cancel archive
     document.getElementById('cancelArchive').addEventListener('click', function() {
         document.getElementById('archiveModal').classList.add('hidden');
+    });
+
+    // View Valid ID in modal
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'viewValidId') {
+        const validIdUrl = document.getElementById('adopterValidId').getAttribute('data-src');
+        document.getElementById('modalImage').src = validIdUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+      }
+    });
+
+    // Close image modal
+    document.getElementById('closeImageModal').addEventListener('click', function() {
+      document.getElementById('imageModal').classList.add('hidden');
     });
   </script>
 </x-admin-layout>

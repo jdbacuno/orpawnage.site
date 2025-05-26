@@ -30,17 +30,22 @@ class PetArchivedNotification extends Notification implements ShouldQueue
         $petNumber = $this->pet->pet_number;
         $petName = $this->pet->pet_name !== 'N/A' ? $this->pet->pet_name : 'Unnamed';
 
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject("{$label} #{$petNumber} Has Been Archived")
             ->greeting("Pet Archive Notification")
-            ->line("We're archiving {$label} #{$petNumber} ({$petName}) from our active records.")
-            ->line('**Reason for Archiving:**')
-            ->line($this->pet->archive_reason)
-            ->when($this->pet->archive_notes, function ($mail) {
-                $mail->line('**Additional Notes:**')
-                    ->line($this->pet->archive_notes);
-            })
-            ->line('This pet is no longer available for adoption.')
+            ->line("We're archiving {$label} #{$petNumber} ({$petName}) from our active records.");
+
+        if ($this->pet->archive_reason === 'Other') {
+            $mail->line('**Reason for Archiving:**')
+                ->line($this->pet->archive_notes ?: 'No additional notes provided.');
+        } else {
+            $mail->line('**Reason for Archiving:**')
+                ->line($this->pet->archive_reason);
+        }
+
+        $mail->line('This pet is no longer available for adoption.')
             ->salutation("Regards,\n" . config('app.name'));
+
+        return $mail;
     }
 }

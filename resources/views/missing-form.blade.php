@@ -7,7 +7,8 @@
 
     <!-- Centered Form Card -->
     <div class="relative z-10 w-full max-w-4xl m-4">
-      <div class="p-6 rounded-xl bg-gray-50/90 border border-gray-300 shadow-md backdrop-blur-sm">
+      <div
+        class="p-6 rounded-xl bg-gray-50/90 border border-gray-300 shadow-md backdrop-blur-sm max-h-full sm:max-h-[90vh] overflow-y-auto scrollbar-hidden">
         <h3 class="text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200 flex items-center">
           <i class="ph-fill ph-magnifying-glass mr-2 text-orange-500"></i>Missing Pet Report Form
         </h3>

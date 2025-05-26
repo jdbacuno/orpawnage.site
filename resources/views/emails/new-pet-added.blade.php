@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -7,36 +7,39 @@
   <title>New Pet Notification</title>
   <style>
     body {
-      background-color: #f3f4f6;
-      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       margin: 0;
       padding: 0;
-    }
-
-    .container {
-      max-width: 640px;
-      margin: 40px auto;
-      padding: 24px;
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #1f2937;
-    }
-
-    .info {
-      margin: 20px 0;
-      line-height: 1.6;
       color: #374151;
     }
 
-    .image-container {
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      padding: 24px 32px;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 20px;
       text-align: center;
-      margin: 20px 0;
+    }
+
+    .info p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 8px 0;
+    }
+
+    .image-container {
+      margin: 24px 0;
+      text-align: center;
     }
 
     .image-container img {
@@ -46,47 +49,42 @@
 
     .button {
       display: inline-block;
-      margin-top: 20px;
+      margin: 24px auto 0;
       padding: 12px 24px;
       background-color: #3b82f6;
-      color: #ffffff;
+      color: #ffffff !important;
+      font-weight: 600;
       text-decoration: none;
       border-radius: 6px;
+      text-align: center;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .button:hover {
+      background-color: #2563eb;
     }
 
     .footer {
-      margin-top: 32px;
+      margin-top: 40px;
       padding-top: 16px;
       border-top: 1px solid #e5e7eb;
       font-size: 0.875rem;
       color: #6b7280;
       text-align: center;
     }
-
-    .text-white {
-      color: #fff;
-    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h2>🐾 A New Pet Has Been Added!</h2>
-
-    <div class="info">
-      <p><strong>Name:</strong> {{ $pet->pet_name ?? 'Unnamed' }}</p>
-      <p><strong>Species:</strong> {{ ucfirst($pet->species) }}</p>
-      <p><strong>Age:</strong> {{ $pet->age }} {{ Str::plural($pet->age_unit, $pet->age) }}</p>
-    </div>
-
-    @if($pet->image_path)
+    @if ($pet->image_path)
     <div class="image-container">
       <img src="{{ $message->embed(storage_path('app/public/' . $pet->image_path)) }}" alt="Pet Image">
     </div>
     @endif
 
-    <div style="text-align: center; color: white">
-      <a href="{{ url('/services/' . $pet->slug . '/adoption-form') }}" style="color: white" class="button">View Pet &
+    <div style="text-align: center; color: white;">
+      <a href="{{ url('/services/' . $pet->slug . '/adoption-form') }}" class="button" style="color: white;">View Pet &
         Adopt</a>
     </div>
 

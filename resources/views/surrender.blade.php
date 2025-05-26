@@ -44,7 +44,7 @@
   <!-- ========== END OF HERO SECTION ========== -->
 
   <!-- ========== START OF RESPONSIVE TEXT SECTION ========== -->
-  <section class="bg-gray-50 pt-12 pb-6 px-6 sm:px-8" id="elementToScrollInto">
+  <section class="bg-gray-100 pt-12 pb-6 px-6 sm:px-8" id="elementToScrollInto">
     <div class="max-w-5xl mx-auto text-center mb-10">
       <h2 class="text-3xl sm:text-4xl font-bold text-gray-800">Need Help With an Animal?</h2>
       <p class="mt-4 text-gray-600">Whether you're rehoming a pet or surrendering a stray, we're here to help.</p>
@@ -52,7 +52,7 @@
 
     <div class="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
       <!-- Rehome Card -->
-      <div class="bg-white shadow rounded-2xl p-6 flex flex-col items-center text-center">
+      <div class="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center">
         <div class="bg-yellow-100 text-yellow-500 rounded-full p-3 mb-4">
           <!-- Heroicon: Home -->
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +67,7 @@
       </div>
 
       <!-- Surrender Card -->
-      <div class="bg-white shadow rounded-2xl p-6 flex flex-col items-center text-center">
+      <div class="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center">
         <div class="bg-yellow-100 text-yellow-500 rounded-full p-3 mb-4">
           <!-- Heroicon: Paw Print -->
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,18 +85,13 @@
   <!-- ========== END OF RESPONSIVE TEXT SECTION ========== -->
 
   <!-- ========== START OF SURRENDER REQUEST FORM SECTION ========== -->
-  <section class="pt-6 pb-10 px-4 sm:px-6 relative overflow-hidden bg-gray-50">
+  <section class="pt-6 pb-10 px-4 sm:px-6 relative overflow-hidden bg-gray-100">
     <div class="max-w-4xl mx-auto">
-      <div class="rounded-xl bg-white border border-gray-200 p-6 sm:p-8 shadow-sm">
+      <div class="rounded-xl bg-white border border-gray-200 p-6 sm:p-8 shadow-md">
         <!-- Form Header -->
         <div class="mb-8">
           <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500 mr-2" viewBox="0 0 24 24"
-              fill="currentColor">
-              <path
-                d="M19 7h-.82l-1.7-4.68A2.008 2.008 0 0 0 14.6 1H12v2h2.6l1.46 4h-4.94l-1.13-3.1-.79-2.2A2.008 2.008 0 0 0 7.6 1H5v2h2.6l.8 2.2L9.6 7H4.6L3.4 4.2 2.6 2H0v2h2.4l4 11H3v3h1c0 1.66 1.34 3 3 3s3-1.34 3-3h5c0 1.66 1.34 3 3 3s3-1.34 3-3h3v-3h-3.4l.8-2H19v-3h-2v3h-1.6l-4-11H19V7zm-9 11H8c0 .55-.45 1-1 1s-1-.45-1-1H5v-1h5v1zm5 0h-3v-1h3v1zm0-2H7.4l-.8-2h12.8l-.8 2z" />
-            </svg>
-            Surrender Request Form
+            <i class="ph-fill ph-clipboard-text mr-2 text-orange-500"></i>Surrender/Rehome Application Form
           </h2>
           <p class="text-gray-600">Please fill out all required fields to submit your surrender request.</p>
         </div>
@@ -105,11 +100,7 @@
           <!-- Surrenderer's Information -->
           <div class="space-y-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-2" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-              </svg>
-              Surrenderer's Information
+              <i class="ph-fill ph-user-circle mr-2"></i>Surrenderer's Information
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -145,13 +136,7 @@
           <!-- Animal's Information -->
           <div class="space-y-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-2" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                  clip-rule="evenodd" />
-              </svg>
-              Animal's Information
+              <i class="ph-fill ph-paw-print mr-2"></i>Animal's Information
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -208,13 +193,7 @@
           <!-- Documentation -->
           <div class="space-y-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-2" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                  clip-rule="evenodd" />
-              </svg>
-              Documentation
+              <i class="ph-fill ph-file mr-2"></i>Documentation
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -251,13 +230,7 @@
           <!-- Declaration -->
           <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
             <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-2" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd" />
-              </svg>
-              Declaration
+              <i class="ph-fill ph-hand-palm mr-2"></i>Declaration
             </h4>
             <div class="text-sm text-gray-700 leading-relaxed">
               <p class="mb-3">I certify that the information provided in this surrender form is true and accurate to the
@@ -331,4 +304,21 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const scrollIntoNextSection = document.getElementById('scrollIntoNextSection');
+      const elementToScrollInto = document.getElementById('elementToScrollInto');
+
+      scrollIntoNextSection.addEventListener('click', function () {
+        const offset = window.innerHeight * 0.1; // 10% of the viewport height
+        const elementPosition = elementToScrollInto.getBoundingClientRect().top + window.scrollY;
+
+        window.scrollTo({
+          top: elementPosition - offset,
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
 </x-layout>

@@ -369,8 +369,9 @@
         <div class="flex gap-x-2 items-center">
           <label class="text-sm font-medium text-gray-600">Valid ID</label>
           <div>
-            <a id="adopterValidId" href="#" target="_blank" class="text-blue-500 underline text-sm">View Uploaded
-              ID</a>
+            <button id="viewValidId" class="text-blue-500 underline text-sm hover:text-blue-600 cursor-pointer">
+              View Uploaded ID
+            </button>
           </div>
         </div>
       </div>
@@ -491,6 +492,19 @@
       <p id="pickupDateText" class="text-lg font-medium text-gray-700"></p>
       <p class="text-sm text-gray-600">Failure to visit after 3 business days from your scheduled date will cancel the
         adoption.</p>
+    </div>
+  </div>
+
+  {{-- VALID ID --}}
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
+      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
+      </button>
+      <h2 class="text-md font-semibold text-gray-800 mb-2">Uploaded Valid ID</h2>
+      <div class="w-full mt-2 flex justify-center items-center">
+        <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+      </div>
     </div>
   </div>
 
@@ -689,29 +703,54 @@
       });
     });
 
-    // Adopter Info Modal functionality
-    document.querySelectorAll('.adopter-info-btn').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        const modal = document.getElementById('adopterInfoModal');
-        
-        // Set adopter data
-        document.getElementById('adopterName').value = this.dataset.name;
-        document.getElementById('adopterEmail').value = this.dataset.email;
-        document.getElementById('adopterAge').value = this.dataset.age;
-        document.getElementById('adopterBirthdate').value = this.dataset.birthdate;
-        document.getElementById('adopterPhone').value = this.dataset.phone;
-        document.getElementById('adopterAddress').value = this.dataset.address;
-        document.getElementById('adopterCivilStatus').value = this.dataset.civil;
-        document.getElementById('adopterCitizenship').value = this.dataset.citizenship;
-        document.getElementById('adopterVisitVet').value = this.dataset.visitvet;
-        document.getElementById('adopterExistingPets').value = this.dataset.existingpets;
-        document.getElementById('adopterReason').value = this.dataset.reason;
-        document.getElementById('adopterValidId').href = this.dataset.validid;
-        
-        // Show modal
-        modal.classList.remove('hidden');
+    // Adopter's Info Modal
+    document.addEventListener('DOMContentLoaded', function () {
+      const adopterInfoModal = document.getElementById('adopterInfoModal');
+      const closeAdopterInfoModal = document.getElementById('closeAdopterInfoModal');
+      const viewValidIdBtn = document.getElementById('viewValidId'); // Get the view button
+
+      document.querySelectorAll(".adopter-info-btn").forEach(button => {
+        button.addEventListener("click", function(e) {
+          e.preventDefault();
+          // Assign to modal
+          document.getElementById("adopterName").value = this.getAttribute("data-name");
+          document.getElementById("adopterEmail").value = this.getAttribute("data-email");
+          document.getElementById("adopterAge").value = this.getAttribute("data-age") + " years old";
+          document.getElementById("adopterBirthdate").value = this.getAttribute("data-birthdate");
+          document.getElementById("adopterAddress").value = this.getAttribute("data-address");
+          document.getElementById("adopterPhone").value = this.getAttribute("data-phone");
+          document.getElementById("adopterCivilStatus").value = this.getAttribute("data-civil");
+          document.getElementById("adopterCitizenship").value = this.getAttribute("data-citizenship");
+          document.getElementById("adopterReason").value = this.getAttribute("data-reason");
+          document.getElementById("adopterVisitVet").value = this.getAttribute("data-visitvet");
+          document.getElementById("adopterExistingPets").value = this.getAttribute("data-existingpets");
+          
+          // Set the data-src attribute on the view button instead of href
+          viewValidIdBtn.setAttribute('data-src', this.getAttribute('data-validid'));
+
+          adopterInfoModal.classList.remove("hidden");
+        });
       });
+
+      closeAdopterInfoModal.addEventListener('click', function (e) {
+        e.preventDefault();
+        adopterInfoModal.classList.add('hidden');
+      });
+
+      // Add click handler for viewing the ID
+      viewValidIdBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const validIdUrl = this.getAttribute('data-src');
+        if (validIdUrl) {
+          document.getElementById('modalImage').src = validIdUrl;
+          document.getElementById('imageModal').classList.remove('hidden');
+        }
+      });
+    });
+
+    // Close image modal
+    document.getElementById('closeImageModal').addEventListener('click', function() {
+      document.getElementById('imageModal').classList.add('hidden');
     });
 
     // Close modals
@@ -721,6 +760,20 @@
 
     document.getElementById('closeAdopterInfoModal').addEventListener('click', function() {
       document.getElementById('adopterInfoModal').classList.add('hidden');
+    });
+
+    // View Valid ID in modal
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'viewValidId') {
+        const validIdUrl = document.getElementById('adopterValidId').getAttribute('data-src');
+        document.getElementById('modalImage').src = validIdUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+      }
+    });
+
+    // Close image modal
+    document.getElementById('closeImageModal').addEventListener('click', function() {
+      document.getElementById('imageModal').classList.add('hidden');
     });
   </script>
 </x-transactions-layout>

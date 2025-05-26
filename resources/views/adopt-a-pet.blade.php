@@ -21,12 +21,12 @@
         </p>
 
         <!-- Adoption Process -->
-        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-sm rounded-lg border border-gray-200">
+        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-sm rounded-lg border border-gray-200 text-justify">
           <h3 class="font-bold text-lg text-black mb-4" id="processTitle"><i
               class="ph-fill ph-paw-print text-orange-500"></i> Adoption Process</h3>
 
           <!-- Tab Navigation -->
-          <div class="flex space-x-2 mb-4" id="language-tabs">
+          <div class="flex space-x-2 mb-4 overflow-x-auto scrollbar-hidden" id="language-tabs">
             <button data-tab="english"
               class="tab-btn bg-white px-3 py-1 rounded border border-yellow-400 text-black font-medium hover:bg-yellow-300 active">English</button>
             <button data-tab="tagalog"

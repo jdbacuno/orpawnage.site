@@ -206,10 +206,10 @@ class PetController extends Controller
     {
         // Validate the request manually
         $validator = Validator::make($request->all(), [
-            'pet_number' => ['required', 'integer', 'min:1'],
-            'pet_name' => ['required', 'string'],
+            'pet_number' => ['required', 'integer', 'min:1', 'max:100'],
+            'pet_name' => ['nullable', 'string'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
-            'age' => ['required', 'integer', 'min:1'],
+            'age' => ['required', 'integer', 'min:1', 'max:100'],
             'age_unit' => ['required', Rule::in(['months', 'years'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
             'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
@@ -230,23 +230,26 @@ class PetController extends Controller
             'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
 
-        // If validation fails, return back with errors
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
-                ->with('modal_open', 'add'); // Keep modal open on error
+                ->with('modal_open', 'add');
         }
 
-        // Normalize case for specific fields
         $validated = $validator->validated();
 
-        // If pet name is 'n/a', convert it to 'N/A'
-        if (strtolower($validated['pet_name']) == 'n/a') {
+        // Set default pet name if empty or null
+        $validated['pet_name'] = trim($validated['pet_name'] ?? '') !== ''
+            ? $validated['pet_name']
+            : 'N/A';
+
+        // Normalize common variations like "n/a", "na"
+        if (in_array(strtolower($validated['pet_name']), ['n/a', 'na'])) {
             $validated['pet_name'] = 'N/A';
         }
 
-        // Upload the image
+        // Upload image
         if ($request->hasFile('image')) {
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
@@ -256,34 +259,32 @@ class PetController extends Controller
             $validated['image_path'] = $imagePath;
         }
 
-        unset($validated['image']); // Remove the image field from validation data
+        unset($validated['image']); // Remove image field before saving
 
-        // Create and store the pet
         $pet = Pet::create($validated);
 
-        // Notify all users except admins asynchronously
+        // Notify users (non-admins)
         User::whereNotNull('email_verified_at')
-            ->whereNotNull('email') // Optional, just in case
+            ->whereNotNull('email')
             ->chunk(100, function ($users) use ($pet) {
                 Notification::send($users, new NewPetAdded($pet));
             });
 
-
-        // Return success response
         return redirect()->back()->with([
             'add_success' => '<a class="text-blue-500" target="_blank" href="/services/' . $pet->slug . '/adoption-form">#' . $pet->pet_number . '</a>',
-            'modal_open' => null // Close modal on success
+            'modal_open' => null,
         ]);
     }
+
 
     public function update(Request $request, Pet $pet)
     {
         // Validate the request manually
         $validator = Validator::make($request->all(), [
-            'pet_number' => ['required', 'integer', 'min:1'],
-            'pet_name' => ['required', 'string'],
+            'pet_number' => ['required', 'integer', 'min:1', 'max:100'],
+            'pet_name' => ['nullable', 'string'],
             'species' => ['required', Rule::in(['feline', 'canine'])],
-            'age' => ['required', 'integer', 'min:1'],
+            'age' => ['required', 'integer', 'min:1', 'max:100'],
             'age_unit' => ['required', Rule::in(['months', 'years', 'weeks'])],
             'sex' => ['required', Rule::in(['male', 'female'])],
             'reproductive_status' => ['required', Rule::in(['intact', 'neutered', 'unknown'])],
@@ -301,35 +302,37 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],  // Changed to 'file' and added 'svg' mime
+            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
         ]);
 
-        // If validation fails, redirect with errors under 'edit_pet' bag
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator, 'edit_pet')
                 ->withInput()
                 ->with([
                     'modal_open' => 'edit',
-                    'edit_pet_id' => $pet->id  // Pass pet ID to prefill modal correctly
+                    'edit_pet_id' => $pet->id
                 ]);
         }
 
-        // Normalize case for specific fields
         $validated = $validator->validated();
 
-        if (strtolower($validated['pet_name']) == 'n/a') {
+        // Set default pet name if empty or null
+        $validated['pet_name'] = trim($validated['pet_name'] ?? '') !== ''
+            ? $validated['pet_name']
+            : 'N/A';
+
+        // Normalize "n/a" or similar entries
+        if (in_array(strtolower($validated['pet_name']), ['n/a', 'na'])) {
             $validated['pet_name'] = 'N/A';
         }
 
-        // Handle Image Upload & Deletion
+        // Handle image upload and deletion
         if ($request->hasFile('image')) {
-            // Delete existing image if it exists
             if ($pet->image_path && Storage::disk('public')->exists($pet->image_path)) {
                 Storage::disk('public')->delete($pet->image_path);
             }
 
-            // Store new image
             $timestamp = now()->format('YmdHis');
             $extension = $request->image->getClientOriginalExtension();
             $imageFileName = "pet{$validated['pet_number']}_{$timestamp}.{$extension}";
@@ -338,19 +341,18 @@ class PetController extends Controller
             $validated['image_path'] = $imagePath;
         }
 
-        // Remove 'image' field before updating the database
-        unset($validated['image']);
+        unset($validated['image']); // Remove the file object before updating
 
-        // Update the pet record
         $pet->update($validated);
 
-        return redirect()->to(url()->previous()) // Redirect to the previous page
+        return redirect()->to(url()->previous())
             ->with([
                 'edit_pet_id' => $pet->id,
                 'edit_success' => '<a target="_blank" class="text-blue-500" href="/services/' . $pet->slug . '/adoption-form">#' . $validated['pet_number'] . '</a>',
-                'modal_open' => null, // Close the modal
+                'modal_open' => null,
             ]);
     }
+
 
     public function archive(Request $request, Pet $pet)
     {

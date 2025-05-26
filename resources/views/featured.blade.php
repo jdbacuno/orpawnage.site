@@ -11,16 +11,31 @@
 
       @if ($featuredPets->count() > 0)
       <div class="container mx-auto px-4">
-        <p class="text-md text-black font-semibold mb-6">
-          These pets have a lower chance of being adopted based on our analysis.
-        </p>
+
+
+        <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <i class="ph-fill ph-heart text-yellow-500 text-xl"></i>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-yellow-700 font-semibold">
+                These pets may not be adopted faster compared to other pets currently available in our shelter based on
+                the
+                past adoption trend. We're featuring them in hopes of catching the attention of potential fur parents
+                who
+                would welcome them in their loving homes as soon as possible.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <!-- Pet Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
           @foreach ($featuredPets as $featured)
           <!-- ENHANCED CARD DESIGN -->
           <div
-            class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
+            class="relative bg-white w-full mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300">
             <a href="/services/{{ $featured->slug }}/adoption-form" class="block">
               <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
                 class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />

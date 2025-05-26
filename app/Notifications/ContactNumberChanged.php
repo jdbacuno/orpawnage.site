@@ -25,12 +25,14 @@ class ContactNumberChanged extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
+        $isAdmin = $notifiable->isAdmin ? 'admin#settingsModal?tab=password-tab' : '#settingsModal?tab=password-tab';
+
         return (new MailMessage)
             ->subject('Contact Number Updated')
             ->line('Your contact number was recently changed from:')
             ->line($this->oldContact . ' to ' . $notifiable->contact_number)
             ->line('If you did not make this change, please secure your account.')
-            ->action('Secure Account', url('/password/reset'))
+            ->action('Secure Account', url('http://orpawnage.test/' . $isAdmin))
             ->line('Thank you for using our application!');
     }
 }

@@ -29,7 +29,7 @@ class NewPetAdded extends Notification implements ShouldQueue
         try {
             // Create the MailMessage instance
             $mailMessage = (new MailMessage)
-                ->subject('A New Pet Has Been Added! 🐾')
+                ->subject('A New Pet is Available for Adoption! 🐾')
                 ->view('emails.new-pet-added', [
                     'pet' => $this->pet
                 ]);

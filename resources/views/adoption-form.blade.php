@@ -14,7 +14,8 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-4">
         <!-- LEFT SIDE: Pet Image -->
-        <div class="overflow-hidden rounded-lg shadow-md h-fit">
+        <div class="overflow-hidden rounded-lg shadow-md h-fit cursor-pointer"
+          onclick="openImageModal('{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}', '{{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}')">
           <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
             class="w-full h-auto max-h-[500px] object-cover transition-transform duration-500 hover:scale-105" />
         </div>
@@ -397,6 +398,20 @@
             <li>Baptismal Certificate</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- FULL IMAGE VIEW MODAL --}}
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+    <div class="relative w-auto">
+      <!-- Full Size Image -->
+      <img id="modalImage" src="" alt="Full size pet image"
+        class="w-full h-auto max-h-[90vh] object-contain rounded-lg">
+
+      <!-- Image Caption -->
+      <div class="text-center mt-2 text-white">
+        <span id="imageCaption" class="text-lg"></span>
       </div>
     </div>
   </div>

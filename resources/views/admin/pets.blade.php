@@ -320,153 +320,196 @@
     </div>
   </div>
 
-  <!-- Add a New Pet Modal (Initially Hidden) -->
+  <!-- Add a New Pet Modal -->
   <div id="modal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 
     {{ session('modal_open') === 'add' ? '' : 'hidden' }}">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-hidden relative flex flex-col">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden relative flex flex-col">
       <!-- Close Button -->
       <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black">
-        <i class="ph-bold ph-x"></i>
+        <i class="ph-bold ph-x text-xl"></i>
       </button>
 
       <!-- Scrollable Content -->
       <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
         <!-- Form Title -->
-        <h2 class="text-xl font-semibold text-gray-800">Add a New Pet</h2>
+        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+          <i class="ph-fill ph-plus-circle mr-2 text-orange-500"></i>Add a New Pet
+        </h2>
 
         <!-- Image Preview -->
         <div class="flex justify-center relative">
-          <p id="imagePlaceholder" class="absolute text-gray-500 text-sm">Image preview here...</p>
+          <p id="imagePlaceholder" class="absolute text-gray-500 text-sm">Image preview will appear here</p>
           <img id="imagePreview" src="" class="w-full h-auto object-cover rounded-lg border border-gray-300 hidden"
             alt="Pet Image">
         </div>
 
         <!-- Form Fields -->
         <form method="POST" id="addPetForm" action="/admin/pet-profiles" enctype="multipart/form-data"
-          class="space-y-4 relative">
+          class="space-y-6">
           @csrf
 
+          <!-- Image Upload -->
           <div>
-            <label class="block text-gray-700 text-sm font-medium">Image</label>
-            <input type="file" class="w-full border rounded-md" name="image" id="imageInput" required>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Pet Image <span
+                class="text-red-500">*</span></label>
+            <input type="file" name="image" id="imageInput"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+              required>
             <x-form-error name="image" />
           </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Pet No.</label>
-            <input type="number" name="pet_number" placeholder="Pet No."
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('pet_number') }}"
-              required>
-            <x-form-error name="pet_number" />
-          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-4">
+              <!-- Pet Number -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Pet Number <span
+                    class="text-red-500">*</span></label>
+                <input type="number" name="pet_number" placeholder="Pet Number"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  value="{{ old('pet_number') }}" min="1" max="100" required>
+                <x-form-error name="pet_number" />
+              </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Pet Name (If Any)</label>
-            <input type="text" name="pet_name" placeholder="Type &quot;N/A&quot; if none"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('pet_name') }}"
-              required>
-            <x-form-error name="pet_name" />
-          </div>
+              <!-- Pet Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Pet Name <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="pet_name" placeholder="(Optional)"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  value="{{ old('pet_name') }}">
+                <x-form-error name="pet_name" />
+              </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Species</label>
-            <select name="species" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="feline" {{ old('species')==='feline' ? 'selected' : '' }}>Feline</option>
-              <option value="canine" {{ old('species')==='canine' ? 'selected' : '' }}>Canine</option>
-            </select>
-            <x-form-error name="species" />
-          </div>
-
-          <div class="flex space-x-2">
-            <div class="w-1/2">
-              <label class="block text-gray-700 text-sm font-medium">Age</label>
-              <input type="number" name="age" placeholder="Age"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" value="{{ old('age') }}" required>
-              <x-form-error name="age" />
+              <!-- Species -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Species <span
+                    class="text-red-500">*</span></label>
+                <select name="species"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="feline" {{ old('species')==='feline' ? 'selected' : '' }}>Feline (Cat)</option>
+                  <option value="canine" {{ old('species')==='canine' ? 'selected' : '' }}>Canine (Dog)</option>
+                </select>
+                <x-form-error name="species" />
+              </div>
             </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700 text-sm font-medium">Unit</label>
-              <select name="age_unit" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-                <option value="months" {{ old('age_unit')==='months' ? 'selected' : '' }}>Months</option>
-                <option value="years" {{ old('age_unit')==='years' ? 'selected' : '' }}>Years</option>
-                <option value="weeks" {{ old('age_unit')==='weeks' ? 'selected' : '' }}>Weeks</option>
-              </select>
-              <x-form-error name="age_unit" />
+
+            <!-- Right Column -->
+            <div class="space-y-4">
+              <!-- Age and Unit -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Age <span
+                      class="text-red-500">*</span></label>
+                  <input type="number" name="age" placeholder="Age"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    value="{{ old('age') }}" min="1" max="100" required>
+                  <x-form-error name="age" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Unit <span
+                      class="text-red-500">*</span></label>
+                  <select name="age_unit"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    required>
+                    <option value="months" {{ old('age_unit')==='months' ? 'selected' : '' }}>Months</option>
+                    <option value="years" {{ old('age_unit')==='years' ? 'selected' : '' }}>Years</option>
+                    <option value="weeks" {{ old('age_unit')==='weeks' ? 'selected' : '' }}>Weeks</option>
+                  </select>
+                  <x-form-error name="age_unit" />
+                </div>
+              </div>
+
+              <!-- Sex -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Sex <span
+                    class="text-red-500">*</span></label>
+                <select name="sex"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="male" {{ old('sex')==='male' ? 'selected' : '' }}>Male</option>
+                  <option value="female" {{ old('sex')==='female' ? 'selected' : '' }}>Female</option>
+                </select>
+                <x-form-error name="sex" />
+              </div>
+
+              <!-- Reproductive Status -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Reproductive Status <span
+                    class="text-red-500">*</span></label>
+                <select name="reproductive_status"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="intact" {{ old('reproductive_status')==='intact' ? 'selected' : '' }}>Intact</option>
+                  <option value="neutered" {{ old('reproductive_status')==='neutered' ? 'selected' : '' }}>
+                    Neutered/Spayed</option>
+                  <option value="unknown" {{ old('reproductive_status')==='unknown' ? 'selected' : '' }}>Unknown
+                  </option>
+                </select>
+                <x-form-error name="reproductive_status" />
+              </div>
+
+              <!-- Color -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Color <span
+                    class="text-red-500">*</span></label>
+                <select name="color"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  @foreach (["black", "white", "gray", "brown", "orange", "brindle", "calico", "tabby", "bi-color",
+                  "tri-color", "others"] as $color)
+                  <option value="{{ $color }}" {{ old('color')===$color ? 'selected' : '' }}>
+                    {{ ucfirst($color) }}
+                  </option>
+                  @endforeach
+                </select>
+                <x-form-error name="color" />
+              </div>
+
+              <!-- Source -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Source <span
+                    class="text-red-500">*</span></label>
+                <select name="source"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="surrendered" {{ old('source')==='surrendered' ? 'selected' : '' }}>Surrendered</option>
+                  <option value="rescued" {{ old('source')==='rescued' ? 'selected' : '' }}>Rescued</option>
+                  <option value="other" {{ old('source')==='other' ? 'selected' : '' }}>Other</option>
+                </select>
+                <x-form-error name="source" />
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Sex</label>
-            <select name="sex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="male" {{ old('sex')==='male' ? 'selected' : '' }}>Male</option>
-              <option value="female" {{ old('sex')==='female' ? 'selected' : '' }}>Female</option>
-            </select>
-            <x-form-error name="sex" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Reproductive Status</label>
-            <select name="reproductive_status" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
-              required>
-              <option value="intact" {{ old('reproductive_status')==='intact' ? 'selected' : '' }}>Intact</option>
-              <option value="neutered" {{ old('reproductive_status')==='neutered' ? 'selected' : '' }}>Neutered</option>
-              <option value="unknown" {{ old('reproductive_status')==='unknown' ? 'selected' : '' }}>Unknown</option>
-            </select>
-            <x-form-error name="reproductive_status" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Color</label>
-            <select name="color" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="black" {{ old('color')==='black' ? 'selected' : '' }}>Black</option>
-              <option value="white" {{ old('color')==='white' ? 'selected' : '' }}>White</option>
-              <option value="gray" {{ old('color')==='gray' ? 'selected' : '' }}>Gray</option>
-              <option value="brown" {{ old('color')==='brown' ? 'selected' : '' }}>Brown</option>
-              <option value="orange" {{ old('color')==='orange' ? 'selected' : '' }}>Orange</option>
-              <option value="brindle" {{ old('color')==='brindle' ? 'selected' : '' }}>Brindle</option>
-              <option value="calico" {{ old('color')==='calico' ? 'selected' : '' }}>Calico</option>
-              <option value="tabby" {{ old('color')==='tabby' ? 'selected' : '' }}>Tabby</option>
-              <option value="bi-color" {{ old('color')==='bi-color' ? 'selected' : '' }}>Bi-color</option>
-              <option value="tri-color" {{ old('color')==='tri-color' ? 'selected' : '' }}>Tri-color</option>
-              <option value="others" {{ old('color')==='others' ? 'selected' : '' }}>Others</option>
-            </select>
-            <x-form-error name="color" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Source of Pet</label>
-            <select name="source" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="surrendered" {{ old('source')==='surrendered' ? 'selected' : '' }}>Surrendered</option>
-              <option value="rescued" {{ old('source')==='rescued' ? 'selected' : '' }}>Rescued</option>
-              <option value="other" {{ old('source')==='other' ? 'selected' : '' }}>Other</option>
-            </select>
-            <x-form-error name="source" />
           </div>
 
           <!-- Submit Button -->
-          <button type="submit"
-            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-400 hover:text-black sticky bottom-0">Add
-            Pet</button>
+          <div class="flex justify-end pt-4">
+            <button type="submit"
+              class="w-full sm:w-fit px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              <i class="ph-fill ph-plus-circle mr-2"></i>Add Pet
+            </button>
+          </div>
         </form>
       </div>
     </div>
   </div>
 
-
   <!-- Edit Pet Modal -->
-  @if (!$pets->isEmpty())
   <div id="editModal"
     class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 {{ session('modal_open') === 'edit' ? '' : 'hidden' }}">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-hidden relative flex flex-col">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden relative flex flex-col">
       <!-- Close Button -->
       <button id="closeEditModal" class="absolute top-3 right-3 text-gray-600 hover:text-black">
-        <i class="ph-bold ph-x"></i>
+        <i class="ph-bold ph-x text-xl"></i>
       </button>
 
       <!-- Scrollable Content -->
       <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
         <!-- Form Title -->
-        <h2 class="text-xl font-semibold text-gray-800">Edit Pet</h2>
+        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+          <i class="ph-fill ph-pencil-simple mr-2 text-orange-500"></i>Edit Pet Profile
+        </h2>
 
         @php
         $editPetData = session('edit_pet_data', $pet);
@@ -475,7 +518,7 @@
 
         <!-- Image Preview -->
         <div class="flex justify-center relative">
-          <p id="editImagePlaceholder" class="absolute text-gray-500 text-sm">Image preview here...</p>
+          <p id="editImagePlaceholder" class="absolute text-gray-500 text-sm">Current pet image</p>
           <img id="editImagePreview"
             src="{{ $editPetData->image_path ? asset('storage/' . $editPetData->image_path) : '' }}"
             class="w-full h-auto object-cover rounded-lg border border-gray-300 {{ $editPetData->image_path ? '' : 'hidden' }}"
@@ -484,137 +527,168 @@
 
         <!-- Form Fields -->
         <form method="POST" id="editPetForm" action="/admin/pet-profiles/{{ $pet->id }}" enctype="multipart/form-data"
-          class="space-y-4 relative">
+          class="space-y-6">
           @csrf
           @method('PATCH')
 
           <input type="hidden" name="id" id="editPetId" value="{{ $pet->id }}">
 
+          <!-- Image Upload -->
           <div>
-            <label class="block text-gray-700 text-sm font-medium">Image</label>
-            <input type="file" class="w-full border rounded-md" name="image" id="editImageInput">
+            <label class="block text-sm font-medium text-gray-600 mb-1">Update Image</label>
+            <input type="file" name="image" id="editImageInput"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
             <x-form-error name="image" />
           </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Pet No.</label>
-            <input type="number" name="pet_number" id="editPetNumber"
-              value="{{ old('pet_number', $editPetData->pet_number) }}"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-            <x-form-error name="pet_number" />
-          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-4">
+              <!-- Pet Number -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Pet Number <span
+                    class="text-red-500">*</span></label>
+                <input type="number" name="pet_number" id="editPetNumber"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  value="{{ old('pet_number', $editPetData->pet_number) }}" min="1" max="100" required>
+                <x-form-error name="pet_number" />
+              </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Pet Name</label>
-            <input type="text" name="pet_name" id="editPetName" value="{{ old('pet_name', $editPetData->pet_name) }}"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
-              placeholder="Type &quot;N/A&quot; if none" required>
-            <x-form-error name="pet_name" />
-          </div>
+              <!-- Pet Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Pet Name <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="pet_name" id="editPetName"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="(Optional)" value="{{ old('pet_name', $editPetData->pet_name) }}">
+                <x-form-error name="pet_name" />
+              </div>
 
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Species</label>
-            <select name="species" id="editSpecies"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="feline" {{ old('species', $editPetData->species) == 'feline' ? 'selected' : '' }}>Feline
-              </option>
-              <option value="canine" {{ old('species', $editPetData->species) == 'canine' ? 'selected' : '' }}>Canine
-              </option>
-            </select>
-            <x-form-error name="species" />
-          </div>
-
-          <div class="flex space-x-2">
-            <div class="w-1/2">
-              <label class="block text-gray-700 text-sm font-medium">Age</label>
-              <input type="number" name="age" id="editAge" value="{{ old('age', $editPetData->age) }}"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <x-form-error name="age" />
+              <!-- Species -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Species <span
+                    class="text-red-500">*</span></label>
+                <select name="species" id="editSpecies"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="feline" {{ old('species', $editPetData->species) == 'feline' ? 'selected' : ''
+                    }}>Feline (Cat)</option>
+                  <option value="canine" {{ old('species', $editPetData->species) == 'canine' ? 'selected' : ''
+                    }}>Canine (Dog)</option>
+                </select>
+                <x-form-error name="species" />
+              </div>
             </div>
-            <div class="w-1/2">
-              <label class="block text-gray-700 text-sm font-medium">Unit</label>
-              <select name="age_unit" id="editAgeUnit"
-                class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-                <option value="months" {{ old('age_unit', $editPetData->age_unit) == 'months' ? 'selected' : ''
-                  }}>Months
-                </option>
-                <option value="years" {{ old('age_unit', $editPetData->age_unit) == 'years' ? 'selected' : '' }}>Years
-                </option>
-                <option value="weeks" {{ old('age_unit', $editPetData->age_unit) == 'weeks' ? 'selected' : '' }}>Weeks
-                </option>
-              </select>
-              <x-form-error name="age_unit" />
+
+            <!-- Right Column -->
+            <div class="space-y-4">
+              <!-- Age and Unit -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Age <span
+                      class="text-red-500">*</span></label>
+                  <input type="number" name="age" id="editAge"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    value="{{ old('age', $editPetData->age) }}" min="1" max="100" required>
+                  <x-form-error name="age" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Unit <span
+                      class="text-red-500">*</span></label>
+                  <select name="age_unit" id="editAgeUnit"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    required>
+                    <option value="months" {{ old('age_unit', $editPetData->age_unit) == 'months' ? 'selected' : ''
+                      }}>Months</option>
+                    <option value="years" {{ old('age_unit', $editPetData->age_unit) == 'years' ? 'selected' : ''
+                      }}>Years</option>
+                    <option value="weeks" {{ old('age_unit', $editPetData->age_unit) == 'weeks' ? 'selected' : ''
+                      }}>Weeks</option>
+                  </select>
+                  <x-form-error name="age_unit" />
+                </div>
+              </div>
+
+              <!-- Sex -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Sex <span
+                    class="text-red-500">*</span></label>
+                <select name="sex" id="editSex"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="male" {{ old('sex', $editPetData->sex) == 'male' ? 'selected' : '' }}>Male</option>
+                  <option value="female" {{ old('sex', $editPetData->sex) == 'female' ? 'selected' : '' }}>Female
+                  </option>
+                </select>
+                <x-form-error name="sex" />
+              </div>
+
+              <!-- Reproductive Status -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Reproductive Status <span
+                    class="text-red-500">*</span></label>
+                <select name="reproductive_status" id="editReproStatus"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="intact" {{ old('reproductive_status', $editPetData->reproductive_status) == 'intact' ?
+                    'selected' : '' }}>Intact</option>
+                  <option value="neutered" {{ old('reproductive_status', $editPetData->reproductive_status) ==
+                    'neutered' ? 'selected' : '' }}>Neutered/Spayed</option>
+                  <option value="unknown" {{ old('reproductive_status', $editPetData->reproductive_status) == 'unknown'
+                    ? 'selected' : '' }}>Unknown</option>
+                </select>
+                <x-form-error name="reproductive_status" />
+              </div>
+
+              <!-- Color -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Color <span
+                    class="text-red-500">*</span></label>
+                <select name="color" id="editColor"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  @foreach (["black", "white", "gray", "brown", "orange", "brindle", "calico", "tabby", "bi-color",
+                  "tri-color", "others"] as $color)
+                  <option value="{{ $color }}" {{ old('color', $editPetData->color) == $color ? 'selected' : '' }}>
+                    {{ ucfirst($color) }}
+                  </option>
+                  @endforeach
+                </select>
+                <x-form-error name="color" />
+              </div>
+
+              <!-- Source -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Source <span
+                    class="text-red-500">*</span></label>
+                <select name="source" id="editSource"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="surrendered" {{ old('source', $editPetData->source) == 'surrendered' ? 'selected' : ''
+                    }}>Surrendered</option>
+                  <option value="rescued" {{ old('source', $editPetData->source) == 'rescued' ? 'selected' : ''
+                    }}>Rescued</option>
+                  <option value="other" {{ old('source', $editPetData->source) == 'other' ? 'selected' : '' }}>Other
+                  </option>
+                </select>
+                <x-form-error name="source" />
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Sex</label>
-            <select name="sex" id="editSex" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
-              required>
-              <option value="male" {{ old('sex', $editPetData->sex) == 'male' ? 'selected' : '' }}>Male</option>
-              <option value="female" {{ old('sex', $editPetData->sex) == 'female' ? 'selected' : '' }}>Female</option>
-            </select>
-            <x-form-error name="sex" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Reproductive Status</label>
-            <select name="reproductive_status" id="editReproStatus"
-              class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400" required>
-              <option value="intact" {{ old('reproductive_status', $editPetData->reproductive_status) == 'intact' ?
-                'selected' : ''
-                }}>Intact</option>
-              <option value="neutered" {{ old('reproductive_status', $editPetData->reproductive_status) == 'neutered' ?
-                'selected' : ''
-                }}>Neutered</option>
-              <option value="unknown" {{ old('reproductive_status', $editPetData->reproductive_status) == 'unknown' ?
-                'selected' : ''
-                }}>Unknown</option>
-            </select>
-            <x-form-error name="reproductive_status" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Color</label>
-            <select name="color" id="editColor" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
-              required>
-              @foreach (["black", "white", "gray", "brown", "orange", "brindle", "calico", "tabby", "bi-color",
-              "tri-color",
-              "others"] as $color)
-              <option value="{{ $color }}" {{ old('color', $editPetData->color) == $color ? 'selected' : '' }}>
-                {{ ucfirst($color) }}
-              </option>
-              @endforeach
-            </select>
-            <x-form-error name="color" />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 text-sm font-medium">Source of Pet</label>
-            <select name="source" id="editSource" class="w-full border p-2 rounded-md focus:ring focus:ring-yellow-400"
-              required>
-              <option value="surrendered" {{ old('source', $editPetData->source) == 'surrendered' ?
-                'selected' : ''
-                }}>Surrendered</option>
-              <option value="rescued" {{ old('source', $editPetData->source) == 'rescued' ? 'selected' : ''
-                }}>Rescued</option>
-              <option value="other" {{ old('source', $editPetData->source) == 'other' ? 'selected' : ''
-                }}>Other</option>
-            </select>
-            <x-form-error name="source" />
           </div>
 
           <!-- Submit Button -->
-          <button type="submit"
-            class="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-yellow-400 hover:text-black sticky bottom-0">Update
-            Pet</button>
+          <div class="flex justify-end pt-4">
+            <button type="submit"
+              class="w-full sm:w-fit px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              <i class="ph-fill ph-floppy-disk	 mr-2"></i>Save
+            </button>
+          </div>
         </form>
       </div>
     </div>
   </div>
-  @endif
 
-  {{-- ARCHIVE MODAL --}}
+  <!-- Archive Modal (Updated Styling) -->
   <div id="archiveModal"
     class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 {{ $errors->has('archive_reason') || $errors->has('archive_notes') ? '' : 'hidden' }}">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -622,21 +696,37 @@
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
-      <h2 class="text-xl font-semibold text-gray-800">Archive this Pet?</h2>
-      <p class="text-gray-600 mt-2">
-        Are you sure you want to archive Pet#<span id="archivePetIdText">{{ old('pet_number',
-          session('archive_pet_number')) }}</span>?
-      </p>
+      <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+        <i class="ph-fill ph-archive mr-2"></i>Archive Pet
+      </h2>
+
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg mt-4">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <i class="ph-fill ph-warning text-yellow-500 text-xl"></i>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-yellow-700">
+              You are about to archive Pet#<span id="archivePetIdText" class="font-semibold">{{ old('pet_number',
+                session('archive_pet_number')) }}</span>.
+              This action cannot be undone.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <form id="archivePetForm" method="POST"
-        action="{{ old('pet_id') ? url('/admin/pet-profiles/' . old('pet_id') . '/archive') : '' }}">
+        action="{{ old('pet_id') ? url('/admin/pet-profiles/' . old('pet_id') . '/archive') : '' }}" class="mt-6">
         @csrf
         @method('PATCH')
         <input type="hidden" name="pet_id" id="archivePetId" value="{{ old('pet_id') }}">
 
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-medium mb-2">Reason for Archiving</label>
-          <select name="archive_reason" id="archiveReason" class="w-full border p-2 rounded-md" required>
+          <label class="block text-sm font-medium text-gray-600 mb-1">Reason for Archiving <span
+              class="text-red-500">*</span></label>
+          <select name="archive_reason" id="archiveReason"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+            required>
             <option value="">Select a reason</option>
             <option value="Pet has passed away" {{ old('archive_reason')=='Pet has passed away' ? 'selected' : '' }}>Pet
               has passed away</option>
@@ -649,18 +739,20 @@
 
         <div class="mb-4" id="archiveNotesContainer"
           style="{{ old('archive_reason') == 'Other' ? '' : 'display: none;' }}">
-          <label class="block text-gray-700 text-sm font-medium mb-2">Additional Notes</label>
-          <textarea name="archive_notes" id="archiveNotes" class="w-full border p-2 rounded-md"
-            rows="3">{{ old('archive_notes') }}</textarea>
+          <textarea name="archive_notes" id="archiveNotes"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+            rows="3" placeholder="Specify the reason for archiving">{{ old('archive_notes') }}</textarea>
           <x-form-error name="archive_notes" />
         </div>
 
-        <div class="flex justify-end mt-4 space-x-2">
-          <button type="button" id="cancelArchive" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+        <div class="flex justify-end space-x-3 mt-6">
+          <button type="button" id="cancelArchive"
+            class="px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-300">
             Cancel
           </button>
-          <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">
-            Archive Pet
+          <button type="submit"
+            class="px-4 py-2.5 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-500 focus:ring-2 focus:ring-red-300 flex items-center">
+            <i class="ph-fill ph-archive mr-2"></i>Confirm Archive
           </button>
         </div>
       </form>

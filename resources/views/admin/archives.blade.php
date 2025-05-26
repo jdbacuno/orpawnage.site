@@ -118,17 +118,15 @@
 
             @if($item->archive_reason || $item->archive_notes)
             <div class="space-y-3 border-t border-gray-100">
-              @if($item->archive_reason)
+              @if($item->archive_reason === 'Other')
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-500">Archive Reason</span>
+                <p class="text-sm text-gray-900 truncate">{{ $item->archive_notes }}</p>
+              </div>
+              @else
               <div class="flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-500">Archive Reason</span>
                 <span class="text-sm text-gray-900">{{ $item->archive_reason }}</span>
-              </div>
-              @endif
-
-              @if($item->archive_notes)
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-500">Additional Notes</span>
-                <p class="text-sm text-gray-900 truncate">{{ $item->archive_notes }}</p>
               </div>
               @endif
             </div>

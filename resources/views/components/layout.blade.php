@@ -549,7 +549,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
 
   <!-- Settings Modal -->
   <div id="settingsModal" class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-1 pb-20 text-center sm:block sm:p-0">
       <!-- Background overlay -->
       <div class="fixed inset-0 transition-opacity" aria-hidden="true">
         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -557,7 +557,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
 
       <!-- Modal content -->
       <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-4xl sm:w-full">
+        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-3xl sm:w-full">
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
             <div class="w-full">
@@ -575,16 +575,16 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
               <div class="border-b border-gray-200">
                 <nav class="-mb-px flex space-x-8">
                   <button onclick="switchTab('account-tab')" id="account-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'account-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'account-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
                     Account
                   </button>
                   <button onclick="switchTab('password-tab')" id="password-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
                     Password
                   </button>
                   @if (!auth()->user()->isAdmin)
                   <button onclick="switchTab('danger-tab')" id="danger-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'danger-tab' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500' }}">
+                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'danger-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
                     Danger Zone
                   </button>
                   @endif
@@ -932,7 +932,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       
       // Deactivate all tab buttons
       document.querySelectorAll('.tab-button').forEach(button => {
-          button.classList.remove('border-orange-500', 'text-orange-600');
+          button.classList.remove('border-orange-500', 'text-orange-500');
           button.classList.add('border-transparent', 'text-gray-500');
       });
       
@@ -943,7 +943,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       // Activate selected tab button
       const tabButton = document.getElementById(tabId + '-btn');
       tabButton.classList.remove('border-transparent', 'text-gray-500');
-      tabButton.classList.add('border-orange-500', 'text-orange-600');
+      tabButton.classList.add('border-orange-500', 'text-orange-500');
       
       // Update URL without reloading
       history.replaceState(null, null, '#settingsModal?tab=' + tabId);

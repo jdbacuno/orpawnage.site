@@ -1,5 +1,5 @@
 <div
-  class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300"
+  class="relative bg-white w-full mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300"
   wire:poll.10s>
   <a href="/services/{{ $pet->slug }}/adoption-form" class="block">
     <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"

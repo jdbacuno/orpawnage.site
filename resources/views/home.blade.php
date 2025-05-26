@@ -155,17 +155,17 @@
       <div class="relative group">
         <!-- Scroll Left Button -->
         <button
-          class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full hover:bg-orange-400 hover:text-white transition-all duration-300 opacity-100 md:opacity-0 group-hover:opacity-100 -ml-4"
+          class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-0 group-hover:opacity-100 -ml-4"
           onclick="scrollFeaturedPets(-1)">
           <i class="ph-fill ph-caret-left text-xl"></i>
         </button>
 
         <!-- Scrollable Container -->
         <div class="relative overflow-x-auto pb-4 scrollbar-hidden" id="featuredPetsContainer">
-          <div class="flex space-x-6 px-2">
+          <div class="flex gap-x-6 px-2">
             @foreach($featuredPets as $featured)
             <!-- Individual Pet Card -->
-            <div class="flex-shrink-0 w-full max-w-[350px] relative group">
+            <div class="flex-shrink-0 w-full sm:max-w-[350px] relative group">
               <div class="bg-white rounded-lg overflow-hidden">
                 <a href="/services/{{ $featured->slug }}/adoption-form" class="block">
                   <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}"
@@ -180,7 +180,7 @@
 
         <!-- Scroll Right Button -->
         <button
-          class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full shadow-md hover:bg-orange-400 hover:text-white transition-all duration-300 opacity-100 md:opacity-0 group-hover:opacity-100 -mr-4"
+          class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full shadow-md hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-0 group-hover:opacity-100 -mr-4"
           onclick="scrollFeaturedPets(1)">
           <i class="ph-fill ph-caret-right text-xl"></i>
         </button>
@@ -190,22 +190,13 @@
 
   <script>
     function scrollFeaturedPets(direction) {
-    const container = document.getElementById('featuredPetsContainer');
-    const scrollAmount = 350; // Matches card width + gap
-    container.scrollBy({
-      left: direction * scrollAmount,
-      behavior: 'smooth'
-    });
-  }
-
-  // Make buttons permanently visible if JavaScript is enabled
-  document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('#featuredPetsContainer ~ button');
-    buttons.forEach(button => {
-      button.classList.remove('md:opacity-0', 'group-hover:opacity-100');
-      button.classList.add('md:opacity-100');
-    });
-  });
+      const container = document.getElementById('featuredPetsContainer');
+      const scrollAmount = 350; // Matches card width + gap
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   </script>
   @endif
   <!-- ========== END OF FEATURED PETS SECTION ========== -->

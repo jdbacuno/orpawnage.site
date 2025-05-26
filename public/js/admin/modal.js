@@ -342,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
   const adopterInfoModal = document.getElementById('adopterInfoModal');
   const closeAdopterInfoModal = document.getElementById('closeAdopterInfoModal');
+  const viewValidIdBtn = document.getElementById('viewValidId'); // Get the view button
 
   document.querySelectorAll(".adopter-info-btn").forEach(button => {
     button.addEventListener("click", function(e) {
@@ -358,7 +359,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById("adopterReason").value = this.getAttribute("data-reason");
       document.getElementById("adopterVisitVet").value = this.getAttribute("data-visitvet");
       document.getElementById("adopterExistingPets").value = this.getAttribute("data-existingpets");
-      document.getElementById("adopterValidId").href = this.getAttribute("data-validid");
+      
+      // Set the data-src attribute on the view button instead of href
+      viewValidIdBtn.setAttribute('data-src', this.getAttribute('data-validid'));
 
       adopterInfoModal.classList.remove("hidden");
     });
@@ -368,6 +371,21 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     adopterInfoModal.classList.add('hidden');
   });
+
+  // Add click handler for viewing the ID
+  viewValidIdBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const validIdUrl = this.getAttribute('data-src');
+    if (validIdUrl) {
+      document.getElementById('modalImage').src = validIdUrl;
+      document.getElementById('imageModal').classList.remove('hidden');
+    }
+  });
+});
+
+// Close image modal
+document.getElementById('closeImageModal').addEventListener('click', function() {
+  document.getElementById('imageModal').classList.add('hidden');
 });
 
 // Approve Adoption Application

@@ -143,12 +143,6 @@ class SettingsController extends Controller
         return redirect('/login')->with('success', 'Your account has been permanently deleted.')->withFragment('settingsModal?tab=danger-tab');;
     }
 
-    // FOR ADMIN SETTINGS
-    public function adminShow()
-    {
-        return view('admin.settings');
-    }
-
     public function adminUpdateEmail(Request $request)
     {
         $request->validate([
@@ -168,7 +162,7 @@ class SettingsController extends Controller
             Notification::route('mail', $oldEmail)->notify(new EmailChanged($user));
         }
 
-        return back()->with('success', 'Email updated successfully! Please verify your new email address.');
+        return back()->with('success', 'Email updated successfully! Please verify your new email address.')->withFragment('settingsModal?tab=account-tab');
     }
 
     public function adminUpdatePassword(Request $request)
@@ -189,7 +183,7 @@ class SettingsController extends Controller
 
         $user->notify(new PasswordChanged());
 
-        return back()->with('success', 'Password updated successfully!');
+        return back()->with('success', 'Password updated successfully!')->withFragment('settingsModal?tab=password-tab');
     }
 
     public function adminUpdateContact(Request $request)
@@ -207,6 +201,6 @@ class SettingsController extends Controller
 
         $user->notify(new ContactNumberChanged($oldContact));
 
-        return back()->with('success', 'Contact number updated successfully!');
+        return back()->with('success', 'Contact number updated successfully!')->withFragment('settingsModal?tab=password-tab');
     }
 }

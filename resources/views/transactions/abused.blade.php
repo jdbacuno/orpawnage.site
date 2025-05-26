@@ -195,7 +195,7 @@
 
   <!-- Image Modal -->
   <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-3xl w-full max-h-[90vh] overflow-auto">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
       <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
         <i class="ph-fill ph-x"></i>
       </button>

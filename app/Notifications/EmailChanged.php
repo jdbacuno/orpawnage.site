@@ -25,12 +25,14 @@ class EmailChanged extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
+        $isAdmin = $notifiable->isAdmin ? 'admin#settingsModal?tab=password-tab' : '#settingsModal?tab=password-tab';
+
         return (new MailMessage)
             ->subject('Email Address Changed')
             ->line('The email address associated with your account was recently changed.')
             ->line('New email address: ' . $this->user->email)
             ->line('If you did not make this change, please secure your account immediately.')
-            ->action('Secure Account', url('/password/reset'))
+            ->action('Secure Account', url('http://orpawnage.test/' . $isAdmin))
             ->line('Thank you for using our application!');
     }
 }
