@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== HERO SECTION ========== -->
-  <section class="relative w-full h-[70vh] max-h-[800px] overflow-hidden">
+  <section class="relative w-full h-[70vh] max-h-[800px] overflow-hidden" id="mainContent">
     <!-- Background image -->
     <img src="{{ asset('images/banner.jpg') }}" alt="Angeles City Veterinary Office staff with animals"
       class="w-full h-full object-cover object-top" />
@@ -380,4 +380,24 @@
       </div>
     </div>
   </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function updateHeaderSpacer() {
+          const header = document.getElementById('main-header');
+          const mainContent = document.getElementById('mainContent');
+          
+          if (header && mainContent) {
+              const headerHeight = header.offsetHeight;
+              mainContent.style.marginTop = `${headerHeight}px`;
+          }
+      }
+
+      // Initial update
+      updateHeaderSpacer();
+
+      // Update on window resize
+      window.addEventListener('resize', updateHeaderSpacer);
+    });
+  </script>
 </x-layout>

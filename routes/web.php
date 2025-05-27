@@ -167,6 +167,7 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
 
     Route::get('/admin/archives', [ArchiveController::class, 'index'])->name('archives');
     Route::patch('/admin/archives/{type}/{id}/restore', [ArchiveController::class, 'restore'])->name('admin.archives.restore');
+    Route::delete('/admin/archives/{type}/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
 
     Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
 

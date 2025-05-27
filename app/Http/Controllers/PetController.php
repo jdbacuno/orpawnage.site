@@ -196,11 +196,11 @@ class PetController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $pets = $query->paginate(8)->appends(request()->query());
+        $perPage = request()->get('per_page', 8); // Use 8 as default if not provided
+        $pets = $query->paginate($perPage)->appends(request()->query());
 
         return view('admin.pets', compact('pets'));
     }
-
 
     public function store(Request $request)
     {

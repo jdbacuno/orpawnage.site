@@ -9,6 +9,7 @@ use App\Models\MissingPetReport;
 use App\Models\AbusedPetReport;
 use App\Models\AnimalAbuseReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArchiveController extends Controller
 {
@@ -70,6 +71,79 @@ class ArchiveController extends Controller
         }
 
         return back()->with('success', 'Item has been unarchived successfully.');
+    }
+
+    public function destroy($type, $id)
+    {
+        $item = match ($type) {
+            'pets' => Pet::findOrFail($id),
+            'adoption' => AdoptionApplication::findOrFail($id),
+            'missing' => MissingPetReport::findOrFail($id),
+            'abused' => AnimalAbuseReport::findOrFail($id),
+            default => null,
+        };
+
+        if (!$item) {
+            return back()->with('error', 'Invalid archive type');
+        }
+
+        // Handle deletion based on type
+        switch ($type) {
+            case 'pets':
+                // Delete pet image if exists
+                if ($item->image_path && Storage::disk('public')->exists($item->image_path)) {
+                    Storage::disk('public')->delete($item->image_path);
+                }
+                $item->delete();
+                break;
+
+            case 'adoption':
+                // Delete valid ID file if exists
+                if ($item->valid_id && Storage::disk('public')->exists($item->valid_id)) {
+                    Storage::disk('public')->delete($item->valid_id);
+                }
+                $item->delete();
+                break;
+
+            case 'missing':
+                // Delete files associated with missing pet report
+                if ($item->valid_id_path && Storage::disk('public')->exists($item->valid_id_path)) {
+                    Storage::disk('public')->delete($item->valid_id_path);
+                }
+                if ($item->pet_photos) {
+                    foreach (json_decode($item->pet_photos) as $photo) {
+                        if (Storage::disk('public')->exists($photo)) {
+                            Storage::disk('public')->delete($photo);
+                        }
+                    }
+                }
+                if ($item->location_photos) {
+                    foreach (json_decode($item->location_photos) as $photo) {
+                        if (Storage::disk('public')->exists($photo)) {
+                            Storage::disk('public')->delete($photo);
+                        }
+                    }
+                }
+                $item->delete();
+                break;
+
+            case 'abused':
+                // Delete files associated with abuse report
+                if ($item->valid_id_path && Storage::disk('public')->exists($item->valid_id_path)) {
+                    Storage::disk('public')->delete($item->valid_id_path);
+                }
+                if ($item->incident_photos) {
+                    foreach (json_decode($item->incident_photos) as $photo) {
+                        if (Storage::disk('public')->exists($photo)) {
+                            Storage::disk('public')->delete($photo);
+                        }
+                    }
+                }
+                $item->delete();
+                break;
+        }
+
+        return back()->with('success', 'Item has been permanently deleted.');
     }
 
     protected function getDefaultStatus($type)

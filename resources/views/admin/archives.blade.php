@@ -1,7 +1,7 @@
 <x-admin-layout>
   <h1 class="text-2xl font-bold text-gray-900">Archives</h1>
 
-  <div class="bg-white p-6 shadow-md rounded-lg mt-4">
+  <div class="mt-4">
     {{-- Filter Section --}}
     <div class="flex flex-wrap gap-2 mb-4">
       <form method="GET" action="{{ route('archives') }}" class="flex flex-wrap gap-4">
@@ -9,7 +9,7 @@
         <select name="type"
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
           onchange="this.form.submit()">
-          <option value="pets" {{ request('type', 'pets' )==='pets' ? 'selected' : '' }}>Archived Pets</option>
+          <option value="pets" {{ request('type', 'pets' )==='pets' ? 'selected' : '' }}>Pets Profiles</option>
           <option value="adoption" {{ request('type')==='adoption' ? 'selected' : '' }}>Adoption Applications</option>
           <option value="surrender" {{ request('type')==='surrender' ? 'selected' : '' }}>Surrender Applications
           </option>
@@ -268,6 +268,11 @@
                   role="menuitem" onclick="showUnarchiveModal('{{ $type }}', '{{ $item->id }}')">
                   <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i> Unarchive
                 </button>
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                  role="menuitem" onclick="showDeleteModal('{{ $type }}', '{{ $item->id }}')">
+                  <i class="ph-fill ph-trash mr-2"></i> Delete Permanently
+                </button>
               </div>
             </div>
           </div>
@@ -326,6 +331,36 @@
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button type="button" id="closeDeleteModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800">Confirm Delete</h2>
+      <p class="mb-4">Are you sure you want to permanently delete this item?</p>
+      <p class="mb-4 text-red-800 text-sm">This action cannot be undone. All data associated with this item will be
+        permanently removed.</p>
+
+      <form id="deleteForm" method="POST" action="">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="type" id="deleteType">
+        <input type="hidden" name="id" id="deleteId">
+
+        <div class="flex justify-end space-x-3 mt-4">
+          <button type="button" id="cancelDelete" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="submit" class="bg-red-500 px-4 py-2 text-white hover:bg-red-600 rounded-md">
+            Confirm Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     function showTextModal(el, text) {
       document.getElementById('textTitle').textContent = el.dataset.title;
@@ -376,6 +411,24 @@
     // Cancel unarchive
     document.getElementById('cancelUnarchive').addEventListener('click', function() {
       document.getElementById('unarchiveModal').classList.add('hidden');
+    });
+
+    // Show delete modal
+    function showDeleteModal(type, id) {
+        document.getElementById('deleteType').value = type;
+        document.getElementById('deleteId').value = id;
+        document.getElementById('deleteForm').action = `/admin/archives/${type}/${id}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    // Close delete modal
+    document.getElementById('closeDeleteModal').addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    });
+
+    // Cancel delete
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.add('hidden');
     });
   </script>
 </x-admin-layout>

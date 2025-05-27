@@ -1,7 +1,7 @@
 <x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900">Manage Pet Profiles</h1>
+  <h1 class="text-2xl font-bold text-gray-900" id="mainContent">Manage Pet Profiles</h1>
 
-  <div class="bg-white p-6 shadow-md rounded-lg mt-4">
+  <div class="mt-4">
     <!-- Successful Add -->
     @if(session('add_success') && !session('modal_open'))
     <div id="alert-3"
@@ -197,7 +197,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       @foreach($pets as $pet)
       <div
-        class="relative bg-white w-full max-w-[350px] mx-auto rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+        class="relative bg-white w-full rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
         wire:poll.10s>
 
         <!-- Image container with hover-specific slide-up -->
@@ -709,7 +709,7 @@
             <p class="text-sm text-yellow-700">
               You are about to archive Pet#<span id="archivePetIdText" class="font-semibold">{{ old('pet_number',
                 session('archive_pet_number')) }}</span>.
-              This action cannot be undone.
+              This action cannot be undone. This will also notify all users.
             </p>
           </div>
         </div>
@@ -792,6 +792,24 @@
       notesContainer.style.display = this.value === 'Other' ? 'block' : 'none';
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+      function updateHeaderSpacer() {
+          const header = document.getElementById('main-header');
+          const mainContent = document.getElementById('mainContent');
+          
+          if (header && mainContent) {
+              const headerHeight = header.offsetHeight;
+              mainContent.style.marginTop = `${headerHeight * .25}px`;
+          }
+      }
+
+      // Initial update
+      updateHeaderSpacer();
+
+      // Update on window resize
+      window.addEventListener('resize', updateHeaderSpacer);
+    });
   </script>
 
 </x-admin-layout>

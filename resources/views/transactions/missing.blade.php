@@ -1,5 +1,5 @@
 <x-transactions-layout>
-  <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mt-0 sm:mt-10">Missing Pet Reports</h1>
+  <h1 class="text-lg sm:text-2xl font-bold text-gray-900">Missing Pet Reports</h1>
 
   <!-- Filters Section -->
   <div class="flex flex-wrap gap-2 my-4">
@@ -21,10 +21,10 @@
     <p class="text-lg">No missing pet reports found.</p>
   </div>
   @else
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
     @foreach($missingReports as $report)
     <div
-      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full overflow-x-auto scrollbar-hidden">
       <!-- Card Header -->
       <div class="p-3 border-b border-gray-200 flex items-start justify-between">
         <div class="flex items-center space-x-1">
@@ -46,7 +46,7 @@
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold flex items-center">
+            <h3 class="text-sm font-semibold flex items-center truncate">
               <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $report->report_number }}
             </h3>
             <p class="text-sm text-gray-500 truncate max-w-[120px]">
@@ -65,16 +65,6 @@
         default => 'bg-gray-100 text-gray-700',
         };
         @endphp
-
-        <!-- Status Badge -->
-        <div class="text-right space-y-1">
-          <span class="px-2 py-1 text-[10px] rounded {{ $statusClasses }}">
-            {{ ucwords($displayStatus) }}
-          </span>
-          <span class="flex justify-end items-center text-[10px] text-gray-500">
-            <i class="ph-fill ph-clock mr-1"></i> {{ $report->created_at->diffForHumans() }}
-          </span>
-        </div>
       </div>
 
       <!-- Card Body -->
@@ -182,16 +172,24 @@
       </div>
 
       <!-- Card Footer -->
-      <div class="p-2 border-t border-gray-200 bg-gray-50 rounded-b-lg">
-        <div class="flex justify-end items-center text-sm text-gray-500">
-          <button type="button" class="delete-btn px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-            data-report-id="{{ $report->id }}" data-report-number="{{ $report->report_number }}">
-            <i class="ph-fill ph-trash"></i>
-          </button>
-        </div>
+      <div class="p-2 border-t border-gray-200 bg-gray-50 rounded-b-lg flex justify-between items-center">
+        <span class="flex items-center text-[10px] text-gray-500">
+          <i class="ph-fill ph-clock mr-1"></i> {{ $report->created_at->diffForHumans() }}
+        </span>
+
+        <!-- Status Badge -->
+        <span class="px-2 py-1 text-[10px] rounded {{ $statusClasses }}">
+          {{ ucwords($displayStatus) }}
+        </span>
+
+        <button type="button" class="delete-btn px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+          data-report-id="{{ $report->id }}" data-report-number="{{ $report->report_number }}">
+          <i class="ph-fill ph-trash"></i>
+        </button>
       </div>
     </div>
-    @endforeach
+  </div>
+  @endforeach
   </div>
 
   <!-- Pagination -->

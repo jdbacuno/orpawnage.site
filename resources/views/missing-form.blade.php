@@ -1,6 +1,6 @@
 <x-layout>
-  <section class="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center pt-20 pb-10"
-    style="background-image: url('{{ asset('images/missing.jpeg') }}')">
+  <section class="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center"
+    style="background-image: url('{{ asset('images/missing.jpeg') }}')" id="mainContent">
 
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/40 z-0"></div>
@@ -324,5 +324,25 @@
     function closeValidIdModal() {
       document.getElementById('validIdModal').classList.add('hidden');
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+     function updateHeaderSpacer() {
+         const header = document.getElementById('main-header');
+         const mainContent = document.getElementById('mainContent');
+         
+         if (header && mainContent) {
+             const headerHeight = header.offsetHeight;
+             mainContent.style.marginTop = `${headerHeight}px`;
+             mainContent.style.paddingTop = `${headerHeight * .30}px`;
+             mainContent.style.paddingBottom = `${headerHeight * .30}px`;
+         }
+     }
+    
+     // Initial update
+     updateHeaderSpacer();
+    
+     // Update on window resize
+     window.addEventListener('resize', updateHeaderSpacer);
+    });
   </script>
 </x-layout>

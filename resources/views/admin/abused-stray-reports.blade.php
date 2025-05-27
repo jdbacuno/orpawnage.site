@@ -29,7 +29,7 @@
     <p class="text-lg">No reports found.</p>
   </div>
   @else
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
     @foreach($reports as $report)
     <div
       class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
@@ -62,19 +62,6 @@
             </p>
           </div>
         </div>
-
-        <!-- Status Badge -->
-        <div class="text-right space-y-1">
-          <span class="px-2 py-1 text-[10px] rounded 
-    {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-    {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
-    {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-            {{ ucwords($report->status) }}
-          </span>
-          <span class="flex justify-end items-center text-[10px] text-gray-500"><i class="ph-fill ph-clock mr-1"></i>{{
-            $report->created_at->diffForHumans()
-            }}</span>
-        </div>
       </div>
 
       <!-- Card Body -->
@@ -91,7 +78,7 @@
           </div>
           <div>
             <p class="text-gray-500 font-medium">When</p>
-            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M j, Y') }}</p>
+            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M d, Y') }}</p>
           </div>
           <div>
             <p class="text-gray-500 font-medium">Where</p>

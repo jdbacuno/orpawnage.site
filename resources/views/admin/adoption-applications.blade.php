@@ -1,7 +1,7 @@
 <x-admin-layout>
   <h1 class="text-2xl font-bold text-gray-900">Manage Pet Adoption Applications</h1>
 
-  <div class="bg-white p-6 shadow-md rounded-lg mt-4">
+  <div class="mt-4">
     {{-- Filter Section --}}
     <div class="flex flex-wrap gap-2 mb-4">
       <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
@@ -48,10 +48,10 @@
       <p class="text-lg">No adoption applications found.</p>
     </div>
     @else
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
       @foreach($adoptionApplications as $application)
       <div
-        class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
         <!-- Pet and Adopter Info Header -->
         <div class="p-4 border-b border-gray-200">
           <div class="flex items-start space-x-2">
@@ -129,14 +129,14 @@
           <div class="flex items-center justify-between">
             <span class="text-sm font-medium text-gray-500">Adopted On</span>
             <span class="text-sm text-gray-900">
-              {{ $application->pickup_date ? $application->pickup_date->format('F j, Y') : 'Not set' }}
+              {{ $application->pickup_date ? $application->pickup_date->format('M d, Y') : 'Not set' }}
             </span>
           </div>
 
           <div class="flex items-center justify-between">
             <span class="text-sm font-medium text-gray-500">Date Applied</span>
             <span class="text-sm text-gray-900">
-              {{ $application->created_at->format('M d, Y h:i A') }}
+              {{ $application->created_at->format('M d, Y') }}
             </span>
           </div>
         </div>

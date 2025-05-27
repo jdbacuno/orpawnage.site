@@ -1,5 +1,5 @@
 <x-transactions-layout>
-  <h1 class="text-lg sm:text-2xl font-bold text-gray-900 mt-0 sm:mt-10">Adoption Applications</h1>
+  <h1 class="text-lg sm:text-2xl font-bold text-gray-900">Adoption Applications</h1>
 
   <!-- Filters Section -->
   <div class="flex flex-wrap gap-2 my-4">
@@ -39,7 +39,7 @@
     <p class="text-lg">No adoption applications found.</p>
   </div>
   @else
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
     @foreach($adoptionApplications as $application)
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">

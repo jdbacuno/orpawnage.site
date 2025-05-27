@@ -43,7 +43,21 @@
             </p>
         </div>
 
-        <div>
+        <div class="flex items-center space-x-1">
+            <form method="GET" id="perPageForm" class="flex items-center hidden lg:flex">
+                <label for="per_page" class="text-sm text-gray-700 mr-2">Items per Page:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()"
+                    class="rounded-md inline-flex items-center pl-2 pr-6 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 transition ease-in-out duration-150">
+                    <option value="8" {{ request('per_page')==8 ? 'selected' : '' }}>8</option>
+                    <option value="12" {{ request('per_page')==12 ? 'selected' : '' }}>12</option>
+                    <option value="16" {{ request('per_page')==16 ? 'selected' : '' }}>16</option>
+                    <option value="20" {{ request('per_page')==20 ? 'selected' : '' }}>20</option>
+                </select>
+                @foreach(request()->except('per_page', 'page') as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                @endforeach
+            </form>
+
             <span class="relative z-0 inline-flex rtl:flex-row-reverse shadow-sm rounded-md">
                 {{-- Previous Page Link --}}
                 @if ($paginator->onFirstPage())

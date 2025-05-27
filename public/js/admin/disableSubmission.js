@@ -36,6 +36,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  const deleteArchivedForm = document.getElementById("deleteForm");
+  if (deleteArchivedForm) {
+    deleteArchivedForm.addEventListener("submit", function () {
+      const submitBtn = deleteArchivedForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Deleting...";
+      }
+    });
+  }
+
   // ========= APPROVE =========
   const pickupForm = document.getElementById("pickupForm");
   if (pickupForm) {

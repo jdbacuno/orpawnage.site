@@ -1,6 +1,8 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="h-screen flex items-center bg-gradient-to-r from-orange-50 to-yellow-50 sm:bg-none relative">
+  <section
+    class="h-50 sm:h-50 md:h-50 lg:h-50 xl:h-screen flex items-center bg-gradient-to-r from-orange-50 to-yellow-50 sm:bg-none relative"
+    id="mainContent">
     <!-- Mobile background image -->
     <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden">
       <img src="{{ asset('images/surrender.jpg') }}" alt="Adopt a Pet"
@@ -15,8 +17,8 @@
       </div>
 
       <!-- RIGHT SIDE: Slogan and CTA -->
-      <div class="flex flex-col justify-center items-start px-6 sm:px-12 lg:px-16 py-12 sm:py-0">
-        <h1 class="text-2xl sm:text-5xl lg:text-4xl font-bold leading-tight tracking-tight">
+      <div class="flex flex-col justify-center items-start px-6 sm:px-12 lg:px-16">
+        <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight">
           <span class="text-white sm:text-gray-800 block mb-2 sm:mb-3">Can't care for your pet anymore?</span>
           <span class="text-yellow-300 sm:text-yellow-500 block mb-6 sm:mb-8 animate-pulse">Rehome.</span>
 
@@ -319,6 +321,23 @@
           behavior: 'smooth'
         });
       });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+     function updateHeaderSpacer() {
+         const header = document.getElementById('main-header');
+         const mainContent = document.getElementById('mainContent');
+         
+         if (header && mainContent) {
+             const headerHeight = header.offsetHeight;
+             mainContent.style.marginTop = `${headerHeight}px`;         }
+     }
+    
+     // Initial update
+     updateHeaderSpacer();
+    
+     // Update on window resize
+     window.addEventListener('resize', updateHeaderSpacer);
     });
   </script>
 </x-layout>

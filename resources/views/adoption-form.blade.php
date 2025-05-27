@@ -1,6 +1,6 @@
 <x-layout>
   <!-- START OF THE SECTION -->
-  <section class="py-20 bg-white">
+  <section class="bg-white" id="mainContent">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Pet Header -->
       <div class="flex flex-wrap justify-between items-center gap-3 mt-2 mb-6">
@@ -487,6 +487,26 @@
     // Update name in oath when typing
     document.querySelector('input[name="full_name"]').addEventListener('input', function() {
       document.getElementById('inserted_name').textContent = this.value || '[Your Full Name]';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+     function updateHeaderSpacer() {
+         const header = document.getElementById('main-header');
+         const mainContent = document.getElementById('mainContent');
+         
+         if (header && mainContent) {
+             const headerHeight = header.offsetHeight;
+             mainContent.style.marginTop = `${headerHeight}px`;
+             mainContent.style.paddingTop = `${headerHeight * .5}px`;
+             mainContent.style.paddingBottom = `${headerHeight * .5}px`;
+         }
+     }
+    
+     // Initial update
+     updateHeaderSpacer();
+    
+     // Update on window resize
+     window.addEventListener('resize', updateHeaderSpacer);
     });
   </script>
 </x-layout>

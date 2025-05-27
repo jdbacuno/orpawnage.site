@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF DONATION SECTION ========== -->
-  <section class="relative flex items-center justify-center min-h-screen bg-black/50 pb-9 pt-24">
+  <section class="relative flex items-center justify-center min-h-screen bg-black/50" id="mainContent">
 
     <!-- Adjusted pt-24 for navbar -->
     <!-- Background Image -->
@@ -68,4 +68,24 @@
     </div>
   </section>
   <!-- ========== END OF DONATION SECTION ========== -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function updateHeaderSpacer() {
+          const header = document.getElementById('main-header');
+          const mainContent = document.getElementById('mainContent');
+          
+          if (header && mainContent) {
+              const headerHeight = header.offsetHeight;
+              mainContent.style.marginTop = `${headerHeight}px`;
+          }
+      }
+
+      // Initial update
+      updateHeaderSpacer();
+
+      // Update on window resize
+      window.addEventListener('resize', updateHeaderSpacer);
+    });
+  </script>
 </x-layout>

@@ -29,10 +29,10 @@
     <p class="text-lg">No reports found.</p>
   </div>
   @else
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
     @foreach($reports as $report)
     <div
-      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+      class="bg-white rounded-lg shadow-md border border-gray-200 overflow-auto scrollbar-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       <!-- Card Header -->
       <div class="p-3 border-b border-gray-200 flex items-start justify-between">
         <div class="flex items-center space-x-1">
@@ -54,25 +54,13 @@
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold flex items-center">
+            <h3 class="text-sm font-semibold flex items-center truncate">
               <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $report->report_number }}
             </h3>
             <p class="text-sm text-gray-500 truncate max-w-[120px]">
               {{ $report->owner_name }}
             </p>
           </div>
-        </div>
-
-        <!-- Status Badge -->
-        <div class="text-right space-y-1">
-          <span class="px-2 py-1 text-[10px] rounded 
-    {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-    {{ $report->status === 'acknowledged' ? 'bg-green-100 text-green-700' : '' }}
-    {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-            {{ ucwords($report->status) }}
-          </span>
-          <span class="flex justify-end items-center text-[10px] text-gray-500"><i class="ph-fill ph-clock mr-1"></i>{{
-            $report->created_at->diffForHumans() }}</span>
         </div>
       </div>
 
@@ -86,7 +74,7 @@
           </div>
           <div>
             <p class="text-gray-500 font-medium">Last Seen</p>
-            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M j, Y') }}</p>
+            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M d, Y') }}</p>
           </div>
           <div>
             <p class="text-gray-500 font-medium">Contact</p>

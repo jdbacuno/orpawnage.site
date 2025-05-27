@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-gray-50 mt-10 py-16 min-h-screen">
+  <section class="bg-gray-50 min-h-screen" id="mainContent">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex items-center mb-6" id="pets">
@@ -31,7 +31,8 @@
         </div>
 
         <!-- Pet Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 justify-center">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 justify-center">
           @foreach ($featuredPets as $featured)
           <!-- ENHANCED CARD DESIGN -->
           <div
@@ -106,4 +107,26 @@
       @endif
     </div>
   </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+     function updateHeaderSpacer() {
+         const header = document.getElementById('main-header');
+         const mainContent = document.getElementById('mainContent');
+         
+         if (header && mainContent) {
+             const headerHeight = header.offsetHeight;
+             mainContent.style.marginTop = `${headerHeight}px`;
+             mainContent.style.paddingTop = `${headerHeight * .30}px`;
+             mainContent.style.paddingBottom = `${headerHeight * .30}px`;
+         }
+     }
+    
+     // Initial update
+     updateHeaderSpacer();
+    
+     // Update on window resize
+     window.addEventListener('resize', updateHeaderSpacer);
+    });
+  </script>
 </x-layout>

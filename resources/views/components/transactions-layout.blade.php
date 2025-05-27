@@ -1,8 +1,8 @@
 <x-layout>
-  <div class="flex min-h-screen">
+  <div class="flex min-h-screen" id="mainContent">
     <!-- Sidebar - Fixed width -->
-    <aside class="hidden sm:block w-70 bg-white border-r border-gray-200 px-4 py-10 flex-shrink-0 fixed h-full z-10">
-      <h2 class="text-lg font-semibold mt-10 mb-4">Manage Transactions</h2>
+    <aside class="hidden sm:block w-70 bg-white border-r border-gray-200 px-4 flex-shrink-0 fixed h-full z-10">
+      <h2 class="text-lg font-semibold mt-4 mb-4">Manage Transactions</h2>
       <nav class="space-y-2">
         <a href="/transactions/adoption-status"
           class="{{ request()->is('transactions/adoption-status') || request()->is('transactions') ? 'bg-yellow-400 text-black' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-yellow-400 transition">
@@ -30,7 +30,7 @@
     <!-- Main Content Area -->
     <div class="flex-1 sm:ml-64 w-full">
       <!-- Mobile Dropdown -->
-      <div class="block sm:hidden px-6 pt-6 mt-20">
+      <div class="block sm:hidden px-6 pt-6">
         <select onchange="location = this.value"
           class="w-full border border-gray-300 text-gray-700 text-base rounded-md px-3 py-2 shadow-sm focus:ring-orange-500 focus:border-orange-500">
           <option value="/transactions/adoption-status" {{ request()->is('transactions/adoption-status') ? 'selected' :
@@ -58,4 +58,24 @@
       </main>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function updateHeaderSpacer() {
+          const header = document.getElementById('main-header');
+          const mainContent = document.getElementById('mainContent');
+          
+          if (header && mainContent) {
+              const headerHeight = header.offsetHeight;
+              mainContent.style.marginTop = `${headerHeight}px`;
+          }
+      }
+
+      // Initial update
+      updateHeaderSpacer();
+
+      // Update on window resize
+      window.addEventListener('resize', updateHeaderSpacer);
+    });
+  </script>
 </x-layout>

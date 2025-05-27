@@ -89,6 +89,12 @@
     .tab-button.text-gray-500 {
       color: #6b7280;
     }
+
+    @media (width: 912px) {
+      #title {
+        display: none;
+      }
+    }
   </style>
 
   @vite(['resources/css/orpawnage-animation.css'])
@@ -169,16 +175,16 @@
   <div class="bg-white">
     <header class="absolute inset-x-0 top-0 z-50">
       <!-- ========== START OF NAVBAR ========== -->
-      <nav class="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-sm">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <nav id="main-header" class="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-sm">
+        <div class="max-w-screen-xl flex flex-wrap gap-y-4 items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400">Or<strong
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
                 class="text-yellow-400">PAW</strong>nage</span>
           </a>
 
           <!-- Dropdown Menu Button -->
-          <div class="flex items-center md:order-2 space-x-3 md:space-x-0 transition duration-300">
+          <div class="flex items-center md:order-2 space-x-3 transition duration-300">
             <button type="button"
               class="flex items-center justify-center text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 relative"
               id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
@@ -261,18 +267,18 @@
             <ul
               class="flex flex-col gap-y-4 font-normal p-4 sm:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 sm:flex-row sm:mt-0 sm:border-0 sm:bg-white transition-colors duration-300">
               <!-- HOME -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
               </li>
 
               <!-- FEATURED PETS -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <a href="/featured-pets" class="nav-link {{ request()->is('featured-pets') ? 'active' : '' }}">Featured
                   Pets</a>
               </li>
 
               <!-- SERVICES -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <div class="relative">
                   <!-- Desktop dropdown trigger (button) -->
                   <button id="dropdownNavbarLink1" data-dropdown-toggle="dropdownNavbar1"
@@ -330,7 +336,7 @@
               </li>
 
               <!-- REPORT -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <div class="relative">
                   <!-- Desktop dropdown trigger (button) -->
                   <button id="dropdownNavbarLink2" data-dropdown-toggle="dropdownNavbar2"
@@ -390,18 +396,18 @@
               </li>
 
               <!-- SUCCESSFUL ADOPTION -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <a href="/featured-adoptions"
                   class="nav-link {{ request()->is('featured-adoptions') ? 'active' : '' }}">Featured Adoptions</a>
               </li>
 
               <!-- ABOUT US -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4">
                 <a href="/about" class="nav-link {{ request()->is('about') ? 'active' : '' }}">About Us</a>
               </li>
 
               <!-- DONATE -->
-              <li class="sm:mr-6">
+              <li class="xl:mr-6 md:mr-4 lg:mr-4">
                 <a href="/donate" class="nav-link {{ request()->is('donate') ? 'active' : '' }}">Donate</a>
               </li>
             </ul>
@@ -436,7 +442,7 @@
 
     <!-- ========== START OF FOOTER ========== -->
     @if (!str_contains(request()->path(), 'transactions') && !str_contains(request()->path(), 'settings'))
-    <footer class="bg-yellow-300 w-full mt-auto {{ request()->is('transactions') }}">
+    <footer class="bg-yellow-300 w-full mt-auto px-10 {{ request()->is('transactions') }}">
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-around">
           <div class="flex items-center space-x-4 mb-6 md:mb-0">
