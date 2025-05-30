@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'isAdmin' => \App\Http\Middleware\IsAdmin::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerifiedExceptSettings::class,
+            'check.banned' => \App\Http\Middleware\CheckBanned::class,
         ]);
 
         $middleware->appendToGroup('web', [

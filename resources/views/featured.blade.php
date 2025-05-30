@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-gray-50 min-h-screen" id="mainContent">
+  <section class="bg-gray-50 featured-gradient min-h-screen" id="mainContent">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex items-center mb-6" id="pets">

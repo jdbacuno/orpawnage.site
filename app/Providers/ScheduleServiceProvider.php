@@ -28,5 +28,10 @@ class ScheduleServiceProvider extends ServiceProvider
       ->daily()
       ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-reject-unpicked.log'));
+
+    $schedule->command('users:auto-ban-rejected-applications')
+      ->daily() // Run daily to check for violations
+      ->onOneServer()
+      ->appendOutputTo(storage_path('logs/auto-ban-users.log'));
   }
 }

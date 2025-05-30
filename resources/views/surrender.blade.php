@@ -1,43 +1,36 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section
-    class="h-50 sm:h-50 md:h-50 lg:h-50 xl:h-screen flex items-center bg-gradient-to-r from-orange-50 to-yellow-50 sm:bg-none relative"
+  <section class="relative h-[70vh] min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden"
     id="mainContent">
-    <!-- Mobile background image -->
-    <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden">
+    <!-- Background image with darker overlay -->
+    <div class="absolute inset-0 w-full h-full">
       <img src="{{ asset('images/surrender.jpg') }}" alt="Adopt a Pet"
-        class="w-full h-full object-cover brightness-50" />
+        class="w-full h-full object-cover object-center brightness-50" />
+      <div class="absolute inset-0 bg-black/40"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 w-full h-full container mx-auto relative z-10">
-      <!-- LEFT SIDE: Pet Image (Desktop only) -->
-      <div class="h-full w-full overflow-hidden hidden sm:block">
-        <img src="{{ asset('images/surrender.jpg') }}" alt="Adopt a Pet"
-          class="w-full h-full object-cover object-center" />
-      </div>
-
-      <!-- RIGHT SIDE: Slogan and CTA -->
-      <div class="flex flex-col justify-center items-start px-6 sm:px-12 lg:px-16">
-        <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight">
-          <span class="text-white sm:text-gray-800 block mb-2 sm:mb-3">Can't care for your pet anymore?</span>
-          <span class="text-yellow-300 sm:text-yellow-500 block mb-6 sm:mb-8 animate-pulse">Rehome.</span>
-
-          <span class="text-white sm:text-gray-800 block mb-2 sm:mb-3">Have a wild or stray animal?</span>
-          <span class="text-yellow-300 sm:text-yellow-500 block animate-pulse">Surrender.</span>
+    <!-- Content container -->
+    <div class="container mx-auto px-6 sm:px-8 relative z-10 text-center">
+      <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+          <span class="block">Rehome. Surrender. Rescue.</span>
+          <span class="text-yellow-400 block">We're Here to Help</span>
         </h1>
 
-        <p class="mt-8 text-lg sm:text-xl text-white/90 sm:text-gray-600 max-w-lg leading-relaxed">
-          Find your pet a new family to love or surrender stray animals to our care.
+        <p class="text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Whether you're rehoming a pet, surrendering any animal, or getting an animal
+          rescued, we're here to help.
         </p>
 
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 cursor-pointer" id="scrollIntoNextSection">
-          <a
+        <div class="flex flex-col sm:flex-row justify-center gap-4" id="scrollIntoNextSection">
+          <a href="#elementToScrollInto"
             class="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-                clip-rule="evenodd" />
-            </svg> Rehome or Surrender
+            <i class="ph-fill ph-arrow-circle-down mr-2"></i>Start the Process
+          </a>
+          <a href="#elementToScrollInto"
+            class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
+            <i class="ph-fill ph-info mr-2"></i>
+            Learn More
           </a>
         </div>
       </div>
@@ -46,10 +39,11 @@
   <!-- ========== END OF HERO SECTION ========== -->
 
   <!-- ========== START OF RESPONSIVE TEXT SECTION ========== -->
-  <section class="bg-gray-100 pt-12 pb-6 px-6 sm:px-8" id="elementToScrollInto">
+  <section class="bg-gray-100 pt-12 pb-6 px-6 sm:px-8" id="startTheProcess">
     <div class="max-w-5xl mx-auto text-center mb-10">
       <h2 class="text-3xl sm:text-4xl font-bold text-gray-800">Need Help With an Animal?</h2>
-      <p class="mt-4 text-gray-600">Whether you're rehoming a pet or surrendering a stray, we're here to help.</p>
+      <p class="mt-4 text-gray-600">Whether you're rehoming a pet, surrendering any animal, or getting an animal
+        rescued, we're here to help.</p>
     </div>
 
     <div class="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -309,18 +303,26 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const scrollIntoNextSection = document.getElementById('scrollIntoNextSection');
-      const elementToScrollInto = document.getElementById('elementToScrollInto');
+        // Get all buttons/links that should trigger the scroll
+        const scrollButtons = document.querySelectorAll('[href="#elementToScrollInto"]');
+        const elementToScrollInto = document.getElementById('startTheProcess');
 
-      scrollIntoNextSection.addEventListener('click', function () {
-        const offset = window.innerHeight * 0.1; // 10% of the viewport height
-        const elementPosition = elementToScrollInto.getBoundingClientRect().top + window.scrollY;
-
-        window.scrollTo({
-          top: elementPosition - offset,
-          behavior: 'smooth'
+        // Add click event to each button/link
+        scrollButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                
+                if (elementToScrollInto) {
+                    const offset = window.innerHeight * 0.1; // 10% of viewport height
+                    const elementPosition = elementToScrollInto.getBoundingClientRect().top + window.scrollY;
+                    
+                    window.scrollTo({
+                        top: elementPosition - offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
-      });
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -330,7 +332,10 @@
          
          if (header && mainContent) {
              const headerHeight = header.offsetHeight;
-             mainContent.style.marginTop = `${headerHeight}px`;         }
+             mainContent.style.marginTop = `${headerHeight}px`;     
+            //  mainContent.style.paddingTop = `${headerHeight}px`;
+            //  mainContent.style.paddingBottom = `${headerHeight * .25}px`;    
+        }
      }
     
      // Initial update

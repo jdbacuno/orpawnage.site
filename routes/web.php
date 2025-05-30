@@ -12,6 +12,7 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use App\Livewire\PetListing;
 use App\Models\AdoptionApplication;
 use Illuminate\Auth\Events\Verified;
@@ -77,7 +78,7 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 })->middleware(['signed'])->name('verification.verify');
 
 // Signed In User Routes
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::view('/', 'home')->name('Home');
 
     Route::get('/featured-pets', [FeaturedPetController::class, 'index'])->name('Featured Pets');
@@ -124,7 +125,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/adoption-status/{application}', [AdoptionApplication::class, 'destroy']);
     });
 
-
     Route::view('/about', 'about')->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
 
@@ -134,6 +134,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
         ->name('transactions.adoption-status');
 });
+
+Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('verified');
 
 // Profile Settings Route
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -193,6 +195,11 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         Route::patch('/password', [SettingsController::class, 'adminUpdatePassword'])->name('admin.settings.password.update');
         Route::patch('/contact', [SettingsController::class, 'adminUpdateContact'])->name('admin.settings.contact.update');
     });
+
+    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
+    Route::patch('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::patch('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+    Route::get('/admin/users/{user}/details', [UserController::class, 'showDetails'])->name('admin.users.details');
 });
 
 // Password Reset Routes

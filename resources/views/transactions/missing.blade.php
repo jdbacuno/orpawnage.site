@@ -77,7 +77,7 @@
           </div>
           <div>
             <p class="text-gray-500 font-medium">Last Seen</p>
-            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M j, Y') }}</p>
+            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M d, Y') }}</p>
           </div>
           <div>
             <p class="text-gray-500 font-medium">Contact</p>

@@ -497,8 +497,8 @@
          if (header && mainContent) {
              const headerHeight = header.offsetHeight;
              mainContent.style.marginTop = `${headerHeight}px`;
-             mainContent.style.paddingTop = `${headerHeight * .5}px`;
-             mainContent.style.paddingBottom = `${headerHeight * .5}px`;
+             mainContent.style.paddingTop = `${headerHeight * .25}px`;
+             mainContent.style.paddingBottom = `${headerHeight * .25}px`;
          }
      }
     

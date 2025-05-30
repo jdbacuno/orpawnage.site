@@ -10,7 +10,5 @@
       @csrf
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Resend Verification Email</button>
     </form>
-
-    <a href="/settings" class="mt-4 text-blue-600 underline">Go to Settings</a>
   </div>
 </x-layout>

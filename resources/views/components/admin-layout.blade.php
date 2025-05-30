@@ -541,6 +541,8 @@
       function closeSettingsModal() {
         document.getElementById('settingsModal').classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
+        window.location.hash = '';
+        history.replaceState(null, null);
       }
 
       // Update your DOMContentLoaded event listener

@@ -15,6 +15,22 @@
 
   @vite(['resources/css/auth.css','resources/css/preloader.css',
   'resources/css/admin/fonts/phosphor/phosphor-fill.css', 'resources/css/orpawnage-animation.css'])
+
+  <style>
+    @media (max-width: 1024px) and (min-width: 912px) {
+      .left-content {
+        justify-content: center;
+      }
+
+      .logo {
+        display: block;
+      }
+
+      .right-content {
+        display: none;
+      }
+    }
+  </style>
 </head>
 
 <body

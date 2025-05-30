@@ -81,7 +81,7 @@
           </div>
           <div>
             <p class="text-gray-500 font-medium">When</p>
-            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M j, Y') }}</p>
+            <p>{{ \Carbon\Carbon::parse($report->incident_date)->format('M d, Y') }}</p>
           </div>
           <div>
             <p class="text-gray-500 font-medium">Where</p>

@@ -45,7 +45,8 @@
       <!-- Item 3 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
         <img src="{{ asset('images/home_image-3.jpg') }}"
-          class="absolute block w-full h-full object-cover sm:object-contain" alt="Slide 3" />
+          class="absolute block w-full h-full object-cover sm:object-cover md:object-cover lg:object-contain xl:object-contain"
+          alt="Slide 3" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
             <h1 class="text-4xl font-bold mb-4 text-yellow-400">

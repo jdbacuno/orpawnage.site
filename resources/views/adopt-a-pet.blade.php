@@ -1,6 +1,7 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="bg-gray-60 sm:bg-none relative" id="mainContent">
+  <section class="relative custom-gradient sm:bg-none" id="mainContent">
+
     <!-- Mobile background image -->
     <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden z-0">
       <img src="{{ asset('images/home_image-3.jpg') }}" alt="Adopt a Pet"
@@ -233,7 +234,7 @@
          if (header && mainContent) {
              const headerHeight = header.offsetHeight;
              mainContent.style.marginTop = `${headerHeight}px`;
-             mainContent.style.paddingTop = `${headerHeight * .30}px`;
+             mainContent.style.paddingTop = `${headerHeight * .3}px`;
              mainContent.style.paddingBottom = `${headerHeight * .25}px`;
          }
      }

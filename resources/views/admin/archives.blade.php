@@ -36,7 +36,7 @@
       <p class="text-lg">No {{ $label }} found.</p>
     </div>
     @else
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
       @foreach($items as $item)
       <div
         class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">

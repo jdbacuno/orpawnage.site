@@ -76,7 +76,7 @@
               <a href="#" class="adopter-info-btn text-blue-500 hover:text-blue-600 hover:underline"
                 data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
                 data-email="{{ $application->email }}" data-age="{{ $application->age }}"
-                data-birthdate="{{ $application->birthdate->format('F j, Y') }}"
+                data-birthdate="{{ $application->birthdate->format('M d, Y') }}"
                 data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
                 data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
                 data-reason="{{ $application->reason_for_adoption }}"
@@ -118,14 +118,14 @@
         <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-gray-500">Pickup Date</span>
           <span class="text-sm text-gray-900">
-            {{ $application->pickup_date ? $application->pickup_date->format('F j, Y') : 'Not set' }}
+            {{ $application->pickup_date ? $application->pickup_date->format('M d, Y') : 'Not set' }}
           </span>
         </div>
 
         <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-gray-500">Date Applied</span>
           <span class="text-sm text-gray-900">
-            {{ $application->created_at->format('M d, Y h:i A') }}
+            {{ $application->created_at->format('M d, Y') }}
           </span>
         </div>
       </div>
@@ -185,7 +185,7 @@
               <button type="button"
                 class="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900"
                 role="menuitem"
-                onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('F j, Y') }}')">
+                onclick="openPickupModal('{{ \Carbon\Carbon::parse($application->pickup_date)->format('M d, Y') }}')">
                 <i class="ph-fill ph-calendar-check mr-2"></i> View Schedule
               </button>
               @endif

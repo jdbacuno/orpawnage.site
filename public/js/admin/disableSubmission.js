@@ -117,6 +117,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ========= BAN/UNBANNING =========
+  const banForm = document.getElementById("banForm");
+  if (banForm) {
+    banForm.addEventListener("submit", function () {
+      const submitBtn = banForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Banning...';
+      }
+    });
+  }
+
+  const unbanForm = document.getElementById("unbanForm");
+  if (unbanForm) {
+    unbanForm.addEventListener("submit", function () {
+      const submitBtn = unbanForm.querySelector("button[type='submit']");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Unbanning...';
+      }
+    });
+  }
+
   // ========= SETTINGS =========
   const settingsForm = document.getElementById("settingsForm");
   if (settingsForm) {

@@ -14,6 +14,7 @@
   <script src="{{ asset('js/theme.js') }}"></script>
 
   @vite(['resources/css/preloader.css', 'resources/css/style.css'])
+  @vite(['resources/css/orpawnage-animation.css'])
 
   <style>
     /* Add this custom CSS for the link animation */
@@ -95,9 +96,22 @@
         display: none;
       }
     }
-  </style>
 
-  @vite(['resources/css/orpawnage-animation.css'])
+    @media (min-width: 768px) and (max-width: 912px) {
+      .logos {
+        flex-direction: column;
+        justify-content: space-evenly;
+      }
+
+      .footer-content {
+        row-gap: 10px
+      }
+    }
+
+    .custom-gradient {
+      background: linear-gradient(135deg, #fff9db 0%, #ffffff 50%) !important;
+    }
+  </style>
 </head>
 
 <body class="mx-auto max-w-[1920px] relative">
@@ -236,10 +250,12 @@
                 </li>
 
                 <!-- Add this near the user dropdown menu items in layout.blade.php -->
+                @unless(Auth::user()->is_banned)
                 <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-gear"></i>
                   <button onclick="openSettingsModal()" class="block py-2 text-sm">Profile Settings</button>
                 </li>
+                @endunless
                 <li class="mx-4 mb-2 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-sign-out"></i>
                   <form action="/logout" method="POST">
@@ -417,15 +433,6 @@
       <!-- ========== END OF NAVBAR ========== -->
     </header>
 
-    @auth
-    @if (!auth()->user()->hasVerifiedEmail())
-    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 p-4 text-center">
-      Your email is not verified.
-      <a href="{{ route('verification.notice') }}" class="underline font-semibold">Click here to verify</a>.
-    </div>
-    @endif
-    @endauth
-
     @if (session('status') === 'already-verified')
     <div class="bg-blue-100 border border-blue-400 text-blue-700 p-4 text-center">
       Your email is already verified.
@@ -444,13 +451,18 @@
     @if (!str_contains(request()->path(), 'transactions') && !str_contains(request()->path(), 'settings'))
     <footer class="bg-yellow-300 w-full mt-auto px-10 {{ request()->is('transactions') }}">
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div class="md:flex md:justify-around">
-          <div class="flex items-center space-x-4 mb-6 md:mb-0">
+        <div class="md:flex md:justify-around footer-content">
+          <div class="flex items-center gap-x-4 logos mb-6 md:mb-0">
             <a href="/" class="flex items-center">
-              <img src="{{ asset('images/orpawnage-logo.png') }}" class="w-[100px] h-[100px]" alt="Brand Logo 1" />
+              <img src="{{ asset('images/orpawnage-logo.png') }}"
+                class="w-[80px] h-[80px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] lg:w-[130px] lg:h-[130px] xl:w-[200px] xl:h-[200px] object-fill"
+                alt="Brand Logo 1" />
             </a>
+
             <a href="/" class="flex items-center">
-              <img src="{{ asset('images/cityvet_logo.png') }}" class="w-[150px] h-[100px]" alt="Brand Logo 2" />
+              <img src="{{ asset('images/cityvet_logo.png') }}"
+                class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
+                alt="Brand Logo 2" />
             </a>
           </div>
 
@@ -909,6 +921,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
     function closeSettingsModal() {
       document.getElementById('settingsModal').classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
+      window.location.hash = '';
+      history.replaceState(null, null);
     }
     
     // Update your DOMContentLoaded event listener

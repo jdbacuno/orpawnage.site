@@ -87,7 +87,7 @@
                 <a href="#" class="adopter-info-btn text-blue-500 hover:text-blue-600 hover:underline"
                   data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
                   data-email="{{ $application->email }}" data-age="{{ $application->age }}"
-                  data-birthdate="{{ $application->birthdate->format('F j, Y') }}"
+                  data-birthdate="{{ $application->birthdate->format('M d, Y') }}"
                   data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
                   data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
                   data-reason="{{ $application->reason_for_adoption }}"

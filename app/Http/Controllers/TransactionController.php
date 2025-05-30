@@ -25,6 +25,8 @@ class TransactionController extends Controller
             $query->where('status', $status);
         }
 
+        $perPage = request()->get('per_page', 8);
+
         $applications = $query->orderByRaw("
             CASE status
                 WHEN 'to be picked up' THEN 0
@@ -34,7 +36,7 @@ class TransactionController extends Controller
                 WHEN 'picked up' THEN 4
                 ELSE 3
             END
-        ")->latest()->paginate(9);
+        ")->latest()->paginate($perPage);
 
         return view('transactions.adoptions', [
             'adoptionApplications' => $applications,
@@ -76,7 +78,8 @@ class TransactionController extends Controller
                 break;
         }
 
-        $reports = $query->latest()->paginate(9);
+        $perPage = request()->get('per_page', 8);
+        $reports = $query->latest()->paginate($perPage);
 
         return view('transactions.missing', [
             'missingReports' => $reports,
@@ -110,7 +113,8 @@ class TransactionController extends Controller
                 break;
         }
 
-        $reports = $query->latest()->paginate(9);
+        $perPage = request()->get('per_page', 8);
+        $reports = $query->latest()->paginate($perPage);
 
         return view('transactions.abused', [
             'abusedReports' => $reports,

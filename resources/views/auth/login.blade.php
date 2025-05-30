@@ -3,7 +3,7 @@
   <div class="relative p-6 bg-white z-1 sm:p-0">
     <div class="relative flex flex-col justify-center w-full h-screen sm:p-0 lg:flex-row">
       <!-- LEFT SIDE: Form -->
-      <div class="flex flex-col flex-1 w-full lg:w-1/2">
+      <div class="flex flex-col flex-1 w-full lg:w-1/2 left-content">
         <div class="flex flex-col justify-center flex-1 w-full max-w-md mx-auto px-4 sm:px-6">
           <div class="space-y-8">
             <!-- Mobile Logo -->
@@ -118,7 +118,7 @@
       </div>
 
       <!-- RIGHT SIDE: Background Image -->
-      <div class="relative hidden w-full h-full lg:block lg:w-1/2 bg-cover bg-center" style="
+      <div class="relative hidden w-full h-full lg:block lg:w-1/2 bg-cover bg-center right-content" style="
           background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
                     url({{ asset('images/vet_service.jpg') }}) no-repeat center center;
           background-size: cover;

@@ -3,10 +3,10 @@
   <div class="relative bg-white sm:p-0">
     <div class="flex flex-col justify-center w-full h-screen lg:flex-row">
       <!-- Form Section -->
-      <div class="flex flex-col flex-1 w-full lg:w-1/2 overflow-y-auto no-scrollbar">
+      <div class="flex flex-col flex-1 w-full lg:w-1/2 overflow-y-auto no-scrollbar left-content">
         <div class="flex flex-col justify-center w-full max-w-md mx-auto px-6 py-12">
           <!-- Mobile Logo -->
-          <div class="lg:hidden mb-8">
+          <div class="lg:hidden mb-8 logo">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-24 mx-auto" alt="OrPAWnage Logo" />
           </div>
 
@@ -222,7 +222,7 @@
       </div>
 
       <!-- Image Section -->
-      <div class="relative hidden w-full lg:block lg:w-1/2 bg-cover bg-center" style="
+      <div class="relative hidden w-full lg:block lg:w-1/2 bg-cover bg-center right-content" style="
           background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
                     url({{ asset('images/vet_spaying.jpg') }}) no-repeat center center;
           background-size: cover;
