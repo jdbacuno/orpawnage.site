@@ -60,7 +60,7 @@
                 @elseif($type === 'adoption')
                 <i class="ph-fill ph-tag mr-2"></i> {{ $item->transaction_number }}
                 @elseif($type === 'surrender')
-                <i class="ph-fill ph-envelope-simple-open mr-2"></i> {{ $item->reference_number }}
+                <i class="ph-fill ph-envelope-simple-open mr-2"></i> {{ $item->transaction_number }}
                 @elseif(in_array($type, ['missing', 'abused']))
                 <i class="ph-fill ph-warning-circle mr-2"></i> {{ $item->report_number }}
                 @endif
@@ -78,7 +78,7 @@
               @elseif($type === 'surrender')
               <p class="text-sm mt-1 truncate">
                 <span class="text-gray-500">Owner:</span>
-                <span class="font-medium">{{ $item->owner_name }}</span>
+                <span class="font-medium">{{ $item->full_name }}</span>
               </p>
               @elseif($type === 'missing')
               <p class="text-sm mt-1 truncate">
@@ -157,18 +157,26 @@
           <!-- Surrender Application Details -->
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Pet Name</span>
-              <span class="text-sm text-gray-900">{{ $item->pet_name }}</span>
+              <span class="text-sm font-medium text-gray-500">Animal Name</span>
+              <span class="text-sm text-gray-900">{{ $item->pet_name ?? 'Unnamed' }}</span>
             </div>
 
             <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Pet Type</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->pet_type) }}</span>
+              <span class="text-sm font-medium text-gray-500">Species</span>
+              <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
             </div>
 
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-500">Reason</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->surrender_reason, 20) }}</span>
+              <span class="text-sm text-gray-900">{{ Str::limit($item->reason, 20) }}
+                @if(strlen($item->reason) > 20)
+                <button data-title="Reason for Surrendering"
+                  onclick="showTextModal(this, {{ json_encode($item->reason) }})"
+                  class="text-blue-500 hover:text-blue-700 text-xs ml-1">
+                  Read More
+                </button>
+                @endif
+              </span>
             </div>
           </div>
 

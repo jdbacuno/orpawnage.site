@@ -66,6 +66,26 @@
       @endif
     </div>
 
+    <!-- Surrender Applications -->
+    <div class="bg-gray-50 p-4 rounded-lg">
+      <h4 class="font-medium text-gray-900 mb-2">Adoption Applications</h4>
+      @if($user->surrenderApplications->isEmpty())
+      <p class="text-sm text-gray-500">No applications</p>
+      @else
+      <ul class="space-y-2">
+        @foreach($user->surrenderApplications as $application)
+        <li class="text-sm">
+          <div class="font-medium">{{ $application->transaction_number }}</div>
+          <div class="text-gray-500">{{ $application->status }}</div>
+          <div class="text-xs text-gray-400">{{ $application->created_at->format('M d, Y') }}</div>
+        </li>
+        @endforeach
+      </ul>
+      <a href="{{ route('admin.surrender-applications', ['search' => $user->email]) }}"
+        class="text-blue-500 text-sm mt-2 inline-block">View all</a>
+      @endif
+    </div>
+
     <!-- Abuse Reports -->
     <div class="bg-gray-50 p-4 rounded-lg">
       <h4 class="font-medium text-gray-900 mb-2">Abuse Reports</h4>

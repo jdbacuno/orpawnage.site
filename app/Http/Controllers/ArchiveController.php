@@ -25,9 +25,9 @@ class ArchiveController extends Controller
             'adoption' => AdoptionApplication::where('status', 'archived')
                 ->orderBy('updated_at', 'desc')
                 ->paginate($perPage),
-            // 'surrender' => SurrenderApplication::where('status', 'archived')
-            //     ->orderBy('updated_at', 'desc')
-            //     ->paginate($perPage),
+            'surrender' => SurrenderApplication::where('status', 'archived')
+                ->orderBy('updated_at', 'desc')
+                ->paginate($perPage),
             'missing' => MissingPetReport::where('status', 'archived')
                 ->orderBy('updated_at', 'desc')
                 ->paginate($perPage),
@@ -48,7 +48,7 @@ class ArchiveController extends Controller
         $item = match ($type) {
             'pets' => Pet::findOrFail($id),
             'adoption' => AdoptionApplication::findOrFail($id),
-            // 'surrender' => SurrenderApplication::findOrFail($id),
+            'surrender' => SurrenderApplication::findOrFail($id),
             'missing' => MissingPetReport::findOrFail($id),
             'abused' => AnimalAbuseReport::findOrFail($id),
             default => null,

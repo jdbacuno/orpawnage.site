@@ -11,6 +11,7 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SurrenderApplicationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Livewire\PetListing;
@@ -92,9 +93,13 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
         return app(PetListing::class)->render();
     });
 
-    Route::get('/services/surrender-an-animal', function () {
-        return view('surrender');
-    })->name('Surrender a Pet');
+    Route::get('/services/surrender-an-animal', [SurrenderApplicationController::class, 'create'])->name('Surrender a Pet');
+
+    Route::post('/services/surrender', [SurrenderApplicationController::class, 'store'])->name('surrender.store');
+    Route::get('/confirm-surrender/{id}', [SurrenderApplicationController::class, 'confirmApplication'])->name('surrender.confirm');
+    Route::post('/transactions/schedule-surrender/{id}', [SurrenderApplicationController::class, 'scheduleSurrender'])->name('schedule.surrender');
+    Route::post('/transactions/{id}/resend-surrender-email', [SurrenderApplicationController::class, 'resendEmail']);
+    Route::delete('/transactions/surrender-status/{application}', [SurrenderApplicationController::class, 'destroy']);
 
     Route::get('/services/{pet:slug}/adoption-form', [AdoptionApplicationController::class, 'create'])->name('Adopt a Pet');
     Route::post('/services/{pet:slug}/adoption-form', [AdoptionApplicationController::class, 'store']);
@@ -112,7 +117,6 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::post('/report/abused-stray-animal', [AnimalAbuseReportController::class, 'store']);
 
     Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
-
     Route::prefix('transactions')->group(function () {
         Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
         Route::post('/schedule-pickup/{id}', [AdoptionApplication::class, 'schedulePickup'])->name('schedule.pickup');
@@ -160,8 +164,8 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
 
     Route::patch('/admin/adoption-applications/archive', [AdoptionApplicationController::class, 'archive'])
         ->name('admin.adoption-applications.archive');
-    // Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])
-    //     ->name('admin.surrender-applications.archive');
+    Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])
+        ->name('admin.surrender-applications.archive');
     Route::patch('/admin/missing-pets/archive', [MissingPetReportController::class, 'archive'])
         ->name('admin.missing-reports.archive');
     Route::patch('/admin/abused-reports/archive', [AnimalAbuseReportController::class, 'archive'])
@@ -171,8 +175,13 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/archives/{type}/{id}/restore', [ArchiveController::class, 'restore'])->name('admin.archives.restore');
     Route::delete('/admin/archives/{type}/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
 
-    Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
+    Route::get('/admin/surrender-applications', [SurrenderApplicationController::class, 'index'])->name('Manage Surrender Applications');
+    Route::post('/admin/surrender-applications/move-to-schedule', [SurrenderApplicationController::class, 'moveToSchedule'])->name('surrender-applications.move-to-schedule');
+    Route::patch('/admin/surrender-applications/completed', [SurrenderApplicationController::class, 'markAsCompleted'])->name('surrender-applications.completed');
+    Route::patch('/admin/surrender-applications/reject', [SurrenderApplicationController::class, 'reject'])->name('surrender-applications.reject');
+    // Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])->name('admin.surrender-applications.archive');
 
+    Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
     Route::post('/admin/adoption-applications/move-to-schedule', [AdoptionApplicationController::class, 'moveToSchedule'])->name('adoption-applications.move-to-schedule');
 
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);

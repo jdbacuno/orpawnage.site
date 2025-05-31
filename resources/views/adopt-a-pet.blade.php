@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="relative custom-gradient sm:bg-none" id="mainContent">
+  <section class="relative custom-gradient sm:bg-none diagonal" id="mainContent">
 
     <!-- Mobile background image -->
     <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden z-0">
@@ -13,7 +13,7 @@
       <div class="lg:w-1/2 sm:mb-10 mb-0 text-left">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-white sm:text-gray-900 leading-tight">
           <i class="ph-fill ph-paw-print text-yellow-500"></i> Browse pets
-          at <span class="text-orange-400">Or<span class="text-yellow-400">PAW</span>nage</span>
+          at <span class="text-orange-400">Or<span class="text-yellow-500">PAW</span>nage</span>
           Adopt. Don't shop.
         </h1>
         <p class="mt-4 text-white sm:text-gray-600">
@@ -22,7 +22,7 @@
         </p>
 
         <!-- Adoption Process -->
-        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-sm rounded-lg border border-gray-200 text-justify">
+        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-lg rounded-lg border border-yellow-500 text-justify">
           <h3 class="font-bold text-lg text-black mb-4" id="processTitle"><i
               class="ph-fill ph-paw-print text-orange-500"></i> Adoption Process</h3>
 

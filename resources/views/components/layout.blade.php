@@ -109,7 +109,7 @@
     }
 
     .custom-gradient {
-      background: linear-gradient(135deg, #fff9db 0%, #ffffff 50%) !important;
+      background: linear-gradient(35deg, #ffc800 0%, #ffffff 50%) !important;
     }
   </style>
 </head>
@@ -194,7 +194,7 @@
           <a href="/" class="flex items-center space-x-3">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
-                class="text-yellow-400">PAW</strong>nage</span>
+                class="text-yellow-500">PAW</strong>nage</span>
           </a>
 
           <!-- Dropdown Menu Button -->

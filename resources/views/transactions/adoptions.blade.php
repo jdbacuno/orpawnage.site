@@ -27,9 +27,6 @@
         <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
           Rejected
         </option>
-        <option value="archive" {{ request('status')==='archive' ? 'selected' : '' }}>
-          Archived
-        </option>
       </select>
     </form>
   </div>
@@ -94,15 +91,22 @@
       <div class="p-4 space-y-3">
         <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-gray-500">Status</span>
-          <span class="px-2 py-1 text-xs rounded 
-                    {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-600' : '' }}
-                    {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
-                    {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                    {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
-                    {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
-                    {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-                    {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
-            @switch($application->status)
+
+          @php
+          $displayStatus = $application->status === 'archived' ? $application->previous_status : $application->status;
+          $statusClasses = match ($displayStatus) {
+          'to be confirmed' => 'bg-orange-100 text-orange-600',
+          'confirmed' => 'bg-blue-100 text-blue-700',
+          'to be scheduled' => 'bg-yellow-100 text-yellow-700',
+          'adoption on-going' => 'bg-indigo-100 text-indigo-700',
+          'picked up' => 'bg-green-100 text-green-700',
+          'rejected' => 'bg-red-100 text-red-700',
+          default => 'bg-gray-100 text-gray-700',
+          };
+          @endphp
+
+          <span class="px-2 py-1 text-xs rounded {{ $statusClasses }}">
+            @switch($displayStatus)
             @case('to be confirmed')
             Waiting Confirmation
             @break
@@ -110,7 +114,7 @@
             Adopted
             @break
             @default
-            {{ ucfirst($application->status) }}
+            {{ ucfirst($displayStatus) }}
             @endswitch
           </span>
         </div>
@@ -139,22 +143,14 @@
               id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
               onclick="toggleDropdownMenu('{{ $application->id }}')">
               <span class="mr-2">Actions</span>
-              <span class="px-2 py-1 text-xs rounded 
-        {{ $application->status === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
-        {{ $application->status === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
-        {{ $application->status === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
-        {{ $application->status === 'adoption on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
-        {{ $application->status === 'picked up' ? 'bg-green-100 text-green-700' : '' }}
-        {{ $application->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
-        {{ $application->status === 'archive' ? 'bg-gray-100 text-gray-700' : '' }}">
-                @switch($application->status)
+              <span class="px-2 py-1 text-xs rounded {{ $statusClasses }}">
+                @switch($displayStatus)
                 @case('to be confirmed') Waiting @break
                 @case('confirmed') Confirmed @break
                 @case('to be scheduled') To be Scheduled @break
                 @case('adoption on-going') On-going @break
                 @case('picked up') Adopted @break
                 @case('rejected') Rejected @break
-                @case('archive') Archived @break
                 @endswitch
               </span>
               <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -215,15 +211,9 @@
               </button>
               @endif
 
-              @if($application->status === 'picked up')
+              @if($application->status === 'picked up' || $application->status === 'archived')
               <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
                 <i class="ph-fill ph-check-circle mr-2"></i> Adoption Completed
-              </div>
-              @endif
-
-              @if($application->status === 'archive')
-              <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
-                <i class="ph-fill ph-archive mr-2"></i> Archived
               </div>
               @endif
             </div>

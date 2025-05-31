@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
 use App\Models\MissingPetReport;
+use App\Models\SurrenderApplication;
 use App\Notifications\AdoptionStatusNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,12 +47,31 @@ class TransactionController extends Controller
 
     public function surrender(Request $request)
     {
-        // Similar structure for surrender applications
+        $status = $request->get('status');
         $userId = Auth::id();
-        $applications = []; // Replace with your actual query
+
+        $query = SurrenderApplication::where('user_id', $userId);
+
+        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be scheduled', 'surrender on-going', 'completed', 'rejected'])) {
+            $query->where('status', $status);
+        }
+
+        $perPage = request()->get('per_page', 8);
+
+        $applications = $query->orderByRaw("
+        CASE status
+            WHEN 'surrender on-going' THEN 0
+            WHEN 'to be scheduled' THEN 1
+            WHEN 'confirmed' THEN 2
+            WHEN 'to be confirmed' THEN 3
+            WHEN 'completed' THEN 4
+            ELSE 3
+        END
+    ")->latest()->paginate($perPage);
 
         return view('transactions.surrender', [
             'applications' => $applications,
+            'status' => $status,
         ]);
     }
 

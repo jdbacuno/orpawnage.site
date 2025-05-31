@@ -24,11 +24,6 @@ class AdoptionApplicationController extends Controller
         $direction = request('direction', 'desc');
         $status = request('status');
 
-        $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color', 'status'];
-        if (!in_array($sort, $allowedSorts)) {
-            $sort = 'created_at';
-        }
-
         $query = AdoptionApplication::with(['pet', 'user'])
             ->where('status', '!=', 'archived') // Exclude archived applications by default
             ->orderBy($sort, $direction);
