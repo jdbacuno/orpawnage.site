@@ -6,6 +6,7 @@ use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\MissingPetReportController;
+use App\Http\Controllers\OfficeStaffController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\RegisteredUserController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Livewire\PetListing;
 use App\Models\AdoptionApplication;
+use App\Models\OfficeStaff;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -119,7 +121,7 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
     Route::prefix('transactions')->group(function () {
         Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
-        Route::post('/schedule-pickup/{id}', [AdoptionApplication::class, 'schedulePickup'])->name('schedule.pickup');
+        Route::post('/schedule-pickup/{id}', [AdoptionApplicationController::class, 'schedulePickup'])->name('schedule.pickup');
         Route::get('/surrender-status', [TransactionController::class, 'surrender'])->name('Surrender Applications Status');
         Route::get('/missing-status', [TransactionController::class, 'missing'])->name('Missing Reports Status');
         Route::get('/abused-status', [TransactionController::class, 'abused'])->name('Abused/Stray Reports Status');
@@ -129,7 +131,10 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
         Route::delete('/adoption-status/{application}', [AdoptionApplication::class, 'destroy']);
     });
 
-    Route::view('/about', 'about')->name('About Us');
+    Route::get('/about', function () {
+        $staff = OfficeStaff::all();
+        return view('about', compact('staff'));
+    })->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
 
     Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
@@ -209,6 +214,14 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
     Route::patch('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     Route::get('/admin/users/{user}/details', [UserController::class, 'showDetails'])->name('admin.users.details');
+
+    Route::get('/admin/office-staff', [OfficeStaffController::class, 'index'])->name('Manage Office Staff');
+    Route::post('/admin/office-staff', [OfficeStaffController::class, 'store'])->name('office-staff.store');
+    Route::put('/admin/office-staff/{id}', [OfficeStaffController::class, 'update'])->name('office-staff.update');
+    Route::delete('/admin/office-staff/{id}', [OfficeStaffController::class, 'destroy'])->name('office-staff.destroy');
+    Route::post('/admin/office-staff/update-order', [OfficeStaffController::class, 'updateOrder'])->name('office-staff.update-order');
+    Route::post('/admin/admin/office-staff/update-order', [OfficeStaffController::class, 'updateOrder'])
+        ->name('admin.office-staff.update-order');
 });
 
 // Password Reset Routes

@@ -133,11 +133,27 @@
           </a>
         </li>
 
+        <li class="mb-1 group {{ request()->is('admin/featured-adoptions') ? 'active' : '' }}">
+          <a href="/admin/featured-adoptions"
+            class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
+            <i class=" ph-fill ph-images-square mr-3 text-lg"></i>
+            <span class="text-sm">Featured Adoptions</span>
+          </a>
+        </li>
+
         <li class="mb-1 group {{ request()->is('admin/users') ? 'active' : '' }}">
           <a href="/admin/users"
             class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
             <i class=" ph-fill ph-user mr-3 text-lg"></i>
             <span class="text-sm">Users</span>
+          </a>
+        </li>
+
+        <li class="mb-1 group {{ request()->is('admin/office-staff') ? 'active' : '' }}">
+          <a href="/admin/office-staff"
+            class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
+            <i class=" ph-fill ph-users-four mr-3 text-lg"></i>
+            <span class="text-sm">Office Staff</span>
           </a>
         </li>
 
@@ -702,6 +718,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ asset('js/admin/script.js') }}"></script>

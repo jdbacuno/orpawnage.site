@@ -289,71 +289,22 @@
         <div class="w-24 h-1 bg-yellow-400 mx-auto mt-4"></div>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-        <!-- Team Member 1 -->
-        <div class="group text-center">
+      <div class="flex overflow-x-auto pb-4 gap-6 px-4">
+        @foreach($staff as $member)
+        <div class="group text-center flex-shrink-0 w-48">
           <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img src="https://avatar.iran.liara.run/public/boy" alt="Dr. Sarah Johnson"
+            <img
+              src="{{ $member->image_path ? asset('storage/' . $member->image_path) : 'https://avatar.iran.liara.run/public/' . ($loop->index % 2 === 0 ? 'boy' : 'girl') }}"
+              alt="{{ $member->name }}"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             <div
               class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             </div>
           </div>
-          <h3 class="font-bold text-lg">Rafael Charlie Nain</h3>
-          <p class="text-orange-100 text-sm">Lead Veterinarian</p>
+          <h3 class="font-bold text-lg">{{ $member->name }}</h3>
+          <p class="text-orange-100 text-sm">{{ $member->position }}</p>
         </div>
-
-        <!-- Team Member 2 -->
-        <div class="group text-center">
-          <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img src="https://avatar.iran.liara.run/public/girl" alt="Michael Chen"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            <div
-              class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            </div>
-          </div>
-          <h3 class="font-bold text-lg">Shanon Ticse</h3>
-          <p class="text-orange-100 text-sm">Shelter Manager</p>
-        </div>
-
-        <!-- Team Member 3 -->
-        <div class="group text-center">
-          <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img src="https://avatar.iran.liara.run/public/girl" alt="David Rodriguez"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            <div
-              class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            </div>
-          </div>
-          <h3 class="font-bold text-lg">Lynchee Circulo</h3>
-          <p class="text-orange-100 text-sm">Adoption Coordinator</p>
-        </div>
-
-        <!-- Team Member 4 -->
-        <div class="group text-center">
-          <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img src="https://avatar.iran.liara.run/public/boy" alt="Emily Wilson"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            <div
-              class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            </div>
-          </div>
-          <h3 class="font-bold text-lg">Alvin Manding</h3>
-          <p class="text-orange-100 text-sm">Volunteer Coordinator</p>
-        </div>
-
-        <!-- Team Member 5 -->
-        <div class="group text-center">
-          <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img src="https://avatar.iran.liara.run/public/boy" alt="Robert Kim"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            <div
-              class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            </div>
-          </div>
-          <h3 class="font-bold text-lg">Jonas Bacuño</h3>
-          <p class="text-orange-100 text-sm">Outreach Director</p>
-        </div>
+        @endforeach
       </div>
     </div>
   </section>

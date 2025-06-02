@@ -1,7 +1,7 @@
 <div
   class="relative bg-white w-full mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300"
   wire:poll.10s>
-  <a href="/services/{{ $pet->slug }}/adoption-form" class="block">
+  <a href="/services/{{ $pet->slug }}/adoption-form" class="block" target="_blank">
     <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
       class="h-64 w-full object-cover group-hover:brightness-95 transition-brightness duration-300" />
   </a>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- YOUR ORIGINAL BUTTON -->
-    <a href="/services/{{ $pet->slug }}/adoption-form"
+    <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
       class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-400 hover:text-black transition-color duration-100 ease-in">
       <i class="ph-fill ph-paw-print mr-1"></i> View More Details
     </a>

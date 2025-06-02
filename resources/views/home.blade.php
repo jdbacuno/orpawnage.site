@@ -168,7 +168,7 @@
             <!-- Individual Pet Card -->
             <div class="flex-shrink-0 w-full sm:max-w-[350px] relative group">
               <div class="bg-white rounded-lg overflow-hidden">
-                <a href="/services/{{ $featured->slug }}/adoption-form" class="block">
+                <a href="/services/{{ $featured->slug }}/adoption-form" class="block" target="_blank">
                   <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}"
                     alt="Pet Image"
                     class="h-64 w-full object-cover group-hover:brightness-95 transition-transform duration-500 hover:scale-105" />

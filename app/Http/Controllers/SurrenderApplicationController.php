@@ -33,7 +33,7 @@ class SurrenderApplicationController extends Controller
       $query->where('status', $status);
     }
 
-    $perPage = request()->get('per_page', 16);
+    $perPage = request()->get('per_page', 12);
     $applications = $query->paginate($perPage);
 
     return view('admin.surrender-applications', ['surrenderApplications' => $applications]);
@@ -130,7 +130,7 @@ class SurrenderApplicationController extends Controller
       $path = $photo->storeAs('surrender_animal_photos', $photoName, 'public');
       $animalPhotos[] = $path;
     }
-    $validated['animal_photo_path'] = json_encode($animalPhotos);
+    $validated['animal_photos'] = json_encode($animalPhotos);
 
     // Store application
     $application = SurrenderApplication::create([

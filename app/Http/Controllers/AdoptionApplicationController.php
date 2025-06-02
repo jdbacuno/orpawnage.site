@@ -32,7 +32,7 @@ class AdoptionApplicationController extends Controller
             $query->where('status', $status);
         }
 
-        $perPage = request()->get('per_page', 16);
+        $perPage = request()->get('per_page', 12);
         $applications = $query->paginate($perPage);
 
         return view('admin.adoption-applications', ['adoptionApplications' => $applications]);

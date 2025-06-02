@@ -52,7 +52,7 @@ class AnimalAbuseReportController extends Controller
             $query->latest();
         }
 
-        $reports = $query->paginate(10)
+        $reports = $query->paginate(12)
             ->appends($request->query());
 
         return view('admin.abused-stray-reports', compact('reports'));

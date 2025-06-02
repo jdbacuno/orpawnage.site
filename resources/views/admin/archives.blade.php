@@ -36,10 +36,10 @@
       <p class="text-lg">No {{ $label }} found.</p>
     </div>
     @else
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
       @foreach($items as $item)
       <div
-        class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
         <!-- Header with image and basic info -->
         <div class="p-4 border-b border-gray-200">
           <div class="flex items-start space-x-2">
@@ -47,28 +47,68 @@
             <!-- Pet Image -->
             <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
               <img src="{{ asset('storage/' . $item->image_path) }}"
-                alt=" {{ strtolower($item->pet_name) !== 'n/a' ? ucwords($item->pet_name) : 'Unnamed' }}"
-                class="w-full h-full object-cover">
+                alt="{{ strtolower($item->pet_name) !== 'n/a' ? ucwords($item->pet_name) : 'Unnamed' }}"
+                class="w-full h-full object-cover cursor-pointer" onclick="openPetPhotoModal(this)">
             </div>
             @endif
 
             <div class="flex-1 min-w-0">
               <h3 class="text-lg font-semibold flex items-center truncate">
                 @if($type === 'pets')
-                <i class="ph-fill ph-paw-print mr-2"></i> {{ strtolower($item->pet_name) !== 'n/a' ?
-                ucwords($item->pet_name) : 'Unnamed' }}
+                <i class="ph-fill ph-paw-print mr-2"></i>
+                <a href="#" class="archive-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                  data-id="{{ $item->id }}" data-type="{{ $type }}"
+                  data-name="{{ strtolower($item->pet_name) !== 'n/a' ? ucwords($item->pet_name) : 'Unnamed' }}"
+                  data-number="{{ $item->pet_number }}" data-species="{{ $item->species === 'feline' ? 'Cat' : 'Dog' }}"
+                  data-age="{{ $item->age }} {{ $item->age_unit }}" data-sex="{{ ucfirst($item->sex) }}"
+                  data-repro-status="{{ ucfirst($item->reproductive_status) }}" data-color="{{ ucfirst($item->color) }}"
+                  data-source="{{ ucfirst($item->source) }}" data-image="{{ asset('storage/' . $item->image_path) }}"
+                  data-reason="{{ $item->archive_reason === 'Other' ? $item->archive_notes : $item->archive_reason }}"
+                  data-date="{{ $item->created_at->format('M d, Y') }}">
+                  {{ strtolower($item->pet_name) !== 'n/a' ? ucwords($item->pet_name) : 'Unnamed' }}
+                </a>
                 @elseif($type === 'adoption')
-                <i class="ph-fill ph-tag mr-2"></i> {{ $item->transaction_number }}
+                <i class="ph-fill ph-tag mr-2"></i>
+                <a href="#" class="archive-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                  data-id="{{ $item->id }}" data-type="{{ $type }}" data-number="{{ $item->transaction_number }}"
+                  data-name="{{ $item->full_name }}" data-pet-name="{{ $item->pet->pet_name }}"
+                  data-pet-number="{{ $item->pet->pet_number }}"
+                  data-species="{{ $item->pet->species === 'feline' ? 'Cat' : 'Dog' }}" data-email="{{ $item->email }}"
+                  data-phone="{{ $item->contact_number }}" data-date="{{ $item->created_at->format('M d, Y') }}"
+                  data-reason="{{ $item->archive_reason ?? 'No reason provided' }}"
+                  data-adoption-reason="{{ $item->reason_for_adoption }}">
+                  {{ $item->transaction_number }}
+                </a>
                 @elseif($type === 'surrender')
-                <i class="ph-fill ph-envelope-simple-open mr-2"></i> {{ $item->transaction_number }}
+                <i class="ph-fill ph-envelope-simple-open mr-2"></i>
+                <a href="#" class="archive-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                  data-id="{{ $item->id }}" data-type="{{ $type }}" data-number="{{ $item->transaction_number }}"
+                  data-name="{{ $item->full_name }}" data-pet-name="{{ $item->pet_name }}"
+                  data-species="{{ ucfirst($item->species) }}" data-email="{{ $item->email }}"
+                  data-phone="{{ $item->contact_number }}"
+                  data-date="{{ \Carbon\Carbon::parse($item->created_at)->format('M d, Y') }}"
+                  data-reason="{{ $item->reason ?? 'No reason provided' }}">
+                  {{ $item->transaction_number }}
+                </a>
                 @elseif(in_array($type, ['missing', 'abused']))
-                <i class="ph-fill ph-warning-circle mr-2"></i> {{ $item->report_number }}
+                <i class="ph-fill ph-warning-circle mr-2"></i>
+                <a href="#" class="archive-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                  data-id="{{ $item->id }}" data-type="{{ $type }}" data-number="{{ $item->report_number }}"
+                  data-name="{{ $item->full_name ?? 'Anonymous' }}"
+                  data-date="{{ $type === 'missing' ? \Carbon\Carbon::parse($item->last_seen_date)->format('M d, Y') : \Carbon\Carbon::parse($item->incident_date)->format('M d, Y') }}"
+                  data-reason="{{ $type === 'missing' ? $item->pet_description : $item->additional_notes }}"
+                  data-location="{{ $type === 'missing' ? $item->last_seen_location : $item->incident_location }}"
+                  data-status="{{ $item->status }}">
+                  {{ $item->report_number }}
+                </a>
                 @endif
               </h3>
 
               @if($type === 'pets')
-              <p class="text-sm font-medium text-gray-900 truncate">
-                {{ ucfirst($item->species == 'feline' ? 'Cat' : 'Dog') }} #{{ $item->pet_number }}
+              <p class="text-sm mt-1 truncate">
+                <span class="text-gray-500">Species:</span>
+                <span class="font-medium">{{ $item->species === 'feline' ? 'Cat' : 'Dog' }}#{{ $item->pet_number
+                  }}</span>
               </p>
               @elseif($type === 'adoption')
               <p class="text-sm mt-1 truncate">
@@ -83,166 +123,21 @@
               @elseif($type === 'missing')
               <p class="text-sm mt-1 truncate">
                 <span class="text-gray-500">Reported by:</span>
-                <span class="font-medium">{{ $item->full_name ?: 'Anonymous' }}</span>
+                <span class="font-medium">{{ $item->full_name ?? 'Anonymous' }}</span>
               </p>
               @elseif($type === 'abused')
               <p class="text-sm mt-1 truncate">
                 <span class="text-gray-500">Reported by:</span>
-                <span class="font-medium">{{ $item->full_name ?: 'Anonymous' }}</span>
+                <span class="font-medium">{{ $item->full_name ?? 'Anonymous' }}</span>
               </p>
               @endif
+
+              <p class="text-sm">
+                <span class="text-gray-500">Archived on:</span>
+                <span class="font-medium">{{ \Carbon\Carbon::parse($item->deleted_at)->format('M d, Y') }}</span>
+              </p>
             </div>
           </div>
-        </div>
-
-        <!-- Details Section -->
-        <div class="p-4 space-y-3">
-          <!-- Type-Specific Information -->
-          @if($type === 'pets')
-          <!-- Pet Details -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Species</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Age</span>
-              <span class="text-sm text-gray-900">{{ $item->age }} {{ $item->age_unit }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Sex</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->sex) }}</span>
-            </div>
-
-            @if($item->archive_reason || $item->archive_notes)
-            <div class="space-y-3 border-t border-gray-100">
-              @if($item->archive_reason === 'Other')
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-500">Archive Reason</span>
-                <p class="text-sm text-gray-900 truncate">{{ $item->archive_notes }}</p>
-              </div>
-              @else
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-500">Archive Reason</span>
-                <span class="text-sm text-gray-900">{{ $item->archive_reason }}</span>
-              </div>
-              @endif
-            </div>
-            @endif
-          </div>
-
-          @elseif($type === 'adoption')
-          <!-- Adoption Application Details -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Pet</span>
-              <span class="text-sm text-gray-900">{{ $item->pet->pet_name }} ({{ ucfirst($item->species == 'feline' ?
-                'Cat' : 'Dog') }}#{{ $item->pet->pet_number }})</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Applied On</span>
-              <span class="text-sm text-gray-900">{{ $item->created_at->format('M d, Y') }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Contact</span>
-              <span class="text-sm text-gray-900">{{ $item->contact_number }}</span>
-            </div>
-          </div>
-
-          @elseif($type === 'surrender')
-          <!-- Surrender Application Details -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Animal Name</span>
-              <span class="text-sm text-gray-900">{{ $item->pet_name ?? 'Unnamed' }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Species</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Reason</span>
-              <span class="text-sm text-gray-900">{{ Str::limit($item->reason, 20) }}
-                @if(strlen($item->reason) > 20)
-                <button data-title="Reason for Surrendering"
-                  onclick="showTextModal(this, {{ json_encode($item->reason) }})"
-                  class="text-blue-500 hover:text-blue-700 text-xs ml-1">
-                  Read More
-                </button>
-                @endif
-              </span>
-            </div>
-          </div>
-
-          @elseif($type === 'missing')
-          <!-- Missing Pet Report Details -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Additional Info</span>
-              <span data-title="Additional Info" onclick="showTextModal(this, `{{ $item->pet_description }}`)"
-                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-                {{ Str::limit($item->pet_description, 20) }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Last Seen Location</span>
-              <span data-title="Last Seen Location" onclick="showTextModal(this, `{{ $item->last_seen_location }}`)"
-                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-                {{ Str::limit($item->last_seen_location, 20) }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Last Seen Date</span>
-              <span class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($item->last_seen_date)->format('M d, Y') }}
-              </span>
-            </div>
-          </div>
-
-          @elseif($type === 'abused')
-          <!-- Animal Abuse Report Details -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Species</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->species) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Incident</span>
-              <span class="text-sm text-gray-900">{{ ucfirst($item->animal_condition) }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Incident Location</span>
-              <span data-title="Incident Location" onclick="showTextModal(this, `{{ $item->incident_location }}`)"
-                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-                {{ Str::limit($item->incident_location, 20) }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Incident Date</span>
-              <span class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($item->incident_date)->format('M d, Y') }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-gray-500">Additional Notes</span>
-
-              <span data-title="Notes" onclick="showTextModal(this, `{{ $item->additional_notes }}`)"
-                class="text-sm text-gray-900 truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-                {{ Str::limit($item->additional_notes, 20) }}
-              </span>
-            </div>
-          </div>
-          @endif
         </div>
 
         <!-- Action Buttons Dropdown -->
@@ -254,9 +149,6 @@
                 id="options-menu-{{ $item->id }}" aria-expanded="true" aria-haspopup="true"
                 onclick="toggleDropdown('{{ $item->id }}')">
                 <span class="mr-2">Actions</span>
-                <span class="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700">
-                  Archived
-                </span>
                 <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                   fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd"
@@ -296,6 +188,48 @@
     @endif
   </div>
 
+  <!-- Archive Info Modal -->
+  <div id="archiveInfoModal"
+    class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div
+      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hidden">
+      <button id="closeArchiveInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800 mb-4" id="archiveModalTitle">Archive Details</h2>
+
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <div class="grid grid-cols-1 gap-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600">Archive Reason</label>
+            <div class="mt-1 text-sm text-gray-900" id="archiveReason"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic content based on type -->
+      <div id="archiveContent"></div>
+    </div>
+  </div>
+
+  <!-- Pet Photo Modal -->
+  <div id="petPhotoModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] flex flex-col">
+      <button id="closePetPhotoModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Pet Photo</h2>
+
+      <div class="flex-1 overflow-hidden relative">
+        <div class="w-full h-full flex items-center justify-center">
+          <img id="mainPetPhoto" alt="Pet Photo" class="max-h-[60vh] max-w-full object-contain rounded-lg shadow-md">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Unarchive Confirmation Modal -->
   <div id="unarchiveModal"
     class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
@@ -325,17 +259,6 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-
-  {{-- TEXT MODAL --}}
-  <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
-      <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x"></i>
-      </button>
-      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Incident Location</h2>
-      <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
     </div>
   </div>
 
@@ -370,15 +293,149 @@
   </div>
 
   <script>
-    function showTextModal(el, text) {
-      document.getElementById('textTitle').textContent = el.dataset.title;
-      document.getElementById('textModalContent').textContent = text;
-      document.getElementById('textModal').classList.remove('hidden');
+    // Archive Info Modal
+    document.querySelectorAll('.archive-info-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const type = this.dataset.type;
+        document.getElementById('archiveModalTitle').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Archive Details`;
+        document.getElementById('archiveReason').textContent = this.dataset.reason || 'No reason provided';
+
+        // Set up dynamic content based on type
+        const contentDiv = document.getElementById('archiveContent');
+        contentDiv.innerHTML = '';
+
+        if (type === 'pets') {
+          contentDiv.innerHTML = `
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
+              </h3>
+              <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-24 h-24 bg-gray-200 rounded-md overflow-hidden">
+                  <img id="petImagePreview" src="${this.dataset.image}" alt="Pet Image"
+                    class="w-full h-full object-cover cursor-pointer" onclick="openPetPhotoModal(this)">
+                </div>
+                <div class="grid grid-cols-2 gap-4 flex-1">
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Name</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.name} (#${this.dataset.number})</div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Species</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.species}</div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Age</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.age}</div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Sex</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.sex}</div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Reproductive Status</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.reproStatus}</div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium text-gray-500">Source</label>
+                    <div class="mt-1 text-sm text-gray-900">${this.dataset.source}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (type === 'adoption' || type === 'surrender') {
+          contentDiv.innerHTML = `
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-user-circle mr-2"></i>${type === 'adoption' ? 'Adopter' : 'Owner'} Information
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm font-medium text-gray-600">Name</label>
+                  <input type="text" value="${this.dataset.name}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-600">Contact Number</label>
+                  <input type="text" value="${this.dataset.phone || 'Not provided'}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-600">Email</label>
+                  <input type="text" value="${this.dataset.email || 'Not provided'}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+              </div>
+              ${type === 'adoption' ? `
+              <div class="mt-4">
+                <label class="text-sm font-medium text-gray-600">Pet</label>
+                <input type="text" value="${this.dataset.petName} (${this.dataset.species}#${this.dataset.petNumber})" readonly
+                  class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+              </div>
+              ` : ''}
+              <div class="mt-4">
+                <label class="text-sm font-medium text-gray-600">${type === 'adoption' ? 'Reason for Adoption' : 'Reason for Surrendering'}</label>
+                <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+                  ${type === 'adoption' ? this.dataset.adoptionReason : this.dataset.reason}
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (type === 'missing' || type === 'abused') {
+          contentDiv.innerHTML = `
+            <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-warning-circle mr-2"></i>Report Details
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm font-medium text-gray-600">Reported by</label>
+                  <input type="text" value="${this.dataset.name}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-600">${type === 'missing' ? 'Last Seen Date' : 'Incident Date'}</label>
+                  <input type="text" value="${this.dataset.date}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-sm font-medium text-gray-600">${type === 'missing' ? 'Last Seen Location' : 'Incident Location'}</label>
+                  <input type="text" value="${this.dataset.location || 'Not specified'}" readonly
+                    class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="text-sm font-medium text-gray-600">${type === 'missing' ? 'Pet Description' : 'Additional Notes'}</label>
+                  <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+                    ${this.dataset.reason || 'No details provided'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        document.getElementById('archiveInfoModal').classList.remove('hidden');
+      });
+    });
+
+    // Open pet photo modal
+    function openPetPhotoModal(imgElement) {
+      const petImageSrc = imgElement.src;
+      if (!petImageSrc) return;
+
+      document.getElementById('mainPetPhoto').src = petImageSrc;
+      document.getElementById('petPhotoModal').classList.remove('hidden');
     }
 
-    function closeTextModal() {
-      document.getElementById('textModal').classList.add('hidden');
-    }
+    // Close modals
+    document.getElementById('closeArchiveInfoModal').addEventListener('click', function() {
+      document.getElementById('archiveInfoModal').classList.add('hidden');
+    });
+
+    document.getElementById('closePetPhotoModal').addEventListener('click', function() {
+      document.getElementById('petPhotoModal').classList.add('hidden');
+    });
 
     // Improved toggle function for upward dropdown
     function toggleDropdown(id) {
@@ -423,20 +480,20 @@
 
     // Show delete modal
     function showDeleteModal(type, id) {
-        document.getElementById('deleteType').value = type;
-        document.getElementById('deleteId').value = id;
-        document.getElementById('deleteForm').action = `/admin/archives/${type}/${id}`;
-        document.getElementById('deleteModal').classList.remove('hidden');
+      document.getElementById('deleteType').value = type;
+      document.getElementById('deleteId').value = id;
+      document.getElementById('deleteForm').action = `/admin/archives/${type}/${id}`;
+      document.getElementById('deleteModal').classList.remove('hidden');
     }
 
     // Close delete modal
     document.getElementById('closeDeleteModal').addEventListener('click', function() {
-        document.getElementById('deleteModal').classList.add('hidden');
+      document.getElementById('deleteModal').classList.add('hidden');
     });
 
     // Cancel delete
     document.getElementById('cancelDelete').addEventListener('click', function() {
-        document.getElementById('deleteModal').classList.add('hidden');
+      document.getElementById('deleteModal').classList.add('hidden');
     });
   </script>
 </x-admin-layout>

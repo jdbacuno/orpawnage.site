@@ -6,9 +6,7 @@ use App\Models\Pet;
 use App\Models\AdoptionApplication;
 use App\Models\SurrenderApplication;
 use App\Models\MissingPetReport;
-use App\Models\AbusedPetReport;
 use App\Models\AnimalAbuseReport;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ArchiveController extends Controller

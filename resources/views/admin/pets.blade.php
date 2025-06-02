@@ -202,7 +202,7 @@
 
         <!-- Image container with hover-specific slide-up -->
         <div class="group relative h-48 overflow-hidden">
-          <a href="/services/{{ $pet->slug }}/adoption-form" class="block h-full">
+          <a href="/services/{{ $pet->slug }}/adoption-form" class="block h-full" target="_blank">
             <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
               class="h-full w-full object-cover transition duration-300" />
           </a>

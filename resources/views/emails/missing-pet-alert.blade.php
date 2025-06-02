@@ -53,7 +53,7 @@
 
     .main-image img {
       width: 100%;
-      height: auto;
+      height: 100%;
       border: 1px solid #ddd;
       border-radius: 4px;
       max-height: 350px;
@@ -213,7 +213,7 @@
         <span class="detail-label">Last Seen Location:</span> {{ $report->last_seen_location }}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Description:</span> {{ $report->pet_description }}
+        <span class="detail-label">Additional Notes/Information:</span> {{ $report->pet_description }}
       </div>
     </div>
 
