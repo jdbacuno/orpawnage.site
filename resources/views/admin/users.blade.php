@@ -7,7 +7,7 @@
       <form method="GET" action="{{ route('admin.users') }}" class="flex flex-wrap gap-4 w-full">
         <!-- Search -->
         <div class="relative">
-          <input type="text" name="search" placeholder="Search by email or name" value="{{ request('search') }}"
+          <input type="text" name="search" placeholder="Search by email or username" value="{{ request('search') }}"
             class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
@@ -88,9 +88,9 @@
 
   <!-- User Details Modal -->
   <div id="userModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
       <button type="button" id="closeUserModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x text-xl"></i>
+        <i class="ph ph-x"></i>
       </button>
 
       <div id="userModalContent">

@@ -84,6 +84,7 @@
                   data-pet-age-unit="{{ $application->pet->age == 1 ? Str::singular($application->pet->age_unit) : Str::plural($application->pet->age_unit) }}"
                   data-pet-color="{{ ucfirst($application->pet->color) }}"
                   data-pet-sex="{{ ucfirst($application->pet->sex) }}"
+                  data-pet-image-path="{{ $application->pet->image_path }}"
                   data-pet-repro-status="{{ ucfirst($application->pet->reproductive_status) }}"
                   data-pet-source="{{ ucfirst($application->pet->source) }}">{{ $application->transaction_number
                   }}</a>
@@ -246,9 +247,8 @@
           <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
         </h3>
         <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 h-24 bg-gray-200 rounded-md overflow-hidden">
-            <img id="petImagePreview" src="{{ asset('storage/' . $application->pet->image_path) }}" alt="Pet Image"
-              class="w-full h-full object-cover cursor-pointer" onclick="openPetPhotoModal(this)">
+          <div class="flex-shrink-0 w-24 h-24 bg-gray-200 rounded-md overflow-hidden" id="petInfoSection">
+            <img class="w-full h-full object-cover cursor-pointer" onclick="openPetPhotoModal(this)">
           </div>
 
           <div class="grid grid-cols-2 gap-4 flex-1">
@@ -557,6 +557,11 @@
         const status = this.dataset.status;
         const pickupDate = this.dataset.pickupDate || 'Not set';
         const createdAt = this.dataset.createdAt;
+
+        // Set pet image for the modal
+        const petImageSrc = "{{ asset('storage/') }}/" + this.dataset.petImagePath;
+        document.querySelector('#petInfoSection img').src = petImageSrc;
+        document.querySelector('#petInfoSection img').alt = this.dataset.petName;
         
         document.getElementById('transactionStatusBadge').textContent = formatStatus(status);
         document.getElementById('transactionStatusBadge').className = `px-2 py-1 text-xs rounded ${getStatusClass(status)}`;

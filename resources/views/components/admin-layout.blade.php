@@ -74,8 +74,8 @@
   <!-- start: Sidebar -->
   <div
     class="fixed left-0 top-0 w-64 h-full bg-white p-4 z-50 sidebar-menu transition-transform flex flex-col border-r border-gray-300">
-    <a href="#" class="flex items-center pb-4 border-b border-b-gray-300">
-      <img src="{{ asset('images/orpawnage-logo.png') }}" alt="" class="w-8 h-8 rounded object-cover" />
+    <a href="/" target="_blank" class="flex items-center pb-4 border-b border-b-gray-300">
+      <img src="{{ asset('images/orpawnage-logo.png') }}" alt="logo" class="w-8 h-8 rounded object-cover" />
       <span class="text-lg font-bold text-yellow-500 ml-3">
         Or<span class="text-orange-500">PAW</span>nage
       </span>
@@ -176,14 +176,6 @@
             class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
             <i class=" ph-fill ph-users-four mr-3 text-lg"></i>
             <span class="text-sm">Team Members</span>
-          </a>
-        </li>
-
-        <li class="mb-1 group">
-          <a href="/" target="_blank"
-            class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold transition-colors duration-300 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-            <i class="ph-fill ph-globe-hemisphere-east mr-3 text-lg"></i>
-            <span class="text-sm">OrPAWnage.com</span>
           </a>
         </li>
       </ul>
