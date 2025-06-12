@@ -76,7 +76,7 @@
                   data-species="{{ $item->pet->species === 'feline' ? 'Cat' : 'Dog' }}" data-email="{{ $item->email }}"
                   data-phone="{{ $item->contact_number }}" data-date="{{ $item->created_at->format('M d, Y') }}"
                   data-reason="{{ $item->archive_reason ?? 'No reason provided' }}"
-                  data-adoption-reason="{{ $item->reason_for_adoption }}">
+                  data-adoption-reason="{{ trim($item->reason_for_adoption) }}">
                   {{ $item->transaction_number }}
                 </a>
                 @elseif($type === 'surrender')
@@ -87,7 +87,7 @@
                   data-species="{{ ucfirst($item->species) }}" data-email="{{ $item->email }}"
                   data-phone="{{ $item->contact_number }}"
                   data-date="{{ \Carbon\Carbon::parse($item->created_at)->format('M d, Y') }}"
-                  data-reason="{{ $item->reason ?? 'No reason provided' }}">
+                  data-reason="{{ trim($item->reason) ?? 'No reason provided' }}">
                   {{ $item->transaction_number }}
                 </a>
                 @elseif(in_array($type, ['missing', 'abused']))
@@ -168,11 +168,14 @@
                   role="menuitem" onclick="showUnarchiveModal('{{ $type }}', '{{ $item->id }}')">
                   <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i> Unarchive
                 </button>
+
+                @if ($type !== 'adoption')
                 <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
                   role="menuitem" onclick="showDeleteModal('{{ $type }}', '{{ $item->id }}')">
                   <i class="ph-fill ph-trash mr-2"></i> Delete Permanently
                 </button>
+                @endif
               </div>
             </div>
           </div>
@@ -199,7 +202,7 @@
 
       <h2 class="text-xl font-semibold text-gray-800 mb-4" id="archiveModalTitle">Archive Details</h2>
 
-      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg archive-reason">
         <div class="grid grid-cols-1 gap-4">
           <div>
             <label class="text-sm font-medium text-gray-600">Archive Reason</label>
@@ -298,7 +301,9 @@
       button.addEventListener('click', function() {
         const type = this.dataset.type;
         document.getElementById('archiveModalTitle').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Archive Details`;
-        document.getElementById('archiveReason').textContent = this.dataset.reason || 'No reason provided';
+        document.getElementById('archiveReason').textContent = this.dataset.reason;
+       
+        if (type !== 'pets') document.querySelector('.archive-reason').classList.add('hidden');
 
         // Set up dynamic content based on type
         const contentDiv = document.getElementById('archiveContent');
@@ -375,7 +380,7 @@
               </div>
               ` : ''}
               <div class="mt-4">
-                <label class="text-sm font-medium text-gray-600">${type === 'adoption' ? 'Reason for Adoption' : 'Reason for Surrendering'}</label>
+                <label class="text-sm font-medium text-gray-600">${type === 'adoption' ? 'Reason for Adopting' : 'Reason for Surrendering'}</label>
                 <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
                   ${type === 'adoption' ? this.dataset.adoptionReason : this.dataset.reason}
                 </div>

@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
   {{--
@@ -17,6 +18,27 @@
   <title>Orpawnage | Admin</title>
 
   <style>
+    .draggable-item {
+      transition: transform 0.2s ease;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .draggable-item.dragging {
+      opacity: 0.5;
+      transform: scale(1.02);
+      cursor: grabbing;
+      z-index: 1000;
+      position: relative;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    #staffGrid {
+      min-height: 300px;
+      position: relative;
+    }
+
     /* Add this at the end of your style.css file */
     @media (max-width: 912px) {
       .main {
@@ -149,11 +171,11 @@
           </a>
         </li>
 
-        <li class="mb-1 group {{ request()->is('admin/office-staff') ? 'active' : '' }}">
-          <a href="/admin/office-staff"
+        <li class="mb-1 group {{ request()->is('admin/team-members') ? 'active' : '' }}">
+          <a href="/admin/team-members"
             class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
             <i class=" ph-fill ph-users-four mr-3 text-lg"></i>
-            <span class="text-sm">Office Staff</span>
+            <span class="text-sm">Team Members</span>
           </a>
         </li>
 
@@ -291,7 +313,7 @@
               <!-- Tab content -->
               <div class="py-4">
                 <!-- Success Alert -->
-                @if(session('success'))
+                @if(session('settings-success'))
                 <div id="alert-3"
                   class="flex items-center pl-4 pr-6 py-3 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
                   role="alert">

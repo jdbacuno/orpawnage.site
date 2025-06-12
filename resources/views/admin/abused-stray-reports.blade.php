@@ -263,16 +263,6 @@
         <div class="w-full h-full flex items-center justify-center">
           <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-contain rounded-lg shadow-md">
         </div>
-
-        <!-- Navigation Arrows -->
-        <button id="prevPhoto"
-          class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-          <i class="ph-fill ph-caret-left"></i>
-        </button>
-        <button id="nextPhoto"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-          <i class="ph-fill ph-caret-right"></i>
-        </button>
       </div>
 
       <!-- Thumbnail Strip -->
@@ -462,25 +452,6 @@
           });
           thumbnailsContainer.appendChild(thumbnail);
         });
-        
-        // Navigation handlers
-        document.getElementById('prevPhoto').onclick = () => {
-          currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-          mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-          // Update active thumbnail
-          document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-            thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          });
-        };
-        
-        document.getElementById('nextPhoto').onclick = () => {
-          currentIndex = (currentIndex + 1) % photos.length;
-          mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-          // Update active thumbnail
-          document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-            thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          });
-        };
         
         modal.classList.remove('hidden');
       } catch (e) {

@@ -1,178 +1,164 @@
 <x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900" id="mainContent">Manage Office Staff</h1>
+  <h1 class="text-2xl font-bold text-gray-900">Manage Team Members</h1>
 
-  <div class="mt-4">
-    @if(session('add_success'))
-    <div id="alert-3" class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 w-full md:w-1/2"
-      role="alert">
-      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-        viewBox="0 0 20 20">
-        <path
-          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 1 1 0 2Z" />
+  @if(session('success'))
+  <div id="alert-3" class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50" role="alert">
+    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+      viewBox="0 0 20 20">
+      <path
+        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+    </svg>
+    <span class="sr-only">Info</span>
+    <div class="ms-3 text-sm font-medium">
+      {{ session('success') }}
+    </div>
+    <button type="button"
+      class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+      data-dismiss-target="#alert-3" aria-label="Close">
+      <span class="sr-only">Close</span>
+      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
       </svg>
-      <span class="sr-only">Info</span>
-      <div class="ms-3 text-sm font-medium">
-        Staff member {{ session('add_success') }} added successfully!
-      </div>
-      <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-        data-dismiss-target="#alert-3" aria-label="Close">
-        <span class="sr-only">Close</span>
-        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-        </svg>
-      </button>
-    </div>
-    @endif
+    </button>
+  </div>
+  @endif
 
-    @if(session('edit_success'))
-    <div id="alert-3" class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 w-full md:w-1/2"
-      role="alert">
-      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-        viewBox="0 0 20 20">
-        <path
-          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 1 1 0 2Z" />
-      </svg>
-      <span class="sr-only">Info</span>
-      <div class="ms-3 text-sm font-medium">
-        Staff member {{ session('edit_success') }} updated successfully!
-      </div>
-      <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-        data-dismiss-target="#alert-3" aria-label="Close">
-        <span class="sr-only">Close</span>
-        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-        </svg>
-      </button>
-    </div>
-    @endif
-
-    @if(session('delete_success'))
-    <div id="alert-3" class="flex items-center p-4 mb-1 text-green-800 rounded-lg bg-green-50 w-full md:w-1/2"
-      role="alert">
-      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-        viewBox="0 0 20 20">
-        <path
-          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 1 1 0 2Z" />
-      </svg>
-      <span class="sr-only">Info</span>
-      <div class="ms-3 text-sm font-medium">
-        {{ session('delete_success') }}
-      </div>
-      <button type="button"
-        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-        data-dismiss-target="#alert-3" aria-label="Close">
-        <span class="sr-only">Close</span>
-        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-        </svg>
-      </button>
-    </div>
-    @endif
-
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold text-gray-800">Staff Members</h2>
-      <button id="openModal"
-        class="bg-yellow-400 text-black hover:bg-orange-500 hover:text-white font-semibold py-2 px-4 md:px-4 flex items-center justify-center md:rounded-md rounded-full w-10 h-10 md:w-auto md:h-auto">
-        <i class="ph-fill ph-plus-circle"></i>
-        <span class="hidden md:inline-flex ml-2">Add New Staff</span>
-      </button>
-    </div>
-
-    @if($staff->isEmpty())
-    <div class="flex items-center justify-center p-6 text-gray-500">
-      <p class="text-lg">No staff members found.</p>
-    </div>
-    @else
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8">
-      @foreach($staff as $member)
-      <div class="group text-center">
-        <div class="relative mb-4 overflow-hidden rounded-full w-24 h-24 mx-auto shadow-lg cursor-pointer staff-profile"
-          data-id="{{ $member->id }}" data-name="{{ $member->name }}" data-position="{{ $member->position }}"
-          data-image="{{ $member->image_path ? asset('storage/' . $member->image_path) : '' }}"
-          data-featured="{{ $member->is_featured }}">
-          <img
-            src="{{ $member->image_path ? asset('storage/' . $member->image_path) : 'https://avatar.iran.liara.run/public/' . ($loop->index % 2 === 0 ? 'boy' : 'girl') }}"
-            alt="{{ $member->name }}"
-            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-          <div
-            class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <i class="ph-fill ph-pencil-simple text-white text-xl"></i>
-          </div>
-          @if($member->is_featured)
-          <span
-            class="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-full transform translate-x-1 -translate-y-1">
-            <i class="ph-fill ph-star"></i>
-          </span>
-          @endif
+  <!-- Add New Staff Button -->
+  <div class="flex flex-wrap justify-between items-center gap-4 my-4">
+    <!-- Search Bar -->
+    <div class="relative">
+      <!-- Replace the current search div with this form -->
+      <form method="GET" action="{{ route('team.management') }}" class="relative">
+        <input type="text" name="search" placeholder="Search by email or name" value="{{ request('search') }}"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 pr-10">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
         </div>
-        <h3 class="font-bold text-gray-800">{{ $member->name }}</h3>
-        <p class="text-gray-600 text-sm">{{ $member->position }}</p>
-      </div>
-      @endforeach
+        @if(request('search'))
+        <a href="{{ route('team.management') }}" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+          <i class="ph-fill ph-x text-gray-500 hover:text-gray-700"></i>
+        </a>
+        @endif
+      </form>
     </div>
-    @endif
+
+    <button id="openModal"
+      class="bg-yellow-400 text-black hover:bg-orange-500 hover:text-white font-semibold py-2 px-4 flex items-center rounded-md">
+      <i class="ph-fill ph-plus-circle"></i>
+      <span class="ml-2">Add a Member</span>
+    </button>
   </div>
 
-  <div id="modal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-hidden relative flex flex-col">
-      <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black">
+  @if($staff->isEmpty())
+  <div class="flex items-center justify-center p-6 text-gray-500">
+    <p class="text-lg">No staff members found.</p>
+  </div>
+  @else
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="staffGrid">
+    @foreach($staff as $member)
+    <div
+      class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 text-center draggable-item"
+      draggable="true" data-id="{{ $member->id }}" data-order="{{ $member->order }}">
+      <!-- Staff Image - Rounded Design -->
+      <div class="relative mb-4 rounded-full w-32 h-32 mx-auto group cursor-pointer"
+        onclick="openEditModal({{ $member->id }})">
+        <img src="{{ asset('storage/' . $member->image_path) }}" alt="{{ $member->name }}"
+          class="w-full h-full object-cover rounded-full duration-500" />
+        <div
+          class="absolute inset-0 bg-orange-700/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        </div>
+      </div>
+
+      <!-- Staff Info -->
+      <h3 class="font-bold text-lg">{{ $member->name }}</h3>
+      <p class="text-gray-600 text-sm">{{ $member->position }}</p>
+      @if($member->email)
+      <p class="text-xs text-gray-500 mt-1">{{ $member->email }}</p>
+      @endif
+    </div>
+    @endforeach
+  </div>
+  @endif
+
+  @if($staff->hasPages())
+  <div class="mt-8">
+    {{ $staff->appends(['search' => request('search')])->links() }}
+  </div>
+  @endif
+
+  <!-- Add Staff Modal -->
+  <div id="addModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden relative flex flex-col">
+      <!-- Close Button -->
+      <button id="closeAddModal" class="absolute top-3 right-3 text-gray-600 hover:text-black">
         <i class="ph-bold ph-x text-xl"></i>
       </button>
 
+      <!-- Scrollable Content -->
       <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
-        <h2 class="text-xl font-semibold text-gray-800 flex items-center" id="modalTitle">
-          <i class="ph-fill ph-plus-circle mr-2 text-orange-500"></i>Add New Staff
+        <!-- Form Title -->
+        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+          <i class="ph-fill ph-plus-circle mr-2 text-orange-500"></i>Add New Staff Member
         </h2>
 
+        <!-- Image Preview -->
         <div class="flex justify-center relative">
           <p id="imagePlaceholder" class="absolute text-gray-500 text-sm">Image preview will appear here</p>
-          <img id="imagePreview" src="" class="w-32 h-32 rounded-full object-cover border-4 border-orange-100 hidden"
+          <img id="imagePreview" src="" class="w-full h-auto object-cover rounded-lg border border-gray-300 hidden"
             alt="Staff Image">
         </div>
 
-        <form id="staffForm" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <!-- Form Fields -->
+        <form method="POST" id="addStaffForm" action="{{ route('office-staff.store') }}" enctype="multipart/form-data"
+          class="space-y-6">
           @csrf
-          <div id="formMethod"></div>
 
+          <!-- Image Upload -->
           <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">Staff Photo</label>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Profile Image</label>
             <input type="file" name="image" id="imageInput"
               class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
           </div>
 
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-4">
+              <!-- Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Full Name <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="name" placeholder="Staff member's full name"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-4">
+              <!-- Position -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Position <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="position" placeholder="Staff member's position"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">Full Name <span
-                class="text-red-500">*</span></label>
-            <input type="text" name="name" id="name" required
+            <label class="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+            <input type="email" name="email" placeholder="Staff member's email (optional)"
               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">Position <span
-                class="text-red-500">*</span></label>
-            <input type="text" name="position" id="position" required
-              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
-          </div>
-
-          <div class="mb-4 flex items-center">
-            <input type="checkbox" name="is_featured" id="is_featured" class="mr-2">
-            <label for="is_featured" class="text-sm text-gray-600">Feature on homepage (first 5 featured staff will be
-              shown)</label>
-          </div>
-
-          <div class="flex justify-between pt-4">
-            <button type="button" id="deleteStaffButton"
-              class="px-5 bg-red-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-red-600 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg hidden">
-              <i class="ph-fill ph-trash mr-2"></i>Delete
-            </button>
+          <!-- Submit Button -->
+          <div class="flex justify-end pt-4">
             <button type="submit"
-              class="w-full sm:w-fit px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg ml-auto">
-              <i class="ph-fill ph-floppy-disk mr-2"></i>Save
+              class="w-full sm:w-fit px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              <i class="ph-fill ph-plus-circle mr-2"></i>Add Staff Member
             </button>
           </div>
         </form>
@@ -180,137 +166,296 @@
     </div>
   </div>
 
-  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-      <div class="flex flex-col items-center">
-        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-          <i class="ph-fill ph-trash text-red-500 text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Staff Member</h3>
-        <p class="text-gray-600 text-center mb-6">Are you sure you want to delete <span id="staffNameToDelete"
-            class="font-semibold"></span>? This action cannot be undone.</p>
+  <!-- Edit Staff Modal -->
+  <div id="editModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden relative flex flex-col">
+      <!-- Close Button -->
+      <button id="closeEditModal" class="absolute top-3 right-3 text-gray-600 hover:text-black">
+        <i class="ph-bold ph-x text-xl"></i>
+      </button>
 
-        <div class="flex justify-center gap-4 w-full">
-          <button id="cancelDelete"
-            class="px-5 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition duration-200">
-            Cancel
-          </button>
-          <form id="deleteForm" method="POST" class="w-full sm:w-auto">
-            @csrf
-            @method('DELETE')
+      <!-- Scrollable Content -->
+      <div class="flex flex-col overflow-y-auto scrollbar-hidden p-2 space-y-4 flex-grow">
+        <!-- Form Title -->
+        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+          <i class="ph-fill ph-pencil-simple mr-2 text-orange-500"></i>Edit Staff Member
+        </h2>
+
+        <!-- Image Preview -->
+        <div class="flex justify-center relative">
+          <img id="editImagePreview" src="" class="w-full h-auto object-cover rounded-lg border border-gray-300"
+            alt="Staff Image">
+        </div>
+
+        <!-- Form Fields -->
+        <form method="POST" id="editStaffForm" action="" enctype="multipart/form-data" class="space-y-6">
+          @csrf
+          @method('PATCH')
+
+          <!-- Image Upload -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Update Profile Image</label>
+            <input type="file" name="image" id="editImageInput"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-4">
+              <!-- Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Full Name <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="name" id="editName"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+              </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-4">
+              <!-- Position -->
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Position <span
+                    class="text-red-500">*</span></label>
+                <input type="text" name="position" id="editPosition"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+            <input type="email" name="email" id="editEmail" placeholder="Staff member's email (optional)"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-end pt-4">
             <button type="submit"
-              class="w-full px-5 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200">
-              Delete
+              class="w-full sm:w-fit px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2.5 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              <i class="ph-fill ph-floppy-disk mr-2"></i>Save Changes
             </button>
-          </form>
+          </div>
+        </form>
+
+        <!-- Delete Button -->
+        <div class="border-t border-gray-200 pt-4">
+          <button id="deleteStaffBtn"
+            class="w-full px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+            <i class="ph-fill ph-trash mr-2"></i>Delete Staff Member
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeDeleteModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+        <i class="ph-fill ph-warning mr-2 text-red-500"></i>Confirm Deletion
+      </h2>
+
+      <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <i class="ph-fill ph-warning text-red-500 text-xl"></i>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">
+              Are you sure you want to delete this staff member? This action cannot be undone.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <form id="deleteStaffForm" method="POST" action="" class="mt-6">
+        @csrf
+        @method('DELETE')
+
+        <div class="flex justify-end space-x-3 mt-6">
+          <button type="button" id="cancelDelete"
+            class="px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-300">
+            Cancel
+          </button>
+          <button type="submit"
+            class="px-4 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 focus:ring-2 focus:ring-red-300 flex items-center">
+            <i class="ph-fill ph-trash mr-2"></i>Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
+    // Image Preview for Add Modal
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('imagePlaceholder').classList.add('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Image Preview for Edit Modal
+    document.getElementById('editImageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('editImagePreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function openEditModal(staffId) {
+        // Get the staff member data from a data attribute on the clicked element
+        const staffElement = document.querySelector(`[data-id="${staffId}"]`);
+        if (!staffElement) return;
+
+        // Get the image path from the img src (remove the asset path)
+        const imgSrc = staffElement.querySelector('img').src;
+        const imagePath = imgSrc.replace("{{ asset('storage/') }}/", '');
+
+        // Get other data from data attributes or text content
+        const name = staffElement.querySelector('h3').textContent;
+        const position = staffElement.querySelector('p.text-gray-600').textContent;
+        const email = staffElement.querySelector('p.text-xs.text-gray-500')?.textContent || '';
+
+        // Populate the edit modal
+        document.getElementById('editImagePreview').src = imgSrc;
+        document.getElementById('editName').value = name;
+        document.getElementById('editPosition').value = position;
+        document.getElementById('editEmail').value = email;
+        
+        document.getElementById('editStaffForm').action = `/admin/office-staff/${staffId}`;
+        document.getElementById('deleteStaffForm').action = `/admin/office-staff/${staffId}`;
+        
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    // Modal Controls
+    document.getElementById('openModal').addEventListener('click', function() {
+        document.getElementById('addModal').classList.remove('hidden');
+    });
+
+    document.getElementById('closeAddModal').addEventListener('click', function() {
+        document.getElementById('addModal').classList.add('hidden');
+    });
+
+    document.getElementById('closeEditModal').addEventListener('click', function() {
+        document.getElementById('editModal').classList.add('hidden');
+    });
+
+    document.getElementById('deleteStaffBtn').addEventListener('click', function() {
+        document.getElementById('editModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.remove('hidden');
+    });
+
+    document.getElementById('closeDeleteModal').addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    });
+
+    // Drag and Drop Functionality
     document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('modal');
-            const deleteModal = document.getElementById('deleteModal');
-            const openModalBtn = document.getElementById('openModal');
-            const closeModalBtn = document.getElementById('closeModal');
-            const cancelDeleteBtn = document.getElementById('cancelDelete');
-            const form = document.getElementById('staffForm');
-            const deleteForm = document.getElementById('deleteForm');
-            const formMethod = document.getElementById('formMethod');
-            const modalTitle = document.getElementById('modalTitle');
-            const imageInput = document.getElementById('imageInput');
-            const imagePreview = document.getElementById('imagePreview');
-            const imagePlaceholder = document.getElementById('imagePlaceholder');
-            const staffNameToDelete = document.getElementById('staffNameToDelete');
-            const deleteStaffButton = document.getElementById('deleteStaffButton'); // New button for delete inside modal
-
-            // Open modal for adding new staff
-            openModalBtn.addEventListener('click', function() {
-                form.reset();
-                form.action = "{{ route('office-staff.store') }}";
-                formMethod.innerHTML = '';
-                modalTitle.innerHTML = '<i class="ph-fill ph-plus-circle mr-2 text-orange-500"></i>Add New Staff';
-                imagePreview.src = '';
-                imagePreview.classList.add('hidden');
-                imagePlaceholder.classList.remove('hidden');
-                document.getElementById('is_featured').checked = false;
-                deleteStaffButton.classList.add('hidden'); // Hide delete button for add
-                modal.classList.remove('hidden');
+        const grid = document.getElementById('staffGrid');
+        let draggedItem = null;
+        
+        // Add event listeners for drag and drop
+        document.querySelectorAll('.draggable-item').forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.5';
+                }, 0);
             });
-
-            // Close modals
-            closeModalBtn.addEventListener('click', function() {
-                modal.classList.add('hidden');
+            
+            item.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                    draggedItem = null;
+                }, 0);
             });
-
-            cancelDeleteBtn.addEventListener('click', function() {
-                deleteModal.classList.add('hidden');
-            });
-
-            // Open modal for editing staff when profile is clicked
-            document.querySelectorAll('.staff-profile').forEach(profile => {
-                profile.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const name = this.getAttribute('data-name');
-                    const position = this.getAttribute('data-position');
-                    const image = this.getAttribute('data-image');
-                    const featured = this.getAttribute('data-featured') === '1';
-
-                    form.action = `/admin/office-staff/${id}`;
-                    formMethod.innerHTML = `@method('PUT')`;
-                    modalTitle.innerHTML = '<i class="ph-fill ph-pencil-simple mr-2 text-orange-500"></i>Edit Staff Member';
-
-                    document.getElementById('name').value = name;
-                    document.getElementById('position').value = position;
-                    document.getElementById('is_featured').checked = featured;
-
-                    if (image) {
-                        imagePreview.src = image;
-                        imagePreview.classList.remove('hidden');
-                        imagePlaceholder.classList.add('hidden');
-                    } else {
-                        imagePreview.src = '';
-                        imagePreview.classList.add('hidden');
-                        imagePlaceholder.classList.remove('hidden');
-                    }
-                    
-                    deleteStaffButton.classList.remove('hidden'); // Show delete button for edit
-                    modal.classList.remove('hidden');
-
-                    // Set up delete button within the edit modal
-                    deleteStaffButton.onclick = function() {
-                        staffNameToDelete.textContent = name;
-                        deleteForm.action = `/admin/office-staff/${id}`;
-                        modal.classList.add('hidden'); // Hide edit modal
-                        deleteModal.classList.remove('hidden'); // Show delete confirmation modal
-                    };
-                });
-            });
-
-            // Image upload handling
-            imageInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.classList.remove('hidden');
-                        imagePlaceholder.classList.add('hidden');
-                    };
-                    reader.readAsDataURL(this.files[0]);
+            
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(grid, e.clientY);
+                if (afterElement == null) {
+                    grid.appendChild(draggedItem);
+                } else {
+                    grid.insertBefore(draggedItem, afterElement);
                 }
             });
-
-            // Universal alert dismiss functionality
-            document.querySelectorAll('[data-dismiss-target]').forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-dismiss-target');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.style.display = 'none'; // Or targetElement.remove();
-                    }
-                });
+        });
+        
+        // Handle drop to update order
+        grid.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const items = Array.from(document.querySelectorAll('.draggable-item'));
+            
+            // Update the order numbers based on new positions
+            items.forEach((item, index) => {
+                const newOrder = index + 1;
+                const currentOrder = parseInt(item.dataset.order);
+                
+                if (newOrder !== currentOrder) {
+                    // Update the order badge immediately
+                    item.dataset.order = newOrder;
+                    
+                    // Send AJAX request to update order in database
+                    updateStaffOrder(item.dataset.id, newOrder);
+                }
             });
         });
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        function updateStaffOrder(staffId, newOrder) {
+            fetch(`/admin/office-staff/${staffId}/update-order`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ order: newOrder })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to update order');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
   </script>
 </x-admin-layout>

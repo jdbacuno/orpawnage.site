@@ -1,10 +1,10 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="bg-gray-50 featured-gradient min-h-screen" id="mainContent">
+  <section class="featured-gradient min-h-screen custom-gradient" id="mainContent">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
-      <div class="text-black flex items-center mb-6" id="pets">
-        <h2 class="text-4xl font-extrabold text-black px-4 flex items-center">
+      <div class="text-black flex justify-center items-center mb-6" id="pets">
+        <h2 class="text-4xl font-bold text-black px-4 flex items-center">
           <i class="ph-fill ph-paw-print mr-2 text-orange-400"></i>Featured Pets
         </h2>
       </div>
@@ -19,7 +19,7 @@
               <i class="ph-fill ph-heart text-yellow-500 text-xl"></i>
             </div>
             <div class="ml-3">
-              <p class="text-sm text-yellow-700 font-semibold">
+              <p class="text-sm text-yellow-900 font-semibold leading-7 tracking-widest">
                 These pets may not be adopted faster compared to other pets currently available in our shelter based on
                 the
                 past adoption trend. We're featuring them in hopes of catching the attention of potential fur parents

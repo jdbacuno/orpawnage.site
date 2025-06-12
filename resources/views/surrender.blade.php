@@ -84,25 +84,6 @@
   <section class="pt-6 pb-10 px-4 sm:px-6 relative overflow-hidden bg-gray-100">
     <div class="max-w-4xl mx-auto">
       <div class="rounded-xl bg-white border border-gray-200 p-6 sm:p-8 shadow-md">
-        @if($hasPendingApplication)
-        <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <i class="ph-fill ph-warning text-yellow-500 text-xl"></i>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-yellow-700">
-                You currently have an ongoing surrender application.
-                <a href="/transactions/surrender-status"
-                  class="font-medium underline text-yellow-700 hover:text-yellow-600">
-                  View your current application</a>.
-                Please wait until it's completed or rejected before submitting a new request.
-              </p>
-            </div>
-          </div>
-        </div>
-        @endif
-
         <!-- Form Header -->
         <div class="mb-8">
           <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center">

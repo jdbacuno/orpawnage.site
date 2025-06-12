@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF HERO SECTION ========== -->
-  <section class="relative custom-gradient sm:bg-none diagonal" id="mainContent">
+  <section class="relative custom-gradient sm:bg-none" id="mainContent">
 
     <!-- Mobile background image -->
     <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden z-0">
@@ -8,7 +8,7 @@
         class="w-full h-full object-cover brightness-50" />
     </div>
 
-    <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-start lg:gap-x-6">
+    <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
       <div class="lg:w-1/2 sm:mb-10 mb-0 text-left">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-white sm:text-gray-900 leading-tight">
@@ -171,9 +171,9 @@
       </div>
 
       <!-- RIGHT SIDE IMAGE -->
-      <div class="lg:w-1/2">
+      <div class="lg:w-1/2 relative">
         <img src="{{ asset('images/home_image-3.jpg') }}" alt="Pet Adoption Hero Image"
-          class="hidden sm:block w-full sm:max-w-[500px] mx-auto rounded-xl shadow-lg" />
+          class="hidden sm:block w-full sm:max-w-[500px] mx-auto rounded-xl shadow-lg brightness-[.75]" />
       </div>
     </div>
   </section>

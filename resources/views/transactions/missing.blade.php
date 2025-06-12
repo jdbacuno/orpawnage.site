@@ -1,5 +1,5 @@
 <x-transactions-layout>
-  <h1 class="text-lg sm:text-2xl font-bold text-gray-900">Missing Pet Reports</h1>
+  <h1 class="text-2xl font-bold text-gray-900">Missing Pet Reports</h1>
 
   <!-- Filters Section -->
   <div class="flex flex-wrap gap-2 my-4">
@@ -21,286 +21,367 @@
     <p class="text-lg">No missing pet reports found.</p>
   </div>
   @else
-  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
     @foreach($missingReports as $report)
+    @php
+    $displayStatus = $report->previous_status ?? $report->status;
+    @endphp
     <div
-      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full overflow-x-auto scrollbar-hidden">
-      <!-- Card Header -->
-      <div class="p-3 border-b border-gray-200 flex items-start justify-between">
-        <div class="flex items-center space-x-1">
-          <div>
-            <!-- Valid ID Photo -->
-            <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-md overflow-hidden border border-gray-300">
-              @if($report->valid_id_path)
-              <button type="button" class="show-image-btn w-full h-full" data-image-title="Valid ID"
-                data-image="{{ asset('storage/' . $report->valid_id_path) }}">
-                <img src="{{ asset('storage/' . $report->valid_id_path) }}" alt="Reporter's ID"
-                  class="w-full h-full object-cover">
-              </button>
-              @else
-              <div class="w-full h-full flex items-center justify-center bg-gray-100">
-                <i class="ph-fill ph-user text-xl text-gray-400"></i>
-              </div>
-              @endif
+      class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      <!-- Pet and Owner Info Header -->
+      <div class="p-4 border-b border-gray-200">
+        <div class="flex items-start space-x-2">
+          <!-- Pet Image (first pet photo or placeholder) -->
+          <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+            @if($report->pet_photos)
+            <img src="{{ asset('storage/' . json_decode($report->pet_photos)[0]) }}" alt="{{ $report->pet_name }}"
+              class="w-full h-full object-cover cursor-pointer"
+              onclick="openPhotosModal('{{ $report->id }}', 'pet', 0)">
+            @else
+            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+              <i class="ph-fill ph-paw-print text-2xl text-gray-400"></i>
             </div>
+            @endif
           </div>
 
-          <div>
-            <h3 class="text-sm font-semibold flex items-center truncate">
-              <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $report->report_number }}
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-semibold flex items-center truncate">
+              <i class="ph-fill ph-tag mr-2"></i><a href="#"
+                class="owner-info-btn text-blue-500 hover:text-blue-600 hover:underline" data-id="{{ $report->id }}"
+                data-name="{{ $report->owner_name }}" data-pet-name="{{ $report->pet_name }}"
+                data-last-seen-date="{{ $report->last_seen_date->format('M d, Y') }}"
+                data-contact="{{ $report->contact_no }}" data-validid="{{ asset('storage/' . $report->valid_id_path) }}"
+                data-petphotos="{{ $report->pet_photos }}" data-locationphotos="{{ $report->location_photos }}"
+                data-description="{{ $report->pet_description }}" data-location="{{ $report->last_seen_location }}">{{
+                $report->report_number }}</a>
             </h3>
-            <p class="text-sm text-gray-500 truncate max-w-[120px]">
-              {{ $report->owner_name ?: 'Anonymous' }}
+            <p class="text-sm truncate">
+              <span class="text-gray-500">Owner:</span>
+              <span class="font-medium text-gray-900 truncate">{{ ucwords(strtolower($report->owner_name)) }}</span>
             </p>
-          </div>
-        </div>
-
-        @php
-        $displayStatus = $report->status === 'archived' ? $report->previous_status : $report->status;
-
-        $statusClasses = match ($displayStatus) {
-        'pending' => 'bg-yellow-100 text-yellow-700',
-        'acknowledged' => 'bg-green-100 text-green-700',
-        'rejected' => 'bg-red-100 text-red-700',
-        default => 'bg-gray-100 text-gray-700',
-        };
-        @endphp
-      </div>
-
-      <!-- Card Body -->
-      <div class="p-3 flex-1">
-        <!-- Basic Info -->
-        <div class="grid grid-cols-2 gap-2 text-sm mb-2">
-          <div>
-            <p class="text-gray-500 font-medium">Pet Name</p>
-            <p>{{ $report->pet_name }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Last Seen</p>
-            <p>{{ \Carbon\Carbon::parse($report->last_seen_date)->format('M d, Y') }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Contact</p>
-            <p>{{ $report->contact_no ?: 'Not provided' }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Last Seen Location</p>
-            <!-- Trigger Text -->
-            <p data-title="Last Seen Location" onclick="showTextModal(this, `{{ $report->last_seen_location }}`)"
-              class="truncate cursor-pointer transition-color duration-100 ease-in hover:text-blue-500">
-              {{ Str::limit($report->last_seen_location, 20) }}
+            <p class="text-sm">
+              <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded 
+                {{ $displayStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                {{ $displayStatus === 'acknowledged' ? 'bg-green-100 text-green-700' : '' }}
+                {{ $displayStatus === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
+                @switch($displayStatus)
+                @case('pending') Waiting for Review @break
+                @case('acknowledged') Acknowledged @break
+                @case('rejected') Rejected @break
+                @endswitch
+              </span>
             </p>
-          </div>
-        </div>
-
-        <!-- Collapsible Sections -->
-        <div class="space-y-2">
-          <!-- Pet Description -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-note-pencil mr-2 text-sm"></i>
-                Pet Description
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              @if($report->pet_description)
-              {{ Str::limit($report->pet_description, 20) }}
-              @if(strlen($report->pet_description) > 20)
-              <button data-title="Pet Description"
-                onclick="showTextModal(this, {{ json_encode($report->pet_description) }})"
-                class="text-blue-500 hover:text-blue-700 text-xs ml-1">
-                Read More
-              </button>
-              @endif
-              @else
-              No notes provided
-              @endif
-            </div>
-          </div>
-
-          <!-- Pet Photos -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-images mr-2 text-sm"></i>
-                Pet Photos ({{ count(json_decode($report->pet_photos)) }})
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden mt-2">
-              <div class="flex flex-wrap gap-1">
-                @foreach(json_decode($report->pet_photos) as $photo)
-                <button type="button" class="show-image-btn" data-image-title="Pet Photo"
-                  data-image="{{ asset('storage/' . $photo) }}">
-                  <img src="{{ asset('storage/' . $photo) }}" alt="Pet photo"
-                    class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
-                </button>
-                @endforeach
-              </div>
-            </div>
-          </div>
-
-          <!-- Location Photos -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-map-pin mr-2 text-sm"></i>
-                Location Photos ({{ count(json_decode($report->location_photos ?? '[]')) }})
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden mt-2">
-              <div class="flex flex-wrap gap-1">
-                @if($report->location_photos)
-                @foreach(json_decode($report->location_photos) as $photo)
-                <button type="button" class="show-image-btn" data-image-title="Location Photo"
-                  data-image="{{ asset('storage/' . $photo) }}">
-                  <img src="{{ asset('storage/' . $photo) }}" alt="Location photo"
-                    class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
-                </button>
-                @endforeach
-                @endif
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      <!-- Card Footer -->
-      <div class="p-2 border-t border-gray-200 bg-gray-50 rounded-b-lg flex justify-between items-center">
-        <span class="flex items-center text-[10px] text-gray-500">
-          <i class="ph-fill ph-clock mr-1"></i> {{ $report->created_at->diffForHumans() }}
-        </span>
-
-        <!-- Status Badge -->
-        <span class="px-2 py-1 text-[10px] rounded {{ $statusClasses }}">
-          {{ ucwords($displayStatus) }}
-        </span>
-
-        <button type="button" class="delete-btn px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-          data-report-id="{{ $report->id }}" data-report-number="{{ $report->report_number }}">
-          <i class="ph-fill ph-trash"></i>
-        </button>
+      <!-- Action Buttons -->
+      <div class="bg-gray-50 px-4 py-3 flex justify-end">
+        <form method="POST" action="/transactions/missing-status/{{ $report->id }}">
+          @csrf
+          @method('DELETE')
+          <button type="button" onclick="showDeleteModal('{{ $report->id }}', '{{ $report->report_number }}')"
+            class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center">
+            <i class="ph-fill ph-trash mr-1"></i> Delete
+          </button>
+        </form>
       </div>
     </div>
+    @endforeach
   </div>
-  @endforeach
-  </div>
+  @endif
 
   <!-- Pagination -->
   <div class="mt-6">
     {{ $missingReports->appends(request()->except('page'))->links() }}
   </div>
-  @endif
 
-  <!-- Image Modal -->
-  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative w-suto max-h-[90vh] overflow-auto">
-      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x"></i>
+  <!-- Owner Info Modal -->
+  <div id="ownerInfoModal"
+    class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div
+      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hidden">
+      <button id="closeOwnerInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
       </button>
-      <h2 class="text-md font-semibold text-gray-800" id="imageModalTitle"></h2>
-      <div class="w-full mt-2 flex justify-center items-center">
-        <img id="modalImage" alt="" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Owner's Information</h2>
+
+      <div class="mt-4">
+        <div class="flex gap-x-2 items-center">
+          <label class="text-sm font-medium text-gray-600">Valid ID</label>
+          <div>
+            <button id="viewValidId" class="text-blue-500 hover:underline text-sm hover:text-blue-600 cursor-pointer">
+              View Uploaded ID
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pet Photos Section -->
+      <div class="mt-2 mb-6 p-4 bg-gray-50 rounded-lg">
+        <div>
+          <label class="text-sm font-medium text-gray-600">Pet Photos</label>
+          <div id="petPhotosContainer" class="flex items-center gap-2 mt-2">
+            <!-- Photos will be inserted here by JavaScript -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600">Owner's Name</label>
+            <input type="text" id="ownerName" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Contact Number</label>
+            <input type="text" id="ownerContact" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600">Pet's Name</label>
+            <input type="text" id="petName" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Last Seen On</label>
+            <input type="text" id="lastSeenOn" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 mt-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600">Last Seen At</label>
+            <input type="text" id="lastSeenAt" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+        </div>
+
+        <!-- Location Photos Section -->
+        <div class="mt-4">
+          <label class="text-sm font-medium text-gray-600">Locations of Last and/or Possible Sightings</label>
+          <div id="locationPhotosContainer" class="flex items-center gap-2 mt-2">
+            <!-- Photos will be inserted here by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Pet Description Section -->
+        <div class="mt-4">
+          <label class="text-sm font-medium text-gray-600">Additional Notes/Info</label>
+          <div type="text" id="descriptionContent" readonly
+            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+      <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
+        <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+          <i class="ph-fill ph-x"></i>
+        </button>
+        <h2 class="text-md font-semibold text-gray-800">Uploaded ID</h2>
+        <div class="w-full mt-2 flex justify-center items-center">
+          <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photos Modal -->
+  <div id="photosModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-w-4xl max-h-[90vh] flex flex-col">
+      <button id="closePhotosModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4" id="photosModalTitle">Photos</h2>
+
+      <div class="flex-1 overflow-hidden relative">
+        <!-- Main Image Display -->
+        <div class="w-full h-full flex items-center justify-center">
+          <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-cover rounded-lg shadow-md">
+        </div>
+      </div>
+
+      <!-- Thumbnail Strip -->
+      <div id="photoThumbnails" class="flex gap-2 mt-4 overflow-x-auto py-2">
+        <!-- Thumbnails will be inserted here by JavaScript -->
       </div>
     </div>
   </div>
 
   <!-- Delete Confirmation Modal -->
   <div id="deleteModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg w-full max-w-sm relative">
-      <button id="closeDeleteModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x"></i>
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeDeleteModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
       </button>
-      <h2 class="font-semibold text-gray-800 mb-3">Confirm Deletion</h2>
-      <p id="deleteMessage" class="text-gray-700 mb-4">
-        Delete missing report <span id="reportNumberToDelete" class="font-semibold"></span>?
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Delete Report</h2>
+      <p id="deleteMessage" class="text-gray-700 mb-6">Are you sure you want to delete report <span
+          id="reportNumberToDelete" class="font-semibold"></span>? This action will remove your report from our records.
       </p>
-      <div class="flex justify-end gap-2">
-        <button id="cancelDelete" class="px-3 py-1 bg-gray-300 text-gray-800 rounded">Cancel</button>
-        <form id="deleteForm" method="POST" class="inline-block">
+      <div class="flex justify-end gap-3">
+        <button id="cancelDelete" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+        <form id="deleteForm" method="POST" action="" class="inline-block">
           @csrf
           @method('DELETE')
           <input type="hidden" name="report_id" id="deleteReportId">
-          <button type="submit" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">Delete</button>
+          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+            Delete
+          </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Location Text Modal -->
-  <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
-      <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x"></i>
-      </button>
-      <h2 class="text-md font-semibold text-gray-800" id="textTitle">Last Seen Location
-      </h2>
-      <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
-    </div>
-  </div>
-
   <script>
-    // incident location
-    function showTextModal(el, text) {
-      document.getElementById('textTitle').textContent = el.dataset.title;
-      document.getElementById('textModalContent').textContent = text;
-      document.getElementById('textModal').classList.remove('hidden');
-    }
-
-    function closeTextModal() {
-      document.getElementById('textModal').classList.add('hidden');
-    }
-
-    // Toggle collapsible sections
-    document.querySelectorAll('.toggle-section-btn').forEach(button => {
+    // Owner Info Modal
+    document.querySelectorAll('.owner-info-btn').forEach(button => {
       button.addEventListener('click', function() {
-        const content = this.nextElementSibling;
-        const icon = this.querySelector('.ph-caret-down');
+        document.getElementById('ownerName').value = this.dataset.name;
+        document.getElementById('ownerContact').value = this.dataset.contact;
+
+        document.getElementById('petName').value = this.dataset.petName;
+        document.getElementById('lastSeenOn').value = this.dataset.lastSeenDate;
+        document.getElementById('lastSeenAt').value = this.dataset.location;
         
-        content.classList.toggle('hidden');
-        icon.classList.toggle('ph-caret-down');
-        icon.classList.toggle('ph-caret-up');
+        // Set up the valid ID view button
+        document.getElementById('viewValidId').onclick = function() {
+          document.getElementById('modalImage').src = button.dataset.validid;
+          document.getElementById('imageModal').classList.remove('hidden');
+        };
         
-        // Close other open sections in this card
-        const card = this.closest('.bg-white');
-        card.querySelectorAll('.toggle-section-btn').forEach(otherBtn => {
-          if (otherBtn !== this) {
-            otherBtn.nextElementSibling.classList.add('hidden');
-            otherBtn.querySelector('.ph-caret-down').classList.remove('ph-caret-up');
-            otherBtn.querySelector('.ph-caret-down').classList.add('ph-caret-down');
+        document.getElementById('descriptionContent').textContent = this.dataset.description || 'No description provided';
+        
+        // Load pet photos
+        const petPhotosContainer = document.getElementById('petPhotosContainer');
+        petPhotosContainer.innerHTML = '';
+        
+        try {
+          const petPhotos = JSON.parse(button.dataset.petphotos || '[]');
+          
+          if (petPhotos.length === 0) {
+            petPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">No pet photos uploaded</p>';
+          } else {
+            petPhotos.forEach((photo, index) => {
+              const photoUrl = "{{ asset('storage/') }}/" + photo;
+              const photoElement = document.createElement('div');
+              photoElement.className = 'cursor-pointer hover:opacity-80 transition-opacity';
+              photoElement.innerHTML = `
+                <img src="${photoUrl}" alt="Pet photo ${index + 1}" 
+                    class="w-24 h-24 object-cover rounded-md border border-gray-200"
+                    onclick="openPhotosModal('${button.dataset.id}', 'pet', ${index})">
+              `;
+              petPhotosContainer.appendChild(photoElement);
+            });
           }
+        } catch (e) {
+          petPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">Error loading pet photos</p>';
+        }
+        
+        // Load location photos
+        const locationPhotosContainer = document.getElementById('locationPhotosContainer');
+        locationPhotosContainer.innerHTML = '';
+        
+        try {
+          const locationPhotos = JSON.parse(button.dataset.locationphotos || '[]');
+          
+          if (locationPhotos.length === 0) {
+            locationPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">No location photos uploaded</p>';
+          } else {
+            locationPhotos.forEach((photo, index) => {
+              const photoUrl = "{{ asset('storage/') }}/" + photo;
+              const photoElement = document.createElement('div');
+              photoElement.className = 'cursor-pointer hover:opacity-80 transition-opacity';
+              photoElement.innerHTML = `
+                <img src="${photoUrl}" alt="Location photo ${index + 1}" 
+                     class="w-24 h-24 object-cover rounded-md border border-gray-200"
+                     onclick="openPhotosModal('${button.dataset.id}', 'location', ${index})">
+              `;
+              locationPhotosContainer.appendChild(photoElement);
+            });
+          }
+        } catch (e) {
+          locationPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">Error loading location photos</p>';
+        }
+        
+        document.getElementById('ownerInfoModal').classList.remove('hidden');
+      });
+    });
+
+    // Function to open photos modal for a specific report
+    function openPhotosModal(reportId, type, startIndex = 0) {
+      const button = document.querySelector(`.owner-info-btn[data-id="${reportId}"]`);
+      if (!button) return;
+      
+      try {
+        const photos = JSON.parse(button.dataset[`${type}photos`] || '[]');
+        if (photos.length === 0) return;
+        
+        const modal = document.getElementById('photosModal');
+        const mainImg = document.getElementById('mainPhoto');
+        const thumbnailsContainer = document.getElementById('photoThumbnails');
+        const modalTitle = document.getElementById('photosModalTitle');
+        
+        // Set modal title
+        modalTitle.textContent = type === 'pet' ? 'Pet Photos' : 'Location Photos';
+        
+        // Clear previous thumbnails
+        thumbnailsContainer.innerHTML = '';
+        
+        // Set initial image
+        let currentIndex = startIndex >= 0 && startIndex < photos.length ? startIndex : 0;
+        mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
+        
+        // Create thumbnails
+        photos.forEach((photo, index) => {
+          const thumbnail = document.createElement('div');
+          thumbnail.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${index === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
+          thumbnail.innerHTML = `<img src="{{ asset('storage/') }}/${photo}" alt="Thumbnail ${index + 1}" class="w-full h-full object-cover">`;
+          thumbnail.addEventListener('click', () => {
+            currentIndex = index;
+            mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
+            // Update active thumbnail
+            document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
+              thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
+            });
+          });
+          thumbnailsContainer.appendChild(thumbnail);
         });
-      });
+        
+        modal.classList.remove('hidden');
+      } catch (e) {
+        console.error('Error loading photos:', e);
+      }
+    }
+
+    // Close owner info modal
+    document.getElementById('closeOwnerInfoModal').addEventListener('click', function() {
+      document.getElementById('ownerInfoModal').classList.add('hidden');
     });
 
-    // Image modal
-    document.querySelectorAll('.show-image-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        document.getElementById('imageModalTitle').textContent = this.dataset.imageTitle;
-        document.getElementById('modalImage').src = this.dataset.image;
-        document.getElementById('modalImage').alt = this.dataset.imageTitle;
-        document.getElementById('imageModal').classList.remove('hidden');
-      });
+    // Photos modal close handler
+    document.getElementById('closePhotosModal').addEventListener('click', function() {
+      document.getElementById('photosModal').classList.add('hidden');
     });
 
+    // Image modal close handler
     document.getElementById('closeImageModal').addEventListener('click', function() {
       document.getElementById('imageModal').classList.add('hidden');
     });
 
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        document.getElementById('deleteReportId').value = this.dataset.reportId;
-        document.getElementById('reportNumberToDelete').textContent = this.dataset.reportNumber;
-        document.getElementById('deleteForm').action = `/transactions/missing-status/${this.dataset.reportId}`;
-        document.getElementById('deleteModal').classList.remove('hidden');
-      });
-    });
+    // Delete modal functions
+    function showDeleteModal(reportId, reportNumber) {
+      document.getElementById('deleteReportId').value = reportId;
+      document.getElementById('reportNumberToDelete').textContent = reportNumber;
+      document.getElementById('deleteForm').action = `/transactions/missing-status/${reportId}`;
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
 
     document.getElementById('closeDeleteModal').addEventListener('click', function() {
       document.getElementById('deleteModal').classList.add('hidden');

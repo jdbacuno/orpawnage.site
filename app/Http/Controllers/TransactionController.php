@@ -6,12 +6,8 @@ use App\Models\AdoptionApplication;
 use App\Models\AnimalAbuseReport;
 use App\Models\MissingPetReport;
 use App\Models\SurrenderApplication;
-use App\Notifications\AdoptionStatusNotification;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -26,7 +22,7 @@ class TransactionController extends Controller
             $query->where('status', $status);
         }
 
-        $perPage = request()->get('per_page', 8);
+        $perPage = request()->get('per_page', 12);
 
         $applications = $query->orderByRaw("
             CASE status
@@ -56,7 +52,7 @@ class TransactionController extends Controller
             $query->where('status', $status);
         }
 
-        $perPage = request()->get('per_page', 8);
+        $perPage = request()->get('per_page', 12);
 
         $applications = $query->orderByRaw("
         CASE status
@@ -98,7 +94,7 @@ class TransactionController extends Controller
                 break;
         }
 
-        $perPage = request()->get('per_page', 8);
+        $perPage = request()->get('per_page', 12);
         $reports = $query->latest()->paginate($perPage);
 
         return view('transactions.missing', [
@@ -133,7 +129,7 @@ class TransactionController extends Controller
                 break;
         }
 
-        $perPage = request()->get('per_page', 8);
+        $perPage = request()->get('per_page', 12);
         $reports = $query->latest()->paginate($perPage);
 
         return view('transactions.abused', [

@@ -109,7 +109,11 @@
     }
 
     .custom-gradient {
-      background: linear-gradient(35deg, #ffc800 0%, #ffffff 50%) !important;
+      background: linear-gradient(35deg, #fadb6b 0%, #fffcec 50%) !important;
+    }
+
+    .footer-gradient {
+      background: linear-gradient(-145deg, #fadb6b 0%, #fffcec 50%) !important;
     }
   </style>
 </head>
@@ -414,7 +418,7 @@
               <!-- SUCCESSFUL ADOPTION -->
               <li class="xl:mr-6 md:mr-4">
                 <a href="/featured-adoptions"
-                  class="nav-link {{ request()->is('featured-adoptions') ? 'active' : '' }}">Featured Adoptions</a>
+                  class="nav-link {{ request()->is('featured-adoptions') ? 'active' : '' }}">Adopted Pets</a>
               </li>
 
               <!-- ABOUT US -->
@@ -449,7 +453,7 @@
 
     <!-- ========== START OF FOOTER ========== -->
     @if (!str_contains(request()->path(), 'transactions') && !str_contains(request()->path(), 'settings'))
-    <footer class="bg-yellow-300 w-full mt-auto px-10 {{ request()->is('transactions') }}">
+    <footer class="footer-gradient w-full mt-auto px-10 {{ request()->is('transactions') }}">
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-around footer-content">
           <div class="flex items-center gap-x-4 logos mb-6 md:mb-0">
@@ -612,7 +616,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
               <!-- Tab content -->
               <div class="py-4">
                 <!-- Success Alert -->
-                @if(session('success'))
+                @if(session('settings-success'))
                 <div id="alert-3"
                   class="flex items-center pl-4 pr-6 py-3 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
                   role="alert">

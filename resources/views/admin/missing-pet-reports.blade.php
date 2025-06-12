@@ -161,7 +161,7 @@
       <div class="mt-2 mb-6 p-4 bg-gray-50 rounded-lg">
         <div>
           <label class="text-sm font-medium text-gray-600">Pet Photos</label>
-          <div id="petPhotosContainer" class="flex items-center gap-2 mt-2">
+          <div id="petPhotosContainer" class="flex flex-wrap items-center gap-2 mt-2">
             <!-- Photos will be inserted here by JavaScript -->
           </div>
         </div>
@@ -219,8 +219,8 @@
     </div>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-      <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
+    <div id="imageModal" class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+      <div class="bg-white p-4 rounded-lg shadow-lg relative max-h-[90vh] overflow-auto">
         <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
           <i class="ph-fill ph-x"></i>
         </button>
@@ -246,16 +246,6 @@
         <div class="w-full h-full flex items-center justify-center">
           <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-contain rounded-lg shadow-md">
         </div>
-
-        <!-- Navigation Arrows -->
-        <button id="prevPhoto"
-          class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-          <i class="ph-fill ph-caret-left"></i>
-        </button>
-        <button id="nextPhoto"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70">
-          <i class="ph-fill ph-caret-right"></i>
-        </button>
       </div>
 
       <!-- Thumbnail Strip -->
@@ -463,25 +453,6 @@
           });
           thumbnailsContainer.appendChild(thumbnail);
         });
-        
-        // Navigation handlers
-        document.getElementById('prevPhoto').onclick = () => {
-          currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-          mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-          // Update active thumbnail
-          document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-            thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          });
-        };
-        
-        document.getElementById('nextPhoto').onclick = () => {
-          currentIndex = (currentIndex + 1) % photos.length;
-          mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-          // Update active thumbnail
-          document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-            thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          });
-        };
         
         modal.classList.remove('hidden');
       } catch (e) {

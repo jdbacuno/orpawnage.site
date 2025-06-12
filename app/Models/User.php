@@ -53,6 +53,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(AdoptionApplication::class);
     }
 
+    public function surrenderApplications()
+    {
+        return $this->hasMany(SurrenderApplication::class);
+    }
+
     public function animalAbuseReports()
     {
         return $this->hasMany(AnimalAbuseReport::class);

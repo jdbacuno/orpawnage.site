@@ -41,30 +41,14 @@ class SurrenderApplicationController extends Controller
 
   public function create(Pet $pet)
   {
-    $hasPendingApplication = SurrenderApplication::where('user_id', Auth::id())
-      ->whereIn('status', ['to be confirmed', 'confirmed', 'surrender on-going', 'to be scheduled'])
-      ->exists();
 
     return view('surrender', [
-      'pet' => $pet,
-      'hasPendingApplication' => $hasPendingApplication
+      'pet' => $pet
     ]);
   }
 
   public function store(Request $request)
   {
-    $existingApplication = SurrenderApplication::where('user_id', Auth::id())
-      ->whereIn('status', ['to be confirmed', 'confirmed', 'surrender on-going', 'to be scheduled'])
-      ->first();
-
-    if ($existingApplication) {
-      return back()->with(
-        'error_request',
-        'You already have a pending surrender application (Transaction #' . $existingApplication->transaction_number . '). ' .
-          'Please wait until your current application is completed or rejected before submitting a new one.'
-      );
-    }
-
     $validator = Validator::make($request->all(), [
       'full_name' => ['required', 'string', 'max:255'],
       'email' => ['required', 'email', 'max:255'],
@@ -114,7 +98,7 @@ class SurrenderApplicationController extends Controller
     $validated['address'] = ucfirst(trim($validated['address']));
     $validated['civil_status'] = ucfirst(trim($validated['civil_status']));
     $validated['citizenship'] = ucfirst(strtolower(trim($validated['citizenship'])));
-    $validated['reason'] = ucfirst(trim($validated['reason']));
+    $validated['reason'] = trim($validated['reason']);
     $validated['transaction_number'] = $this->generateUniqueTransactionNumber();
 
     // Upload valid ID
@@ -149,7 +133,7 @@ class SurrenderApplicationController extends Controller
       'sex' => $validated['sex'],
       'reason' => $validated['reason'],
       'valid_id_path' => $validated['valid_id_path'],
-      'animal_photos' => $validated['animal_photo_path'], // Correct field name
+      'animal_photos' => $validated['animal_photos'], // Correct field name
       'transaction_number' => $validated['transaction_number'],
     ]);
 

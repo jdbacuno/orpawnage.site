@@ -2,7 +2,7 @@
   <!-- User Info Section -->
   <div class="flex items-start space-x-4">
     <div class="flex-shrink-0 h-16 w-16">
-      <img class="h-16 w-16 rounded-full" src="https://avatar.iran.liara.run/public" alt="Avatar">
+      <img class="h-16 w-16 rounded-full" src="{{ asset('images/profile_pic.png') }}" alt="Avatar">
     </div>
     <div class="flex-1">
       <div class="flex items-center justify-between">
@@ -45,44 +45,40 @@
   </div>
 
   <!-- User Activity Sections -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-2 gap-4">
     <!-- Adoption Applications -->
     <div class="bg-gray-50 p-4 rounded-lg">
       <h4 class="font-medium text-gray-900 mb-2">Adoption Applications</h4>
       @if($user->adoptionApplications->isEmpty())
       <p class="text-sm text-gray-500">No applications</p>
       @else
-      <ul class="space-y-2">
-        @foreach($user->adoptionApplications as $application)
-        <li class="text-sm">
-          <div class="font-medium">{{ $application->transaction_number }}</div>
-          <div class="text-gray-500">{{ $application->status }}</div>
-          <div class="text-xs text-gray-400">{{ $application->created_at->format('M d, Y') }}</div>
-        </li>
-        @endforeach
-      </ul>
-      <a href="{{ route('admin.adoption-applications', ['search' => $user->email]) }}"
-        class="text-blue-500 text-sm mt-2 inline-block">View all</a>
+      <div class="text-sm">
+        <div class="font-medium">{{ $user->adoptionApplications->first()->transaction_number }}</div>
+        <div class="text-gray-500">{{ $user->adoptionApplications->first()->previous_status ?:
+          $user->adoptionApplications->first()->status }}</div>
+        <div class="text-xs text-gray-400">{{ $user->adoptionApplications->first()->created_at->format('M d, Y') }}
+        </div>
+      </div>
+      <button onclick="showApplicationsModal('adoption', {{ json_encode($user->adoptionApplications) }})"
+        class="text-blue-500 text-sm mt-2 inline-block">View all ({{ $user->adoptionApplications->count() }})</button>
       @endif
     </div>
 
     <!-- Surrender Applications -->
     <div class="bg-gray-50 p-4 rounded-lg">
-      <h4 class="font-medium text-gray-900 mb-2">Adoption Applications</h4>
+      <h4 class="font-medium text-gray-900 mb-2">Surrender Applications</h4>
       @if($user->surrenderApplications->isEmpty())
       <p class="text-sm text-gray-500">No applications</p>
       @else
-      <ul class="space-y-2">
-        @foreach($user->surrenderApplications as $application)
-        <li class="text-sm">
-          <div class="font-medium">{{ $application->transaction_number }}</div>
-          <div class="text-gray-500">{{ $application->status }}</div>
-          <div class="text-xs text-gray-400">{{ $application->created_at->format('M d, Y') }}</div>
-        </li>
-        @endforeach
-      </ul>
-      <a href="{{ route('admin.surrender-applications', ['search' => $user->email]) }}"
-        class="text-blue-500 text-sm mt-2 inline-block">View all</a>
+      <div class="text-sm">
+        <div class="font-medium">{{ $user->surrenderApplications->first()->transaction_number }}</div>
+        <div class="text-gray-500">{{ $user->surrenderApplications->first()->previous_status ?:
+          $user->surrenderApplications->first()->status }}</div>
+        <div class="text-xs text-gray-400">{{ $user->surrenderApplications->first()->created_at->format('M d, Y') }}
+        </div>
+      </div>
+      <button onclick="showApplicationsModal('surrender', {{ json_encode($user->surrenderApplications) }})"
+        class="text-blue-500 text-sm mt-2 inline-block">View all ({{ $user->surrenderApplications->count() }})</button>
       @endif
     </div>
 
@@ -92,17 +88,14 @@
       @if($user->animalAbuseReports->isEmpty())
       <p class="text-sm text-gray-500">No reports</p>
       @else
-      <ul class="space-y-2">
-        @foreach($user->animalAbuseReports as $report)
-        <li class="text-sm">
-          <div class="font-medium">{{ $report->report_number }}</div>
-          <div class="text-gray-500">{{ $report->status }}</div>
-          <div class="text-xs text-gray-400">{{ $report->created_at->format('M d, Y') }}</div>
-        </li>
-        @endforeach
-      </ul>
-      <a href="{{ route('admin.abused-stray-reports', ['search' => $user->email]) }}"
-        class="text-blue-500 text-sm mt-2 inline-block">View all</a>
+      <div class="text-sm">
+        <div class="font-medium">{{ $user->animalAbuseReports->first()->report_number }}</div>
+        <div class="text-gray-500">{{ $user->animalAbuseReports->first()->previous_status ?:
+          $user->animalAbuseReports->first()->previous_status }}</div>
+        <div class="text-xs text-gray-400">{{ $user->animalAbuseReports->first()->created_at->format('M d, Y') }}</div>
+      </div>
+      <button onclick="showApplicationsModal('abuse', {{ json_encode($user->animalAbuseReports) }})"
+        class="text-blue-500 text-sm mt-2 inline-block">View all ({{ $user->animalAbuseReports->count() }})</button>
       @endif
     </div>
 
@@ -112,30 +105,32 @@
       @if($user->missingPetReports->isEmpty())
       <p class="text-sm text-gray-500">No reports</p>
       @else
-      <ul class="space-y-2">
-        @foreach($user->missingPetReports as $report)
-        <li class="text-sm">
-          <div class="font-medium">{{ $report->report_number }}</div>
-          <div class="text-gray-500">{{ $report->status }}</div>
-          <div class="text-xs text-gray-400">{{ $report->created_at->format('M d, Y') }}</div>
-        </li>
-        @endforeach
-      </ul>
-      <a href="{{ route('admin.missing-pet-reports', ['search' => $user->email]) }}"
-        class="text-blue-500 text-sm mt-2 inline-block">View all</a>
+      <div class="text-sm">
+        <div class="font-medium">{{ $user->missingPetReports->first()->report_number }}</div>
+        <div class="text-gray-500">{{ $user->missingPetReports->first()->previous_status ?:
+          $user->missingPetReports->first()->status }}</div>
+        <div class="text-xs text-gray-400">{{ $user->missingPetReports->first()->created_at->format('M d, Y') }}</div>
+      </div>
+      <button onclick="showApplicationsModal('missing', {{ json_encode($user->missingPetReports) }})"
+        class="text-blue-500 text-sm mt-2 inline-block">View all ({{ $user->missingPetReports->count() }})</button>
       @endif
     </div>
   </div>
 </div>
 
-<script>
-  function showBanModal(userId) {
-    document.getElementById('banUserId').value = userId;
-    document.getElementById('banForm').action = `/admin/users/${userId}/ban`;
-    document.getElementById('banModal').classList.remove('hidden');
-  }
+<!-- Applications Modal -->
 
-  document.getElementById('closeBanModal').addEventListener('click', () => {
-    document.getElementById('banModal').classList.add('hidden');
-  });
-</script>
+<div id="applicationsModal"
+  class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl relative max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 id="modalTitle" class="text-lg font-medium text-gray-900"></h3>
+      <button onclick="closeApplicationsModal()" class="text-gray-500 hover:text-gray-700">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+    <div id="modalContent" class="max-h-96 overflow-y-auto scrollbar-hidden">
+      <!-- Content will be loaded here dynamically -->
+    </div>
+  </div>
+</div>

@@ -97,13 +97,13 @@ class UserController extends Controller
         // Load user's related data
         $user->load([
             'adoptionApplications' => function ($query) {
-                $query->latest()->limit(5);
+                $query->latest();
             },
             'animalAbuseReports' => function ($query) {
-                $query->latest()->limit(5);
+                $query->latest();
             },
             'missingPetReports' => function ($query) {
-                $query->latest()->limit(5);
+                $query->latest();
             }
         ]);
 

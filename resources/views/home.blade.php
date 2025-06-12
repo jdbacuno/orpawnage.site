@@ -19,7 +19,7 @@
               </span>
             </h1>
             <p
-              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
               The official online portal of Angeles City Veterinary Office for animal welfare services
             </p>
           </div>
@@ -36,7 +36,7 @@
               Explore Our Services
             </h1>
             <p
-              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
               We offer the best services for you.</p>
           </div>
         </div>
@@ -44,17 +44,41 @@
 
       <!-- Item 3 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
+        @php
+        $latestFeaturedAdoptions = App\Models\FeaturedAdoption::orderBy('created_at', 'desc')->take(3)->get();
+        @endphp
+
+        @if($latestFeaturedAdoptions->count() > 0)
+        <!-- Mobile/Tablet - Single Image -->
+        <div class="absolute block w-full h-full md:hidden">
+          <img src="{{ asset('storage/' . $latestFeaturedAdoptions[0]->image_path) }}"
+            class="w-full h-full object-cover" alt="Featured Adoption">
+        </div>
+
+        <!-- Desktop - Three Images -->
+        <div class="absolute hidden w-full h-full md:flex">
+          @foreach($latestFeaturedAdoptions as $adoption)
+          <div class="w-1/3 h-full">
+            <img src="{{ asset('storage/' . $adoption->image_path) }}" class="w-full h-full object-cover"
+              alt="Featured Adoption {{ $loop->iteration }}">
+          </div>
+          @endforeach
+        </div>
+        @else
         <img src="{{ asset('images/home_image-3.jpg') }}"
           class="absolute block w-full h-full object-cover sm:object-cover md:object-cover lg:object-contain xl:object-contain"
           alt="Slide 3" />
+        @endif
+
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
             <h1 class="text-4xl font-bold mb-4 text-yellow-400">
               Join Us Today
             </h1>
             <p
-              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
-              Become a part of our community.</p>
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
+              Become a part of our community.
+            </p>
           </div>
         </div>
       </div>
@@ -141,7 +165,7 @@
 
   <!-- ========== START OF FEATURED PETS SECTION ========== -->
   @if($featuredPets->count() > 4)
-  <section class="w-full py-16 bg-white">
+  <section class="w-full py-16 bg-white custom-gradient">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <div class="flex justify-between items-center mb-8">
         <h2 class="text-3xl font-bold text-black">

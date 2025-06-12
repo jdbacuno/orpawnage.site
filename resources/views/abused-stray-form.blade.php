@@ -131,9 +131,9 @@
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     required>
                     <option value="" disabled selected>Select condition</option>
-                    <option value="Illegal Meat Trading" {{ old('animal_condition')=='Illegal Trading' ? 'selected' : ''
-                      }}>
-                      Illegal Meat Trading</option>
+                    <option value="Illegal Meat Trading or Consumption" {{
+                      old('animal_condition')=='Illegal Meat Trading or Consumption' ? 'selected' : '' }}>
+                      Illegal Meat Trading/Consumption</option>
                     <option value="Wounded" {{ old('animal_condition')=='Wounded' ? 'selected' : '' }}>Wounded</option>
                     <option value="Physically Abused" {{ old('animal_condition')=='Physically Abused' ? 'selected' : ''
                       }}>Physically Abused</option>

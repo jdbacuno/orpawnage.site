@@ -1,325 +1,411 @@
 <x-transactions-layout>
-  <h1 class="text-lg sm:text-2xl font-bold text-gray-900">Surrender Applications</h1>
+  <h1 class="text-2xl font-bold text-gray-900">Surrender Applications</h1>
 
   <!-- Filters Section -->
-  <div class="flex flex-wrap gap-2 my-4">
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
-      <!-- Status Filter -->
-      <select name="status"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
-        onchange="this.form.submit()">
-        <option value="">All Statuses</option>
-        <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
-          Waiting Confirmation
-        </option>
-        <option value="confirmed" {{ request('status')==='confirmed' ? 'selected' : '' }}>
-          Confirmed
-        </option>
-        <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
-          To Be Scheduled
-        </option>
-        <option value="surrender on-going" {{ request('status')==='surrender on-going' ? 'selected' : '' }}>
-          Surrender On-going
-        </option>
-        <option value="completed" {{ request('status')==='completed' ? 'selected' : '' }}>
-          Completed
-        </option>
-        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
-          Rejected
-        </option>
-      </select>
-    </form>
-  </div>
+  <div class="mt-4">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+        <!-- Status Filter -->
+        <select name="status"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+          onchange="this.form.submit()">
+          <option value="">All Statuses</option>
+          <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
+            Waiting Confirmation
+          </option>
+          <option value="confirmed" {{ request('status')==='confirmed' ? 'selected' : '' }}>
+            Confirmed
+          </option>
+          <option value="to be scheduled" {{ request('status')==='to be scheduled' ? 'selected' : '' }}>
+            To Be Scheduled
+          </option>
+          <option value="surrender on-going" {{ request('status')==='surrender on-going' ? 'selected' : '' }}>
+            Surrender On-going
+          </option>
+          <option value="completed" {{ request('status')==='completed' ? 'selected' : '' }}>
+            Completed
+          </option>
+          <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>
+            Rejected
+          </option>
+        </select>
 
-  @if($applications->isEmpty())
-  <div class="flex items-center justify-center p-6 text-gray-500">
-    <p class="text-lg">No surrender applications found.</p>
-  </div>
-  @else
-  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
-    @foreach($applications as $application)
-    <div
-      class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full overflow-x-auto scrollbar-hidden">
-      <!-- Card Header -->
-      <div class="p-3 border-b border-gray-200 flex items-start justify-between">
-        <div class="flex items-center space-x-1">
-          <div>
-            <!-- Valid ID Photo -->
-            <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-md overflow-hidden border border-gray-300">
-              @if($application->valid_id_path)
-              <button type="button" class="show-image-btn w-full h-full" data-image-title="Valid ID"
-                data-image="{{ asset('storage/' . $application->valid_id_path) }}">
-                <img src="{{ asset('storage/' . $application->valid_id_path) }}" alt="Owner's ID"
-                  class="w-full h-full object-cover">
-              </button>
+        <select name="direction"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+          onchange="this.form.submit()">
+          <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>
+            Newest First
+          </option>
+          <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>
+            Oldest First
+          </option>
+        </select>
+      </form>
+    </div>
+
+    @if($applications->isEmpty())
+    <div class="flex items-center justify-center p-6 text-gray-500">
+      <p class="text-lg">No surrender applications found.</p>
+    </div>
+    @else
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      @foreach($applications as $application)
+      <div
+        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+        <!-- Pet and Owner Info Header -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="flex items-start space-x-2">
+            <!-- First Photo -->
+            <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+              @if($application->animal_photos)
+              <img src="{{ asset('storage/' . json_decode($application->animal_photos)[0]) }}"
+                alt="{{ $application->pet_name }}" class="w-full h-full object-cover cursor-pointer"
+                onclick="openValidIdModal(this)">
               @else
-              <div class="w-full h-full flex items-center justify-center bg-gray-100">
-                <i class="ph-fill ph-user text-xl text-gray-400"></i>
+              <div class=" w-full h-full flex items-center justify-center bg-gray-100">
+                <i class="ph-fill ph-paw-print text-2xl text-gray-400"></i>
               </div>
               @endif
             </div>
-          </div>
 
-          <div>
-            <h3 class="text-sm font-semibold flex items-center truncate">
-              <i class="ph-fill ph-tag mr-1 text-sm"></i> {{ $application->transaction_number }}
-            </h3>
-            <p class="text-sm text-gray-500 truncate max-w-[120px]">
-              {{ $application->full_name }}
-            </p>
-          </div>
-        </div>
-
-        @php
-        $displayStatus = $application->status === 'archived' ? $application->previous_status : $application->status;
-        $statusClasses = match ($displayStatus) {
-        'to be confirmed' => 'bg-orange-100 text-orange-600',
-        'confirmed' => 'bg-blue-100 text-blue-700',
-        'to be scheduled' => 'bg-yellow-100 text-yellow-700',
-        'surrender on-going' => 'bg-indigo-100 text-indigo-700',
-        'completed' => 'bg-green-100 text-green-700',
-        'rejected' => 'bg-red-100 text-red-700',
-        default => 'bg-gray-100 text-gray-700',
-        };
-        @endphp
-      </div>
-
-      <!-- Card Body -->
-      <div class="p-3 flex-1">
-        <!-- Basic Info -->
-        <div class="grid grid-cols-2 gap-2 text-sm mb-2">
-          <div>
-            <p class="text-gray-500 font-medium">Pet Name</p>
-            <p>{{ $application->pet_name ?? 'Unnamed' }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Species</p>
-            <p>{{ $application->species === 'feline' ? 'Cat' : 'Dog' }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Breed</p>
-            <p>{{ $application->breed ?? 'Unknown' }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Sex</p>
-            <p>{{ $application->sex }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Surrender Date</p>
-            <p>{{ $application->surrender_date ? $application->surrender_date->format('M d, Y') : 'Not set' }}</p>
-          </div>
-          <div>
-            <p class="text-gray-500 font-medium">Date Applied</p>
-            <p>{{ $application->created_at->format('M d, Y') }}</p>
-          </div>
-        </div>
-
-        <!-- Collapsible Sections -->
-        <div class="space-y-2">
-          <!-- Owner Information -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-user-circle mr-2 text-sm"></i>
-                Owner Information
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden text-sm text-gray-700 mt-1 px-1 space-y-1">
-              <div><span class="font-medium">Name:</span> {{ $application->full_name }}</div>
-              <div><span class="font-medium">Email:</span> {{ $application->email }}</div>
-              <div><span class="font-medium">Age:</span> {{ $application->age }} years old</div>
-              <div><span class="font-medium">Birthdate:</span> {{ $application->birthdate->format('M d, Y') }}</div>
-              <div><span class="font-medium">Contact:</span> {{ $application->contact_number }}</div>
-              <div><span class="font-medium">Address:</span> {{ $application->address }}</div>
-              <div><span class="font-medium">Civil Status:</span> {{ $application->civil_status }}</div>
-              <div><span class="font-medium">Citizenship:</span> {{ $application->citizenship }}</div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-lg font-semibold flex items-center truncate">
+                <i class="ph-fill ph-tag mr-2"></i><a href="#"
+                  class="transaction-info-btn text-blue-500 hover:text-blue-600 hover:underline"
+                  data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
+                  data-email="{{ $application->email }}" data-age="{{ $application->age }}"
+                  data-birthdate="{{ $application->birthdate->format('M d, Y') }}"
+                  data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
+                  data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
+                  data-reason="{{ $application->reason }}"
+                  data-validid="{{ asset('storage/' . $application->valid_id_path) }}"
+                  data-status="{{ $application->status }}"
+                  data-surrender-date="{{ $application->surrender_date ? $application->surrender_date->format('M d, Y') : 'Not set' }}"
+                  data-created-at="{{ $application->created_at->format('M d, Y') }}"
+                  data-transaction-number="{{ $application->transaction_number }}"
+                  data-pet-name="{{ $application->pet_name ?? 'Unnamed' }}"
+                  data-pet-species="{{ $application->species === 'feline' ? 'Cat' : 'Dog' }}"
+                  data-pet-breed="{{ $application->breed ?? 'Unknown' }}"
+                  data-pet-sex="{{ ucfirst($application->sex) }}" data-animal-photos="{{ $application->animal_photos }}"
+                  data-reject-reason="{{ $application->reject_reason ?? '' }}">
+                  {{ $application->transaction_number }}
+                </a>
+              </h3>
+              <p class="text-sm mt-1 truncate">
+                <span class="text-gray-500">Owner:</span>
+                <span class="font-medium text-gray-900 truncate">{{ $application->full_name }}</span>
+              </p>
+              <p class="text-sm">
+                <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded 
+    {{ ($application->previous_status ?? $application->status) === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'surrender on-going' ? 'bg-indigo-100 text-indigo-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'completed' ? 'bg-green-100 text-green-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+    {{ ($application->previous_status ?? $application->status) === 'archived' ? 'bg-gray-100 text-gray-700' : '' }}">
+                  @switch($application->previous_status ?? $application->status)
+                  @case('to be confirmed') Waiting Confirmation @break
+                  @case('confirmed') Confirmed @break
+                  @case('to be scheduled') To be Scheduled @break
+                  @case('surrender on-going') On-going @break
+                  @case('completed') Completed @break
+                  @case('rejected') Rejected @break
+                  @case('archive') Archived @break
+                  @endswitch
+                </span>
+              </p>
             </div>
           </div>
+        </div>
 
-          <!-- Reason for Surrender -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-note-pencil mr-2 text-sm"></i>
-                Reason for Surrender
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              @if($application->reason)
-              {{ Str::limit($application->reason, 100) }}
-              @if(strlen($application->reason) > 100)
-              <button data-title="Reason for Surrender"
-                onclick="showTextModal(this, {{ json_encode($application->reason) }})"
-                class="text-blue-500 hover:text-blue-700 text-xs ml-1">
-                Read More
+        <!-- Action Buttons Dropdown - User Side -->
+        <div class="bg-gray-50 px-4 py-3 flex justify-end relative">
+          <div class="relative inline-block text-left">
+            <div>
+              <button type="button"
+                class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
+                onclick="toggleDropdownMenu('{{ $application->id }}')">
+                <span class="mr-2">Actions</span>
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+                </svg>
               </button>
-              @endif
-              @else
-              No reason provided
-              @endif
             </div>
-          </div>
 
-          <!-- Pet Photos -->
-          <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-images mr-2 text-sm"></i>
-                Pet Photos ({{ count(json_decode($application->animal_photos)) }})
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden mt-2">
-              <div class="flex flex-wrap gap-1">
-                @foreach(json_decode($application->animal_photos) as $photo)
-                <button type="button" class="show-image-btn" data-image-title="Pet Photo"
-                  data-image="{{ asset('storage/' . $photo) }}">
-                  <img src="{{ asset('storage/' . $photo) }}" alt="Pet photo"
-                    class="w-12 h-12 object-cover rounded border border-gray-300 hover:border-blue-500">
+            <!-- Dropdown menu positioned upward -->
+            <div
+              class="origin-bottom-right absolute right-0 bottom-full mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50"
+              id="dropdown-{{ $application->id }}">
+              <div class="py-1" role="menu" aria-orientation="vertical"
+                aria-labelledby="options-menu-{{ $application->id }}">
+
+                @if(($application->previous_status ?? $application->status) === 'to be scheduled')
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-100 hover:text-yellow-900"
+                  role="menuitem" onclick="openScheduleModal({{ $application->id }})">
+                  <i class="ph-fill ph-calendar mr-2"></i> Schedule Surrender
                 </button>
-                @endforeach
+                @endif
+
+                @if(($application->previous_status ?? $application->status) === 'surrender on-going')
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900"
+                  role="menuitem"
+                  onclick="openSurrenderModal('{{ \Carbon\Carbon::parse($application->surrender_date)->format('M d, Y') }}')">
+                  <i class="ph-fill ph-calendar-check mr-2"></i> View Schedule
+                </button>
+                @endif
+
+                @if(($application->previous_status ?? $application->status) === 'to be confirmed')
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-900"
+                  role="menuitem" onclick="openResendModal({{ $application->id }})">
+                  <i class="ph-fill ph-envelope-simple-open mr-2"></i> Resend Confirmation
+                </button>
+                @endif
+
+                @if(in_array(($application->previous_status ?? $application->status), ['to be confirmed', 'confirmed',
+                'to be scheduled']))
+                <button type="button"
+                  class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
+                  role="menuitem" onclick="openCancelModal({{ $application->id }})">
+                  <i class="ph-fill ph-x-circle mr-2"></i> Cancel Application
+                </button>
+                @endif
+
+                @if(($application->previous_status ?? $application->status) === 'completed' ||
+                ($application->previous_status ?? $application->status) === 'archived')
+                <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
+                  <i class="ph-fill ph-check-circle mr-2"></i> Surrender Completed
+                </div>
+                @endif
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
 
-          <!-- Reject Reason (if rejected) -->
-          @if($application->status === 'rejected' && $application->reject_reason)
+    <!-- Pagination -->
+    <div class="mt-6">
+      {{ $applications->appends(request()->except('page'))->links() }}
+    </div>
+    @endif
+  </div>
+
+  <!-- Owner Info Modal -->
+  <div id="ownerInfoModal"
+    class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div
+      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hidden">
+      <!-- Close Button -->
+      <button id="closeOwnerInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Surrender Application Details</h2>
+
+      <!-- Transaction Info Section -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+          <i class="ph-fill ph-receipt mr-2"></i>Transaction Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <button
-              class="toggle-section-btn w-full text-left flex items-center justify-between text-sm text-gray-500 hover:text-gray-700 py-1">
-              <span class="flex items-center">
-                <i class="ph-fill ph-warning-circle mr-2 text-sm"></i>
-                Rejection Reason
-              </span>
-              <i class="ph-fill ph-caret-down text-sm"></i>
-            </button>
-            <div class="hidden text-sm text-gray-700 mt-1 px-1">
-              {{ $application->reject_reason }}
+            <label class="text-sm font-medium text-gray-600">Status</label>
+            <div class="mt-1">
+              <span id="transactionStatusBadge" class="px-2 py-1 text-xs rounded"></span>
             </div>
           </div>
-          @endif
+          <div>
+            <label class="text-sm font-medium text-gray-600">Surrender Date</label>
+            <div class="mt-1 text-sm text-gray-900" id="transactionSurrenderDate"></div>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Date Applied</label>
+            <div class="mt-1 text-sm text-gray-900" id="transactionCreatedAt"></div>
+          </div>
+          <div class="flex gap-x-2 items-center">
+            <label class="text-sm font-medium text-gray-600">Valid ID</label>
+            <div>
+              <button id="viewValidId" class="text-blue-500 hover:underline text-sm hover:text-blue-600 cursor-pointer">
+                View Uploaded ID
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Card Footer -->
-      <div class="p-2 border-t border-gray-200 bg-gray-50 rounded-b-lg flex justify-between items-center">
-        <span class="flex items-center text-[10px] text-gray-500">
-          <i class="ph-fill ph-clock mr-1"></i> {{ $application->created_at->diffForHumans() }}
-        </span>
-
-        <!-- Status Badge -->
-        <span class="px-2 py-1 text-[10px] rounded {{ $statusClasses }}">
-          @switch($displayStatus)
-          @case('to be confirmed') Waiting Confirmation @break
-          @case('completed') Completed @break
-          @default {{ ucfirst($displayStatus) }}
-          @endswitch
-        </span>
-
-        <!-- Action Buttons -->
-        <div class="relative inline-block text-left">
+      <!-- Pet Info Section -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+          <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <button type="button"
-              class="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
-              id="options-menu-{{ $application->id }}" aria-expanded="true" aria-haspopup="true"
-              onclick="toggleDropdownMenu('{{ $application->id }}')">
-              Actions
-              <svg class="-mr-1 ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                aria-hidden="true">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd" />
-              </svg>
-            </button>
+            <label class="text-sm font-medium text-gray-500">Name</label>
+            <div class="mt-1 text-sm text-gray-900" id="petName"></div>
           </div>
-
-          <!-- Dropdown menu -->
-          <div
-            class="origin-bottom-right absolute right-0 bottom-full mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50"
-            id="dropdown-{{ $application->id }}">
-            <div class="py-1" role="menu" aria-orientation="vertical"
-              aria-labelledby="options-menu-{{ $application->id }}">
-
-              @if($application->status === 'to be scheduled')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-yellow-700 hover:bg-yellow-100 hover:text-yellow-900"
-                role="menuitem" onclick="openScheduleModal({{ $application->id }})">
-                <i class="ph-fill ph-calendar mr-2"></i> Schedule Surrender
-              </button>
-              @endif
-
-              @if($application->status === 'surrender on-going')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900"
-                role="menuitem"
-                onclick="openSurrenderModal('{{ \Carbon\Carbon::parse($application->surrender_date)->format('M d, Y') }}')">
-                <i class="ph-fill ph-calendar-check mr-2"></i> View Schedule
-              </button>
-              @endif
-
-              @if($application->status === 'to be confirmed')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-orange-700 hover:bg-orange-100 hover:text-orange-900"
-                role="menuitem" onclick="openResendModal({{ $application->id }})">
-                <i class="ph-fill ph-envelope-simple-open mr-2"></i> Resend Confirmation
-              </button>
-              @endif
-
-              @if(in_array($application->status, ['to be confirmed', 'confirmed', 'to be scheduled', 'surrender
-              on-going']))
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
-                role="menuitem" onclick="openCancelModal({{ $application->id }})">
-                <i class="ph-fill ph-x-circle mr-2"></i> Cancel Application
-              </button>
-              @endif
-
-              @if($application->status === 'rejected')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
-                role="menuitem" onclick="openCancelModal({{ $application->id }})">
-                <i class="ph-fill ph-trash mr-2"></i> Delete Application
-              </button>
-              @endif
-
-              @if($application->status === 'completed' || $application->status === 'archived')
-              <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
-                <i class="ph-fill ph-check-circle mr-2"></i> Surrender Completed
-              </div>
-              @endif
-            </div>
+          <div>
+            <label class="text-sm font-medium text-gray-500">Species</label>
+            <div class="mt-1 text-sm text-gray-900" id="petSpecies"></div>
           </div>
+          <div>
+            <label class="text-sm font-medium text-gray-500">Breed</label>
+            <div class="mt-1 text-sm text-gray-900" id="petBreed"></div>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-500">Sex</label>
+            <div class="mt-1 text-sm text-gray-900" id="petSex"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pet Photos Section -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+          <i class="ph-fill ph-images mr-2"></i>Pet Photos
+        </h3>
+        <div class="flex flex-wrap gap-2" id="petPhotosContainer">
+          <!-- Pet photos will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <h4 class="text-md font-medium text-gray-700 mb-2 flex items-center">
+          <i class="ph-fill ph-user-circle mr-2"></i>Owner Information
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600">Name</label>
+            <input type="text" id="ownerName" readonly
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Email</label>
+            <input type="text" id="ownerEmail" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Age</label>
+            <input type="text" id="ownerAge" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Birthdate</label>
+            <input type="text" id="ownerBirthdate" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Contact Number</label>
+            <input type="text" id="ownerPhone" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Address</label>
+            <input type="text" id="ownerAddress" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Civil Status</label>
+            <input type="text" id="ownerCivilStatus" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Citizenship</label>
+            <input type="text" id="ownerCitizenship" disabled
+              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="text-sm font-medium text-gray-600">Reason for Surrender</label>
+          <div id="ownerReason" disabled
+            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+          </div>
+        </div>
+
+        @if($application->reject_reason ?? false)
+        <div class="mt-4">
+          <label class="text-sm font-medium text-gray-600">Rejection Reason</label>
+          <div id="rejectReason" disabled
+            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+          </div>
+        </div>
+        @endif
+      </div>
+    </div>
+  </div>
+
+  <!-- Valid ID Modal -->
+  <div id="validIdModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] flex flex-col">
+      <button id="closeValidIdModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Owner's Valid ID</h2>
+
+      <div class="flex-1 overflow-hidden relative">
+        <!-- Main Image Display -->
+        <div class="w-full h-full flex items-center justify-center">
+          <img id="mainValidIdPhoto" alt="Valid ID" class="max-h-[60vh] max-w-full object-contain rounded-lg shadow-md">
         </div>
       </div>
     </div>
-    @endforeach
   </div>
 
-  <!-- Pagination -->
-  <div class="mt-6">
-    {{ $applications->appends(request()->except('page'))->links() }}
+  <!-- Image Modal -->
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
+      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x"></i>
+      </button>
+      <h2 class="text-md font-semibold text-gray-800">Uploaded ID</h2>
+      <div class="w-full mt-2 flex justify-center items-center">
+        <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+      </div>
+    </div>
   </div>
-  @endif
 
   <!-- Cancel Confirmation Modal -->
   <div id="cancelModal"
     class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Confirm Action</h2>
-      <p class="text-sm text-gray-600">Are you sure you want to cancel this surrender request?</p>
+      <p class="text-sm text-gray-600">Are you sure you want to cancel this adoption request? This action will remove
+        your application from our records.</p>
 
       <div class="mt-4 flex justify-end gap-2">
         <button onclick="closeCancelModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
 
-        <form id="deleteForm" method="POST" action="{{ url('/transactions/surrender-status/' . $application->id) }}">
+        <form id="deleteForm" method="POST" action="">
           @csrf
           @method('DELETE')
+          <input type="hidden" name="id" id="deleteId">
           <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg">Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resend Confirmation Modal -->
+  <div id="resendModal"
+    class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-md p-6 w-96">
+      <h2 class="text-lg font-semibold mb-4">Confirm Resend</h2>
+      <p class="text-sm text-gray-600">Are you sure you want to resend the confirmation email?</p>
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="closeResendModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
+
+        <form id="resendForm" method="POST" action="">
+          @csrf
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400">Resend</button>
         </form>
       </div>
     </div>
@@ -330,7 +416,8 @@
     class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-100">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Select Surrender Date</h2>
-      <p class="text-sm text-gray-600 mb-4">Please select a weekday (Monday-Friday) within the next 7 business days.</p>
+      <p class="text-sm text-gray-600 mb-4">Please select a weekday (Monday-Friday) within the next 7 business days.
+      </p>
 
       <form id="scheduleForm" method="POST" action="{{ url('/transactions/schedule-surrender') }}" class="space-y-4">
         @csrf
@@ -355,7 +442,6 @@
   <div id="surrenderModal"
     class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-1">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full space-y-4 relative">
-      <!-- Close Button -->
       <button id="closeSurrenderModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
@@ -367,48 +453,115 @@
     </div>
   </div>
 
-  <!-- Resend Confirmation Modal -->
-  <div id="resendModal"
-    class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg shadow-md p-6 w-96">
-      <h2 class="text-lg font-semibold mb-4">Confirm Resend</h2>
-      <p class="text-sm text-gray-600">Are you sure you want to resend the confirmation email?</p>
-      <div class="mt-4 flex justify-end gap-2">
-        <button onclick="closeResendModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
-
-        <form id="resendForm" method="POST" action="">
-          @csrf
-          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400">Resend</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Image Modal -->
-  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
-      <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x"></i>
-      </button>
-      <h2 class="text-md font-semibold text-gray-800" id="imageModalTitle"></h2>
-      <div class="w-full mt-2 flex justify-center items-center">
-        <img id="modalImage" alt="" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
-      </div>
-    </div>
-  </div>
-
-  <!-- Text Modal -->
-  <div id="textModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-lg w-full max-h-[90vh] overflow-auto">
-      <button onclick="closeTextModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x"></i>
-      </button>
-      <h2 class="text-md font-semibold text-gray-800" id="textTitle"></h2>
-      <div class="w-full mt-2 text-gray-700 whitespace-pre-wrap break-words" id="textModalContent"></div>
-    </div>
-  </div>
-
   <script>
+    // Helper function to get status class
+    function getStatusClass(status) {
+      switch(status) {
+        case 'to be confirmed': return 'bg-orange-100 text-orange-700';
+        case 'confirmed': return 'bg-blue-100 text-blue-700';
+        case 'to be scheduled': return 'bg-yellow-100 text-yellow-700';
+        case 'surrender on-going': return 'bg-indigo-100 text-indigo-700';
+        case 'completed': return 'bg-green-100 text-green-700';
+        case 'rejected': return 'bg-red-100 text-red-700';
+        case 'archive': return 'bg-gray-100 text-gray-700';
+        default: return '';
+      }
+    }
+
+    // Helper function to format status text
+    function formatStatus(status) {
+      switch(status) {
+        case 'to be confirmed': return 'Waiting Confirmation';
+        case 'completed': return 'Completed';
+        default: return status.charAt(0).toUpperCase() + status.slice(1);
+      }
+    }
+
+    // Owner Info Modal with new features
+    document.querySelectorAll('.transaction-info-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        document.getElementById('ownerName').value = this.dataset.name;
+        document.getElementById('ownerEmail').value = this.dataset.email;
+        document.getElementById('ownerAge').value = this.dataset.age;
+        document.getElementById('ownerBirthdate').value = this.dataset.birthdate;
+        document.getElementById('ownerPhone').value = this.dataset.phone;
+        document.getElementById('ownerAddress').value = this.dataset.address;
+        document.getElementById('ownerCivilStatus').value = this.dataset.civil;
+        document.getElementById('ownerCitizenship').value = this.dataset.citizenship;
+        document.getElementById('ownerReason').textContent = this.dataset.reason;
+        
+        if (this.dataset.rejectReason) {
+          document.getElementById('rejectReason').textContent = this.dataset.rejectReason;
+        }
+
+        document.getElementById('petName').textContent = this.dataset.petName;
+        document.getElementById('petSpecies').textContent = this.dataset.petSpecies;
+        document.getElementById('petBreed').textContent = this.dataset.petBreed;
+        document.getElementById('petSex').textContent = this.dataset.petSex;
+
+        // Set transaction info
+        const status = this.dataset.status;
+        const surrenderDate = this.dataset.surrenderDate || 'Not set';
+        const createdAt = this.dataset.createdAt;
+        
+        document.getElementById('transactionStatusBadge').textContent = formatStatus(status);
+        document.getElementById('transactionStatusBadge').className = `px-2 py-1 text-xs rounded ${getStatusClass(status)}`;
+        document.getElementById('transactionSurrenderDate').textContent = surrenderDate;
+        document.getElementById('transactionCreatedAt').textContent = createdAt;
+        
+        // Set up the valid ID view button
+        document.getElementById('viewValidId').onclick = function() {
+          document.getElementById('modalImage').src = button.dataset.validid;
+          document.getElementById('imageModal').classList.remove('hidden');
+        };
+
+        // Load pet photos
+        const petPhotosContainer = document.getElementById('petPhotosContainer');
+        petPhotosContainer.innerHTML = '';
+        const animalPhotos = JSON.parse(this.dataset.animalPhotos);
+        
+        animalPhotos.forEach(photo => {
+          const imgBtn = document.createElement('button');
+          imgBtn.className = 'show-image-btn';
+          imgBtn.dataset.image = "{{ asset('storage/') }}/" + photo;
+          
+          const img = document.createElement('img');
+          img.src = "{{ asset('storage/') }}/" + photo;
+          img.alt = 'Pet photo';
+          img.className = 'w-16 h-16 object-cover rounded border border-gray-300 hover:border-blue-500';
+          
+          imgBtn.appendChild(img);
+          imgBtn.addEventListener('click', function() {
+            document.getElementById('modalImage').src = this.dataset.image;
+            document.getElementById('imageModal').classList.remove('hidden');
+          });
+          
+          petPhotosContainer.appendChild(imgBtn);
+        });
+
+        document.getElementById('ownerInfoModal').classList.remove('hidden');
+      });
+    });
+
+    // Open valid ID modal
+    function openValidIdModal(imgElement) {
+      const validIdSrc = imgElement.src;
+      if (!validIdSrc) return;
+
+      document.getElementById('mainValidIdPhoto').src = validIdSrc;
+      document.getElementById('validIdModal').classList.remove('hidden');
+    }
+
+    // Close owner info modal
+    document.getElementById('closeOwnerInfoModal').addEventListener('click', function() {
+      document.getElementById('ownerInfoModal').classList.add('hidden');
+    });
+
+    // Close valid ID modal
+    document.getElementById('closeValidIdModal').addEventListener('click', function() {
+      document.getElementById('validIdModal').classList.add('hidden');
+    });
+
     // Improved toggle function for upward dropdown
     function toggleDropdownMenu(id) {
       const dropdown = document.getElementById(`dropdown-${id}`);
@@ -432,54 +585,12 @@
       });
     });
 
-    // Toggle collapsible sections
-    document.querySelectorAll('.toggle-section-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const content = this.nextElementSibling;
-        const icon = this.querySelector('.ph-caret-down');
-        
-        content.classList.toggle('hidden');
-        icon.classList.toggle('ph-caret-down');
-        icon.classList.toggle('ph-caret-up');
-        
-        // Close other open sections in this card
-        const card = this.closest('.bg-white');
-        card.querySelectorAll('.toggle-section-btn').forEach(otherBtn => {
-          if (otherBtn !== this) {
-            otherBtn.nextElementSibling.classList.add('hidden');
-            otherBtn.querySelector('.ph-caret-down').classList.remove('ph-caret-up');
-            otherBtn.querySelector('.ph-caret-down').classList.add('ph-caret-down');
-          }
-        });
-      });
-    });
-
-    // Image modal
-    document.querySelectorAll('.show-image-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        document.getElementById('imageModalTitle').textContent = this.dataset.imageTitle;
-        document.getElementById('modalImage').src = this.dataset.image;
-        document.getElementById('modalImage').alt = this.dataset.imageTitle;
-        document.getElementById('imageModal').classList.remove('hidden');
-      });
-    });
-
-    // Text modal
-    function showTextModal(el, text) {
-      document.getElementById('textTitle').textContent = el.dataset.title;
-      document.getElementById('textModalContent').textContent = text;
-      document.getElementById('textModal').classList.remove('hidden');
-    }
-
-    function closeTextModal() {
-      document.getElementById('textModal').classList.add('hidden');
-    }
-
     // Close image modal
     document.getElementById('closeImageModal').addEventListener('click', function() {
       document.getElementById('imageModal').classList.add('hidden');
     });
 
+    // Schedule Surrender Modal
     function openScheduleModal(appId) {
       document.getElementById('scheduleModal').classList.remove('hidden');
       document.getElementById('scheduleAppId').value = appId;
@@ -540,6 +651,7 @@
       document.getElementById('surrenderDateText').innerText = `Your scheduled surrender date is: ${surrenderDate}`;
     }
 
+    // Close the modal when the close button is clicked
     document.getElementById('closeSurrenderModalBtn').addEventListener('click', function () {
       closeSurrenderModal();
     });

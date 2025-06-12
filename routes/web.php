@@ -4,6 +4,7 @@ use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AnimalAbuseReportController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeaturedAdoptionController;
 use App\Http\Controllers\FeaturedPetController;
 use App\Http\Controllers\MissingPetReportController;
 use App\Http\Controllers\OfficeStaffController;
@@ -142,6 +143,9 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::post('/transactions/{id}/resend-email', [AdoptionApplication::class, 'resendEmail']);
     Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
         ->name('transactions.adoption-status');
+
+    Route::get('/featured-adoptions', [FeaturedAdoptionController::class, 'index'])->name('Featured Adoptions');
+    Route::get('/featured-adoptions/load-more', [FeaturedAdoptionController::class, 'loadMore'])->name('featured-adoptions.load-more');
 });
 
 Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('verified');
@@ -215,13 +219,17 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     Route::get('/admin/users/{user}/details', [UserController::class, 'showDetails'])->name('admin.users.details');
 
-    Route::get('/admin/office-staff', [OfficeStaffController::class, 'index'])->name('Manage Office Staff');
+    Route::get('/admin/team-members', [OfficeStaffController::class, 'index'])->name('team.management');
     Route::post('/admin/office-staff', [OfficeStaffController::class, 'store'])->name('office-staff.store');
-    Route::put('/admin/office-staff/{id}', [OfficeStaffController::class, 'update'])->name('office-staff.update');
-    Route::delete('/admin/office-staff/{id}', [OfficeStaffController::class, 'destroy'])->name('office-staff.destroy');
-    Route::post('/admin/office-staff/update-order', [OfficeStaffController::class, 'updateOrder'])->name('office-staff.update-order');
-    Route::post('/admin/admin/office-staff/update-order', [OfficeStaffController::class, 'updateOrder'])
-        ->name('admin.office-staff.update-order');
+    Route::patch('/admin/office-staff/{staff}', [OfficeStaffController::class, 'update']);
+    Route::delete('/admin/office-staff/{staff}', [OfficeStaffController::class, 'destroy']);
+    Route::patch('/admin/office-staff/{staff}/update-order', [OfficeStaffController::class, 'updateOrder'])
+        ->name('office-staff.update-order');
+
+    Route::get('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'adminIndex'])->name('admin.featured.adoptions');
+    Route::post('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'store'])->name('featured-adoptions.store');
+    Route::delete('/admin/featured-adoptions/{featuredPet}', [FeaturedAdoptionController::class, 'destroy'])->name('featured-adoptions.destroy');
+    Route::patch('/admin/featured-adoptions/{featuredPet}/update-order', [FeaturedAdoptionController::class, 'updateOrder'])->name('featured-adoptions.update-order');
 });
 
 // Password Reset Routes

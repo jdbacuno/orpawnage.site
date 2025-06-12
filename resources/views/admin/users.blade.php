@@ -53,7 +53,7 @@
             <td class="px-6 py-4">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-10 w-10">
-                  <img class="h-10 w-10 rounded-full" src="https://avatar.iran.liara.run/public" alt="Avatar">
+                  <img class="h-10 w-10 rounded-full" src="{{ asset('images/profile_pic.png') }}" alt="Avatar">
                 </div>
                 <div class="ml-4">
                   <div class="text-sm font-medium text-gray-900">{{ $user->username ?? 'No Name' }}</div>
@@ -165,6 +165,120 @@
       document.getElementById('closeBanModal')?.addEventListener('click', () => {
         document.getElementById('banModal').classList.add('hidden');
       });
+    });
+
+    // Define functions first before they're called
+    function showApplicationsModal(type, items) {
+      const modal = document.getElementById('applicationsModal');
+      const title = document.getElementById('modalTitle');
+      const content = document.getElementById('modalContent');
+      
+      // Set title based on type
+      switch(type) {
+        case 'adoption':
+          title.textContent = 'Adoption Applications';
+          break;
+        case 'surrender':
+          title.textContent = 'Surrender Applications';
+          break;
+        case 'abuse':
+          title.textContent = 'Abuse Reports';
+          break;
+        case 'missing':
+          title.textContent = 'Missing Pet Reports';
+          break;
+      }
+      
+      // Generate content
+      let html = '';
+      if (items && items.length > 0) {
+        items.forEach(item => {
+          html += `
+            <div class="border-b border-gray-200 py-2">
+              <div class="font-medium">${item.transaction_number || item.report_number}</div>
+              <div class="text-gray-500">${item.status}</div>
+              <div class="text-xs text-gray-400">${new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+            </div>
+          `;
+        });
+      } else {
+        html = '<p class="text-gray-500">No items found</p>';
+      }
+      
+      content.innerHTML = html;
+      modal.classList.remove('hidden');
+    }
+
+    function closeApplicationsModal() {
+      document.getElementById('applicationsModal').classList.add('hidden');
+    }
+
+    function showBanModal(userId) {
+      document.getElementById('banUserId').value = userId;
+      document.getElementById('banForm').action = `/admin/users/${userId}/ban`;
+      document.getElementById('banModal').classList.remove('hidden');
+    }
+
+    // Close ban modal event listener
+    document.getElementById('closeBanModal')?.addEventListener('click', () => {
+      document.getElementById('banModal').classList.add('hidden');
+    });
+
+    // Define functions first before they're called
+    function showApplicationsModal(type, items) {
+      const modal = document.getElementById('applicationsModal');
+      const title = document.getElementById('modalTitle');
+      const content = document.getElementById('modalContent');
+      
+      // Set title based on type
+      switch(type) {
+        case 'adoption':
+          title.textContent = 'Adoption Applications';
+          break;
+        case 'surrender':
+          title.textContent = 'Surrender Applications';
+          break;
+        case 'abuse':
+          title.textContent = 'Abuse Reports';
+          break;
+        case 'missing':
+          title.textContent = 'Missing Pet Reports';
+          break;
+      }
+      
+      // Generate content
+      let html = '';
+      if (items && items.length > 0) {
+        items.forEach(item => {
+          html += `
+            <div class="border-b border-gray-200 py-2">
+              <div class="font-medium">${item.transaction_number || item.report_number}</div>
+              <div class="text-gray-500">${item.previous_status || item.status }</div>
+              <div class="text-xs text-gray-400">${new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+            </div>
+          `;
+        });
+      } else {
+        html = '<p class="text-gray-500">No items found</p>';
+      }
+      
+      content.innerHTML = html;
+      modal.classList.remove('hidden');
+    }
+
+    function closeApplicationsModal() {
+      document.getElementById('applicationsModal').classList.add('hidden');
+    }
+
+    function showBanModal(userId) {
+      document.getElementById('banUserId').value = userId;
+      document.getElementById('banForm').action = `/admin/users/${userId}/ban`;
+      document.getElementById('banModal').classList.remove('hidden');
+    }
+
+    // Close ban modal event listener
+    document.getElementById('closeBanModal')?.addEventListener('click', () => {
+      document.getElementById('banModal').classList.add('hidden');
     });
   </script>
 </x-admin-layout>

@@ -118,7 +118,7 @@ class AdoptionApplicationController extends Controller
         $validated['address'] = ucfirst(trim($validated['address']));
         $validated['civil_status'] = ucfirst(trim($validated['civil_status']));
         $validated['citizenship'] = ucfirst(strtolower(trim($validated['citizenship'])));
-        $validated['reason_for_adoption'] = ucfirst(trim($validated['reason_for_adoption']));
+        $validated['reason_for_adoption'] = trim($validated['reason_for_adoption']);
         $validated['transaction_number'] = $this->generateUniqueTransactionNumber();
 
         // Upload valid ID

@@ -277,6 +277,7 @@
   </section>
 
   <!-- ========== TEAM SECTION ========== -->
+  @if($staff->count() > 0)
   <section class="py-16 md:py-24 bg-gray-500 text-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -289,25 +290,24 @@
         <div class="w-24 h-1 bg-yellow-400 mx-auto mt-4"></div>
       </div>
 
-      <div class="flex overflow-x-auto pb-4 gap-6 px-4">
-        @foreach($staff as $member)
-        <div class="group text-center flex-shrink-0 w-48">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+        @foreach($staff->sortBy('order')->take(5) as $member)
+        <div class="group text-center">
           <div class="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto shadow-lg">
-            <img
-              src="{{ $member->image_path ? asset('storage/' . $member->image_path) : 'https://avatar.iran.liara.run/public/' . ($loop->index % 2 === 0 ? 'boy' : 'girl') }}"
-              alt="{{ $member->name }}"
+            <img src="{{ asset('storage/' . $member->image_path) }}" alt="{{ $member->name }}"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             <div
               class="absolute inset-0 bg-orange-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             </div>
           </div>
-          <h3 class="font-bold text-lg">{{ $member->name }}</h3>
-          <p class="text-orange-100 text-sm">{{ $member->position }}</p>
+          <h3 class="font-bold text-lg">{{ ucwords(strtolower($member->name)) }}</h3>
+          <p class="text-orange-100 text-sm">{{ ucwords($member->position) }}</p>
         </div>
         @endforeach
       </div>
     </div>
   </section>
+  @endif
 
   <!-- ========== CTA SECTION ========== -->
   <section class="py-16 md:py-24 bg-gray-900 text-white">

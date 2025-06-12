@@ -6,7 +6,7 @@ let slideInterval;
 function startCarousel() {
   slideInterval = setInterval(() => {
     slideNext();
-  }, 10000); // Change slide every 10 seconds
+  }, 15000); // Change slide every 15 seconds
 }
 
 // Go to specific slide

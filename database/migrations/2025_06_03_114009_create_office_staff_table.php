@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('position');
+            $table->string('email')->nullable();
             $table->string('image_path')->nullable();
-            $table->boolean('is_featured')->default(false);
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(1);
             $table->timestamps();
         });
     }

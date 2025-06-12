@@ -2,11 +2,10 @@
   <!-- ========== START OF DONATION SECTION ========== -->
   <section class="relative flex items-center justify-center min-h-screen bg-black/50" id="mainContent">
 
-    <!-- Adjusted pt-24 for navbar -->
     <!-- Background Image -->
     <div class="absolute inset-0 overflow-hidden">
       <img src="{{ asset('images/donate.jpg') }}" alt="Donate Background"
-        class="w-full h-full object-cover brightness-75" />
+        class="w-full h-full object-cover bg-black mix-blend-multiply" />
     </div>
 
     <!-- Overlay Content - More compact version -->
@@ -77,7 +76,7 @@
           
           if (header && mainContent) {
               const headerHeight = header.offsetHeight;
-              mainContent.style.marginTop = `${headerHeight}px`;
+              mainContent.style.marginTop = `${headerHeight * .5}px`;
           }
       }
 

@@ -43,7 +43,7 @@ class SettingsController extends Controller
             Notification::route('mail', $oldEmail)->notify(new EmailChanged($user));
         }
 
-        return redirect()->back()->with('success', 'Email updated successfully! Please verify your new email address.')->withFragment('settingsModal?tab=account-tab');
+        return redirect()->back()->with('settings-success', 'Email updated successfully! Please verify your new email address.')->withFragment('settingsModal?tab=account-tab');
     }
 
     public function updatePassword(Request $request)
@@ -69,7 +69,7 @@ class SettingsController extends Controller
         // Send password change notification
         $user->notify(new PasswordChanged());
 
-        return redirect()->back()->with('success', 'Password updated successfully!')->withFragment('settingsModal?tab=password-tab');
+        return redirect()->back()->with('settings-success', 'Password updated successfully!')->withFragment('settingsModal?tab=password-tab');
     }
 
     public function updateContact(Request $request)
@@ -88,7 +88,7 @@ class SettingsController extends Controller
         // Send contact number change notification
         $user->notify(new ContactNumberChanged($oldContact));
 
-        return redirect()->back()->with('success', 'Contact number updated successfully!')->withFragment('settingsModal?tab=account-tab');
+        return redirect()->back()->with('settings-success', 'Contact number updated successfully!')->withFragment('settingsModal?tab=account-tab');
     }
 
     public function deleteAccount(Request $request)
@@ -140,7 +140,7 @@ class SettingsController extends Controller
 
         Auth::logout();
 
-        return redirect('/login')->with('success', 'Your account has been permanently deleted.')->withFragment('settingsModal?tab=danger-tab');;
+        return redirect('/login')->with('settings-success', 'Your account has been permanently deleted.')->withFragment('settingsModal?tab=danger-tab');;
     }
 
     public function adminUpdateEmail(Request $request)
@@ -162,7 +162,7 @@ class SettingsController extends Controller
             Notification::route('mail', $oldEmail)->notify(new EmailChanged($user));
         }
 
-        return back()->with('success', 'Email updated successfully! Please verify your new email address.')->withFragment('settingsModal?tab=account-tab');
+        return back()->with('settings-success', 'Email updated successfully! Please verify your new email address.')->withFragment('settingsModal?tab=account-tab');
     }
 
     public function adminUpdatePassword(Request $request)
@@ -183,7 +183,7 @@ class SettingsController extends Controller
 
         $user->notify(new PasswordChanged());
 
-        return back()->with('success', 'Password updated successfully!')->withFragment('settingsModal?tab=password-tab');
+        return back()->with('settings-success', 'Password updated successfully!')->withFragment('settingsModal?tab=password-tab');
     }
 
     public function adminUpdateContact(Request $request)
@@ -201,6 +201,6 @@ class SettingsController extends Controller
 
         $user->notify(new ContactNumberChanged($oldContact));
 
-        return back()->with('success', 'Contact number updated successfully!')->withFragment('settingsModal?tab=password-tab');
+        return back()->with('settings-success', 'Contact number updated successfully!')->withFragment('settingsModal?tab=password-tab');
     }
 }

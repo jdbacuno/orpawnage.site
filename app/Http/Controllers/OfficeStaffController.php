@@ -3,86 +3,129 @@
 namespace App\Http\Controllers;
 
 use App\Models\OfficeStaff;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class OfficeStaffController extends Controller
 {
-    // OfficeStaffController.php
-    public function index()
+    public function index(Request $request)
     {
-        $staff = OfficeStaff::orderBy('is_featured', 'desc')
-            ->orderBy('order')
-            ->get();
+        $query = OfficeStaff::query()->orderBy('order');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%");
+            });
+        }
+
+        $staff = $query->paginate(12);
         return view('admin.office-staff', compact('staff'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'boolean'
+            'email' => 'nullable|email|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $imagePath = null;
+        // Handle image upload or use default
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('staff-images', 'public');
+        } else {
+            // Copy default image to storage with unique name
+            $defaultImage = 'images/profile_pic.png';
+            $newFilename = 'staff-' . uniqid() . '.png';
+            Storage::disk('public')->put(
+                'staff-images/' . $newFilename,
+                file_get_contents(public_path($defaultImage))
+            );
+            $imagePath = 'staff-images/' . $newFilename;
         }
 
         $staff = OfficeStaff::create([
-            'name' => $validated['name'],
-            'position' => $validated['position'],
+            'name' => $request->name,
+            'position' => $request->position,
+            'email' => $request->email,
             'image_path' => $imagePath,
-            'is_featured' => $request->boolean('is_featured'),
-            'order' => OfficeStaff::max('order') + 1
+            'order' => OfficeStaff::max('order') + 1,
         ]);
 
-        return redirect()->back()->with('add_success', $staff->name);
+        return back()->with('success', 'Staff member added successfully!');
     }
 
-    public function update(Request $request, OfficeStaff $officeStaff)
+    public function update(Request $request, OfficeStaff $staff)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'boolean'
+            'email' => 'nullable|email|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
+        $data = [
+            'name' => $request->name,
+            'position' => $request->position,
+            'email' => $request->email,
+        ];
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($officeStaff->image_path) {
-                Storage::disk('public')->delete($officeStaff->image_path);
+            try {
+                // Delete old image if it exists and isn't a default image
+                if ($staff->image_path && !str_contains($staff->image_path, 'profile_pic.png')) {
+                    Storage::disk('public')->delete($staff->image_path);
+                }
+
+                // Store new image
+                $data['image_path'] = $request->file('image')->store('staff-images', 'public');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Failed to update image: ' . $e->getMessage());
             }
-            $officeStaff->image_path = $request->file('image')->store('staff-images', 'public');
+        } elseif (!$staff->image_path) {
+            // Only set default image if no image exists at all
+            $defaultImage = 'images/profile_pic.png';
+            $newFilename = 'staff-' . uniqid() . '.png';
+            Storage::disk('public')->put(
+                'staff-images/' . $newFilename,
+                file_get_contents(public_path($defaultImage))
+            );
+            $data['image_path'] = 'staff-images/' . $newFilename;
         }
 
-        $officeStaff->update([
-            'name' => $validated['name'],
-            'position' => $validated['position'],
-            'is_featured' => $request->boolean('is_featured')
+        $staff->update($data);
+
+        return back()->with('success', 'Staff member updated successfully!');
+    }
+
+    public function destroy(OfficeStaff $staff)
+    {
+        try {
+            // Only delete the image if it exists and isn't the default profile image
+            if ($staff->image_path && !str_contains($staff->image_path, 'profile_pic.png')) {
+                Storage::disk('public')->delete($staff->image_path);
+            }
+
+            $staff->delete();
+
+            return back()->with('success', 'Staff member deleted successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete staff member: ' . $e->getMessage());
+        }
+    }
+
+    public function updateOrder(Request $request, OfficeStaff $staff)
+    {
+        $request->validate([
+            'order' => 'required|integer',
         ]);
 
-        return redirect()->back()->with('edit_success', $officeStaff->name);
-    }
+        $staff->update(['order' => $request->order]);
 
-    public function destroy(OfficeStaff $officeStaff)
-    {
-        if ($officeStaff->image_path) {
-            Storage::disk('public')->delete($officeStaff->image_path);
-        }
-        $officeStaff->delete();
-        return redirect()->back()->with('delete_success', 'Staff member deleted successfully!');
-    }
-
-    public function updateOrder(Request $request)
-    {
-        foreach ($request->order as $order => $id) {
-            OfficeStaff::where('id', $id)->update(['order' => $order]);
-        }
-        return response()->json(['success' => true]);
+        return back()->with('success', 'Order updated!');
     }
 }
