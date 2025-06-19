@@ -60,7 +60,7 @@
               @if($application->animal_photos)
               <img src="{{ asset('storage/' . json_decode($application->animal_photos)[0]) }}"
                 alt="{{ $application->pet_name }}" class="w-full h-full object-cover cursor-pointer"
-                onclick="openValidIdModal(this)">
+                onclick='openPhotosModal({{ json_encode(json_decode($application->animal_photos)) }}, 0)'>
               @else
               <div class=" w-full h-full flex items-center justify-center bg-gray-100">
                 <i class="ph-fill ph-paw-print text-2xl text-gray-400"></i>
@@ -453,6 +453,24 @@
     </div>
   </div>
 
+  <!-- Image Gallery Modal (NEW) -->
+  <div id="photosModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-w-4xl max-h-[90vh] flex flex-col">
+      <button id="closePhotosModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4" id="photosModalTitle">Pet Photos</h2>
+      <div class="flex-1 overflow-hidden relative">
+        <div class="w-full h-full flex items-center justify-center">
+          <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-cover rounded-lg shadow-md">
+        </div>
+      </div>
+      <div id="photoThumbnails" class="flex gap-2 mt-4 overflow-x-auto py-2">
+        <!-- Thumbnails will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <script>
     // Helper function to get status class
     function getStatusClass(status) {
@@ -520,22 +538,24 @@
         petPhotosContainer.innerHTML = '';
         const animalPhotos = JSON.parse(this.dataset.animalPhotos);
         
-        animalPhotos.forEach(photo => {
+        animalPhotos.forEach((photo, idx) => {
           const imgBtn = document.createElement('button');
           imgBtn.className = 'show-image-btn';
           imgBtn.dataset.image = "{{ asset('storage/') }}/" + photo;
-          
+          imgBtn.dataset.index = idx;
+          imgBtn.type = 'button';
+          imgBtn.title = 'View in gallery';
+
           const img = document.createElement('img');
           img.src = "{{ asset('storage/') }}/" + photo;
           img.alt = 'Pet photo';
           img.className = 'w-16 h-16 object-cover rounded border border-gray-300 hover:border-blue-500';
-          
+
           imgBtn.appendChild(img);
-          imgBtn.addEventListener('click', function() {
-            document.getElementById('modalImage').src = this.dataset.image;
-            document.getElementById('imageModal').classList.remove('hidden');
+          imgBtn.addEventListener('click', function(e) {
+            openPhotosModal(animalPhotos, idx);
           });
-          
+
           petPhotosContainer.appendChild(imgBtn);
         });
 
@@ -677,5 +697,36 @@
     function closeResendModal() {
       document.getElementById('resendModal').classList.add('hidden');
     }
+
+    // Image Gallery Modal logic (copied/adapted from missing.blade.php)
+    function openPhotosModal(photos, startIndex = 0) {
+      if (!photos || photos.length === 0) return;
+      const modal = document.getElementById('photosModal');
+      const mainImg = document.getElementById('mainPhoto');
+      const thumbnailsContainer = document.getElementById('photoThumbnails');
+      const modalTitle = document.getElementById('photosModalTitle');
+      modalTitle.textContent = 'Pet Photos';
+      thumbnailsContainer.innerHTML = '';
+      let currentIndex = startIndex >= 0 && startIndex < photos.length ? startIndex : 0;
+      mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
+      photos.forEach((photo, index) => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${index === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
+        thumbnail.innerHTML = `<img src=\"{{ asset('storage/') }}/${photo}\" alt=\"Thumbnail ${index + 1}\" class=\"w-full h-full object-cover\">`;
+        thumbnail.addEventListener('click', () => {
+          currentIndex = index;
+          mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
+          document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
+            thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
+          });
+        });
+        thumbnailsContainer.appendChild(thumbnail);
+      });
+      modal.classList.remove('hidden');
+    }
+
+    document.getElementById('closePhotosModal').addEventListener('click', function() {
+      document.getElementById('photosModal').classList.add('hidden');
+    });
   </script>
 </x-transactions-layout>
