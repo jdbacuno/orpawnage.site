@@ -176,9 +176,7 @@
               <div class="tail -end">
                 <div class="tail">
                   <div class="tail">
-                    <div class="tail">
-                      <div class="tail"></div>
-                    </div>
+                    <div class="tail"></div>
                   </div>
                 </div>
               </div>
@@ -472,55 +470,64 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">
             <div>
-              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">
-                Services
+              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase flex items-center gap-2">
+                <i class="ph-fill ph-list text-orange-400"></i> Our Services
               </h2>
-              <ul class="text-gray-500 font-medium">
-                <li class="mb-4">
-                  <a href="/services/adopt-a-pet"
-                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Adopt</a>
+              <ul class="text-gray-600 font-medium space-y-3">
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <a href="/services/adopt-a-pet" class="flex items-center gap-2 nav-link">
+                    <i class="ph-fill ph-heart text-orange-400"></i>
+                    Adopt a Pet
+                  </a>
                 </li>
-                <li class="mb-4">
-                  <a href="/services/surrender-an-animal"
-                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Surrender</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <a href="/services/surrender-an-animal" class="flex items-center gap-2 nav-link">
+                    <i class="ph-fill ph-hand-palm text-orange-400"></i>
+                    Surrender a Pet
+                  </a>
                 </li>
-                <li class="mb-4">
-                  <a href="/report/missing-pet"
-                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Report a
-                    Missing Pet</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <a href="/report/missing-pet" class="flex items-center gap-2 nav-link">
+                    <i class="ph-fill ph-magnifying-glass text-orange-400"></i>
+                    Report Missing Pet
+                  </a>
                 </li>
-                <li class="mb-4">
-                  <a href="/report/abused-stray-animal"
-                    class="hover:text-orange-500 transition-colors duration-300 nav-link">Report an Abused / Stray
-                    Pet</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <a href="/report/abused-stray-animal" class="flex items-center gap-2 nav-link">
+                    <i class="ph-fill ph-warning text-orange-400"></i>
+                    Report Abused/Stray
+                  </a>
                 </li>
-                <li class="mb-4">
-                  <a href="/donate" class="hover:text-orange-500 transition-colors duration-300 nav-link">Donate</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <a href="/donate" class="flex items-center gap-2 nav-link">
+                    <i class="ph-fill ph-currency-circle-dollar text-orange-400"></i>
+                    Donate
+                  </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">
-                Contact Us
+              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase flex items-center gap-2">
+                <i class="ph-fill ph-chat-dots text-orange-400"></i> Contact Us
               </h2>
-              <ul class="text-gray-500 font-medium">
-                <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
-                  <i class="ph-fill ph-phone text-lg"></i>
-                  <a href="#" class="hover:text-orange-500 transition-colors duration-300 nav-link">09123456789</a>
+              <p class="text-gray-500 text-sm mb-4">We'd love to hear from you! Reach us anytime:</p>
+              <ul class="text-gray-600 font-medium space-y-3">
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <i class="ph-fill ph-phone text-orange-400"></i>
+                  <a href="tel:09123456789" class="nav-link">0912 345 6789</a>
                 </li>
-                <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
-                  <i class="ph-fill ph-envelope text-lg"></i>
-                  <a href="#"
-                    class="hover:text-orange-500 transition-colors duration-300 nav-link">orpawnageteam@gmail.com</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <i class="ph-fill ph-envelope text-orange-400"></i>
+                  <a href="mailto:orpawnageteam@gmail.com" class="nav-link">orpawnageteam@gmail.com</a>
                 </li>
-                <li class="mb-4 flex items-center space-x-2 hover:text-orange-500 transition-colors duration-300">
-                  <i class="ph-fill ph-facebook-logo text-lg"></i>
-                  <a href="#" class="hover:text-orange-500 transition-colors duration-300 nav-link">Angeles City
-                    Veterinary Office</a>
+                <li class="flex items-center gap-2 pl-4 text-sm">
+                  <i class="ph-fill ph-facebook-logo text-orange-400"></i>
+                  <a href="https://facebook.com/AngelesCityVeterinaryOffice" target="_blank" class="nav-link">
+                    Angeles City Veterinary Office
+                  </a>
                 </li>
               </ul>
-
             </div>
           </div>
         </div>

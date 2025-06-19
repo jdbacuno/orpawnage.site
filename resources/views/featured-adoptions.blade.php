@@ -55,7 +55,7 @@
         </div>
       </div>
       @if($totalImages > $initialLimit)
-      <div class="mt-8 text-center">
+      <div id="loadMoreWrapper" class="mt-8 text-center">
         <button id="loadMoreBtn" class="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
           Load More
         </button>
@@ -149,131 +149,97 @@
       const yearFilter = document.getElementById('yearFilter');
       const monthFilter = document.getElementById('monthFilter');
       const loadMoreBtn = document.getElementById('loadMoreBtn');
-      
-      function applyFilters() {
-          const selectedYear = yearFilter.value;
-          const selectedMonth = monthFilter.value;
-          let visibleCount = 0;
-          
-          document.querySelectorAll('.gallery-item').forEach(item => {
-              const itemYear = item.getAttribute('data-year');
-              const itemMonth = item.getAttribute('data-month');
-              
-              const yearMatch = selectedYear === 'all' || itemYear === selectedYear;
-              const monthMatch = selectedMonth === 'all' || itemMonth === selectedMonth;
-              
-              if (yearMatch && monthMatch) {
-                  item.classList.remove('hidden');
-                  visibleCount++;
-              } else {
-                  item.classList.add('hidden');
-              }
-          });
-          
-          // Show/hide load more button based on filters
-          if (loadMoreBtn) {
-              if (selectedYear === 'all' && selectedMonth === 'all') {
-                  // When showing all, compare with totalImages
-                  const loadedItems = document.querySelectorAll('.gallery-item').length;
-                  loadMoreBtn.style.display = loadedItems < {{ $totalImages }} ? 'block' : 'none';
-              } else {
-                  // When filtered, hide the load more button
-                  loadMoreBtn.style.display = 'none';
-              }
+      const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+      const galleryContainer = document.querySelector('.gallery-grid');
+      let currentPage = 0;
+      const perPage = 12;
+      let isLoading = false;
+
+      async function fetchAndRenderGallery(reset = false) {
+        if (isLoading) return;
+        isLoading = true;
+        if (reset) {
+          currentPage = 0;
+          galleryContainer.innerHTML = '';
+        }
+        const year = yearFilter.value;
+        const month = monthFilter.value;
+        const url = `/featured-adoptions/load-more?page=${currentPage}&year=${year}&month=${month}`;
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const html = await response.text();
+          if (reset && html.trim() === '') {
+            if (loadMoreWrapper) loadMoreWrapper.style.display = 'none';
+            isLoading = false;
+            return;
           }
+          galleryContainer.insertAdjacentHTML('beforeend', html);
+          attachModalListenersToNewItems();
+          // If less than perPage items returned, hide Load More
+          if (!html.trim() || (html.match(/gallery-item/g) || []).length < perPage) {
+            if (loadMoreWrapper) loadMoreWrapper.style.display = 'none';
+          } else {
+            if (loadMoreWrapper) loadMoreWrapper.style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Error loading images:', error);
+        }
+        isLoading = false;
       }
 
-      // Add event listener for month filter changes
-      monthFilter.addEventListener('change', applyFilters);
-
-      // Year filter change event
+      // Filter change logic
+      function onFilterChange() {
+        fetchAndRenderGallery(true);
+      }
+      monthFilter.addEventListener('change', onFilterChange);
       yearFilter.addEventListener('change', function() {
-          const selectedYear = this.value;
-          
-          // Reset month filter
-          monthFilter.value = 'all';
-          
-          if (selectedYear === 'all') {
-              // Enable all month options
-              Array.from(monthFilter.options).forEach(option => {
-                  option.disabled = false;
-              });
-          } else {
-              // Disable months that don't have data for selected year
-              const availableMonths = new Set();
-              document.querySelectorAll(`.gallery-item[data-year="${selectedYear}"]`).forEach(item => {
-                  availableMonths.add(item.getAttribute('data-month'));
-              });
-              
-              Array.from(monthFilter.options).forEach(option => {
-                  option.disabled = option.value !== 'all' && !availableMonths.has(option.value);
-              });
-          }
-          
-          applyFilters();
+        const selectedYear = this.value;
+        monthFilter.value = 'all';
+        if (selectedYear === 'all') {
+          Array.from(monthFilter.options).forEach(option => { option.disabled = false; });
+        } else {
+          const availableMonths = new Set();
+          document.querySelectorAll(`.gallery-item[data-year="${selectedYear}"]`).forEach(item => {
+            availableMonths.add(item.getAttribute('data-month'));
+          });
+          Array.from(monthFilter.options).forEach(option => {
+            option.disabled = option.value !== 'all' && !availableMonths.has(option.value);
+          });
+        }
+        fetchAndRenderGallery(true);
       });
 
-      // Load More button functionality
+      // Load More button logic
       if (loadMoreBtn) {
-          let currentPage = 0;
-          const perPage = 12;
-          
-          loadMoreBtn.addEventListener('click', async function() {
-              currentPage++;
-              loadMoreBtn.disabled = true;
-              loadMoreBtn.textContent = 'Loading...';
-              
-              try {
-                  const response = await fetch(`/featured-adoptions/load-more?page=${currentPage}`);
-                  
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  
-                  const html = await response.text();
-                  
-                  if (html.trim() === '') {
-                      loadMoreBtn.style.display = 'none';
-                      return;
-                  }
-                  
-                  const galleryContainer = document.querySelector('.gallery-grid');
-                  galleryContainer.insertAdjacentHTML('beforeend', html);
-                  
-                  attachModalListenersToNewItems();
-                  
-                  // Only check total count when not filtered
-                  if (yearFilter.value === 'all' && monthFilter.value === 'all') {
-                      const loadedItems = document.querySelectorAll('.gallery-item').length;
-                      if (loadedItems >= {{ $totalImages }}) {
-                          loadMoreBtn.style.display = 'none';
-                      }
-                  }
-                  
-                  loadMoreBtn.disabled = false;
-                  loadMoreBtn.textContent = 'Load More';
-                  
-              } catch (error) {
-                  console.error('Error loading more images:', error);
-                  loadMoreBtn.disabled = false;
-                  loadMoreBtn.textContent = 'Load More';
-              }
-          });
+        loadMoreBtn.addEventListener('click', async function() {
+          currentPage++;
+          loadMoreBtn.disabled = true;
+          loadMoreBtn.textContent = 'Loading...';
+          await fetchAndRenderGallery(false);
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.textContent = 'Load More';
+        });
       }
-        
+
       function attachModalListenersToNewItems() {
-          document.querySelectorAll('.gallery-item').forEach(item => {
-              if (!item.hasAttribute('data-modal-listener')) {
-                  item.setAttribute('data-modal-listener', 'true');
-                  item.addEventListener('click', function() {
-                      const imgSrc = this.getAttribute('data-src');
-                      modalImg.src = imgSrc;
-                      modal.classList.remove('hidden');
-                      modal.classList.add('flex');
-                      document.body.style.overflow = 'hidden';
-                  });
-              }
-          });
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          if (!item.hasAttribute('data-modal-listener')) {
+            item.setAttribute('data-modal-listener', 'true');
+            item.addEventListener('click', function() {
+              const imgSrc = this.getAttribute('data-src');
+              modalImg.src = imgSrc;
+              modal.classList.remove('hidden');
+              modal.classList.add('flex');
+              document.body.style.overflow = 'hidden';
+            });
+          }
+        });
+      }
+
+      // Initial fetch for filters (if not showing all)
+      if (yearFilter.value !== 'all' || monthFilter.value !== 'all') {
+        fetchAndRenderGallery(true);
       }
     });
   </script>

@@ -139,7 +139,21 @@ class FeaturedAdoptionController extends Controller
     $perPage = 12;
     $offset = ($page * $perPage); // This skips the already loaded items
 
-    $featuredPets = FeaturedAdoption::orderBy('created_at', 'DESC')
+    $query = FeaturedAdoption::orderBy('created_at', 'DESC');
+
+    // Filter by year if provided
+    $year = $request->query('year');
+    if ($year && $year !== 'all') {
+      $query->whereYear('created_at', $year);
+    }
+
+    // Filter by month if provided
+    $month = $request->query('month');
+    if ($month && $month !== 'all') {
+      $query->whereMonth('created_at', $month);
+    }
+
+    $featuredPets = $query
       ->skip($offset)
       ->take($perPage)
       ->get()
