@@ -13,7 +13,7 @@ class FeaturedAdoptionController extends Controller
   public function index()
   {
     $initialLimit = 12;
-    $featuredPets = FeaturedAdoption::orderBy('order')->take($initialLimit)->get()
+    $featuredPets = FeaturedAdoption::orderBy('created_at', 'DESC')->take($initialLimit)->get()
       ->groupBy(function ($item) {
         return $item->created_at->format('F Y');
       });
@@ -61,7 +61,7 @@ class FeaturedAdoptionController extends Controller
   // Admin panel
   public function adminIndex()
   {
-    $featuredPets = FeaturedAdoption::orderBy('order')->get()
+    $featuredPets = FeaturedAdoption::orderBy('created_at', 'DESC')->get()
       ->groupBy(function ($item) {
         return $item->created_at->format('F Y');
       });
@@ -135,11 +135,12 @@ class FeaturedAdoptionController extends Controller
 
   public function loadMore(Request $request)
   {
-    $page = $request->query('page', 1); // Start from page 1
+    $page = $request->query('page', 1);
     $perPage = 12;
+    $offset = ($page * $perPage); // This skips the already loaded items
 
-    $featuredPets = FeaturedAdoption::orderBy('order')
-      ->skip($page * $perPage) // Changed from (page-1)*perPage
+    $featuredPets = FeaturedAdoption::orderBy('created_at', 'DESC')
+      ->skip($offset)
       ->take($perPage)
       ->get()
       ->groupBy(function ($item) {

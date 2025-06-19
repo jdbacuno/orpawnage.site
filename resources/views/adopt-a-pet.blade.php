@@ -172,10 +172,20 @@
 
       <!-- RIGHT SIDE IMAGE -->
       <div class="lg:w-1/2 relative">
-        <img src="{{ asset('images/home_image-3.jpg') }}" alt="Pet Adoption Hero Image"
-          class="hidden sm:block w-full sm:max-w-[500px] mx-auto rounded-xl shadow-lg brightness-[.75]" />
+        <div class="hidden sm:block w-full sm:max-w-[500px] mx-auto relative">
+          <!-- Main Image -->
+          <img src="{{ asset('images/home_image-3.jpg') }}" alt="Pet Adoption Hero Image"
+            class="w-full rounded-xl brightness-[.75] relative z-10" />
+
+          <!-- Decorative Border Layer -->
+          <div class="absolute -inset-4 border-2 border-yellow-400 rounded-xl z-0"></div>
+
+          <!-- Paw Print Corner Accents -->
+          <div class="absolute -top-10 -left-8 -rotate-45 text-yellow-600 z-20">
+            <i class="ph-fill ph-paw-print text-4xl"></i>
+          </div>
+        </div>
       </div>
-    </div>
   </section>
   <!-- ========== END OF HERO SECTION ========== -->
 

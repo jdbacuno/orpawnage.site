@@ -165,7 +165,7 @@
 
   <!-- ========== START OF FEATURED PETS SECTION ========== -->
   @if($featuredPets->count() > 4)
-  <section class="w-full py-16 bg-white custom-gradient">
+  <section class="w-full py-16 bg-white bg-yellow-20">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <div class="flex justify-between items-center mb-8">
         <h2 class="text-3xl font-bold text-black">

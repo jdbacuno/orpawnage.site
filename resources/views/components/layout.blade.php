@@ -109,11 +109,11 @@
     }
 
     .custom-gradient {
-      background: linear-gradient(35deg, #fadb6b 0%, #fffcec 50%) !important;
+      background: linear-gradient(15deg, #ffd745 0%, #fffef5 40%) !important;
     }
 
     .footer-gradient {
-      background: linear-gradient(-145deg, #fadb6b 0%, #fffcec 50%) !important;
+      background: linear-gradient(-165deg, #ffd745 0%, #fffef5 40%) !important;
     }
   </style>
 </head>

@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="featured-gradient min-h-screen custom-gradient" id="mainContent">
+  <section class="featured-gradient min-h-screen bg-yellow-20" id="mainContent">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Header Section -->
       <div class="text-black flex justify-center items-center mb-6" id="pets">
@@ -13,7 +13,7 @@
       <div class="container mx-auto px-4">
 
 
-        <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+        <div class="mb-4 p-4 bg-yellow-400/30 border-l-4 border-yellow-400 rounded-r-lg">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <i class="ph-fill ph-heart text-yellow-500 text-xl"></i>

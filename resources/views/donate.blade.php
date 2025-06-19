@@ -10,7 +10,7 @@
 
     <!-- Overlay Content - More compact version -->
     <div
-      class="relative z-10 w-full max-w-2xl bg-white/90 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4">
+      class="relative z-10 w-full max-w-2xl bg-white/75 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4">
       <!-- Header -->
       <div class="text-center mb-6">
         <h1

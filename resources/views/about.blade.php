@@ -21,7 +21,8 @@
             <span class="glowing-border"></span>
           </span>
         </h1>
-        <p class="text-lg/10 mt-10 mx-auto text-white drop-shadow-md bg-black/20 px-4 py-2 rounded-lg">
+        <p
+          class="text-lg/10 mt-10 mx-auto max-w-[700px] text-white tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
           The official online portal of Angeles City Veterinary Office for animal welfare services
         </p>
       </div>
@@ -74,7 +75,7 @@
   </section>
 
   <!-- ========== MISSION & VALUES SECTION ========== -->
-  <section class="py-16 bg-white">
+  <section class="py-16 custom-gradient">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -137,7 +138,7 @@
   </section>
 
   <!-- ========== SERVICES SECTION ========== -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-16 bg-yellow-20">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

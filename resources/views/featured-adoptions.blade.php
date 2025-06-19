@@ -24,6 +24,7 @@
         <div class="w-full sm:w-auto">
           <select id="yearFilter"
             class="block w-full pl-4 pr-8 py-2 text-base border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
+            <option value="all">All Year</option>
             @foreach($years as $year)
             <option value="{{ $year }}">{{ $year }}</option>
             @endforeach
@@ -55,8 +56,7 @@
       </div>
       @if($totalImages > $initialLimit)
       <div class="mt-8 text-center">
-        <button id="loadMoreBtn"
-          class="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-colors duration-200">
+        <button id="loadMoreBtn" class="px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
           Load More
         </button>
       </div>
@@ -148,60 +148,74 @@
       // Month/Year filter functionality
       const yearFilter = document.getElementById('yearFilter');
       const monthFilter = document.getElementById('monthFilter');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
       
       function applyFilters() {
-        const selectedYear = yearFilter.value;
-        const selectedMonth = monthFilter.value;
-        
-        document.querySelectorAll('.gallery-item').forEach(item => {
-          const itemYear = item.getAttribute('data-year');
-          const itemMonth = item.getAttribute('data-month');
+          const selectedYear = yearFilter.value;
+          const selectedMonth = monthFilter.value;
+          let visibleCount = 0;
           
-          const yearMatch = selectedYear === 'all' || itemYear === selectedYear;
-          const monthMatch = selectedMonth === 'all' || itemMonth === selectedMonth;
+          document.querySelectorAll('.gallery-item').forEach(item => {
+              const itemYear = item.getAttribute('data-year');
+              const itemMonth = item.getAttribute('data-month');
+              
+              const yearMatch = selectedYear === 'all' || itemYear === selectedYear;
+              const monthMatch = selectedMonth === 'all' || itemMonth === selectedMonth;
+              
+              if (yearMatch && monthMatch) {
+                  item.classList.remove('hidden');
+                  visibleCount++;
+              } else {
+                  item.classList.add('hidden');
+              }
+          });
           
-          if (yearMatch && monthMatch) {
-            item.classList.remove('hidden');
-          } else {
-            item.classList.add('hidden');
+          // Show/hide load more button based on filters
+          if (loadMoreBtn) {
+              if (selectedYear === 'all' && selectedMonth === 'all') {
+                  // When showing all, compare with totalImages
+                  const loadedItems = document.querySelectorAll('.gallery-item').length;
+                  loadMoreBtn.style.display = loadedItems < {{ $totalImages }} ? 'block' : 'none';
+              } else {
+                  // When filtered, hide the load more button
+                  loadMoreBtn.style.display = 'none';
+              }
           }
-        });
       }
-      
-      yearFilter.addEventListener('change', applyFilters);
+
+      // Add event listener for month filter changes
       monthFilter.addEventListener('change', applyFilters);
-      
-      // When year changes, update available months
+
+      // Year filter change event
       yearFilter.addEventListener('change', function() {
-        const selectedYear = this.value;
-        
-        // Reset month filter
-        monthFilter.value = 'all';
-        
-        if (selectedYear === 'all') {
-          // Enable all month options
-          Array.from(monthFilter.options).forEach(option => {
-            option.disabled = false;
-          });
-        } else {
-          // Disable months that don't have data for selected year
-          const availableMonths = new Set();
-          document.querySelectorAll(`.gallery-item[data-year="${selectedYear}"]`).forEach(item => {
-            availableMonths.add(item.getAttribute('data-month'));
-          });
+          const selectedYear = this.value;
           
-          Array.from(monthFilter.options).forEach(option => {
-            option.disabled = option.value !== 'all' && !availableMonths.has(option.value);
-          });
-        }
-        
-        applyFilters();
+          // Reset month filter
+          monthFilter.value = 'all';
+          
+          if (selectedYear === 'all') {
+              // Enable all month options
+              Array.from(monthFilter.options).forEach(option => {
+                  option.disabled = false;
+              });
+          } else {
+              // Disable months that don't have data for selected year
+              const availableMonths = new Set();
+              document.querySelectorAll(`.gallery-item[data-year="${selectedYear}"]`).forEach(item => {
+                  availableMonths.add(item.getAttribute('data-month'));
+              });
+              
+              Array.from(monthFilter.options).forEach(option => {
+                  option.disabled = option.value !== 'all' && !availableMonths.has(option.value);
+              });
+          }
+          
+          applyFilters();
       });
 
-      // Load More functionality
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      // Load More button functionality
       if (loadMoreBtn) {
-          let currentPage = 0; // Start from 0 to match skip logic
+          let currentPage = 0;
           const perPage = 12;
           
           loadMoreBtn.addEventListener('click', async function() {
@@ -219,56 +233,48 @@
                   const html = await response.text();
                   
                   if (html.trim() === '') {
-                      // No more content to load
                       loadMoreBtn.style.display = 'none';
                       return;
                   }
                   
-                  // Create a temporary container to parse the HTML
-                  const tempDiv = document.createElement('div');
-                  tempDiv.innerHTML = html;
-                  
-                  // Get the main container where new content should be appended
                   const galleryContainer = document.querySelector('.gallery-grid');
-                  
-                  // Append the new content
                   galleryContainer.insertAdjacentHTML('beforeend', html);
                   
-                  // Reattach event listeners to new items for modal
                   attachModalListenersToNewItems();
                   
-                  // Check if we've loaded all items
-                  const loadedItems = document.querySelectorAll('.gallery-item').length;
-                  if (loadedItems >= {{ $totalImages }}) {
-                      loadMoreBtn.style.display = 'none';
-                  } else {
-                      loadMoreBtn.disabled = false;
-                      loadMoreBtn.textContent = 'Load More';
+                  // Only check total count when not filtered
+                  if (yearFilter.value === 'all' && monthFilter.value === 'all') {
+                      const loadedItems = document.querySelectorAll('.gallery-item').length;
+                      if (loadedItems >= {{ $totalImages }}) {
+                          loadMoreBtn.style.display = 'none';
+                      }
                   }
+                  
+                  loadMoreBtn.disabled = false;
+                  loadMoreBtn.textContent = 'Load More';
                   
               } catch (error) {
                   console.error('Error loading more images:', error);
                   loadMoreBtn.disabled = false;
                   loadMoreBtn.textContent = 'Load More';
-                  // Optional: Show error message to user
               }
           });
       }
         
-        function attachModalListenersToNewItems() {
-            document.querySelectorAll('.gallery-item').forEach(item => {
-                if (!item.hasAttribute('data-modal-listener')) {
-                    item.setAttribute('data-modal-listener', 'true');
-                    item.addEventListener('click', function() {
-                        const imgSrc = this.getAttribute('data-src');
-                        modalImg.src = imgSrc;
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                        document.body.style.overflow = 'hidden';
-                    });
-                }
-            });
-        }
+      function attachModalListenersToNewItems() {
+          document.querySelectorAll('.gallery-item').forEach(item => {
+              if (!item.hasAttribute('data-modal-listener')) {
+                  item.setAttribute('data-modal-listener', 'true');
+                  item.addEventListener('click', function() {
+                      const imgSrc = this.getAttribute('data-src');
+                      modalImg.src = imgSrc;
+                      modal.classList.remove('hidden');
+                      modal.classList.add('flex');
+                      document.body.style.overflow = 'hidden';
+                  });
+              }
+          });
+      }
     });
   </script>
 </x-layout>

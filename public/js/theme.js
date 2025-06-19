@@ -9,6 +9,7 @@ tailwind.config = {
           500: '#ff6600',
         },
         yellow: {
+          20: '#fffef5',
           300: '#fff9db',
           400: '#fadb6b',
           500: '#ffc800',
