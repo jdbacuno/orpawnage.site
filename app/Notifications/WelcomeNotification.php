@@ -22,7 +22,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
             ->subject('Welcome to ' . config('app.name'))
             ->line('Thank you for signing up using your Google account!')
             ->line('Your account has been created successfully.')
-            ->action('Visit Your Dashboard', url('/'))
+            ->action('Visit Your Dashboard', url('http://localhost/'))
             ->line('If you did not request this, please contact support.');
     }
 }
