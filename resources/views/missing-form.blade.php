@@ -80,7 +80,8 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
-                  <input type="tel" name="contact_no" value="{{ auth()->user()->contact_number }}"
+                  <input type="tel" name="contact_no"
+                    value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly
                     required />
                   <x-form-error name="contact_no" />

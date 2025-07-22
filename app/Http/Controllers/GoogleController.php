@@ -24,7 +24,7 @@ class GoogleController extends Controller
                 $user = User::create([
                     'username' => strtolower(str_replace(' ', '', $googleUser->getName()) . '_' . substr($googleUser->getId(), 0, 4)),
                     'email' => $googleUser->getEmail(),
-                    'contact_number' => 'Not Set (Please update in settings)',
+                    'contact_number' => '',
                     'password' => bcrypt(rand(100000, 999999)),
                     'email_verified_at' => now(),
                     'signed_up_with_google' => true,

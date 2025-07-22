@@ -199,7 +199,8 @@
                 </label>
                 <input type="text" name="contact_number"
                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  value="{{ auth()->user()->contact_number }}" readonly required />
+                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}" readonly
+                  required />
                 <x-form-error name="contact_number" />
               </div>
 

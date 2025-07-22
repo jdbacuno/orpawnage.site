@@ -25,13 +25,13 @@ class SettingsController extends Controller
     public function updateEmail(Request $request)
     {
         $request->validate([
-            'email_current_password' => ['required', 'current_password'],
-            'email' => ['required', 'email', 'unique:users,email,' . Auth::id()]
+            'settings_email_current_password' => ['required', 'current_password'],
+            'settings_email' => ['required', 'email', 'unique:users,email,' . Auth::id()]
         ]);
 
         $user = $request->user();
         $oldEmail = $user->email;
-        $user->email = $request->email;
+        $user->email = $request->settings_email;
         $user->email_verified_at = null;
         $user->save();
 
@@ -49,8 +49,8 @@ class SettingsController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => [
+            'settings_current_password' => ['required', 'current_password'],
+            'settings_password' => [
                 'required',
                 'confirmed',
                 Password::min(6)
@@ -63,7 +63,7 @@ class SettingsController extends Controller
 
         $user = $request->user();
         $user->update([
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->settings_password)
         ]);
 
         // Send password change notification
@@ -75,14 +75,14 @@ class SettingsController extends Controller
     public function updateContact(Request $request)
     {
         $request->validate([
-            'contact_current_password' => ['required', 'current_password'],
-            'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11']
+            'settings_contact_current_password' => ['required', 'current_password'],
+            'settings_contact_number' => ['required', 'string', 'regex:/^09\d{9}$/', 'size:11']
         ]);
 
         $user = $request->user();
         $oldContact = $user->contact_number;
         $user->update([
-            'contact_number' => $request->contact_number
+            'contact_number' => $request->settings_contact_number
         ]);
 
         // Send contact number change notification
@@ -94,7 +94,7 @@ class SettingsController extends Controller
     public function deleteAccount(Request $request)
     {
         $request->validate([
-            'delete_current_password' => ['required', 'current_password']
+            'settings_delete_current_password' => ['required', 'current_password']
         ]);
 
         $user = $request->user();
@@ -146,7 +146,7 @@ class SettingsController extends Controller
     public function setupPassword(Request $request)
     {
         $request->validate([
-            'password' => [
+            'settings_password' => [
                 'required',
                 'confirmed',
                 Password::min(6)
@@ -159,7 +159,7 @@ class SettingsController extends Controller
 
         $user = $request->user();
         $user->update([
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->settings_password),
             'has_set_password' => true,
         ]);
 

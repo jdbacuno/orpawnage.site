@@ -380,6 +380,7 @@
   </div>
 
   <!-- Cancel Confirmation Modal -->
+  @if (count($adoptionApplications) > 0)
   <div id="cancelModal"
     class="fixed inset-0 px-1 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg shadow-md p-6 w-96">
@@ -398,6 +399,7 @@
       </div>
     </div>
   </div>
+  @endif
 
   <!-- Resend Confirmation Modal -->
   <div id="resendModal"

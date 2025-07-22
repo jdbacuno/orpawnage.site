@@ -235,7 +235,9 @@
                 <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
                 <input type="text" name="contact_number"
                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Your contact number" value="{{ auth()->user()->contact_number }}" readonly required />
+                  placeholder="Your contact number"
+                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}" readonly
+                  required />
                 <x-form-error name="contact_number" />
               </div>
               <div>

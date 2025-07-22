@@ -560,20 +560,20 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   @php
   // Determine which tab should be active based on the errors
   $activeTab = 'account-tab';
-  if ($errors->has('current_password') || $errors->has('password')) {
+  if ($errors->has('settings_current_password') || $errors->has('settings_password')) {
   $activeTab = 'password-tab';
-  } elseif ($errors->has('delete_current_password')) {
+  } elseif ($errors->has('settings_delete_current_password')) {
   $activeTab = 'danger-tab';
-  } elseif ($errors->has('email') || $errors->has('email_current_password') ||
-  $errors->has('contact_number') || $errors->has('contact_current_password')) {
+  } elseif ($errors->has('settings_email') || $errors->has('settings_email_current_password') ||
+  $errors->has('settings_contact_number') || $errors->has('settings_contact_current_password')) {
   $activeTab = 'account-tab';
   }
 
   // Check if modal should be open
-  $modalOpen = $errors->has('email') || $errors->has('email_current_password') ||
-  $errors->has('contact_number') || $errors->has('contact_current_password') ||
-  $errors->has('current_password') || $errors->has('password') ||
-  $errors->has('delete_current_password');
+  $modalOpen = $errors->has('settings_email') || $errors->has('settings_email_current_password') ||
+  $errors->has('settings_contact_number') || $errors->has('settings_contact_current_password') ||
+  $errors->has('settings_current_password') || $errors->has('settings_password') ||
+  $errors->has('settings_delete_current_password');
   @endphp
 
   <!-- Settings Modal -->
@@ -696,16 +696,16 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
 
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
-                          <input type="email" name="email" value="{{ old('email') }}" required
+                          <input type="email" name="settings_email" value="{{ old('settings_email') }}" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                             placeholder="New email address">
-                          <x-form-error name="email" />
+                          <x-form-error name="settings_email" />
                         </div>
 
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                           <div class="relative">
-                            <input type="password" name="email_current_password" required
+                            <input type="password" name="settings_email_current_password" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Enter your current password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -713,7 +713,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                               <i class="ph-fill ph-eye text-lg"></i>
                             </button>
                           </div>
-                          <x-form-error name="email_current_password" />
+                          <x-form-error name="settings_email_current_password" />
                         </div>
 
                         <div class="pt-2 flex justify-end">
@@ -739,23 +739,23 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                       <div class="space-y-4">
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
-                          <input type="tel" value="{{ auth()->user()->contact_number }}"
+                          <input type="tel" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update)' }}"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
                         </div>
 
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
-                          <input type="tel" name="contact_number" value="{{ old('contact_number') }}"
+                          <input type="tel" name="settings_contact_number" value="{{ old('settings_contact_number') }}"
                             pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
                           <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
-                          <x-form-error name="contact_number" />
+                          <x-form-error name="settings_contact_number" />
                         </div>
 
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                           <div class="relative">
-                            <input type="password" name="contact_current_password" required
+                            <input type="password" name="settings_contact_current_password" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Enter your current password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -763,7 +763,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                               <i class="ph-fill ph-eye text-lg"></i>
                             </button>
                           </div>
-                          <x-form-error name="contact_current_password" />
+                          <x-form-error name="settings_contact_current_password" />
                         </div>
 
                         <div class="pt-2 flex justify-end">
@@ -798,7 +798,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
                           <div class="relative">
-                            <input type="password" name="password" required
+                            <input type="password" name="settings_password" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Choose a password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -806,7 +806,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                               <i class="ph-fill ph-eye text-lg"></i>
                             </button>
                           </div>
-                          <x-form-error name="password" />
+                          <x-form-error name="settings_password" />
 
                           <!-- Password Strength Meter -->
                           <div class="mt-2 space-y-2">
@@ -844,7 +844,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
                           <div class="relative">
-                            <input type="password" name="password_confirmation" required
+                            <input type="password" name="settings_password_confirmation" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Confirm your password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -872,7 +872,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                           <div class="relative">
-                            <input type="password" name="current_password" required
+                            <input type="password" name="settings_current_password" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Current password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -880,13 +880,13 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                               <i class="ph-fill ph-eye text-lg"></i>
                             </button>
                           </div>
-                          <x-form-error name="current_password" />
+                          <x-form-error name="settings_current_password" />
                         </div>
 
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
                           <div class="relative">
-                            <input type="password" id="password" name="password" required
+                            <input type="password" id="password" name="settings_password" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="New password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -894,7 +894,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                               <i class="ph-fill ph-eye text-lg"></i>
                             </button>
                           </div>
-                          <x-form-error name="password" />
+                          <x-form-error name="settings_password" />
 
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
@@ -931,7 +931,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
                           <div class="relative">
-                            <input type="password" name="password_confirmation" required
+                            <input type="password" name="settings_password_confirmation" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                               placeholder="Confirm new password">
                             <button type="button" onclick="togglePasswordVisibility(this)"
@@ -985,7 +985,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                       <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                         <div class="relative">
-                          <input type="password" name="delete_current_password" required
+                          <input type="password" name="settings_delete_current_password" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
                             placeholder="Enter your current password">
                           <button type="button" onclick="togglePasswordVisibility(this)"
@@ -993,7 +993,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             <i class="ph-fill ph-eye text-lg"></i>
                           </button>
                         </div>
-                        <x-form-error name="delete_current_password" />
+                        <x-form-error name="settings_delete_current_password" />
                       </div>
 
                       <div class="pt-2 flex justify-end">
