@@ -143,6 +143,33 @@ class SettingsController extends Controller
         return redirect('/login')->with('settings-success', 'Your account has been permanently deleted.')->withFragment('settingsModal?tab=danger-tab');;
     }
 
+    public function setupPassword(Request $request)
+    {
+        $request->validate([
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(6)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
+        ]);
+
+        $user = $request->user();
+        $user->update([
+            'password' => Hash::make($request->password),
+            'has_set_password' => true,
+        ]);
+
+        $user->notify(new PasswordChanged());
+
+        return redirect()->back()
+            ->with('settings-success', 'Password set successfully! You can now delete your account if needed.')
+            ->withFragment('settingsModal?tab=password-tab');
+    }
+
     public function adminUpdateEmail(Request $request)
     {
         $request->validate([

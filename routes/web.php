@@ -6,6 +6,7 @@ use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedAdoptionController;
 use App\Http\Controllers\FeaturedPetController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MissingPetReportController;
 use App\Http\Controllers\OfficeStaffController;
 use App\Http\Controllers\PasswordResetController;
@@ -31,6 +32,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
+
+    Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 // Email Verification Routes
@@ -146,6 +150,9 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
 
     Route::get('/featured-adoptions', [FeaturedAdoptionController::class, 'index'])->name('Featured Adoptions');
     Route::get('/featured-adoptions/load-more', [FeaturedAdoptionController::class, 'loadMore'])->name('featured-adoptions.load-more');
+
+    Route::patch('/settings/password/setup', [SettingsController::class, 'setupPassword'])
+        ->name('settings.password.setup');
 });
 
 Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('verified');

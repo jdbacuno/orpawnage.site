@@ -31,6 +31,13 @@ class SessionController extends Controller
             ]);
         }
 
+        // Check if user registered via Google (has random password)
+        if ($user->password === null || $user->password === '') {
+            throw ValidationException::withMessages([
+                'email' => 'This account was created via Google. Please sign in with Google.'
+            ]);
+        }
+
         if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
                 'password' => 'Incorrect password'

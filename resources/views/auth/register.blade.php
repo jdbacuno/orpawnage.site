@@ -24,7 +24,7 @@
 
             <!-- Social Login -->
             <div class="space-y-6">
-              <button
+              <a href="{{ route('google.login') }}"
                 class="flex items-center justify-center w-full gap-3 px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-200 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -41,7 +41,7 @@
                     fill="#EB4335" />
                 </svg>
                 Continue with Google
-              </button>
+              </a>
 
               <div class="relative my-6">
                 <div class="absolute inset-0 flex items-center">

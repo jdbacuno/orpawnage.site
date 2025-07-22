@@ -781,8 +781,89 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                 <div id="password-tab" class="tab-content {{ $activeTab === 'password-tab' ? 'activeTab' : 'hidden' }}">
                   <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                      <i class="ph-fill ph-lock mr-2 text-orange-400"></i>Change Password
+                      <i class="ph-fill ph-lock mr-2 text-orange-400"></i>
+                      @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                      Set a Password
+                      @else
+                      Change Password
+                      @endif
                     </h3>
+
+                    @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                    <form method="POST" action="{{ route('settings.password.setup') }}" id="passwordSetupForm">
+                      @csrf
+                      @method('PATCH')
+
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
+                          <div class="relative">
+                            <input type="password" name="password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Choose a password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="password" />
+
+                          <!-- Password Strength Meter -->
+                          <div class="mt-2 space-y-2">
+                            <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
+                            <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
+                              <div id="strength-progress"
+                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                            </div>
+                          </div>
+
+                          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
+                            <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                              <i class="ph-fill ph-info mr-2"></i>Password Requirements
+                            </h4>
+                            <ul class="text-xs space-y-1">
+                              <li id="req-length" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
+                              </li>
+                              <li id="req-uppercase" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
+                              </li>
+                              <li id="req-lowercase" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
+                              </li>
+                              <li id="req-number" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
+                              </li>
+                              <li id="req-symbol" class="flex items-center text-blue-700">
+                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
+                          <div class="relative">
+                            <input type="password" name="password_confirmation" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Confirm your password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div class="pt-2 flex justify-end">
+                          <button type="submit"
+                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Set Password
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                    @else
+                    <!-- Existing password change form -->
                     <form method="POST" action="{{ route('settings.password.update') }}" id="passwordChangeForm">
                       @csrf
                       @method('PATCH')
@@ -815,7 +896,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           </div>
                           <x-form-error name="password" />
 
-                          <!-- Password Strength Meter -->
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
                             <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
@@ -824,7 +904,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             </div>
                           </div>
 
-                          <!-- Password Requirements -->
                           <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
                             <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
                               <i class="ph-fill ph-info mr-2"></i>Password Requirements
@@ -870,6 +949,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         </div>
                       </div>
                     </form>
+                    @endif
                   </div>
                 </div>
 
@@ -880,6 +960,20 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                     <h3 class="text-lg font-semibold text-red-800 mb-4 flex items-center">
                       <i class="ph-fill ph-trash mr-2 text-red-500"></i>Delete Account
                     </h3>
+
+                    @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-r-lg">
+                      <div class="flex items-center">
+                        <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
+                        <p class="text-sm text-gray-700">
+                          You signed up with Google. To delete your account, you must first
+                          <a href="#" onclick="switchTab('password-tab')" class="text-orange-500 hover:underline">
+                            set a password
+                          </a>.
+                        </p>
+                      </div>
+                    </div>
+                    @else
                     <p class="text-sm text-gray-700 mb-4">
                       Once you delete your account, there is no going back. Please be certain.
                     </p>
@@ -909,6 +1003,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         </button>
                       </div>
                     </form>
+                    @endif
                   </div>
                   @endif
                 </div>
@@ -1104,6 +1199,17 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
       
       // Submit the form after validation
+      this.submit();
+    });
+
+    // Add this to your existing script section
+    document.getElementById('passwordSetupForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitButton = this.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
+      
       this.submit();
     });
   </script>
