@@ -19,6 +19,7 @@ class SurrenderApplicationController extends Controller
     $sort = request('sort', 'created_at');
     $direction = request('direction', 'desc');
     $status = request('status');
+    $search = request('search');
 
     $allowedSorts = ['created_at', 'pet_number', 'species', 'age', 'sex', 'color', 'status'];
     if (!in_array($sort, $allowedSorts)) {
@@ -31,6 +32,15 @@ class SurrenderApplicationController extends Controller
 
     if ($status && $status !== 'all') {
       $query->where('status', $status);
+    }
+
+    if ($search) {
+      $query->where(function ($q) use ($search) {
+        $q->where('transaction_number', 'like', "%$search%")
+          ->orWhere('email', 'like', "%$search%")
+          ->orWhere('full_name', 'like', "%$search%")
+        ;
+      });
     }
 
     $perPage = request()->get('per_page', 12);

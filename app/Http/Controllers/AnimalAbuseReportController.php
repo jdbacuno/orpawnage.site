@@ -26,6 +26,7 @@ class AnimalAbuseReportController extends Controller
 
         // Status Filter
         $status = $request->status;
+        $search = $request->search;
         switch ($status) {
             case 'pending':
                 $query->where('status', 'pending');
@@ -42,6 +43,15 @@ class AnimalAbuseReportController extends Controller
             default:
                 // No status filter - show all
                 break;
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('report_number', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                  ->orWhere('contact_no', 'like', "%$search%")
+                ;
+            });
         }
 
         // Sorting

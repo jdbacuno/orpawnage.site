@@ -23,6 +23,7 @@ class AdoptionApplicationController extends Controller
         $sort = request('sort', 'created_at');
         $direction = request('direction', 'desc');
         $status = request('status');
+        $search = request('search');
 
         $query = AdoptionApplication::with(['pet', 'user'])
             ->where('status', '!=', 'archived') // Exclude archived applications by default
@@ -30,6 +31,15 @@ class AdoptionApplicationController extends Controller
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('transaction_number', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                ;
+            });
         }
 
         $perPage = request()->get('per_page', 12);

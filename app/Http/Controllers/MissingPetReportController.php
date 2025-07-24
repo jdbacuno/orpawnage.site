@@ -27,6 +27,7 @@ class MissingPetReportController extends Controller
 
         // Status Filter
         $status = $request->status;
+        $search = $request->search;
         switch ($status) {
             case 'pending':
                 $query->where('status', 'pending');
@@ -43,6 +44,15 @@ class MissingPetReportController extends Controller
             default:
                 // No additional status filter
                 break;
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('report_number', 'like', "%$search%")
+                  ->orWhere('owner_name', 'like', "%$search%")
+                  ->orWhere('contact_no', 'like', "%$search%")
+                ;
+            });
         }
 
         // Sorting

@@ -3,9 +3,8 @@
 
   <div class="mt-4">
     {{-- Filter Section --}}
-    <div class="flex flex-wrap gap-2 mb-4">
-      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
-        <!-- Status Filter -->
+    <div class="flex flex-wrap gap-2 mb-4 items-center">
+      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center w-full">
         <select name="status"
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
           onchange="this.form.submit()">
@@ -29,7 +28,6 @@
             Rejected
           </option>
         </select>
-
         <select name="direction"
           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
           onchange="this.form.submit()">
@@ -40,6 +38,18 @@
             Oldest First
           </option>
         </select>
+        <div class="relative ml-auto">
+          <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by transaction number, email, or name" class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[250px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+          <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
+            <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
+          </div>
+        </div>
+        @foreach(request()->except(['search', 'page', 'status', 'direction']) as $key => $value)
+          <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
+        @endforeach
+        @if(request('search'))
+          <a href="{{ request()->url() }}?{{ http_build_query(request()->except(['search', 'page'])) }}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
+        @endif
       </form>
     </div>
 

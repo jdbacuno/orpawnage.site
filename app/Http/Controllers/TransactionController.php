@@ -15,11 +15,21 @@ class TransactionController extends Controller
     {
         $status = $request->get('status');
         $userId = Auth::id();
+        $search = $request->get('search');
 
         $query = AdoptionApplication::with('pet')->where('user_id', $userId);
 
         if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be picked up', 'adoption on-going', 'to be scheduled', 'picked up', 'rejected', 'archive'])) {
             $query->where('status', $status);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('transaction_number', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                ;
+            });
         }
 
         $perPage = request()->get('per_page', 12);
@@ -45,11 +55,21 @@ class TransactionController extends Controller
     {
         $status = $request->get('status');
         $userId = Auth::id();
+        $search = $request->get('search');
 
         $query = SurrenderApplication::where('user_id', $userId);
 
         if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be scheduled', 'surrender on-going', 'completed', 'rejected'])) {
             $query->where('status', $status);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('transaction_number', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                ;
+            });
         }
 
         $perPage = request()->get('per_page', 12);
@@ -75,6 +95,7 @@ class TransactionController extends Controller
     {
         $userId = Auth::id();
         $status = $request->get('status');
+        $search = $request->get('search');
 
         $query = MissingPetReport::where('user_id', $userId);
 
@@ -94,6 +115,15 @@ class TransactionController extends Controller
                 break;
         }
 
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('report_number', 'like', "%$search%")
+                  ->orWhere('owner_name', 'like', "%$search%")
+                  ->orWhere('contact_no', 'like', "%$search%")
+                ;
+            });
+        }
+
         $perPage = request()->get('per_page', 12);
         $reports = $query->latest()->paginate($perPage);
 
@@ -107,6 +137,7 @@ class TransactionController extends Controller
     {
         $userId = Auth::id();
         $status = $request->get('status');
+        $search = $request->get('search');
 
         $query = AnimalAbuseReport::where('user_id', $userId);
 
@@ -127,6 +158,15 @@ class TransactionController extends Controller
             default:
                 // No additional filtering for 'all' or empty status
                 break;
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('report_number', 'like', "%$search%")
+                  ->orWhere('full_name', 'like', "%$search%")
+                  ->orWhere('contact_no', 'like', "%$search%")
+                ;
+            });
         }
 
         $perPage = request()->get('per_page', 12);
