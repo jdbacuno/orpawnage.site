@@ -34,7 +34,7 @@ class GoogleController extends Controller
                 $user->notify(new \App\Notifications\WelcomeNotification());
             }
 
-            // Auth::login($user);
+            Auth::login($user);
             return redirect($user->isAdmin ? '/admin' : '/');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Google login failed: ' . $e->getMessage());

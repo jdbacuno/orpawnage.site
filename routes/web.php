@@ -170,9 +170,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Admin Routes
 Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('Home');
+    Route::get('/admin/adoption-stats', [DashboardController::class, 'getAdoptionStats'])->name('admin.adoption-stats');
+    Route::get('/admin/monthly-trend-stats', [DashboardController::class, 'getMonthlyTrendStats'])->name('admin.monthly-trend-stats');
 
-    Route::get('/admin/pet-profiles', [PetController::class, 'create'])->name('Manage Pet Profiles');
-    Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('Manage Pet Profiles');
+    Route::get('/admin/pet-profiles', [PetController::class, 'create'])->name('admin.pet-profiles');
+    Route::post('/admin/pet-profiles', [PetController::class, 'store'])->name('admin.pet-profiles.store');
 
     Route::patch('/admin/pet-profiles/{pet}', [PetController::class, 'update']);
     Route::patch('/admin/pet-profiles/{pet}/archive', [PetController::class, 'archive'])
@@ -197,7 +199,7 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/surrender-applications/reject', [SurrenderApplicationController::class, 'reject'])->name('surrender-applications.reject');
     // Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])->name('admin.surrender-applications.archive');
 
-    Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('Manage Pet Adoption Applications');
+    Route::get('/admin/adoption-applications', [AdoptionApplicationController::class, 'index'])->name('admin.adoption-applications');
     Route::post('/admin/adoption-applications/move-to-schedule', [AdoptionApplicationController::class, 'moveToSchedule'])->name('adoption-applications.move-to-schedule');
 
     Route::patch('/admin/adoption-applications/pickedup', [AdoptionApplicationController::class, 'markAsPickedUp']);
