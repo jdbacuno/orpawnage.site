@@ -155,6 +155,14 @@
           </a>
         </li>
 
+        <li class="mb-1 group {{ request()->is('admin/bug-reports') ? 'active' : '' }}">
+          <a href="/admin/bug-reports"
+            class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">
+            <i class="ph-fill ph-bug mr-3 text-lg"></i>
+            <span class="text-sm">Bug Reports</span>
+          </a>
+        </li>
+
         <li class="mb-1 group {{ request()->is('admin/featured-adoptions') ? 'active' : '' }}">
           <a href="/admin/featured-adoptions"
             class="flex items-center py-2 px-4 text-gray-900 hover:bg-yellow-400 hover:text-black hover:font-semibold rounded-md group-[.active]:bg-yellow-400 group-[.active]:text-black">

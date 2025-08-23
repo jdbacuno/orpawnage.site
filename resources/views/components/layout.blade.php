@@ -519,7 +519,7 @@
                 </li>
                 <li class="flex items-center gap-2 pl-4 text-sm">
                   <i class="ph-fill ph-envelope text-orange-400"></i>
-                  <a href="mailto:orpawnageteam@gmail.com" class="nav-link">orpawnageteam@gmail.com</a>
+                  <a href="mailto:orpawnagedevelopers@gmail.com" class="nav-link">orpawnagedevelopers@gmail.com</a>
                 </li>
                 <li class="flex items-center gap-2 pl-4 text-sm">
                   <i class="ph-fill ph-facebook-logo text-orange-400"></i>
@@ -552,7 +552,7 @@
   </div>
 
   <!-- Scroll to Top Button -->
-  <button id="scrollToTop" class="fixed bottom-20 right-8 z-10 hidden bg-orange-500 hover:bg-yellow-400 hover:text-black 
+  <button id="scrollToTop" class="fixed bottom-8 right-8 z-10 hidden bg-orange-500 hover:bg-yellow-400 hover:text-black 
 text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full transition-opacity duration-300">
     <i class="ph-fill ph-arrow-up"></i>
   </button>
@@ -1213,6 +1213,11 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       this.submit();
     });
   </script>
+
+  <!-- Bug Report Button - Only show on non-admin pages -->
+  @if(!request()->is('admin*'))
+  <x-bug-report-button />
+  @endif
 
   <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
   <script src="{{ asset('js/heroSlider.js') }}"></script>

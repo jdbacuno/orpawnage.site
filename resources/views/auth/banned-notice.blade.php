@@ -25,7 +25,7 @@
       </div>
       @endif
 
-      <a href="mailto:orpawnageteam@gmail.com"
+      <a href="mailto:orpawnagedevelopers@gmail.com"
         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
         Contact Support
       </a>

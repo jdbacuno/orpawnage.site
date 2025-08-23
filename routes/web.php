@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AnimalAbuseReportController;
 use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturedAdoptionController;
 use App\Http\Controllers\FeaturedPetController;
@@ -85,6 +86,11 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     return redirect('/login')->with('verified', true);
 })->middleware(['signed'])->name('verification.verify');
 
+// Bug Report Route (accessible to all users)
+Route::post('/bug-report', [BugReportController::class, 'store'])->name('bug-report.store');
+
+
+
 // Signed In User Routes
 Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::view('/', 'home')->name('Home');
@@ -144,7 +150,7 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
 
     Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
         ->name('adoption.confirm');
-    Route::post('/transactions/{id}/resend-email', [AdoptionApplication::class, 'resendEmail']);
+    Route::post('/transactions/{id}/resend-email', [AdoptionApplicationController::class, 'resendEmail']);
     Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
         ->name('transactions.adoption-status');
 
@@ -236,9 +242,14 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         ->name('office-staff.update-order');
 
     Route::get('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'adminIndex'])->name('admin.featured.adoptions');
-    Route::post('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'store'])->name('featured-adoptions.store');
-    Route::delete('/admin/featured-adoptions/{featuredPet}', [FeaturedAdoptionController::class, 'destroy'])->name('featured-adoptions.destroy');
-    Route::patch('/admin/featured-adoptions/{featuredPet}/update-order', [FeaturedAdoptionController::class, 'updateOrder'])->name('featured-adoptions.update-order');
+Route::post('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'store'])->name('featured-adoptions.store');
+Route::delete('/admin/featured-adoptions/{featuredPet}', [FeaturedAdoptionController::class, 'destroy'])->name('featured-adoptions.destroy');
+Route::patch('/admin/featured-adoptions/{featuredPet}/update-order', [FeaturedAdoptionController::class, 'updateOrder'])->name('featured-adoptions.update-order');
+
+// Bug Report Management
+Route::get('/admin/bug-reports', [BugReportController::class, 'index'])->name('admin.bug-reports');
+Route::patch('/admin/bug-reports/{bugReport}/status', [BugReportController::class, 'updateStatus'])->name('admin.bug-reports.update-status');
+Route::delete('/admin/bug-reports/{bugReport}', [BugReportController::class, 'destroy'])->name('admin.bug-reports.destroy');
 });
 
 // Password Reset Routes
@@ -260,7 +271,7 @@ Route::middleware('guest')->group(function () {
 Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
 
 Route::get('/contact', function () {
-    return redirect()->away('mailto:orpawnageteam@gmail.com');
+    return redirect()->away('mailto:orpawnagedevelopers@gmail.com');
 });
 
 

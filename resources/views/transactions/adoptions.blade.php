@@ -670,7 +670,7 @@
 
     function openResendModal(appId) {
       document.getElementById('resendModal').classList.remove('hidden');
-      document.getElementById('resendForm').action = `/transactions/resend-confirmation/${appId}`;
+      document.getElementById('resendForm').action = `/transactions/${appId}/resend-email`;
     }
 
     function closeResendModal() {

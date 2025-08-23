@@ -114,7 +114,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
     }
 
     return $mailMessage
-      ->line('For any questions, please contact us at orpawnageteam@gmail.com and reference your **transaction number**.')
+      ->line('For any questions, please contact us at orpawnagedevelopers@gmail.com and reference your **transaction number**.')
       ->salutation("Thank you,\nOrpawnage Team");
   }
 }

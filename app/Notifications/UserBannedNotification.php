@@ -42,8 +42,8 @@ class UserBannedNotification extends Notification
             $mail->line('To ensure fairness, we limit repeated submissions that don’t meet our guidelines.');
         }
 
-        $mail->line('If you believe this is a mistake, please contact us at orpawnageteam@gmail.com with your username or registered email')
-            ->action('Appeal Ban', 'mailto:orpawnageteam@gmail.com');
+        $mail->line('If you believe this is a mistake, please contact us at orpawnagedevelopers@gmail.com with your username or registered email')
+            ->action('Appeal Ban', 'mailto:orpawnagedevelopers@gmail.com');
 
         return $mail;
     }
