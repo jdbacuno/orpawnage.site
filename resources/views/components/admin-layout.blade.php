@@ -214,14 +214,10 @@
             </div>
 
             <!-- Logout Button -->
-            <form action="/logout" method="POST" class="ml-auto">
-              @csrf
-              @method('DELETE')
-              <button type="submit"
-                class="w-10 h-10 rounded-full text-gray-900 flex items-center justify-center text-xl hover:bg-yellow-400 hover:text-black transition-colors">
-                <i class="ph-fill ph-sign-out"></i>
-              </button>
-            </form>
+            <button type="button" onclick="openLogoutModal()"
+              class="w-10 h-10 rounded-full text-gray-900 flex items-center justify-center text-xl hover:bg-yellow-400 hover:text-black transition-colors">
+              <i class="ph-fill ph-sign-out"></i>
+            </button>
           </div>
         </li>
       </ul>
@@ -569,6 +565,47 @@
     </div>
   </div>
 
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 bg-gray-500 opacity-75 transition-opacity"></div>
+
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-auto overflow-hidden">
+        <div class="px-6 py-6">
+          <div class="flex items-center justify-center mb-4">
+            <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
+              <i class="ph-fill ph-sign-out text-yellow-600 text-xl"></i>
+            </div>
+          </div>
+          <div class="text-center">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">
+              Confirm Logout
+            </h3>
+            <p class="text-sm text-gray-500">
+              Are you sure you want to log out?
+            </p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row-reverse gap-3 rounded-b-lg">
+          <form action="/logout" method="POST" id="logoutForm" class="w-full sm:w-auto">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+              class="w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-yellow-500 text-base font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors">
+              <i class="ph-fill ph-sign-out mr-2"></i>Logout
+            </button>
+          </form>
+          <button type="button" onclick="closeLogoutModal()"
+            class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Settings Modal Functions
       function openSettingsModal() {
@@ -583,6 +620,17 @@
         document.body.classList.remove('overflow-hidden');
         window.location.hash = '';
         history.replaceState(null, null);
+      }
+
+      // Logout Modal Functions
+      function openLogoutModal() {
+        document.getElementById('logoutModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+
+      function closeLogoutModal() {
+        document.getElementById('logoutModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
       }
 
       // Update your DOMContentLoaded event listener
@@ -600,6 +648,24 @@
               switchTab(tab);
           }
         }
+
+        // Add event listeners for logout modal
+        const logoutModal = document.getElementById('logoutModal');
+        const logoutModalContent = logoutModal.querySelector('.inline-block');
+
+        // Close modal when clicking outside
+        logoutModal.addEventListener('click', function(e) {
+          if (e.target === logoutModal) {
+            closeLogoutModal();
+          }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && !logoutModal.classList.contains('hidden')) {
+            closeLogoutModal();
+          }
+        });
       });
 
       // Modify your switchTab function to update URL

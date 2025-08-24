@@ -4821,3 +4821,20 @@ span.flatpickr-weekday,
   inherits: false;
 }
 
+/* Bug report link styling */
+#bug-report-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+
+#bug-report-link:hover {
+    color: #3b82f6;
+}
+
+/* Bug report chatbox positioning */
+#bug-report-chatbox {
+    position: absolute;
+    z-index: 50;
+}

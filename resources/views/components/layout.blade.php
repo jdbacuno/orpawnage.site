@@ -189,9 +189,23 @@
   <!-- ===== Preloader End ===== -->
 
   <div class="bg-white">
-    <header class="absolute inset-x-0 top-0 z-50">
+    <header class="absolute inset-x-0 z-50">
       <!-- ========== START OF NAVBAR ========== -->
-      <nav id="main-header" class="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-sm">
+      <!-- Admin Indicator Bar -->
+      <nav id="main-header" class="bg-white fixed w-full z-20 start-0 border-b border-gray-200 shadow-sm">
+        @if (Auth::check() && Auth::user()->isAdmin)
+        <div id="adminIndicator" class="footer-gradient text-black font-semibold text-center py-2 px-4 shadow-md">
+          <div class="flex items-center justify-center gap-2 flex-wrap">
+            <i class="ph-fill ph-shield-check text-lg"></i>
+            <span class="text-sm sm:text-base">You are viewing as an Administrator</span>
+            <a href="/admin"
+              class="ml-2 sm:ml-4 bg-yellow-500 hover:bg-yellow-200 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm transition-colors duration-200">
+              Go to Admin Dashboard
+            </a>
+          </div>
+        </div>
+        @endif
+
         <div class="max-w-screen-xl flex flex-wrap gap-y-4 items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3">
             <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
@@ -1212,6 +1226,71 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       
       this.submit();
     });
+
+    // Admin indicator height adjustment
+    function adjustNavbarPosition() {
+      const adminIndicator = document.getElementById('adminIndicator');
+      const navbar = document.getElementById('main-header');
+      const header = document.querySelector('header');
+      
+      if (adminIndicator && navbar && header) {
+        // Get the computed styles to account for any CSS
+        const indicatorStyles = window.getComputedStyle(adminIndicator);
+        const indicatorHeight = adminIndicator.offsetHeight;
+        const indicatorTop = parseInt(indicatorStyles.top) || 0;
+        const indicatorMarginTop = parseInt(indicatorStyles.marginTop) || 0;
+        const indicatorMarginBottom = parseInt(indicatorStyles.marginBottom) || 0;
+        
+        // Calculate total height including margins
+        const totalIndicatorHeight = indicatorHeight + indicatorTop + indicatorMarginTop + indicatorMarginBottom;
+        
+        // Set navbar and header position
+        navbar.style.top = totalIndicatorHeight + 'px';
+        header.style.top = totalIndicatorHeight + 'px';
+        
+        // Ensure navbar is visible
+        navbar.style.position = 'fixed';
+        navbar.style.zIndex = '20';
+        
+        // Add some debugging for mobile
+        console.log('Indicator height:', indicatorHeight, 'Total height:', totalIndicatorHeight);
+      } else if (navbar && header) {
+        // No admin indicator, reset to top
+        navbar.style.top = '0px';
+        header.style.top = '0px';
+      }
+    }
+
+    // Call on page load, window resize, and after a short delay to ensure all elements are rendered
+    document.addEventListener('DOMContentLoaded', function() {
+      adjustNavbarPosition();
+      // Additional check after a short delay to handle any dynamic content
+      setTimeout(adjustNavbarPosition, 100);
+      
+      // Use ResizeObserver to watch for changes in admin indicator size
+      const adminIndicator = document.getElementById('adminIndicator');
+      if (adminIndicator && window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(function(entries) {
+          adjustNavbarPosition();
+        });
+        resizeObserver.observe(adminIndicator);
+      }
+    });
+    
+    window.addEventListener('resize', adjustNavbarPosition);
+    
+    // Also adjust when the page becomes visible (for mobile browsers)
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        setTimeout(adjustNavbarPosition, 50);
+      }
+    });
+    
+    // Additional check for mobile orientation changes
+    window.addEventListener('orientationchange', function() {
+      setTimeout(adjustNavbarPosition, 200);
+    });
+
   </script>
 
   <!-- Bug Report Button - Only show on non-admin pages -->
