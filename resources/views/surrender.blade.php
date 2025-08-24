@@ -24,13 +24,8 @@
 
         <div class="flex flex-col sm:flex-row justify-center gap-4" id="scrollIntoNextSection">
           <a href="#elementToScrollInto"
-            class="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center">
+            class="px-8 py-3 bg-white/10 hover:bg-yellow-500/20 text-black text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
             <i class="ph-fill ph-arrow-circle-down mr-2"></i>Start the Process
-          </a>
-          <a href="#elementToScrollInto"
-            class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
-            <i class="ph-fill ph-info mr-2"></i>
-            Learn More
           </a>
         </div>
       </div>

@@ -198,6 +198,12 @@
                   <i class="ph-fill ph-check-circle mr-2"></i> Adoption Completed
                 </div>
                 @endif
+
+                @if(($application->previous_status ?? $application->status) === 'rejected')
+                <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
+                  <i class="ph-fill ph-x-circle mr-2"></i> Application Rejected
+                </div>
+                @endif
               </div>
             </div>
           </div>
@@ -408,7 +414,7 @@
       <div class="mt-4 flex justify-end gap-2">
         <button onclick="closeCancelModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg">Cancel</button>
 
-        <form id="deleteForm" method="POST" action="{{ url('/transactions/' . $application->id) }}">
+        <form id="deleteForm" method="POST" action="{{ url('/adoption-status/' . $application->id) }}">
           @csrf
           @method('DELETE')
           <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-400 text-white rounded-lg">Confirm</button>

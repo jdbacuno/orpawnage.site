@@ -6,7 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 use App\Models\AdoptionApplication;
+use Illuminate\Support\Facades\Auth;
 
 class AdoptionStatusNotification extends Notification implements ShouldQueue
 {
@@ -15,18 +17,15 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
     protected $application;
     protected $oldPickupDate;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(AdoptionApplication $application, $oldPickupDate = null)
+    protected $isUserLoggedIn;
+
+    public function __construct(AdoptionApplication $application, $oldPickupDate = null, $isUserLoggedIn = false)
     {
         $this->application = $application;
         $this->oldPickupDate = $oldPickupDate;
+        $this->isUserLoggedIn = $isUserLoggedIn;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     */
     public function via($notifiable)
     {
         return ['mail'];
@@ -62,7 +61,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
                 $mailMessage
                     ->line('🎉 We have received your application!')
                     ->line('Please confirm within **24 hours** to proceed with the adoption.')
-                    ->action('Confirm Application', url('/confirm-application/' . $this->application->id))
+                    ->action('Confirm Application', URL::signedRoute('adoption.confirm', ['id' => $this->application->id]))
                     ->line('Failure to confirm within 24 hours will automatically cancel your application.')
                     ->line('We look forward to helping you adopt a pet!');
                 break;

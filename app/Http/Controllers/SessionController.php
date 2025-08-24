@@ -53,6 +53,7 @@ class SessionController extends Controller
         return $user->isAdmin ? redirect('/admin') : redirect('/');
     }
 
+
     public function destroy()
     {
         Auth::logout();

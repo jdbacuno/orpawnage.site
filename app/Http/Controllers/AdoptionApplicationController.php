@@ -36,8 +36,8 @@ class AdoptionApplicationController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('transaction_number', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%")
-                  ->orWhere('full_name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('full_name', 'like', "%$search%")
                 ;
             });
         }
@@ -154,23 +154,41 @@ class AdoptionApplicationController extends Controller
     public function confirmApplication($id)
     {
         $application = AdoptionApplication::where('id', $id)
-            ->where('user_id', Auth::id())
             ->where('status', 'to be confirmed')
             ->first();
 
         if (!$application) {
-            return redirect()->route('transactions.adoption-status')
-                ->with('error_request', 'Invalid or already confirmed application.');
+            return response()->view('confirmation-result', [
+                'success' => false,
+                'message' => 'Invalid or already confirmed application.'
+            ]);
         }
 
-        $application->status = 'confirmed';
-        $application->save();
+        // Check if the application has expired (24 hours)
+        if ($application->created_at->diffInHours(now()) > 24) {
+            // Auto-reject expired applications
+            $application->update([
+                'status' => 'rejected',
+                'reject_reason' => 'Application expired - not confirmed within 24 hours'
+            ]);
 
-        // Notify user that their application has been confirmed
+            return response()->view('confirmation-result', [
+                'success' => false,
+                'message' => 'This confirmation link has expired. Please submit a new application.'
+            ]);
+        }
+
+        // Update the application status to confirmed
+        $application->update(['status' => 'confirmed']);
+
+        // Send confirmation notification
         $application->user->notify(new AdoptionStatusNotification($application));
 
-        return redirect()->route('transactions.adoption-status')
-            ->with('success', 'Your adoption application has been successfully confirmed. A confirmation email has been sent.');
+        return response()->view('confirmation-result', [
+            'success' => true,
+            'message' => 'Your adoption application has been successfully confirmed!',
+            'type' => 'adoption'
+        ]);
     }
 
     public function moveToSchedule(Request $request)

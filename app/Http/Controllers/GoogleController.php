@@ -35,6 +35,16 @@ class GoogleController extends Controller
             }
 
             Auth::login($user);
+            
+            // Check for pending adoption confirmation
+            if (session('pending_confirmation')) {
+                $applicationId = session('pending_confirmation');
+                session()->forget('pending_confirmation');
+                
+                // Redirect to the direct confirmation route for logged-in users
+                return redirect()->route('adoption.confirm.direct', ['id' => $applicationId]);
+            }
+            
             return redirect($user->isAdmin ? '/admin' : '/');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Google login failed: ' . $e->getMessage());

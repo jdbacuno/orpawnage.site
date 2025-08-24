@@ -139,7 +139,8 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
 
         Route::delete('/missing-status/{missingReport}', [MissingPetReportController::class, 'destroy']);
         Route::delete('/abused-status/{abusedReport}', [AnimalAbuseReportController::class, 'destroy']);
-        Route::delete('/adoption-status/{application}', [AdoptionApplication::class, 'destroy']);
+        Route::delete('/adoption-status/{application}', [AdoptionApplicationController::class, 'destroy'])
+            ->name('adoption-applications.destroy');
     });
 
     Route::get('/about', function () {
@@ -148,8 +149,6 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     })->name('About Us');
     Route::view('/donate', 'donate')->name('Donate');
 
-    Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
-        ->name('adoption.confirm');
     Route::post('/transactions/{id}/resend-email', [AdoptionApplicationController::class, 'resendEmail']);
     Route::get('/transactions/adoption-status', [TransactionController::class, 'adoption'])
         ->name('transactions.adoption-status');
@@ -162,6 +161,14 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
 });
 
 Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('verified');
+
+Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
+    ->name('adoption.confirm')
+    ->middleware('signed');
+
+Route::get('/confirm-surrender/{id}', [SurrenderApplicationController::class, 'confirmApplication'])
+    ->name('surrender.confirm')
+    ->middleware('signed');
 
 // Profile Settings Route
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -242,14 +249,14 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
         ->name('office-staff.update-order');
 
     Route::get('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'adminIndex'])->name('admin.featured.adoptions');
-Route::post('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'store'])->name('featured-adoptions.store');
-Route::delete('/admin/featured-adoptions/{featuredPet}', [FeaturedAdoptionController::class, 'destroy'])->name('featured-adoptions.destroy');
-Route::patch('/admin/featured-adoptions/{featuredPet}/update-order', [FeaturedAdoptionController::class, 'updateOrder'])->name('featured-adoptions.update-order');
+    Route::post('/admin/featured-adoptions', [FeaturedAdoptionController::class, 'store'])->name('featured-adoptions.store');
+    Route::delete('/admin/featured-adoptions/{featuredPet}', [FeaturedAdoptionController::class, 'destroy'])->name('featured-adoptions.destroy');
+    Route::patch('/admin/featured-adoptions/{featuredPet}/update-order', [FeaturedAdoptionController::class, 'updateOrder'])->name('featured-adoptions.update-order');
 
-// Bug Report Management
-Route::get('/admin/bug-reports', [BugReportController::class, 'index'])->name('admin.bug-reports');
-Route::patch('/admin/bug-reports/{bugReport}/status', [BugReportController::class, 'updateStatus'])->name('admin.bug-reports.update-status');
-Route::delete('/admin/bug-reports/{bugReport}', [BugReportController::class, 'destroy'])->name('admin.bug-reports.destroy');
+    // Bug Report Management
+    Route::get('/admin/bug-reports', [BugReportController::class, 'index'])->name('admin.bug-reports');
+    Route::patch('/admin/bug-reports/{bugReport}/status', [BugReportController::class, 'updateStatus'])->name('admin.bug-reports.update-status');
+    Route::delete('/admin/bug-reports/{bugReport}', [BugReportController::class, 'destroy'])->name('admin.bug-reports.destroy');
 });
 
 // Password Reset Routes

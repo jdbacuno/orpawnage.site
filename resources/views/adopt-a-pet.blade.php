@@ -177,12 +177,9 @@
           <img src="{{ asset('images/home_image-3.jpg') }}" alt="Pet Adoption Hero Image"
             class="w-full rounded-xl brightness-[.75] relative z-10" />
 
-          <!-- Decorative Border Layer -->
-          <div class="absolute -inset-4 border-2 border-yellow-400 rounded-xl z-0"></div>
-
           <!-- Paw Print Corner Accents -->
-          <div class="absolute -top-10 -left-8 -rotate-45 text-yellow-600 z-20">
-            <i class="ph-fill ph-paw-print text-4xl"></i>
+          <div class="absolute -top-12 -left-12 -rotate-45 text-yellow-500 z-20">
+            <i class="ph-fill ph-paw-print text-8xl"></i>
           </div>
         </div>
       </div>

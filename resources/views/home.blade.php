@@ -1,4 +1,24 @@
 <x-layout>
+  <style>
+    /* Ensure buttons are clickable and have proper hover effects */
+    .hero-button {
+      position: relative;
+      z-index: 40;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    
+    .hero-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Ensure carousel content is properly layered */
+    .carousel-content {
+      position: relative;
+      z-index: 10;
+    }
+  </style>
   <!-- ========== START OF HERO CAROUSEL ========== -->
   <div class="relative w-full h-screen 4xl:h-50 overflow-hidden">
     <!-- Carousel wrapper -->
@@ -22,6 +42,16 @@
               class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
               The official online portal of Angeles City Veterinary Office for animal welfare services
             </p>
+            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 relative z-40 carousel-content">
+              <a href="/services/adopt-a-pet"
+                class="hero-button inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-all duration-200 text-white">
+                <i class="ph-fill ph-paw-print mr-2"></i> Adopt a Pet
+              </a>
+              <a href="/donate"
+                class="hero-button inline-flex items-center px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-all duration-200 text-white">
+                <i class="ph-fill ph-hand-heart mr-2"></i> Donate Now
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -85,10 +115,10 @@
     </div>
 
     <!-- Slider controls container -->
-    <div class="absolute inset-0 group">
+    <div class="absolute inset-0 group pointer-events-none">
       <!-- Previous button -->
       <button type="button"
-        class="absolute top-1/2 left-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none"
+        class="absolute top-1/2 left-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none pointer-events-auto"
         onclick="slidePrev()">
         <span class="sr-only">Previous</span>
         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -100,7 +130,7 @@
 
       <!-- Next button -->
       <button type="button"
-        class="absolute top-1/2 right-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none"
+        class="absolute top-1/2 right-4 z-30 flex items-center justify-center w-10 h-10 bg-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-y-1/2 hover:bg-yellow-400/50 focus:outline-none pointer-events-auto"
         onclick="slideNext()">
         <span class="sr-only">Next</span>
         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -112,12 +142,12 @@
     </div>
 
     <!-- Slider indicators -->
-    <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center space-x-2">
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+    <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center space-x-2 pointer-events-none">
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(0)"></button>
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(1)"></button>
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300"
+      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(2)"></button>
     </div>
   </div>

@@ -160,23 +160,42 @@ class SurrenderApplicationController extends Controller
   public function confirmApplication($id)
   {
     $application = SurrenderApplication::where('id', $id)
-      ->where('user_id', Auth::id())
       ->where('status', 'to be confirmed')
       ->first();
 
     if (!$application) {
-      return redirect()->route('transactions.surrender-status')
-        ->with('error_request', 'Invalid or already confirmed application.');
+      return response()->view('confirmation-result', [
+        'success' => false,
+        'message' => 'Invalid or already confirmed application.'
+      ]);
     }
 
+    // Check if the application has expired (24 hours)
+    if ($application->created_at->diffInHours(now()) > 24) {
+      // Auto-reject expired applications
+      $application->update([
+        'status' => 'rejected',
+        'reject_reason' => 'Application expired - not confirmed within 24 hours'
+      ]);
+
+      return response()->view('confirmation-result', [
+        'success' => false,
+        'message' => 'This confirmation link has expired. Please submit a new application.'
+      ]);
+    }
+
+    // Update the application status to confirmed
     $application->status = 'confirmed';
     $application->confirmed_at = now();
     $application->save();
 
     $application->user->notify(new SurrenderStatusNotification($application));
 
-    return redirect()->route('transactions.surrender-status')
-      ->with('success', 'Your surrender application has been successfully confirmed. A confirmation email has been sent.');
+    return response()->view('confirmation-result', [
+      'success' => true,
+      'message' => 'Your surrender application has been successfully confirmed!',
+      'type' => 'surrender'
+    ]);
   }
 
   public function moveToSchedule(Request $request)

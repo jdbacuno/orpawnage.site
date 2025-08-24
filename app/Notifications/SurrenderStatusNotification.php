@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 use App\Models\SurrenderApplication;
 
 class SurrenderStatusNotification extends Notification implements ShouldQueue
@@ -58,7 +59,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
         $mailMessage
           ->line('We have received your surrender application!')
           ->line('Please confirm within **24 hours** to proceed with the surrender process.')
-          ->action('Confirm Application', url('/confirm-surrender/' . $this->application->id))
+          ->action('Confirm Application', URL::signedRoute('surrender.confirm', ['id' => $this->application->id]))
           ->line('Failure to confirm within 24 hours will automatically cancel your application.')
           ->line('Thank you for responsibly surrendering your animal.');
         break;
