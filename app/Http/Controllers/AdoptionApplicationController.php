@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
 
 class AdoptionApplicationController extends Controller
 {
@@ -221,11 +222,11 @@ class AdoptionApplicationController extends Controller
         // Send email to adopter
         $application->user->notify(new AdoptionStatusNotification($application));
 
-        // Send general announcement to all users (including admins)
-        $users = \App\Models\User::where('id', '!=', $application->user_id)->get();
-        foreach ($users as $user) {
-            $user->notify(new PetAdoptionAnnouncement($application->pet));
-        }
+        // Send general announcement to all users (including admins) in chunks
+        \App\Models\User::where('id', '!=', $application->user_id)
+            ->chunkById(500, function ($users) use ($application) {
+                Notification::send($users, new PetAdoptionAnnouncement($application->pet));
+            });
 
         return redirect()->back()->with('success', 'Adoption marked as completed and notifications sent.');
     }

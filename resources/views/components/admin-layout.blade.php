@@ -75,10 +75,10 @@
   <div
     class="fixed left-0 top-0 w-64 h-full bg-white p-4 z-50 sidebar-menu transition-transform flex flex-col border-r border-gray-300">
     <a href="/" target="_blank" class="flex items-center pb-4 border-b border-b-gray-300">
-      <img src="{{ asset('images/orpawnage-logo.png') }}" alt="logo" class="w-8 h-8 rounded object-cover" />
-      <span class="text-lg font-bold text-yellow-500 ml-3">
+      <img src="{{ asset('images/orpawnage-brand-logo-2.png') }}" alt="logo" class="h-8 rounded object-cover" />
+      {{-- <span class="text-lg font-bold text-yellow-500 ml-3">
         Or<span class="text-orange-500">PAW</span>nage
-      </span>
+      </span> --}}
     </a>
     <div class="flex-1 overflow-y-auto">
       <ul class="mt-4">
@@ -205,7 +205,7 @@
         <li class="my-3 px-2">
           <div class="flex items-center gap-3">
             <!-- User Image -->
-            <img src="{{ asset('images/cityvet_logo.png') }}" alt="User" class="w-10 h-10 rounded object-cover" />
+            <img src="{{ asset('images/orpawnage-logo-2.png') }}" alt="User" class="w-10 h-10 rounded object-cover" />
 
             <!-- Admin Info -->
             <div class="flex flex-col text-gray-900 text-sm leading-tight flex-1 max-w-28">

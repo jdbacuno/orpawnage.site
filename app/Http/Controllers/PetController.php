@@ -380,9 +380,7 @@ class PetController extends Controller
         ]);
 
         User::chunk(100, function ($users) use ($pet) {
-            foreach ($users as $user) {
-                $user->notify(new PetArchivedNotification($pet));
-            }
+            Notification::send($users, new PetArchivedNotification($pet));
         });
 
         return back()->with('success', 'Pet archived successfully.');

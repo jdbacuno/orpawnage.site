@@ -87,37 +87,34 @@ class DashboardController extends Controller
 
     private function getMonthlyAdoptionDataBySpecies($year, $month)
     {
+        $start = Carbon::create($year, $month, 1)->startOfDay();
+        $end = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
+
+        $rows = AdoptionApplication::where('status', 'picked up')
+            ->whereNotNull('pickup_date')
+            ->whereBetween('pickup_date', [$start, $end])
+            ->whereHas('pet', function ($q) {
+                $q->whereIn('species', ['canine', 'feline']);
+            })
+            ->selectRaw("DATE(pickup_date) as d, (SELECT species FROM pets WHERE pets.id = adoption_applications.pet_id) as species, COUNT(*) as c")
+            ->groupByRaw('DATE(pickup_date), species')
+            ->orderByRaw('DATE(pickup_date)')
+            ->get();
+
         $daysInMonth = Carbon::create($year, $month)->daysInMonth;
         $data = [];
-        
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $date = Carbon::create($year, $month, $day);
-            
-            // Get canine adoptions
-            $canineCount = AdoptionApplication::where('status', 'picked up')
-                ->whereNotNull('pickup_date')
-                ->whereDate('pickup_date', $date)
-                ->whereHas('pet', function($query) {
-                    $query->where('species', 'canine');
-                })
-                ->count();
-            
-            // Get feline adoptions
-            $felineCount = AdoptionApplication::where('status', 'picked up')
-                ->whereNotNull('pickup_date')
-                ->whereDate('pickup_date', $date)
-                ->whereHas('pet', function($query) {
-                    $query->where('species', 'feline');
-                })
-                ->count();
-            
+            $dateStr = $date->toDateString();
+            $canine = $rows->firstWhere(fn($r) => $r->d === $dateStr && $r->species === 'canine')->c ?? 0;
+            $feline = $rows->firstWhere(fn($r) => $r->d === $dateStr && $r->species === 'feline')->c ?? 0;
             $data[] = [
                 'date' => $date->format('M d'),
-                'canine' => $canineCount,
-                'feline' => $felineCount
+                'canine' => (int) $canine,
+                'feline' => (int) $feline,
             ];
         }
-        
+
         return $data;
     }
 
@@ -176,48 +173,35 @@ class DashboardController extends Controller
 
     private function getMonthlyTrendDataByDateRange($startDate, $endDate)
     {
-        $data = [];
-        
         // Parse the date strings (format: YYYY-MM)
-        $start = Carbon::createFromFormat('Y-m', $startDate);
-        $end = Carbon::createFromFormat('Y-m', $endDate);
-        
-        // Generate data for each month in the range
+        $start = Carbon::createFromFormat('Y-m', $startDate)->startOfMonth();
+        $end = Carbon::createFromFormat('Y-m', $endDate)->endOfMonth();
+
+        $rows = AdoptionApplication::where('status', 'picked up')
+            ->whereNotNull('pickup_date')
+            ->whereBetween('pickup_date', [$start, $end])
+            ->whereHas('pet', function ($q) {
+                $q->whereIn('species', ['canine', 'feline']);
+            })
+            ->selectRaw("DATE_FORMAT(pickup_date, '%Y-%m') as ym, (SELECT species FROM pets WHERE pets.id = adoption_applications.pet_id) as species, COUNT(*) as c")
+            ->groupByRaw("DATE_FORMAT(pickup_date, '%Y-%m'), species")
+            ->orderByRaw("DATE_FORMAT(pickup_date, '%Y-%m')")
+            ->get();
+
+        $data = [];
         $currentDate = $start->copy();
-        
         while ($currentDate <= $end) {
-            $year = $currentDate->year;
-            $month = $currentDate->month;
-            
-            // Get canine adoptions that were picked up in this month
-            $canineCount = AdoptionApplication::where('status', 'picked up')
-                ->whereNotNull('pickup_date')
-                ->whereYear('pickup_date', $year)
-                ->whereMonth('pickup_date', $month)
-                ->whereHas('pet', function($query) {
-                    $query->where('species', 'canine');
-                })
-                ->count();
-            
-            // Get feline adoptions that were picked up in this month
-            $felineCount = AdoptionApplication::where('status', 'picked up')
-                ->whereNotNull('pickup_date')
-                ->whereYear('pickup_date', $year)
-                ->whereMonth('pickup_date', $month)
-                ->whereHas('pet', function($query) {
-                    $query->where('species', 'feline');
-                })
-                ->count();
-            
+            $ym = $currentDate->format('Y-m');
+            $canine = $rows->firstWhere(fn($r) => $r->ym === $ym && $r->species === 'canine')->c ?? 0;
+            $feline = $rows->firstWhere(fn($r) => $r->ym === $ym && $r->species === 'feline')->c ?? 0;
             $data[] = [
                 'month' => $currentDate->format('M Y'),
-                'canine' => $canineCount,
-                'feline' => $felineCount
+                'canine' => (int) $canine,
+                'feline' => (int) $feline,
             ];
-            
             $currentDate->addMonth();
         }
-        
+
         return $data;
     }
 

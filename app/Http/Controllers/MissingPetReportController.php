@@ -154,14 +154,10 @@ class MissingPetReportController extends Controller
             // First, notify the reporter that their report has been acknowledged
             $report->user->notify(new MissingPetReportAcknowledged($report));
 
-            // Then, send the missing pet alert to all users
-            $users = User::all();
-            foreach ($users as $user) {
-                $user->notify(new MissingPetAlert($report));
-            }
-
-            // Alternatively, you can use the Notification facade to send to multiple users at once:
-            // Notification::send($users, new MissingPetAlert($report));
+            // Then, send the missing pet alert to all users in chunks to avoid memory spikes
+            User::chunkById(500, function ($users) use ($report) {
+                Notification::send($users, new MissingPetAlert($report));
+            });
 
             return redirect()->back()
                 ->with('success', 'Report #' . $report->report_number . ' has been acknowledged. The reporter has been notified and missing pet alerts have been sent to all users.');

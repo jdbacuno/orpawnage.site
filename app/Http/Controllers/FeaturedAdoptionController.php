@@ -111,13 +111,14 @@ class FeaturedAdoptionController extends Controller
     ]);
 
     if ($request->hasFile('images')) {
+      $nextOrder = (FeaturedAdoption::max('order') ?? 0) + 1;
       foreach ($request->file('images') as $image) {
         $filename = Str::random(20) . '.' . $image->getClientOriginalExtension();
         $path = $image->storeAs('featured_adoptions', $filename, 'public');
 
         FeaturedAdoption::create([
           'image_path' => $path,
-          'order' => FeaturedAdoption::max('order') + 1,
+          'order' => $nextOrder++,
         ]);
       }
     }

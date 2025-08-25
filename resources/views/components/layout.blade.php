@@ -208,9 +208,9 @@
 
         <div class="max-w-screen-xl flex flex-wrap gap-y-4 items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3">
-            <img src="{{ asset('images/orpawnage-logo.png') }}" class="h-8" alt="Flowbite Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
-                class="text-yellow-500">PAW</strong>nage</span>
+            <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="h-8" alt="Flowbite Logo" />
+            {{-- <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
+                class="text-yellow-500">PAW</strong>nage</span> --}}
           </a>
 
           <!-- Dropdown Menu Button -->
@@ -476,7 +476,7 @@
             </a>
 
             <a href="/" class="flex items-center">
-              <img src="{{ asset('images/cityvet_logo.png') }}"
+              <img src="{{ asset('images/orpawnage-logo-2.png') }}"
                 class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
                 alt="Brand Logo 2" />
             </a>
