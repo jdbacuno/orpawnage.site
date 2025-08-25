@@ -1,7 +1,7 @@
 <x-admin-layout>
   <h1 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
 
-  <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Total Users (excluding admins) -->
     <div
       class="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between h-32 cursor-pointer hover:shadow-lg transition-shadow duration-300"
@@ -103,25 +103,25 @@
 
   <!-- Chart Section -->
   <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold text-gray-700">Daily Adoption Statistics</h2>
-      <div class="flex gap-2">
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+      <h2 class="text-lg font-semibold text-gray-700 break-anywhere">Daily Adoption Statistics</h2>
+      <div class="flex gap-2 flex-wrap w-full sm:w-auto">
         <select id="chartMonth"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8">
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8 w-full sm:w-auto">
           @for($i = 1; $i <= 12; $i++) <option value="{{ $i }}" {{ $i==now()->month ? 'selected' : '' }}>
             {{ Carbon\Carbon::create()->month($i)->format('F') }}
             </option>
             @endfor
         </select>
         <select id="chartYear"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6">
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6 w-full sm:w-auto">
           @for($year = 2024; $year <= now()->year; $year++)
             <option value="{{ $year }}" {{ $year==now()->year ? 'selected' : '' }}>
               {{ $year }}
             </option>
             @endfor
         </select>
-        <button onclick="updateChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+        <button onclick="updateChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
           Update
         </button>
       </div>
@@ -131,22 +131,22 @@
 
   <!-- Monthly Trend Chart Section -->
   <div class="bg-white shadow-md rounded-lg p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold text-gray-700">Monthly Adoption Trends</h2>
-      <div class="flex gap-2 items-center">
-        <div class="flex items-center gap-2">
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+      <h2 class="text-lg font-semibold text-gray-700 break-anywhere">Monthly Adoption Trends</h2>
+      <div class="flex gap-2 items-center flex-wrap w-full sm:w-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600">From:</label>
           <input type="month" id="startDate" value="{{ now()->subMonths(11)->format('Y-m') }}" 
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2 w-full sm:w-auto"
             max="{{ now()->format('Y-m') }}">
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600">To:</label>
           <input type="month" id="endDate" value="{{ now()->format('Y-m') }}" 
-            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2"
+            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2 w-full sm:w-auto"
             max="{{ now()->format('Y-m') }}">
         </div>
-        <button onclick="updateTrendChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+        <button onclick="updateTrendChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
           Update
         </button>
       </div>
@@ -167,16 +167,16 @@
         <div class="p-6">
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Select Period:</label>
-            <div class="flex gap-2">
+            <div class="flex gap-2 flex-wrap">
               <select id="rateMonth"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8">
+                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8 w-full sm:w-auto">
                 @for($i = 1; $i <= 12; $i++) <option value="{{ $i }}" {{ $i==now()->month ? 'selected' : '' }}>
                   {{ Carbon\Carbon::create()->month($i)->format('F') }}
                   </option>
                   @endfor
               </select>
               <select id="rateYear"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6">
+                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6 w-full sm:w-auto">
                 @for($year = 2024; $year <= now()->year; $year++)
                   <option value="{{ $year }}" {{ $year==now()->year ? 'selected' : '' }}>
                     {{ $year }}
@@ -184,7 +184,7 @@
                   @endfor
               </select>
               <button onclick="loadAdoptionRate()"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
                 Load
               </button>
             </div>

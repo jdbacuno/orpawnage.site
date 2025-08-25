@@ -140,6 +140,13 @@ strong {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
   }
+
+  /* Prevent text/button overflow on small screens */
+  .break-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+  }
 }
 
 code,
