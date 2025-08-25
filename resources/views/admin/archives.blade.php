@@ -381,7 +381,7 @@
               ` : ''}
               <div class="mt-4">
                 <label class="text-sm font-medium text-gray-600">${type === 'adoption' ? 'Reason for Adopting' : 'Reason for Surrendering'}</label>
-                <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+                <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
                   ${type === 'adoption' ? this.dataset.adoptionReason : this.dataset.reason}
                 </div>
               </div>
