@@ -65,11 +65,14 @@
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex-1 min-w-0">
                         @if($bugReport->user)
-                        <h3 class="font-semibold text-gray-900 truncate">{{ $bugReport->user->name }}</h3>
+                        <h3 class="font-semibold text-gray-900 truncate">{{ $bugReport->user->username }}</h3>
                         <p class="text-xs text-gray-500 truncate">{{ $bugReport->user->email }}</p>
+                        @elseif($bugReport->email)
+                        <h3 class="font-semibold text-gray-900 truncate">Anonymous User</h3>
+                        <p class="text-xs text-gray-500 truncate">{{ $bugReport->email }}</p>
                         @else
-                        <h3 class="font-semibold text-gray-900">Anonymous User</h3>
-                        <p class="text-xs text-gray-500">No account</p>
+                        <h3 class="font-semibold text-gray-900 truncate">Anonymous User</h3>
+                        <p class="text-xs text-gray-500 truncate">No email provided</p>
                         @endif
                     </div>
                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ml-2 flex-shrink-0

@@ -12,6 +12,7 @@ class BugReport extends Model
 
     protected $fillable = [
         'user_id',
+        'email',
         'description',
         'screenshot_path',
         'page_url',

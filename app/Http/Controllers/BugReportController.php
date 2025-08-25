@@ -15,6 +15,7 @@ class BugReportController extends Controller
         $request->validate([
             'description' => 'required|string|max:1000',
             'screenshot' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email' => 'nullable|email|max:255',
         ]);
 
         $bugReport = new BugReport();
@@ -25,6 +26,9 @@ class BugReportController extends Controller
 
         if (Auth::check()) {
             $bugReport->user_id = Auth::id();
+        } else {
+            // If user is not authenticated, store their email if provided
+            $bugReport->email = $request->email;
         }
 
         // Handle screenshot upload
