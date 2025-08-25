@@ -7,7 +7,7 @@
       <form method="GET" action="{{ route('archives') }}" class="flex flex-wrap gap-4">
         <!-- Type Filter -->
         <select name="type"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]"
+          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px] z-50"
           onchange="this.form.submit()">
           <option value="pets" {{ request('type', 'pets' )==='pets' ? 'selected' : '' }}>Pets Profiles</option>
           <option value="adoption" {{ request('type')==='adoption' ? 'selected' : '' }}>Adoption Applications</option>
@@ -39,7 +39,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
       @foreach($items as $item)
       <div
-        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300 z-10">
         <!-- Header with image and basic info -->
         <div class="p-4 border-b border-gray-200">
           <div class="flex items-start space-x-2">
@@ -411,7 +411,7 @@
                 </div>
                 <div class="md:col-span-2">
                   <label class="text-sm font-medium text-gray-600">${type === 'missing' ? 'Pet Description' : 'Additional Notes'}</label>
-                  <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
+                  <div class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
                     ${this.dataset.reason || 'No details provided'}
                   </div>
                 </div>
