@@ -21,6 +21,7 @@
           <option value="">All Statuses</option>
           <option value="active" {{ request('status')==='active' ? 'selected' : '' }}>Active</option>
           <option value="banned" {{ request('status')==='banned' ? 'selected' : '' }}>Banned</option>
+          <option value="temporarily_banned" {{ request('status')==='temporarily_banned' ? 'selected' : '' }}>Temporarily Banned</option>
           <option value="verified" {{ request('status')==='verified' ? 'selected' : '' }}>Verified</option>
           <option value="unverified" {{ request('status')==='unverified' ? 'selected' : '' }}>Unverified</option>
         </select>
@@ -62,6 +63,9 @@
                     @if($user->is_banned)
                     <span
                       class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Banned</span>
+                    @elseif($user->is_temporarily_banned)
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Temporarily Banned</span>
                     @elseif($user->email_verified_at)
                     <span
                       class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
@@ -128,6 +132,32 @@
     </div>
   </div>
 
+  <!-- Temporary Ban Modal -->
+  <div id="temporaryBanModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button type="button" id="closeTemporaryBanModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800">Temporarily Ban User</h2>
+      <p class="mb-4">Please provide a reason for temporarily banning this user:</p>
+      <p class="mb-4 text-orange-500 text-sm">This will send an email notification to the user. The ban will automatically lift after 7 days.</p>
+
+      <form id="temporaryBanForm" method="POST" action="">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="user_id" id="temporaryBanUserId">
+
+        <label for="temporary_ban_reason" class="block font-medium text-gray-700">Reason:</label>
+        <textarea id="temporary_ban_reason" name="temporary_ban_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
+
+        <button type="submit" class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md w-full">
+          <i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     function showUserModal(userId) {
       const modal = document.getElementById('userModal');
@@ -153,17 +183,27 @@
       document.getElementById('userModal').classList.add('hidden');
     });
 
-    // Make this function globally available
+    // Make these functions globally available
     window.showBanModal = function(userId) {
       document.getElementById('banUserId').value = userId;
       document.getElementById('banForm').action = `/admin/users/${userId}/ban`;
       document.getElementById('banModal').classList.remove('hidden');
     }
 
+    window.showTemporaryBanModal = function(userId) {
+      document.getElementById('temporaryBanUserId').value = userId;
+      document.getElementById('temporaryBanForm').action = `/admin/users/${userId}/temporary-ban`;
+      document.getElementById('temporaryBanModal').classList.remove('hidden');
+    }
+
     // Initialize event listeners when the main page loads
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('closeBanModal')?.addEventListener('click', () => {
         document.getElementById('banModal').classList.add('hidden');
+      });
+      
+      document.getElementById('closeTemporaryBanModal')?.addEventListener('click', () => {
+        document.getElementById('temporaryBanModal').classList.add('hidden');
       });
     });
 

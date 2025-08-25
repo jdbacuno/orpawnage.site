@@ -238,6 +238,7 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
 
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
     Route::patch('/admin/users/{user}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+    Route::patch('/admin/users/{user}/temporary-ban', [UserController::class, 'temporaryBan'])->name('admin.users.temporary-ban');
     Route::patch('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     Route::get('/admin/users/{user}/details', [UserController::class, 'showDetails'])->name('admin.users.details');
 

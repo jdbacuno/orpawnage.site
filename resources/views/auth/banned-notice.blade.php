@@ -9,20 +9,32 @@
         </svg>
       </div>
 
-      <h2 class="text-2xl font-bold mb-4">Account Suspended</h2>
+      @if(Auth::user()->is_temporarily_banned)
+        <h2 class="text-2xl font-bold mb-4">Account Temporarily Suspended</h2>
+        <p class="mb-6 text-gray-700">
+          Your account has been temporarily suspended. This suspension will automatically lift on {{ \Carbon\Carbon::parse(Auth::user()->temporary_ban_expires_at)->format('M d, Y \a\t g:i A') }}.
+        </p>
 
-      <p class="mb-6 text-gray-700">
-        Your account has been banned. Please contact support if you believe this is an error.
-      </p>
+        @if(Auth::user()->temporary_ban_reason)
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 mb-6 text-left">
+          <p class="font-medium text-orange-700">Reason:</p>
+          <p class="text-orange-600">{{ Auth::user()->temporary_ban_reason }}</p>
+          <p class="text-sm text-gray-500 mt-1">Suspended on: {{ \Carbon\Carbon::parse(Auth::user()->temporarily_banned_at)->format('M d, Y') }}</p>
+        </div>
+        @endif
+      @else
+        <h2 class="text-2xl font-bold mb-4">Account Suspended</h2>
+        <p class="mb-6 text-gray-700">
+          Your account has been permanently banned. Please contact support if you believe this is an error.
+        </p>
 
-
-      @if(Auth::user()->ban_reason)
-      <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 text-left">
-        <p class="font-medium text-red-700">Reason:</p>
-        <p class="text-red-600">{{ Auth::user()->ban_reason }}</p>
-        <p class="text-sm text-gray-500 mt-1">Banned on: {{ \Carbon\Carbon::parse(Auth::user()->banned_at)->format('M d,
-          Y') }}</p>
-      </div>
+        @if(Auth::user()->ban_reason)
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 text-left">
+          <p class="font-medium text-red-700">Reason:</p>
+          <p class="text-red-600">{{ Auth::user()->ban_reason }}</p>
+          <p class="text-sm text-gray-500 mt-1">Banned on: {{ \Carbon\Carbon::parse(Auth::user()->banned_at)->format('M d, Y') }}</p>
+        </div>
+        @endif
       @endif
 
       <a href="mailto:orpawnagedevelopers@gmail.com"

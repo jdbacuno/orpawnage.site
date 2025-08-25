@@ -9,9 +9,11 @@
         <h3 class="text-lg font-medium text-gray-900">{{ $user->username ?? 'No Name' }}</h3>
         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
           @if($user->is_banned) bg-red-100 text-red-800
+          @elseif($user->is_temporarily_banned) bg-orange-100 text-orange-800
           @elseif($user->email_verified_at) bg-green-100 text-green-800
           @else bg-yellow-100 text-yellow-800 @endif">
           @if($user->is_banned) Banned
+          @elseif($user->is_temporarily_banned) Temporarily Banned
           @elseif($user->email_verified_at) Active
           @else Unverified @endif
         </span>
@@ -22,6 +24,12 @@
       @if($user->is_banned)
       <p class="text-sm text-red-600 mt-1">Ban Reason: {{ $user->ban_reason ?? 'No reason provided' }}</p>
       <p class="text-sm text-red-600">Banned On: {{ $user->banned_at->format('M d, Y') }}</p>
+      @endif
+
+      @if($user->is_temporarily_banned)
+      <p class="text-sm text-orange-600 mt-1">Temporary Ban Reason: {{ $user->temporary_ban_reason ?? 'No reason provided' }}</p>
+      <p class="text-sm text-orange-600">Temporarily Banned On: {{ $user->temporarily_banned_at->format('M d, Y') }}</p>
+      <p class="text-sm text-orange-600">Expires On: {{ $user->temporary_ban_expires_at->format('M d, Y \a\t g:i A') }}</p>
       @endif
     </div>
   </div>
@@ -36,11 +44,25 @@
         <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i>Unban User
       </button>
     </form>
+    @elseif($user->is_temporarily_banned)
+    <form method="POST" action="{{ route('admin.users.unban', $user) }}">
+      @csrf
+      @method('PATCH')
+      <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md">
+        <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i>Lift Temporary Ban
+      </button>
+    </form>
     @elseif($user->email_verified_at)
-    <button onclick="showBanModal('{{ $user->id }}')"
-      class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md">
-      <i class="ph-fill ph-prohibit mr-2"></i>Ban User
-    </button>
+    <div class="flex space-x-2">
+      <button onclick="showBanModal('{{ $user->id }}')"
+        class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md">
+        <i class="ph-fill ph-prohibit mr-2"></i>Ban User
+      </button>
+      <button onclick="showTemporaryBanModal('{{ $user->id }}')"
+        class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md">
+        <i class="ph-fill ph-clock mr-2"></i>Temporary Ban
+      </button>
+    </div>
     @endif
   </div>
 

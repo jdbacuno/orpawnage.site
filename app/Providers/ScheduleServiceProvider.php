@@ -36,6 +36,12 @@ class ScheduleServiceProvider extends ServiceProvider
       ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-ban-users.log'));
 
+    // Auto-lift temporary bans
+    $schedule->command('users:auto-lift-temporary-bans')
+      ->daily() // Run daily to check for expired temporary bans
+      ->onOneServer()
+      ->appendOutputTo(storage_path('logs/auto-lift-temporary-bans.log'));
+
     // surrender tasks
     $schedule->command('surrender:reject-unconfirmed')
       ->everyMinute()

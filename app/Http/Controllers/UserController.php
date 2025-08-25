@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Notifications\UserBannedNotification;
 use App\Notifications\UserUnbannedNotification;
+use App\Notifications\UserTemporarilyBannedNotification;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -30,8 +31,11 @@ class UserController extends Controller
                 case 'banned':
                     $query->where('is_banned', true);
                     break;
+                case 'temporarily_banned':
+                    $query->where('is_temporarily_banned', true);
+                    break;
                 case 'active':
-                    $query->where('is_banned', false);
+                    $query->where('is_banned', false)->where('is_temporarily_banned', false);
                     break;
                 case 'verified':
                     $query->whereNotNull('email_verified_at');
@@ -79,17 +83,42 @@ class UserController extends Controller
         return back()->with('success', 'User has been banned successfully.');
     }
 
+    public function temporaryBan(Request $request, User $user)
+    {
+        $request->validate([
+            'temporary_ban_reason' => 'required|string|max:500'
+        ]);
+
+        $user->update([
+            'is_temporarily_banned' => true,
+            'temporary_ban_reason' => $request->temporary_ban_reason,
+            'temporarily_banned_at' => now(),
+            'temporary_ban_expires_at' => now()->addDays(7)
+        ]);
+
+        $user->notify(new UserTemporarilyBannedNotification($user));
+
+        return back()->with('success', 'User has been temporarily banned for 7 days.');
+    }
+
     public function unban(User $user)
     {
+        $wasTemporarilyBanned = $user->is_temporarily_banned;
+        
         $user->update([
             'is_banned' => false,
             'ban_reason' => null,
-            'banned_at' => null
+            'banned_at' => null,
+            'is_temporarily_banned' => false,
+            'temporary_ban_reason' => null,
+            'temporarily_banned_at' => null,
+            'temporary_ban_expires_at' => null
         ]);
 
         $user->notify(new UserUnbannedNotification($user));
 
-        return back()->with('success', 'User has been unbanned successfully.');
+        $message = $wasTemporarilyBanned ? 'Temporary ban has been lifted successfully.' : 'User has been unbanned successfully.';
+        return back()->with('success', $message);
     }
 
     public function showDetails(User $user)

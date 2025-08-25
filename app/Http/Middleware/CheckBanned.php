@@ -10,9 +10,18 @@ class CheckBanned
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->banned_at) {
-            // Redirect to banned notice for all other routes
-            return redirect()->route('banned.notice');
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            // Check for permanent ban
+            if ($user->banned_at) {
+                return redirect()->route('banned.notice');
+            }
+            
+            // Check for temporary ban
+            if ($user->is_temporarily_banned && $user->temporary_ban_expires_at && $user->temporary_ban_expires_at->isFuture()) {
+                return redirect()->route('banned.notice');
+            }
         }
 
         return $next($request);
