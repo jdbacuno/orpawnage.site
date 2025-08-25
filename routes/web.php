@@ -160,7 +160,7 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
         ->name('settings.password.setup');
 });
 
-Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('verified');
+Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('auth');
 
 Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
     ->name('adoption.confirm')
@@ -171,7 +171,7 @@ Route::get('/confirm-surrender/{id}', [SurrenderApplicationController::class, 'c
     ->middleware('signed');
 
 // Profile Settings Route
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
     Route::prefix('settings')->group(function () {
         Route::patch('/email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
         Route::patch('/password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
@@ -181,7 +181,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
+Route::middleware(['isAdmin', 'verified', 'auth', 'check.banned'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('Home');
     Route::get('/admin/adoption-stats', [DashboardController::class, 'getAdoptionStats'])->name('admin.adoption-stats');
     Route::get('/admin/monthly-trend-stats', [DashboardController::class, 'getMonthlyTrendStats'])->name('admin.monthly-trend-stats');
@@ -241,6 +241,7 @@ Route::middleware(['isAdmin', 'verified', 'auth'])->group(function () {
     Route::patch('/admin/users/{user}/temporary-ban', [UserController::class, 'temporaryBan'])->name('admin.users.temporary-ban');
     Route::patch('/admin/users/{user}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
     Route::get('/admin/users/{user}/details', [UserController::class, 'showDetails'])->name('admin.users.details');
+    Route::post('/admin/users/{user}/password-reset', [UserController::class, 'sendPasswordReset'])->name('admin.users.password-reset');
 
     Route::get('/admin/team-members', [OfficeStaffController::class, 'index'])->name('team.management');
     Route::post('/admin/office-staff', [OfficeStaffController::class, 'store'])->name('office-staff.store');
@@ -276,7 +277,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout Route
-Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
+Route::delete('/logout', [SessionController::class, 'destroy'])->name('logout')->middleware('auth');
 
 Route::get('/contact', function () {
     return redirect()->away('mailto:orpawnagedevelopers@gmail.com');

@@ -40,7 +40,7 @@
     <form method="POST" action="{{ route('admin.users.unban', $user) }}">
       @csrf
       @method('PATCH')
-      <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md">
+      <button type="submit" class="bg-green-500 px-4 py-2 text-white hover:bg-green-400 rounded-md disabled:opacity-50 disabled:cursor-not-allowed" onclick="this.disabled=true; this.innerHTML='<i class=\'ph-fill ph-arrow-counter-clockwise mr-2\'></i>Processing...'; this.form.submit();">
         <i class="ph-fill ph-arrow-counter-clockwise mr-2"></i>Unban User
       </button>
     </form>
@@ -62,6 +62,13 @@
         class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md">
         <i class="ph-fill ph-clock mr-2"></i>Temporary Ban
       </button>
+      <form method="POST" action="{{ route('admin.users.password-reset', $user) }}">
+        @csrf
+        <button type="submit" class="bg-blue-500 px-4 py-2 text-white hover:bg-blue-400 rounded-md"
+          onclick="this.disabled=true; this.innerHTML='Sending...'; this.form.submit();">
+          <i class="ph-fill ph-key mr-2"></i>Send Reset Email
+        </button>
+      </form>
     </div>
     @endif
   </div>

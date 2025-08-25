@@ -125,7 +125,7 @@
         <label for="ban_reason" class="block font-medium text-gray-700">Reason:</label>
         <textarea id="ban_reason" name="ban_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
 
-        <button type="submit" class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md w-full">
+        <button type="submit" id="banSubmitBtn" class="bg-red-500 px-4 py-2 text-white hover:bg-red-400 rounded-md w-full disabled:opacity-50 disabled:cursor-not-allowed">
           <i class="ph-fill ph-prohibit mr-2"></i>Confirm Ban
         </button>
       </form>
@@ -151,7 +151,7 @@
         <label for="temporary_ban_reason" class="block font-medium text-gray-700">Reason:</label>
         <textarea id="temporary_ban_reason" name="temporary_ban_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
 
-        <button type="submit" class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md w-full">
+        <button type="submit" id="temporaryBanSubmitBtn" class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md w-full disabled:opacity-50 disabled:cursor-not-allowed">
           <i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban
         </button>
       </form>
@@ -188,22 +188,136 @@
       document.getElementById('banUserId').value = userId;
       document.getElementById('banForm').action = `/admin/users/${userId}/ban`;
       document.getElementById('banModal').classList.remove('hidden');
+      
+      // Reset form and button state
+      document.getElementById('banForm').reset();
+      const submitBtn = document.getElementById('banSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="ph-fill ph-prohibit mr-2"></i>Confirm Ban';
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
     }
 
     window.showTemporaryBanModal = function(userId) {
       document.getElementById('temporaryBanUserId').value = userId;
       document.getElementById('temporaryBanForm').action = `/admin/users/${userId}/temporary-ban`;
       document.getElementById('temporaryBanModal').classList.remove('hidden');
+      
+      // Reset form and button state
+      document.getElementById('temporaryBanForm').reset();
+      const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban';
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
     }
 
     // Initialize event listeners when the main page loads
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('closeBanModal')?.addEventListener('click', () => {
         document.getElementById('banModal').classList.add('hidden');
+        // Reset form and button state when modal is closed
+        document.getElementById('banForm').reset();
+        const submitBtn = document.getElementById('banSubmitBtn');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="ph-fill ph-prohibit mr-2"></i>Confirm Ban';
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
       });
       
       document.getElementById('closeTemporaryBanModal')?.addEventListener('click', () => {
         document.getElementById('temporaryBanModal').classList.add('hidden');
+        // Reset form and button state when modal is closed
+        document.getElementById('temporaryBanForm').reset();
+        const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban';
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      });
+
+          // Handle form submissions to prevent multiple submissions
+    document.getElementById('banForm')?.addEventListener('submit', function(e) {
+      const submitBtn = document.getElementById('banSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ph-fill ph-prohibit mr-2"></i>Processing...';
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    });
+
+    document.getElementById('temporaryBanForm')?.addEventListener('submit', function(e) {
+      const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Processing...';
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    });
+
+      // Close modals when clicking outside
+      document.getElementById('banModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.add('hidden');
+          // Reset form and button state
+          document.getElementById('banForm').reset();
+          const submitBtn = document.getElementById('banSubmitBtn');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="ph-fill ph-prohibit mr-2"></i>Confirm Ban';
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+        }
+      });
+
+      document.getElementById('temporaryBanModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.add('hidden');
+          // Reset form and button state
+          document.getElementById('temporaryBanForm').reset();
+          const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban';
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+        }
+      });
+
+      // Handle escape key to close modals
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const banModal = document.getElementById('banModal');
+          const tempBanModal = document.getElementById('temporaryBanModal');
+          
+          if (banModal && !banModal.classList.contains('hidden')) {
+            banModal.classList.add('hidden');
+            // Reset form and button state
+            document.getElementById('banForm').reset();
+            const submitBtn = document.getElementById('banSubmitBtn');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="ph-fill ph-prohibit mr-2"></i>Confirm Ban';
+              submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+          }
+          
+          if (tempBanModal && !tempBanModal.classList.contains('hidden')) {
+            tempBanModal.classList.add('hidden');
+            // Reset form and button state
+            document.getElementById('temporaryBanForm').reset();
+            const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban';
+              submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+          }
+        }
       });
     });
 

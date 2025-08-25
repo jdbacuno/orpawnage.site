@@ -37,11 +37,25 @@
         @endif
       @endif
 
-      <a href="mailto:orpawnagedevelopers@gmail.com"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
-        Contact Support
-      </a>
-      </form>
+      <div class="flex flex-col sm:flex-row gap-3 mt-6">
+        <a href="mailto:orpawnagedevelopers@gmail.com"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition text-center">
+          Contact Support
+        </a>
+        
+        <form method="POST" action="{{ route('logout') }}" class="inline">
+          @csrf
+          @method('DELETE')
+          <button type="submit" 
+            class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition w-full sm:w-auto">
+            Sign Out
+          </button>
+        </form>
+      </div>
+      
+      <p class="text-sm text-gray-500 mt-4 text-center">
+        You can sign out at any time using the button above.
+      </p>
     </div>
   </div>
 </x-layout>

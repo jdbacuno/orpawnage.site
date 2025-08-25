@@ -9,6 +9,8 @@ use App\Notifications\UserBannedNotification;
 use App\Notifications\UserUnbannedNotification;
 use App\Notifications\UserTemporarilyBannedNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use App\Notifications\PasswordResetNotification;
 
 class UserController extends Controller
 {
@@ -58,8 +60,20 @@ class UserController extends Controller
 
     public function show(Request $request)
     {
-        // Prevent banned users from staying on /banned after being unbanned
-        if (Auth::check() && !Auth::user()->banned_at && $request->is('banned')) {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        
+        // If user is not banned (either permanently or temporarily), redirect to home
+        if (!$user->banned_at && !$user->is_temporarily_banned) {
+            return redirect('/');
+        }
+        
+        // If temporary ban has expired, redirect to home
+        if ($user->is_temporarily_banned && $user->temporary_ban_expires_at && $user->temporary_ban_expires_at->isPast()) {
             return redirect('/');
         }
 
@@ -137,5 +151,24 @@ class UserController extends Controller
         ]);
 
         return view('admin.user-details-modal', compact('user'));
+    }
+
+    /**
+     * Send a password reset email to a specific user (admin action).
+     */
+    public function sendPasswordReset(User $user)
+    {
+        // Generate and send reset link using the same notification used elsewhere
+        $status = Password::sendResetLink(
+            ['email' => $user->email],
+            function ($notifiable, $token) {
+                $notifiable->notify(new PasswordResetNotification($token));
+            }
+        );
+
+        return back()->with(
+            $status === Password::RESET_LINK_SENT ? 'success' : 'error',
+            $status === Password::RESET_LINK_SENT ? 'Password reset email sent.' : __($status)
+        );
     }
 }

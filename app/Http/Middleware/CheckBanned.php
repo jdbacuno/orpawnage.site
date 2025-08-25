@@ -15,12 +15,18 @@ class CheckBanned
             
             // Check for permanent ban
             if ($user->banned_at) {
-                return redirect()->route('banned.notice');
+                // Allow access to logout route, banned notice, and password reset routes
+                if (!$request->is('banned') && !$request->is('logout') && !$request->is('password.*')) {
+                    return redirect()->route('banned.notice');
+                }
             }
             
             // Check for temporary ban
             if ($user->is_temporarily_banned && $user->temporary_ban_expires_at && $user->temporary_ban_expires_at->isFuture()) {
-                return redirect()->route('banned.notice');
+                // Allow access to logout route, banned notice, and password reset routes
+                if (!$request->is('banned') && !$request->is('logout') && !$request->is('password.*')) {
+                    return redirect()->route('banned.notice');
+                }
             }
         }
 
