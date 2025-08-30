@@ -130,7 +130,7 @@
           </div>
 
           <!-- Bug Report Link -->
-          <div class="fixed top-4 right-4 z-40">
+          <div class="fixed bottom-4 right-4 z-40">
             <button id="bug-report-link"
               class="text-sm bg-red-500 text-white hover:text-red-500 hover:bg-white flex items-center justify-center bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md border border-gray-200 hover:bg-white transition-all duration-200">
               <svg class="w-5 h-5 sm:mr-1" fill="currentColor" viewBox="0 0 24 24">

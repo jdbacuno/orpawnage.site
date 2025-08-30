@@ -46,7 +46,7 @@ available_pets = pd.read_sql("""
     )
     AND p.id NOT IN (
         SELECT pet_id FROM adoption_applications 
-        WHERE status IN ('rejected', 'denied', 'cancelled', 'withdrawn')
+        WHERE status IN ('rejected', 'to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going')
         AND pet_id IN (
             SELECT pet_id FROM adoption_applications WHERE status = 'picked up'
         )

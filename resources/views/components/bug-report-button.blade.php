@@ -2,9 +2,13 @@
 <div id="bug-report-container" class="fixed bottom-24 right-8 z-50">
     <!-- Floating Button -->
     <button id="bug-report-btn"
-        class="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+        class="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 relative"
         title="Report a Bug">
         <i class="ph-fill ph-bug text-lg"></i>
+        <div
+            class="absolute p-1 overflow-hidden bg-white text-red-500 right-14 w-28 h-auto text-sm rounded-md shadow-md">
+            Report
+            a Bug?</div>
     </button>
 
     <!-- Bug Report Chatbox -->
@@ -42,7 +46,8 @@
                     <input type="email" id="bug-email" name="email"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         placeholder="Enter your email to receive updates about this bug report">
-                    <p class="text-xs text-gray-500 mt-1">We'll use this to contact you about the status of your bug report</p>
+                    <p class="text-xs text-gray-500 mt-1">We'll use this to contact you about the status of your bug
+                        report</p>
                 </div>
 
                 <div class="mb-4">
