@@ -4,22 +4,10 @@
   </div>
 
   <!-- Filters Section -->
-  <div class="flex flex-wrap gap-2 my-4">
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
-      <!-- Status Filter -->
-      <select name="status"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
-        onchange="this.form.submit()">
-        <option value="">All Statuses</option>
-        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
-        <option value="action taken" {{ request('status')==='action taken' ? 'selected' : '' }}>Action Taken</option>
-        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
-      </select>
-    </form>
-    <form method="GET" action="{{ request()->url() }}" class="relative flex items-center ml-auto mt-2 sm:mt-0">
-      <input type="text" name="search" value="{{ request('search') }}"
-        placeholder="Search by report number, reporter name, or contact number"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[250px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+  <div class="flex flex-wrap gap-4 my-4">
+    <form method="GET" action="{{ request()->url() }}" class="relative flex items-center mt-2 sm:mt-0">
+      <input type="text" name="search" value="{{ request('search') }}" placeholder="Report number/name, or contact"
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[300px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
       <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
         <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
       </div>
@@ -30,6 +18,17 @@
       <a href="{{ request()->url() }}?{{ http_build_query(request()->except(['search', 'page'])) }}"
         class="ml-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
       @endif
+    </form>
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+      <!-- Status Filter -->
+      <select name="status"
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+        onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
+        <option value="action taken" {{ request('status')==='action taken' ? 'selected' : '' }}>Action Taken</option>
+        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
+      </select>
     </form>
   </div>
 

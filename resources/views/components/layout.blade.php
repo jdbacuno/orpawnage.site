@@ -665,7 +665,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
 
                 <!-- Account Tab -->
                 <div id="account-tab" class="tab-content {{ $activeTab === 'account-tab' ? 'activeTab' : 'hidden' }}">
-                  <!-- Email Verification Status -->
+                  <!-- Overview / Verification -->
                   <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4 mb-6">
                     <div class="flex items-center justify-between">
                       <div class="flex items-start">
@@ -692,109 +692,103 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                     </div>
                   </div>
 
-                  <!-- Email Update -->
-                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                      <i class="ph-fill ph-envelope mr-2 text-orange-400"></i>Change Email Address
-                    </h3>
-                    <form method="POST" action="{{ route('settings.email.update') }}" id="emailUpdateForm">
-                      @csrf
-                      @method('PATCH')
-
-                      <div class="space-y-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Email</label>
-                          <input type="email" value="{{ auth()->user()->email }}"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
-                        </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
-                          <input type="email" name="settings_email" value="{{ old('settings_email') }}" required
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                            placeholder="New email address">
-                          <x-form-error name="settings_email" />
-                        </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_email_current_password" required
+                  <!-- Profile & Contact -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Email Update -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                      <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="ph-fill ph-envelope mr-2 text-orange-400"></i>Change Email
+                      </h3>
+                      <form method="POST" action="{{ route('settings.email.update') }}" id="emailUpdateForm">
+                        @csrf
+                        @method('PATCH')
+                        <div class="space-y-4">
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Email</label>
+                            <input type="email" value="{{ auth()->user()->email }}"
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                          </div>
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
+                            <input type="email" name="settings_email" value="{{ old('settings_email') }}" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Enter your current password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
+                              placeholder="New email address">
+                            <x-form-error name="settings_email" />
+                          </div>
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                            <div class="relative">
+                              <input type="password" name="settings_email_current_password" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                                placeholder="Enter your current password">
+                              <button type="button" onclick="togglePasswordVisibility(this)"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                                <i class="ph-fill ph-eye text-lg"></i>
+                              </button>
+                            </div>
+                            <x-form-error name="settings_email_current_password" />
+                          </div>
+                          <div class="pt-1 flex justify-end">
+                            <button type="submit"
+                              class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                              <i class="ph-fill ph-check-circle mr-2"></i>Save
                             </button>
                           </div>
-                          <x-form-error name="settings_email_current_password" />
                         </div>
+                      </form>
+                    </div>
 
-                        <div class="pt-2 flex justify-end">
-                          <button type="submit"
-                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-                            <i class="ph-fill ph-check-circle mr-2"></i>Update Email
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-
-                  <!-- Contact Number Update -->
-                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                      <i class="ph-fill ph-phone mr-2 text-orange-400"></i>Update Contact Number
-                    </h3>
-                    <form method="POST" action="{{ route('settings.contact.update') }}" id="contactUpdateForm">
-
-                      @csrf
-                      @method('PATCH')
-
-                      <div class="space-y-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
-                          <input type="tel" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update)' }}"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
-                        </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
-                          <input type="tel" name="settings_contact_number" value="{{ old('settings_contact_number') }}"
-                            pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
-                          <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
-                          <x-form-error name="settings_contact_number" />
-                        </div>
-
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_contact_current_password" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Enter your current password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
+                    <!-- Contact Number Update -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                      <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="ph-fill ph-phone mr-2 text-orange-400"></i>Update Contact
+                      </h3>
+                      <form method="POST" action="{{ route('settings.contact.update') }}" id="contactUpdateForm">
+                        @csrf
+                        @method('PATCH')
+                        <div class="space-y-4">
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
+                            <input type="tel" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update)' }}"
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                          </div>
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
+                            <input type="tel" name="settings_contact_number" value="{{ old('settings_contact_number') }}"
+                              pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
+                            <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
+                            <x-form-error name="settings_contact_number" />
+                          </div>
+                          <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                            <div class="relative">
+                              <input type="password" name="settings_contact_current_password" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                                placeholder="Enter your current password">
+                              <button type="button" onclick="togglePasswordVisibility(this)"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                                <i class="ph-fill ph-eye text-lg"></i>
+                              </button>
+                            </div>
+                            <x-form-error name="settings_contact_current_password" />
+                          </div>
+                          <div class="pt-1 flex justify-end">
+                            <button type="submit"
+                              class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                              <i class="ph-fill ph-check-circle mr-2"></i>Save
                             </button>
                           </div>
-                          <x-form-error name="settings_contact_current_password" />
                         </div>
-
-                        <div class="pt-2 flex justify-end">
-                          <button type="submit"
-                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-                            <i class="ph-fill ph-check-circle mr-2"></i>Update Contact
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Password Tab -->
                 <div id="password-tab" class="tab-content {{ $activeTab === 'password-tab' ? 'activeTab' : 'hidden' }}">
                   <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
                       <i class="ph-fill ph-lock mr-2 text-orange-400"></i>
                       @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
                       Set a Password
@@ -807,8 +801,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                     <form method="POST" action="{{ route('settings.password.setup') }}" id="passwordSetupForm">
                       @csrf
                       @method('PATCH')
-
-                      <div class="space-y-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
                           <div class="relative">
@@ -822,12 +815,10 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           </div>
                           <x-form-error name="settings_password" />
 
-                          <!-- Password Strength Meter -->
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
                             <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress"
-                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                              <div id="strength-progress" class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
                             </div>
                           </div>
 
@@ -854,7 +845,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             </ul>
                           </div>
                         </div>
-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
                           <div class="relative">
@@ -867,13 +857,12 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             </button>
                           </div>
                         </div>
-
-                        <div class="pt-2 flex justify-end">
-                          <button type="submit"
-                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-                            <i class="ph-fill ph-check-circle mr-2"></i>Set Password
-                          </button>
-                        </div>
+                      </div>
+                      <div class="pt-3 flex justify-end">
+                        <button type="submit"
+                          class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                          <i class="ph-fill ph-check-circle mr-2"></i>Set Password
+                        </button>
                       </div>
                     </form>
                     @else
@@ -881,9 +870,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                     <form method="POST" action="{{ route('settings.password.update') }}" id="passwordChangeForm">
                       @csrf
                       @method('PATCH')
-
-                      <div class="space-y-4">
-                        <div>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
                           <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                           <div class="relative">
                             <input type="password" name="settings_current_password" required
@@ -896,7 +884,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           </div>
                           <x-form-error name="settings_current_password" />
                         </div>
-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
                           <div class="relative">
@@ -913,8 +900,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
                             <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress"
-                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                              <div id="strength-progress" class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
                             </div>
                           </div>
 
@@ -941,7 +927,6 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             </ul>
                           </div>
                         </div>
-
                         <div>
                           <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
                           <div class="relative">
@@ -954,13 +939,12 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                             </button>
                           </div>
                         </div>
-
-                        <div class="pt-2 flex justify-end">
-                          <button type="submit"
-                            class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-                            <i class="ph-fill ph-check-circle mr-2"></i>Update Password
-                          </button>
-                        </div>
+                      </div>
+                      <div class="pt-3 flex justify-end">
+                        <button type="submit"
+                          class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                          <i class="ph-fill ph-check-circle mr-2"></i>Update Password
+                        </button>
                       </div>
                     </form>
                     @endif
@@ -971,7 +955,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                 <div id="danger-tab" class="tab-content {{ $activeTab === 'danger-tab' ? 'activeTab' : 'hidden' }}">
                   @if (!auth()->user()->isAdmin)
                   <div class="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm">
-                    <h3 class="text-lg font-semibold text-red-800 mb-4 flex items-center">
+                    <h3 class="text-base font-semibold text-red-800 mb-4 flex items-center">
                       <i class="ph-fill ph-trash mr-2 text-red-500"></i>Delete Account
                     </h3>
 
@@ -995,12 +979,11 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                     <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
                       @csrf
                       @method('DELETE')
-
                       <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
                         <div class="relative">
                           <input type="password" name="settings_delete_current_password" required
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
+                            class="w-full border border-red-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
                             placeholder="Enter your current password">
                           <button type="button" onclick="togglePasswordVisibility(this)"
                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
@@ -1009,10 +992,9 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                         </div>
                         <x-form-error name="settings_delete_current_password" />
                       </div>
-
-                      <div class="pt-2 flex justify-end">
+                      <div class="pt-3 flex justify-end">
                         <button type="submit"
-                          class="px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                          class="px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow">
                           <i class="ph-fill ph-warning-circle mr-2"></i>Delete Account Permanently
                         </button>
                       </div>
@@ -1022,6 +1004,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                   @endif
                 </div>
               </div>
+              <!-- End Tab content -->
             </div>
           </div>
         </div>
