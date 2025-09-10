@@ -152,9 +152,9 @@ class AdoptionApplicationController extends Controller
         );
     }
 
-    public function confirmApplication($id)
+    public function confirmApplication($application)
     {
-        $application = AdoptionApplication::where('id', $id)
+        $application = AdoptionApplication::where('id', $application)
             ->where('status', 'to be confirmed')
             ->first();
 
@@ -165,7 +165,6 @@ class AdoptionApplicationController extends Controller
             ]);
         }
 
-        // Check if the application has expired (24 hours)
         if ($application->created_at->diffInHours(now()) > 24) {
             // Auto-reject expired applications
             $application->update([
@@ -248,7 +247,6 @@ class AdoptionApplicationController extends Controller
         $application->user->notify(new AdoptionStatusNotification($application));
 
         return redirect()->back()->with('success', 'Adoption application rejected.');
-    }
 
     public function archive(Request $request)
     {

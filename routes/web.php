@@ -162,7 +162,7 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
 
 Route::get('/banned', [UserController::class, 'show'])->name('banned.notice')->middleware('auth');
 
-Route::get('/confirm-application/{id}', [AdoptionApplicationController::class, 'confirmApplication'])
+Route::get('/confirm-application/{application}', [AdoptionApplicationController::class, 'confirmApplication'])
     ->name('adoption.confirm')
     ->middleware('signed');
 

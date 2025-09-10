@@ -227,7 +227,7 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:10240'],
         ]);
 
         if ($validator->fails()) {
@@ -302,7 +302,7 @@ class PetController extends Controller
                 'others'
             ])],
             'source' => ['required', Rule::in(['surrendered', 'rescued', 'other'])],
-            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:10240'],
         ]);
 
         if ($validator->fails()) {
