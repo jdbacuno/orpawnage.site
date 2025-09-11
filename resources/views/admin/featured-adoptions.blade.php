@@ -102,14 +102,20 @@
           <div
             class="gallery-item overflow-hidden rounded-lg shadow-md group cursor-pointer transition-all duration-300 hover:shadow-lg"
             data-src="{{ asset('storage/' . $image->image_path) }}" data-month="{{ date('n', strtotime($month)) }}"
-            data-year="{{ date('Y', strtotime($month)) }}"
-            onclick="confirmDelete('{{ route('featured-adoptions.destroy', $image) }}')">
-            <div class="relative aspect-square">
+            data-year="{{ date('Y', strtotime($month)) }}">
+            <div class="relative aspect-square" onclick="openImageModal('{{ asset('storage/' . $image->image_path) }}')">
               <img src="{{ asset('storage/' . $image->image_path) }}" alt="Featured adoption"
                 class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                 loading="lazy">
-              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
-              </div>
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+              <button type="button"
+                class="absolute top-2 right-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-full p-1 shadow hidden group-hover:block"
+                title="Delete"
+                onclick="event.stopPropagation(); confirmDelete('{{ route('featured-adoptions.destroy', $image) }}')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2h12a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zm-3 6a1 1 0 011 1v6a1 1 0 11-2 0V9a1 1 0 011-1zm4 0a1 1 0 011 1v6a1 1 0 11-2 0V9a1 1 0 011-1zm5 1a1 1 0 10-2 0v6a1 1 0 102 0V9z" clip-rule="evenodd" />
+                </svg>
+              </button>
             </div>
           </div>
           @endforeach
@@ -148,6 +154,19 @@
           </form>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-80 z-50 hidden">
+    <button type="button" class="absolute top-4 right-4 text-white bg-black/40 hover:bg-black/60 rounded-full p-2"
+      aria-label="Close preview" onclick="closeImageModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <div class="max-w-7xl w-full max-h-[90vh] flex items-center justify-center" onclick="closeImageModal()">
+      <img id="modalImage" src="" alt="Preview" class="max-h-[90vh] max-w-full rounded-lg shadow-lg" onclick="event.stopPropagation()">
     </div>
   </div>
 
@@ -278,6 +297,29 @@
         applyFilters();
       });
     });
+
+    // Image preview modal helpers
+    function openImageModal(src) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      img.src = src;
+      modal.classList.remove('hidden');
+
+      // Escape to close
+      function onKeydown(e) {
+        if (e.key === 'Escape') {
+          closeImageModal();
+        }
+      }
+      window.addEventListener('keydown', onKeydown, { once: true });
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      img.src = '';
+      modal.classList.add('hidden');
+    }
 
     // Delete confirmation modal
     function confirmDelete(url) {

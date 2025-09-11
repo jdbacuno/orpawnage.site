@@ -91,14 +91,14 @@
                   class="transaction-info-btn text-blue-500 hover:text-blue-600 hover:underline"
                   data-id="{{ $application->id }}" data-name="{{ $application->full_name }}"
                   data-email="{{ $application->email }}" data-age="{{ $application->age }}"
-                  data-birthdate="{{ $application->birthdate->format('M d, Y') }}"
+                  data-birthdate="{{ $application->birthdate ? \Carbon\Carbon::parse($application->birthdate)->format('M d, Y') : 'Not set' }}"
                   data-address="{{ $application->address }}" data-phone="{{ $application->contact_number }}"
                   data-civil="{{ $application->civil_status }}" data-citizenship="{{ $application->citizenship }}"
                   data-reason="{{ $application->reason }}"
                   data-validid="{{ asset('storage/' . $application->valid_id_path) }}"
                   data-status="{{ $application->status }}"
-                  data-surrender-date="{{ $application->surrender_date ? $application->surrender_date->format('M d, Y') : 'Not set' }}"
-                  data-created-at="{{ $application->created_at->format('M d, Y') }}"
+                  data-surrender-date="{{ $application->surrender_date ? \Carbon\Carbon::parse($application->surrender_date)->format('M d, Y') : 'Not set' }}"
+                  data-created-at="{{ $application->created_at ? \Carbon\Carbon::parse($application->created_at)->format('M d, Y') : 'Not set' }}"
                   data-transaction-number="{{ $application->transaction_number }}"
                   data-pet-name="{{ $application->pet_name ?? 'Unnamed' }}"
                   data-pet-species="{{ $application->species === 'feline' ? 'Cat' : 'Dog' }}"
@@ -173,7 +173,7 @@
                 <button type="button"
                   class="block w-full text-left px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-100 hover:text-indigo-900"
                   role="menuitem"
-                  onclick="openSurrenderModal('{{ \Carbon\Carbon::parse($application->surrender_date)->format('M d, Y') }}')">
+                  onclick="openSurrenderModal('{{ $application->surrender_date ? \Carbon\Carbon::parse($application->surrender_date)->format('M d, Y') : 'Not set' }}')">
                   <i class="ph-fill ph-calendar-check mr-2"></i> View Schedule
                 </button>
                 @endif
@@ -193,6 +193,12 @@
                   role="menuitem" onclick="openCancelModal({{ $application->id }})">
                   <i class="ph-fill ph-x-circle mr-2"></i> Cancel Application
                 </button>
+                @endif
+
+                @if(($application->previous_status ?? $application->status) === 'rejected')
+                <div class="block w-full text-left px-4 py-2 text-sm text-gray-500 italic">
+                  <i class="ph-fill ph-x-circle mr-2"></i> Application Rejected
+                </div>
                 @endif
 
                 @if(($application->previous_status ?? $application->status) === 'completed' ||

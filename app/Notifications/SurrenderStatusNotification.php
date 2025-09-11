@@ -13,12 +13,12 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
 {
   use Queueable;
 
-  protected $application;
+  protected $applicationId;
   protected $oldSurrenderDate;
 
-  public function __construct(SurrenderApplication $application, $oldSurrenderDate = null)
+  public function __construct($applicationId, $oldSurrenderDate = null)
   {
-    $this->application = $application;
+    $this->applicationId = $applicationId;
     $this->oldSurrenderDate = $oldSurrenderDate;
   }
 
@@ -29,8 +29,9 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
 
   public function toMail($notifiable)
   {
-    $status = $this->application->status;
-    $transactionNumber = $this->application->transaction_number;
+    $application = SurrenderApplication::findOrFail($this->applicationId);
+    $status = $application->status;
+    $transactionNumber = $application->transaction_number;
 
     $statusSubjectMap = [
       'to be confirmed' => 'Confirm Your Surrender Application',
@@ -45,21 +46,21 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
 
     $mailMessage = (new MailMessage)
       ->subject("Surrender Application - {$customSubject} - Transaction #{$transactionNumber}")
-      ->greeting('Hello ' . $this->application->full_name . ',')
+      ->greeting('Hello ' . $application->full_name . ',')
       ->line('**Transaction #:** ' . $transactionNumber);
 
-    if ($this->application->pet_name) {
-      $mailMessage->line('**Animal Name:** ' . $this->application->pet_name);
+    if ($application->pet_name) {
+      $mailMessage->line('**Animal Name:** ' . $application->pet_name);
     }
 
-    $mailMessage->line('**Application Date:** ' . $this->application->created_at->format('F j, Y'));
+    $mailMessage->line('**Application Date:** ' . $application->created_at->format('F j, Y'));
 
-    switch ($this->application->status) {
+    switch ($application->status) {
       case 'to be confirmed':
         $mailMessage
           ->line('We have received your surrender application!')
           ->line('Please confirm within **24 hours** to proceed with the surrender process.')
-          ->action('Confirm Application', URL::signedRoute('surrender.confirm', ['id' => $this->application->id]))
+          ->action('Confirm Application', URL::signedRoute('surrender.confirm', ['id' => $application->id]))
           ->line('Failure to confirm within 24 hours will automatically cancel your application.')
           ->line('Thank you for responsibly surrendering your animal.');
         break;
@@ -88,7 +89,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
       case 'surrender on-going':
         $mailMessage
           ->line('📅 Your surrender appointment is scheduled!')
-          ->line('**Scheduled Surrender Date:** ' . $this->application->surrender_date->format('F j, Y'))
+          ->line('**Scheduled Surrender Date:** ' . $application->surrender_date->format('F j, Y'))
           ->line('**Location:** Angeles City Veterinary Office')
           ->line('**On your surrender day, bring:**')
           ->line('- A valid government-issued ID')
@@ -101,7 +102,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
       case 'completed':
         $mailMessage
           ->line('🏡 Your surrender process is now **complete**.')
-          ->line('**Completion Date:** ' . $this->application->updated_at->format('F j, Y'))
+          ->line('**Completion Date:** ' . $application->updated_at->format('F j, Y'))
           ->line("Thank you for responsibly surrendering your animal.")
           ->line('🐾 We will provide proper care for the animal and work to find it a new home if appropriate.');
         break;
@@ -109,7 +110,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
       case 'rejected':
         $mailMessage
           ->line('We regret to inform you that your surrender application has been **rejected**.')
-          ->line('**Reason for Rejecting:** ' . $this->application->reject_reason)
+          ->line('**Reason for Rejecting:** ' . $application->reject_reason)
           ->line('For any questions, please contact our office.');
         break;
     }

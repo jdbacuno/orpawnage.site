@@ -8,20 +8,19 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 use App\Models\AdoptionApplication;
-use Illuminate\Support\Facades\Auth;
 
 class AdoptionStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $application;
+    protected $applicationId;
     protected $oldPickupDate;
 
     protected $isUserLoggedIn;
 
-    public function __construct(AdoptionApplication $application, $oldPickupDate = null, $isUserLoggedIn = false)
+    public function __construct(int $applicationId, $oldPickupDate = null, $isUserLoggedIn = false)
     {
-        $this->application = $application;
+        $this->applicationId = $applicationId;
         $this->oldPickupDate = $oldPickupDate;
         $this->isUserLoggedIn = $isUserLoggedIn;
     }
@@ -36,8 +35,9 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $status = $this->application->status;
-        $transactionNumber = $this->application->transaction_number;
+        $application = AdoptionApplication::with(['pet', 'user'])->findOrFail($this->applicationId);
+        $status = $application->status;
+        $transactionNumber = $application->transaction_number;
 
         // Map status to subject line
         $statusSubjectMap = [
@@ -51,17 +51,17 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
 
         $mailMessage = (new MailMessage)
             ->subject("Adoption Application - {$customSubject} - Transaction #{$transactionNumber}")
-            ->greeting('Hello ' . $this->application->user->full_name . ',')
+            ->greeting('Hello ' . $application->user->full_name . ',')
             ->line('**Transaction #:** ' . $transactionNumber)
-            ->line('**Pet Name:** ' . $this->application->pet->pet_name)
-            ->line('**Application Date:** ' . $this->application->created_at->format('F j, Y'));
+            ->line('**Pet Name:** ' . $application->pet->pet_name)
+            ->line('**Application Date:** ' . $application->created_at->format('F j, Y'));
 
-        switch ($this->application->status) {
+        switch ($application->status) {
             case 'to be confirmed':
                 $mailMessage
                     ->line('🎉 We have received your application!')
                     ->line('Please confirm within **24 hours** to proceed with the adoption.')
-                    ->action('Confirm Application', URL::signedRoute('adoption.confirm', ['id' => $this->application->id]))
+                    ->action('Confirm Application', URL::signedRoute('adoption.confirm', ['application' => $application->id]))
                     ->line('Failure to confirm within 24 hours will automatically cancel your application.')
                     ->line('We look forward to helping you adopt a pet!');
                 break;
@@ -89,7 +89,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
             case 'adoption on-going':
                 $mailMessage
                     ->line('📅 Your new pet is ready to welcome you home!')
-                    ->line('**Scheduled Visit Date:** ' . $this->application->pickup_date->format('F j, Y'))
+                    ->line('**Scheduled Visit Date:** ' . $application->pickup_date->format('F j, Y'))
                     ->line('**Location:** Angeles City Veterinary Office')
                     ->line('**On your pickup day, bring:**')
                     ->line('- A valid government-issued ID')
@@ -101,15 +101,15 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
             case 'picked up':
                 $mailMessage
                     ->line('🏡 Congratulations! Your adoption is now **complete**.')
-                    ->line('**Completion Date:** ' . $this->application->updated_at->format('F j, Y'))
-                    ->line("Thank you for providing a loving home to **{$this->application->pet->pet_name}**!")
+                    ->line('**Completion Date:** ' . $application->updated_at->format('F j, Y'))
+                    ->line("Thank you for providing a loving home to **{$application->pet->pet_name}**!")
                     ->line('🐾 We would love to see how your new pet is doing! Share updates on our [Facebook page](https://www.facebook.com/ACVeterinaryOffice/).');
                 break;
 
             case 'rejected':
                 $mailMessage
                     ->line('We regret to inform you that your adoption application has been **rejected**.')
-                    ->line('**Reason for Rejecting:** ' . $this->application->reject_reason)
+                    ->line('**Reason for Rejecting:** ' . $application->reject_reason)
                     ->line('We encourage you to:')
                     ->line('- Review our adoption requirements')
                     ->line('- Consider other available pets')

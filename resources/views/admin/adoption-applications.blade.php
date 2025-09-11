@@ -358,6 +358,27 @@
     </div>
   </div>
 
+  <!-- Move to Scheduling Confirmation Modal -->
+  <div id="moveToScheduleModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button type="button" id="closeMoveToScheduleModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <i class="ph-fill ph-x text-xl"></i>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-800">Move to Scheduling</h2>
+      <p class="mt-2 text-sm text-gray-600">This will set the status to <span class="font-medium">To be scheduled</span> and email the applicant with scheduling instructions.</p>
+
+      <form id="moveToScheduleForm" method="POST" action="/admin/adoption-applications/move-to-schedule" class="mt-4">
+        @csrf
+        <input type="hidden" name="application_id" id="moveToScheduleApplicationId">
+        <div class="flex justify-end space-x-3">
+          <button type="button" id="cancelMoveToSchedule" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="bg-blue-600 px-4 py-2 text-white hover:bg-blue-500 rounded-md">Confirm Move</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Pet Photo Modal -->
   <div id="petPhotoModal"
     class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
@@ -629,6 +650,26 @@
         dropdown.classList.add('hidden');
       });
     });
+
+    // Handle "Move to Scheduling" -> show confirmation modal only
+    (function() {
+      document.querySelectorAll('button[data-action="move-to-schedule"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const applicationId = this.getAttribute('data-id');
+          const dropdown = document.getElementById(`dropdown-${applicationId}`);
+          if (dropdown) dropdown.classList.add('hidden');
+          document.getElementById('moveToScheduleApplicationId').value = applicationId;
+          document.getElementById('moveToScheduleModal').classList.remove('hidden');
+        });
+      });
+      document.getElementById('closeMoveToScheduleModal').addEventListener('click', function() {
+        document.getElementById('moveToScheduleModal').classList.add('hidden');
+      });
+      document.getElementById('cancelMoveToSchedule').addEventListener('click', function() {
+        document.getElementById('moveToScheduleModal').classList.add('hidden');
+      });
+    })();
 
     // Show pickup modal
     function showPickupModal(id) {

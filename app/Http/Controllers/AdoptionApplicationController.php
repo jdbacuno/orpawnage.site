@@ -144,7 +144,7 @@ class AdoptionApplicationController extends Controller
             ...$validated,
         ]);
 
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return back()->with(
             'success',
@@ -182,7 +182,7 @@ class AdoptionApplicationController extends Controller
         $application->update(['status' => 'confirmed']);
 
         // Send confirmation notification
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return response()->view('confirmation-result', [
             'success' => true,
@@ -203,7 +203,7 @@ class AdoptionApplicationController extends Controller
         $application->update(['status' => 'to be scheduled']);
 
         // Send email with scheduling link
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return redirect()->back()->with('success', 'Application moved to scheduling. An email has been sent to the applicant.');
     }
@@ -219,7 +219,7 @@ class AdoptionApplicationController extends Controller
         $application->update(['status' => 'picked up', 'pickup_date' => now()]);
 
         // Send email to adopter
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         // Send general announcement to all users (including admins) in chunks
         \App\Models\User::where('id', '!=', $application->user_id)
@@ -244,9 +244,10 @@ class AdoptionApplicationController extends Controller
             'reject_reason' => $request->reject_reason,
         ]);
 
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return redirect()->back()->with('success', 'Adoption application rejected.');
+    }
 
     public function archive(Request $request)
     {
@@ -284,7 +285,7 @@ class AdoptionApplicationController extends Controller
         $application = AdoptionApplication::findOrFail($id);
 
         // Logic to send email...
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return back()->with('success', 'Confirmation email resent successfully.');
     }
@@ -316,7 +317,7 @@ class AdoptionApplicationController extends Controller
         $application->status = 'adoption on-going';
         $application->save();
 
-        $application->user->notify(new AdoptionStatusNotification($application));
+        $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return redirect()->back()->with('success', 'Pickup scheduled successfully!');
     }

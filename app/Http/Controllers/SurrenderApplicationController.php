@@ -147,7 +147,7 @@ class SurrenderApplicationController extends Controller
       'transaction_number' => $validated['transaction_number'],
     ]);
 
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return back()->with(
       'success',
@@ -189,7 +189,7 @@ class SurrenderApplicationController extends Controller
     $application->confirmed_at = now();
     $application->save();
 
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return response()->view('confirmation-result', [
       'success' => true,
@@ -207,7 +207,7 @@ class SurrenderApplicationController extends Controller
     $application = SurrenderApplication::with(['user'])->findOrFail($request->application_id);
 
     $application->update(['status' => 'to be scheduled']);
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return redirect()->back()->with('success', 'Application moved to scheduling. An email has been sent to the applicant.');
   }
@@ -221,7 +221,7 @@ class SurrenderApplicationController extends Controller
     }
 
     $application->update(['status' => 'completed']);
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return redirect()->back()->with('success', 'Surrender marked as completed and notification sent.');
   }
@@ -240,7 +240,7 @@ class SurrenderApplicationController extends Controller
       'reject_reason' => $request->reject_reason,
     ]);
 
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return redirect()->back()->with('success', 'Surrender application rejected.');
   }
@@ -268,7 +268,7 @@ class SurrenderApplicationController extends Controller
   public function resendEmail($id)
   {
     $application = SurrenderApplication::findOrFail($id);
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return back()->with('success', 'Confirmation email resent successfully.');
   }
@@ -300,7 +300,7 @@ class SurrenderApplicationController extends Controller
     $application->status = 'surrender on-going';
     $application->save();
 
-    $application->user->notify(new SurrenderStatusNotification($application));
+    $application->user->notify(new SurrenderStatusNotification($application->id));
 
     return redirect()->back()->with('success', 'Surrender scheduled successfully!');
   }
