@@ -7,6 +7,33 @@
       <img src="{{ asset('images/adopter.jpg') }}" alt="Adopt a Pet" class="w-full h-full object-cover brightness-50" />
     </div>
 
+    <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
+    <div class="hidden sm:block absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 animate-[gradientShift_14s_ease-in-out_infinite]"></div>
+      <div class="absolute inset-0 opacity-40"
+        style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;"></div>
+      <!-- Paw accents sprinkled like background (non-interactive) -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-30 text-7xl -top-10 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-6xl top-6 left-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-5xl top-10 right-1/3"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-8xl top-1/3 -left-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl top-1/2 left-1/5"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-6xl top-2/3 left-1/2"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-7xl bottom-10 right-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl bottom-24 right-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-6xl bottom-8 left-1/3"></i>
+        <!-- Extra right-side sprinkles -->
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl top-4 right-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl top-1/4 right-10"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-7xl top-1/3 right-1/6"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-6xl top-1/2 right-3"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl bottom-1/3 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-5xl bottom-1/5 right-1/12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl bottom-6 right-4"></i>
+      </div>
+    </div>
+
     <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
       <!-- LEFT SIDE CONTENT -->
       <div class="lg:w-1/2 sm:mb-10 mb-0 text-left">
@@ -28,11 +55,11 @@
             </h3>
             <div class="flex space-x-2 overflow-x-auto scrollbar-hidden" id="language-tabs">
               <button data-tab="english"
-                class="tab-btn bg-white px-3 py-1 rounded border border-yellow-400 text-black font-medium hover:bg-yellow-300 active">English</button>
+                class="tab-btn bg-white px-4 py-1.5 rounded-full border border-yellow-400 text-black font-medium hover:bg-yellow-300 active">English</button>
               <button data-tab="tagalog"
-                class="tab-btn bg-white px-3 py-1 rounded border border-yellow-400 text-black font-medium hover:bg-yellow-300">Taglish</button>
+                class="tab-btn bg-white px-4 py-1.5 rounded-full border border-yellow-400 text-black font-medium hover:bg-yellow-300">Taglish</button>
               <button data-tab="kapampangan"
-                class="tab-btn bg-white px-3 py-1 rounded border border-yellow-400 text-black font-medium hover:bg-yellow-300">Kapampangan</button>
+                class="tab-btn bg-white px-4 py-1.5 rounded-full border border-yellow-400 text-black font-medium hover:bg-yellow-300">Kapampangan</button>
             </div>
           </div>
 
@@ -60,7 +87,7 @@
             <div id="tab-content-english" class="tab-content">
               <div class="space-y-2">
                 <details class="process-step" data-step="1" open>
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">1) Apply</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -74,7 +101,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">2) Confirm</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -90,7 +117,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">3) Prepare</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -104,7 +131,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">4) Schedule</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -121,7 +148,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">5) Bring</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -140,7 +167,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="6">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">6) Pickup</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -161,7 +188,7 @@
             <div id="tab-content-tagalog" class="tab-content hidden">
               <div class="space-y-2">
                 <details class="process-step" data-step="1" open>
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">1) Mag-apply</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -175,7 +202,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">2) Kumpirma</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -191,7 +218,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">3) Paghahanda</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -206,7 +233,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">4) Schedule</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -223,7 +250,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">5) Dalhin</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -243,7 +270,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="6">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">6) Pickup</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -264,7 +291,7 @@
             <div id="tab-content-kapampangan" class="tab-content hidden">
               <div class="space-y-2">
                 <details class="process-step" data-step="1" open>
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">1) Mag-apply</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -278,7 +305,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">2) Kumpirma</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -294,7 +321,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">3) Pagsasanaya</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -310,7 +337,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">4) Schedule</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -327,7 +354,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">5) Dalhin</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
@@ -347,7 +374,7 @@
                   </div>
                 </details>
                 <details class="process-step" data-step="6">
-                  <summary class="cursor-pointer p-3 bg-white rounded border flex items-center justify-between">
+                  <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
                     <span class="font-medium text-gray-800">6) Pickup</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>

@@ -5,7 +5,22 @@
       <!-- Hero / Purpose Banner -->
       <div class="mt-2 mb-8">
         <div class="rounded-2xl overflow-hidden">
-          <div class="bg-gradient-to-r from-amber-100 via-rose-100 to-orange-100 p-6 sm:p-8 border border-amber-200/60">
+          <div class="relative p-6 sm:p-8 border border-amber-200/60">
+            <!-- Animated gradient background layer -->
+            <div class="absolute inset-0 bg-gradient-to-r from-amber-100 via-rose-100 to-orange-100 animate-[gradientShift_14s_ease-in-out_infinite]"></div>
+            <!-- Subtle dotted pattern overlay -->
+            <div class="absolute inset-0 opacity-[.28]" style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;"></div>
+            <!-- Floating paw accents -->
+            <div class="pointer-events-none absolute -top-6 -left-6 text-yellow-400 opacity-50 animate-[floatSlow_10s_ease-in-out_infinite]">
+              <i class="ph-fill ph-paw-print text-7xl"></i>
+            </div>
+            <div class="pointer-events-none absolute -bottom-8 right-10 text-orange-400 opacity-40 animate-[floatSlow_12s_ease-in-out_infinite_reverse]">
+              <i class="ph-fill ph-paw-print text-8xl"></i>
+            </div>
+            <div class="pointer-events-none absolute top-6 right-1/3 text-rose-400 opacity-30 animate-[floatSlow_11s_ease-in-out_infinite]">
+              <i class="ph-fill ph-paw-print text-6xl"></i>
+            </div>
+            <div class="relative">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight flex items-center">
@@ -35,6 +50,7 @@
                   Explore All Pets
                 </a>
               </div>
+            </div>
             </div>
           </div>
         </div>

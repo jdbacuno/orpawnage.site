@@ -31,23 +31,26 @@
 
     <!-- Colorized Badges -->
     <div class="flex flex-wrap gap-2 mb-3">
-      <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer" data-description="Age" onclick="changeText(this)">
+      <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer"
+        data-description="Age" onclick="changeText(this)">
         {{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old
       </span>
       <span
-        class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Sex" onclick="changeText(this)">
+        class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
+        data-description="Sex" onclick="changeText(this)">
         {{ ucfirst($pet->sex) }}
       </span>
-      <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer" data-description="Color" onclick="changeText(this)">
+      <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer"
+        data-description="Color" onclick="changeText(this)">
         {{ ucfirst($pet->color) }}
       </span>
       @php
-        $ageYears = 0;
-        if (strtolower($pet->age_unit) === 'year' || strtolower($pet->age_unit) === 'years') {
-          $ageYears = (int) $pet->age;
-        } elseif (strtolower($pet->age_unit) === 'month' || strtolower($pet->age_unit) === 'months') {
-          $ageYears = floor(((int) $pet->age) / 12);
-        }
+      $ageYears = 0;
+      if (strtolower($pet->age_unit) === 'year' || strtolower($pet->age_unit) === 'years') {
+      $ageYears = (int) $pet->age;
+      } elseif (strtolower($pet->age_unit) === 'month' || strtolower($pet->age_unit) === 'months') {
+      $ageYears = floor(((int) $pet->age) / 12);
+      }
       @endphp
       @if ($ageYears >= 6)
       <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full border border-purple-200">
@@ -56,9 +59,17 @@
       @endif
     </div>
 
-    <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
-      class="mt-1 block text-center inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
-      <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
-    </a>
+    <div class="flex items-center justify-between">
+      <div class="text-[11px] text-gray-600 inline-flex items-center gap-2">
+        <span class="inline-flex items-center"><i class="ph-fill ph-sparkle mr-1 text-amber-600"></i>Give me a
+          chance</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="/services/{{ $pet->slug }}/adoption-form"
+          class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
+          <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
+        </a>
+      </div>
+    </div>
   </div>
 </div>

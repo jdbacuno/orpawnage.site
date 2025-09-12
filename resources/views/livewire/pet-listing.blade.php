@@ -32,7 +32,7 @@
     <div class="flex flex-wrap gap-4 items-center w-full mb-6">
       <!-- Species Filter -->
       <select wire:model.live="species"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[120px]">
         <option value="">All Species</option>
         <option value="feline">Cats</option>
         <option value="canine">Dogs</option>
@@ -40,7 +40,7 @@
 
       <!-- Gender Filter -->
       <select wire:model.live="sex"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[120px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[120px]">
         <option value="">All Genders</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
@@ -48,7 +48,7 @@
 
       <!-- Reproductive Status Filter -->
       <select wire:model.live="reproductive_status"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[200px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[200px]">
         <option value="">All Reproductive Statuses</option>
         <option value="intact">Intact</option>
         <option value="neutered">Neutered</option>
@@ -57,7 +57,7 @@
 
       <!-- Color Filter -->
       <select wire:model.live="color"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[100px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[100px]">
         <option value="">All Colors</option>
         <option value="black">Black</option>
         <option value="white">White</option>
@@ -74,7 +74,7 @@
 
       <!-- Source Filter -->
       <select wire:model.live="source"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[150px]">
         <option value="">All Sources</option>
         <option value="surrendered">Surrendered</option>
         <option value="rescued">Rescued</option>
@@ -83,7 +83,7 @@
 
       <!-- Combined Sort Dropdown -->
       <select wire:model.live="sort_by"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]">
+        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-full px-4 py-2.5 min-w-[150px]">
         <option value="">Sort By</option>
         <option value="latest">Newest Arrivals</option>
         <option value="oldest">Oldest Arrivals</option>
