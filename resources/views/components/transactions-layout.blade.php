@@ -5,22 +5,22 @@
       <h2 class="text-lg font-semibold mt-4 mb-4">Manage Transactions</h2>
       <nav class="space-y-2">
         <a href="/transactions/adoption-status"
-          class="{{ request()->is('transactions/adoption-status') || request()->is('transactions') ? 'bg-yellow-400 text-black' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-yellow-400 transition">
+          class="{{ request()->is('transactions/adoption-status') || request()->is('transactions') ? 'bg-indigo-600 text-white' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-indigo-600 hover:text-white transition">
           <i class="ph-fill ph-paw-print mr-3 text-lg"></i>
           Adoption Applications
         </a>
         <a href="/transactions/surrender-status"
-          class="{{ request()->is('transactions/surrender-status') ? 'bg-yellow-400 text-black' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-yellow-400 transition">
+          class="{{ request()->is('transactions/surrender-status') ? 'bg-indigo-600 text-white' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-indigo-600 hover:text-white transition">
           <i class="ph-fill ph-hand-arrow-up mr-3 text-lg"></i>
           Surrender Applications
         </a>
         <a href="/transactions/missing-status"
-          class="{{ request()->is('transactions/missing-status') ? 'bg-yellow-400 text-black' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-yellow-400 transition">
+          class="{{ request()->is('transactions/missing-status') ? 'bg-indigo-600 text-white' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-indigo-600 hover:text-white transition">
           <i class="ph-fill ph-magnifying-glass mr-3 text-lg"></i>
           Missing Pet Reports
         </a>
         <a href="/transactions/abused-status"
-          class="{{ request()->is('transactions/abused-status') ? 'bg-yellow-400 text-black' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-yellow-400 transition">
+          class="{{ request()->is('transactions/abused-status') ? 'bg-indigo-600 text-white' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-indigo-600 hover:text-white transition">
           <i class="ph-fill ph-warning-circle mr-3 text-lg"></i>
           Abused/Stray Reports
         </a>

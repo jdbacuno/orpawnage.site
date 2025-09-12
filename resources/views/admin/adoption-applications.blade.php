@@ -279,6 +279,10 @@
               <div class="mt-1 text-sm text-gray-900" id="petSex"></div>
             </div>
             <div>
+              <label class="text-sm font-medium text-gray-500">Color</label>
+              <div class="mt-1 text-sm text-gray-900" id="petColor"></div>
+            </div>
+            <div>
               <label class="text-sm font-medium text-gray-500">Reproductive Status</label>
               <div class="mt-1 text-sm text-gray-900" id="petReproductive"></div>
             </div>
@@ -581,6 +585,7 @@
         document.getElementById('petAge').textContent = this.dataset.petAge + ' ' + this.dataset.petAgeUnit;
         document.getElementById('petSpecies').textContent = this.dataset.petSpecies;
         document.getElementById('petSex').textContent = this.dataset.petSex;
+        document.getElementById('petColor').textContent = this.dataset.petColor;
         document.getElementById('petReproductive').textContent = this.dataset.petReproStatus;
         document.getElementById('petSource').textContent = this.dataset.petSource;
 

@@ -89,7 +89,7 @@
     @if($adoptionApplications->isEmpty())
     <div
       class="flex flex-col items-center justify-center p-10 text-center bg-white rounded-lg border border-gray-200 shadow-sm">
-      <img src="{{ asset('images/pets.png') }}" class="h-20 w-20 opacity-70 mb-3" alt="Empty" />
+      <img src="{{ asset('images/login-img.jpg') }}" class="h-20 w-20 opacity-70 mb-3 rounded-full" alt="Empty" />
       <p class="text-lg font-medium text-gray-700">No adoption applications found</p>
       <p class="text-sm text-gray-500">Try changing filters or check back later.</p>
     </div>
@@ -319,6 +319,10 @@
             <div>
               <label class="text-sm font-medium text-gray-500">Sex</label>
               <div class="mt-1 text-sm text-gray-900" id="petSex"></div>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-500">Color</label>
+              <div class="mt-1 text-sm text-gray-900" id="petColor"></div>
             </div>
             <div>
               <label class="text-sm font-medium text-gray-500">Reproductive Status</label>
@@ -554,6 +558,7 @@
         document.getElementById('petAge').textContent = this.dataset.petAge + ' ' + this.dataset.petAgeUnit;
         document.getElementById('petSpecies').textContent = this.dataset.petSpecies;
         document.getElementById('petSex').textContent = this.dataset.petSex;
+        document.getElementById('petColor').textContent = this.dataset.petColor;
         document.getElementById('petReproductive').textContent = this.dataset.petReproStatus;
         document.getElementById('petSource').textContent = this.dataset.petSource;
 

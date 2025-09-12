@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="flex flex-wrap gap-2">
-            <a href="/transactions/adoptions-status"
+            <a href="/transactions/adoption-status"
               class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Adoptions</a>
             <a href="/transactions/surrender-status"
               class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Surrenders</a>
@@ -59,8 +59,11 @@
   </div>
 
   @if ($abusedReports->isEmpty())
-  <div class="flex items-center justify-center p-6 text-gray-500">
-    <p class="text-lg">No abused/stray reports found.</p>
+  <div
+    class="flex flex-col items-center justify-center p-10 text-center bg-white rounded-lg border border-gray-200 shadow-sm">
+    <img src="{{ asset('images/abuse-img.jpg') }}" class="h-20 w-20 opacity-70 mb-3 rounded-full" alt="Empty" />
+    <p class="text-lg font-medium text-gray-700">No adoption applications found</p>
+    <p class="text-sm text-gray-500">Try changing filters or check back later.</p>
   </div>
   @else
   <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">

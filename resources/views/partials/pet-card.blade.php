@@ -1,14 +1,23 @@
 <div
-  class="relative bg-white w-full mx-auto rounded-lg shadow-lg overflow-hidden group hover:shadow-xl transition-shadow duration-300"
+  class="relative bg-white w-full mx-auto rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200"
   wire:poll.10s>
-  <a href="/services/{{ $pet->slug }}/adoption-form" class="block" target="_blank">
+  <a href="/services/{{ $pet->slug }}/adoption-form" class="block relative" target="_blank">
     <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
-      class="h-64 w-full object-cover group-hover:brightness-95 transition-brightness duration-300" />
+      class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
+    <div class="absolute top-2 left-2">
+      <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded">Pick me!</span>
+    </div>
+    <div class="absolute top-2 right-2">
+      <span class="bg-black/60 text-white text-[10px] px-2 py-1 rounded flex items-center">
+        <i class="ph-fill ph-clock mr-1"></i>
+        Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}
+      </span>
+    </div>
   </a>
 
   <!-- Slide-Up Panel with Blur -->
   <div
-    class="absolute bottom-0 left-0 w-full bg-white/50 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-translate duration-300 ease-in-out">
+    class="absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
 
     <!-- Name & ID -->
     <div class="flex justify-between items-center mb-3">
@@ -32,19 +41,24 @@
       <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200">
         {{ ucfirst($pet->color) }}
       </span>
-    </div>
-
-    <!-- HIGHLIGHTED TIMESTAMP - Now more visible -->
-    <div class="flex justify-end">
-      <span class="bg-black/10 text-gray-700 text-xs px-3 py-1 rounded-full backdrop-blur-lg inline-flex items-center">
-        <i class="ph-fill ph-clock mr-1"></i> Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}
+      @php
+        $ageYears = 0;
+        if (strtolower($pet->age_unit) === 'year' || strtolower($pet->age_unit) === 'years') {
+          $ageYears = (int) $pet->age;
+        } elseif (strtolower($pet->age_unit) === 'month' || strtolower($pet->age_unit) === 'months') {
+          $ageYears = floor(((int) $pet->age) / 12);
+        }
+      @endphp
+      @if ($ageYears >= 6)
+      <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full border border-purple-200">
+        Senior
       </span>
+      @endif
     </div>
 
-    <!-- YOUR ORIGINAL BUTTON -->
     <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
-      class="mt-3 block text-center px-3 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-yellow-400 hover:text-black transition-color duration-100 ease-in">
-      <i class="ph-fill ph-paw-print mr-1"></i> View More Details
+      class="mt-1 block text-center inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
+      <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
     </a>
   </div>
 </div>

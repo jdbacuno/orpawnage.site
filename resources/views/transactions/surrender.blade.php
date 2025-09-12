@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="flex flex-wrap gap-2">
-            <a href="/transactions/adoptions-status"
+            <a href="/transactions/adoption-status"
               class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Adoptions</a>
             <a href="/transactions/surrender-status"
               class="px-3 py-1.5 text-sm rounded-full bg-indigo-600 text-white shadow-sm">Surrenders</a>

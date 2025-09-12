@@ -1,5 +1,5 @@
 <!-- Bug Report Floating Button -->
-<div id="bug-report-container" class="fixed bottom-24 right-8 z-50">
+<div id="bug-report-container" class="fixed bottom-8 right-8 z-40">
     <!-- Floating Button -->
     <button id="bug-report-btn"
         class="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 relative"
@@ -13,7 +13,7 @@
 
     <!-- Bug Report Chatbox -->
     <div id="bug-report-chatbox"
-        class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 z-50">
+        class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 z-40">
         <div class="bg-orange-500 text-white p-4 rounded-t-lg">
             <div class="flex justify-between items-center">
                 <h3 class="font-semibold">Report a Bug</h3>
