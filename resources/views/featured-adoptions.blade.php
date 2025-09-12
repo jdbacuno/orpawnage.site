@@ -1,9 +1,10 @@
 <x-layout>
   <!-- Hero -->
   <section id="mainContent" class="relative bg-gradient-to-b from-orange-50 to-white">
-    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-16">
+    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-6">
       <div class="text-center">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm font-medium">
+        <span
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm font-medium">
           <i class="ph-fill ph-paw-print"></i>
           Celebrating Matches
         </span>
@@ -65,17 +66,21 @@
           <div class="mb-4 break-inside-avoid" style="break-inside: avoid;">
             <div
               class="gallery-item relative overflow-hidden rounded-xl shadow-sm group cursor-pointer transition-all duration-300 hover:shadow-lg"
-              data-index="{{ $__idx }}"
-              data-src="{{ asset('storage/' . $image->image_path) }}" data-month="{{ date('n', strtotime($month)) }}"
-              data-year="{{ date('Y', strtotime($month)) }}">
+              data-index="{{ $__idx }}" data-src="{{ asset('storage/' . $image->image_path) }}"
+              data-month="{{ date('n', strtotime($month)) }}" data-year="{{ date('Y', strtotime($month)) }}">
               <img src="{{ asset('storage/' . $image->image_path) }}" alt="Featured adoption"
-                class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy">
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              </div>
               <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 backdrop-blur">
+                <span
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 backdrop-blur">
                   {{ date('M Y', strtotime($month)) }}
                 </span>
-                <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-orange-500 text-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-orange-500 text-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <i class="ph ph-magnifying-glass"></i>
                 </span>
               </div>
@@ -98,8 +103,10 @@
 
       @if($totalImages > $initialLimit)
       <div id="loadMoreWrapper" class="mt-8 text-center">
-        <button id="loadMoreBtn" class="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition disabled:opacity-60 disabled:cursor-not-allowed">
-          <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <button id="loadMoreBtn"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition disabled:opacity-60 disabled:cursor-not-allowed">
+          <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
           </svg>
@@ -112,11 +119,14 @@
 
   <!-- Image Modal -->
   <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4">
-    <button id="closeModal" class="absolute top-4 right-4 text-white hover:text-orange-400 text-4xl leading-none">&times;</button>
-    <button id="prevImage" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
+    <button id="closeModal"
+      class="absolute top-4 right-4 text-white hover:text-orange-400 text-4xl leading-none">&times;</button>
+    <button id="prevImage"
+      class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
       <i class="ph ph-caret-left text-2xl"></i>
     </button>
-    <button id="nextImage" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
+    <button id="nextImage"
+      class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
       <i class="ph ph-caret-right text-2xl"></i>
     </button>
     <div class="relative max-w-6xl max-h-[90vh]">
