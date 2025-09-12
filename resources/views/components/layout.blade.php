@@ -208,7 +208,7 @@
 
         <div class="max-w-screen-xl flex flex-wrap gap-y-4 items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3">
-            <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="h-8" alt="Flowbite Logo" />
+            <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="h-10 sm:h-8" alt="Flowbite Logo" />
             {{-- <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
                 class="text-yellow-500">PAW</strong>nage</span> --}}
           </a>

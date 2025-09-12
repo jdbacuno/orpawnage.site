@@ -205,7 +205,7 @@
         <li class="my-3 px-2">
           <div class="flex items-center gap-3">
             <!-- User Image -->
-            <img src="{{ asset('images/orpawnage-logo-2.png') }}" alt="User" class="w-10 h-10 rounded object-cover" />
+            <img src="{{ asset('images/orpawnage-logo.png') }}" alt="User" class="w-10 h-10 rounded object-cover" />
 
             <!-- Admin Info -->
             <div class="flex flex-col text-gray-900 text-sm leading-tight flex-1 max-w-28">

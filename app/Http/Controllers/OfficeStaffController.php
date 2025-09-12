@@ -76,13 +76,22 @@ class OfficeStaffController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                // Delete old image if it exists and isn't a default image
-                if ($staff->image_path && !str_contains($staff->image_path, 'profile_pic.png')) {
-                    Storage::disk('public')->delete($staff->image_path);
-                }
+                // Store new image first
+                $newPath = $request->file('image')->store('staff-images', 'public');
+                $data['image_path'] = $newPath;
 
-                // Store new image
-                $data['image_path'] = $request->file('image')->store('staff-images', 'public');
+                // Then safely delete old image if it exists and isn't a default image
+                if ($staff->image_path && !str_contains($staff->image_path, 'profile_pic.png')) {
+                    if (Storage::disk('public')->exists($staff->image_path)) {
+                        Storage::disk('public')->delete($staff->image_path);
+                    } else {
+                        // Fallback: try deleting via public path if stored path got prefixed elsewhere
+                        $publicPath = public_path('storage/' . ltrim($staff->image_path, '/'));
+                        if (is_file($publicPath)) {
+                            @unlink($publicPath);
+                        }
+                    }
+                }
             } catch (\Exception $e) {
                 return back()->with('error', 'Failed to update image: ' . $e->getMessage());
             }
@@ -107,7 +116,14 @@ class OfficeStaffController extends Controller
         try {
             // Only delete the image if it exists and isn't the default profile image
             if ($staff->image_path && !str_contains($staff->image_path, 'profile_pic.png')) {
-                Storage::disk('public')->delete($staff->image_path);
+                if (Storage::disk('public')->exists($staff->image_path)) {
+                    Storage::disk('public')->delete($staff->image_path);
+                } else {
+                    $publicPath = public_path('storage/' . ltrim($staff->image_path, '/'));
+                    if (is_file($publicPath)) {
+                        @unlink($publicPath);
+                    }
+                }
             }
 
             $staff->delete();
