@@ -136,12 +136,28 @@
         </div>
         @endif
 
+        <!-- Form Stepper -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
+              <div id="surrenderProgress" class="h-2 bg-orange-500 rounded-full" style="width: 25%"></div>
+            </div>
+            <span id="surrenderStepLabel" class="text-xs text-gray-600">Step 1 of 4</span>
+          </div>
+          <div class="mt-2 grid grid-cols-4 gap-2 text-[11px] text-gray-600">
+            <div class="text-center">Your Info</div>
+            <div class="text-center">Animal</div>
+            <div class="text-center">Documents</div>
+            <div class="text-center">Declaration</div>
+          </div>
+        </div>
+
         <form method="POST" action="/services/surrender" id="surrenderForm" enctype="multipart/form-data"
-          class="space-y-8">
+          class="space-y-6">
           @csrf
 
-          <!-- Surrenderer's Information -->
-          <div class="space-y-4">
+          <!-- Step 1: Surrenderer's Information -->
+          <div class="surrender-step" data-step="1">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
               <i class="ph-fill ph-user-circle mr-2"></i>Surrenderer's Information
             </h3>
@@ -236,8 +252,8 @@
             </div>
           </div>
 
-          <!-- Animal's Information -->
-          <div class="space-y-4">
+          <!-- Step 2: Animal's Information -->
+          <div class="surrender-step hidden" data-step="2">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
               <i class="ph-fill ph-paw-print mr-2"></i>Animal's Information
             </h3>
@@ -259,7 +275,7 @@
                 </label>
                 <input type="text" id="species" name="species" placeholder="Enter the type of animal"
                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  value="{{ old('pet_name') }}" />
+                  value="{{ old('pet_name') }}" required />
                 <x-form-error name="species" />
               </div>
 
@@ -300,8 +316,8 @@
             </div>
           </div>
 
-          <!-- Documentation -->
-          <div class="space-y-4">
+          <!-- Step 3: Documentation -->
+          <div class="surrender-step hidden" data-step="3">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center">
               <i class="ph-fill ph-file mr-2"></i>Documentation
             </h3>
@@ -349,37 +365,51 @@
             </div>
           </div>
 
-          <!-- Declaration -->
-          <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
-            <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
-              <i class="ph-fill ph-hand-palm mr-2"></i>Declaration
-            </h4>
-            <div class="text-sm text-gray-700 leading-relaxed">
-              <p class="mb-3">I certify that the information provided in this surrender form is true and accurate to the
-                best of my knowledge.</p>
-              <p>I understand that by surrendering this animal, I am transferring all rights of ownership to the
-                shelter, and I will not be able to reclaim the animal once the surrender process is complete.</p>
+          <!-- Step 4: Declaration & Submit -->
+          <div class="surrender-step hidden" data-step="4">
+            <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
+              <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
+                <i class="ph-fill ph-hand-palm mr-2"></i>Declaration
+              </h4>
+              <div class="text-sm text-gray-700 leading-relaxed">
+                <p class="mb-3">I certify that the information provided in this surrender form is true and accurate to
+                  the best of my knowledge.</p>
+                <p>I understand that by surrendering this animal, I am transferring all rights of ownership to the
+                  shelter, and I will not be able to reclaim the animal once the surrender process is complete.</p>
+              </div>
+              <div class="mt-4 flex items-center">
+                <input type="checkbox" id="declaration" name="declaration" required
+                  class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" checked>
+                <label for="declaration" class="ml-2 block text-sm text-gray-700">
+                  I agree to the terms above <span class="text-red-500">*</span>
+                </label>
+              </div>
+              <x-form-error name="declaration" />
             </div>
-            <div class="mt-4 flex items-center">
-              <input type="checkbox" id="declaration" name="declaration" required
-                class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" checked>
-              <label for="declaration" class="ml-2 block text-sm text-gray-700">
-                I agree to the terms above <span class="text-red-500">*</span>
-              </label>
+
+            <div class="flex justify-end mt-4">
+              <button type="submit" id="surrenderSubmit"
+                class="px-8 py-3 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                    clip-rule="evenodd" />
+                </svg>
+                Submit Surrender Request
+              </button>
             </div>
-            <x-form-error name="declaration" />
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-full sm:w-fit px-8 py-3 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-                  clip-rule="evenodd" />
-              </svg>
-              Submit Surrender Request
+          <!-- Wizard Controls -->
+          <div class="mt-4 flex items-center justify-between">
+            <button type="button" id="surrenderPrev"
+              class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40"
+              disabled>
+              Back
+            </button>
+            <button type="button" id="surrenderNext"
+              class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              Next
             </button>
           </div>
         </form>
@@ -576,5 +606,64 @@
         calculateAge(birthdate);
       }
     });
+
+    // Wizard logic for Surrender form
+    (function() {
+      const steps = Array.from(document.querySelectorAll('.surrender-step'));
+      const nextBtn = document.getElementById('surrenderNext');
+      const prevBtn = document.getElementById('surrenderPrev');
+      const progress = document.getElementById('surrenderProgress');
+      const label = document.getElementById('surrenderStepLabel');
+      const total = steps.length || 4;
+      let current = 1;
+
+      function showStep(step) {
+        steps.forEach(s => s.classList.add('hidden'));
+        const active = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (active) active.classList.remove('hidden');
+
+        const pct = Math.max(25, Math.min(100, (step / total) * 100));
+        progress.style.width = pct + '%';
+        label.textContent = `Step ${step} of ${total}`;
+
+        prevBtn.disabled = step === 1;
+        nextBtn.classList.toggle('hidden', step === total);
+      }
+
+      function validateStep(step) {
+        const container = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (!container) return true;
+        const requiredInputs = container.querySelectorAll('[required]');
+        for (const input of requiredInputs) {
+          if (input.type === 'file') {
+            if (!input.files || input.files.length === 0) {
+              input.reportValidity();
+              return false;
+            }
+          } else if (input.type === 'checkbox') {
+            if (!input.checked) {
+              input.reportValidity();
+              return false;
+            }
+          } else if (!input.value) {
+            input.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      nextBtn?.addEventListener('click', () => {
+        if (!validateStep(current)) return;
+        current = Math.min(total, current + 1);
+        showStep(current);
+      });
+      prevBtn?.addEventListener('click', () => {
+        current = Math.max(1, current - 1);
+        showStep(current);
+      });
+
+      showStep(current);
+    })();
   </script>
 </x-layout>

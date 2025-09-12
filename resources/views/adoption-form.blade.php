@@ -136,7 +136,7 @@
         </div>
       </div>
 
-      <!-- Bottom: Adoption Form -->
+      <!-- Bottom: Adoption Form (Wizard) -->
       <div class="p-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md">
         <!-- Alerts -->
         @if (session('success'))
@@ -188,70 +188,69 @@
         </div>
         @endif
 
-        <h3 class="text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200 flex items-center">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
           <i class="ph-fill ph-clipboard-text mr-2 text-orange-500"></i>Adoption Application Form
         </h3>
+
+        <!-- Stepper -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
+              <div id="adoptProgress" class="h-2 bg-orange-500 rounded-full" style="width: 25%"></div>
+            </div>
+            <span id="adoptStepLabel" class="text-xs text-gray-600">Step 1 of 4</span>
+          </div>
+          <div class="mt-2 grid grid-cols-4 gap-2 text-[11px] text-gray-600">
+            <div class="text-center">Personal</div>
+            <div class="text-center">Pet Qs</div>
+            <div class="text-center">Documents</div>
+            <div class="text-center">Oath & Submit</div>
+          </div>
+        </div>
 
         <form method="POST" action="/services/{{ $pet->slug }}/adoption-form" id="applicationForm"
           enctype="multipart/form-data">
           @csrf
 
-          <!-- Personal Information -->
-          <div class="mb-6">
+          <!-- Step 1: Personal Information -->
+          <div class="adopt-step" data-step="1">
             <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
               <i class="ph-fill ph-user-circle mr-2"></i>Personal Information
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
-                <input type="text" name="full_name"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your full name" value="{{ old('full_name') }}" required />
+                <input type="text" name="full_name" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" placeholder="Your full name" value="{{ old('full_name') }}" required />
                 <x-form-error name="full_name" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                <input type="email" name="email"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Your email" value="{{ auth()->user()->email }}" readonly required />
+                <input type="email" name="email" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" placeholder="Your email" value="{{ auth()->user()->email }}" readonly required />
                 <x-form-error name="email" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Birthdate</label>
-                <input type="date" name="birthdate" id="birthdate"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  value="{{ old('birthdate') }}" required max="{{ date('Y-m-d') }}"
-                  onchange="calculateAge(this.value)" />
+                <input type="date" name="birthdate" id="birthdate" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" value="{{ old('birthdate') }}" required max="{{ date('Y-m-d') }}" onchange="calculateAge(this.value)" />
                 <x-form-error name="birthdate" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Age</label>
-                <input type="number" name="age" id="age"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Auto-calculated" value="{{ old('age') }}" readonly required />
+                <input type="number" name="age" id="age" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" placeholder="Auto-calculated" value="{{ old('age') }}" readonly required />
                 <x-form-error name="age" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
-                <input type="text" name="contact_number"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Your contact number"
-                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}" readonly
-                  required />
+                <input type="text" name="contact_number" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" placeholder="Your contact number" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}" readonly required />
                 <x-form-error name="contact_number" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Address</label>
-                <input type="text" name="address"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your residential address" value="{{ old('address') }}" required />
+                <input type="text" name="address" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" placeholder="Your residential address" value="{{ old('address') }}" required />
                 <x-form-error name="address" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Civil Status</label>
-                <select name="civil_status"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  required>
+                <select name="civil_status" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" required>
                   <option value="" disabled {{ old('civil_status') ? '' : 'selected' }}>Select status</option>
                   <option value="Single" {{ old('civil_status')=='Single' ? 'selected' : '' }}>Single</option>
                   <option value="Married" {{ old('civil_status')=='Married' ? 'selected' : '' }}>Married</option>
@@ -261,100 +260,86 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Citizenship</label>
-                <input type="text" name="citizenship"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your citizenship" value="{{ old('citizenship') }}" required />
+                <input type="text" name="citizenship" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" placeholder="Your citizenship" value="{{ old('citizenship') }}" required />
                 <x-form-error name="citizenship" />
               </div>
             </div>
           </div>
 
-          <!-- Pet Information + Documentation + Oath -->
-          <div class="mb-6">
+
+          <!-- Step 2: Pet-related Questions -->
+          <div class="adopt-step hidden" data-step="2">
             <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
               <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-              <!-- Left Column: Reason -->
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Why do you want to adopt?</label>
-                <textarea name="reason_for_adoption"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  rows="10" placeholder="Explain why you want to adopt this pet"
-                  required>{{ old('reason_for_adoption') }}</textarea>
+                <textarea name="reason_for_adoption" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" rows="8" placeholder="Explain why you want to adopt this pet" required>{{ old('reason_for_adoption') }}</textarea>
                 <x-form-error name="reason_for_adoption" />
               </div>
-
-              <!-- Right Column: Veterinarian + Existing Pets + Docs + Oath -->
               <div class="flex flex-col gap-4">
-
                 <div>
                   <label class="block text-sm font-medium text-gray-600 mb-1">Do you visit a Veterinarian?</label>
-                  <select name="visit_veterinarian"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    required>
+                  <select name="visit_veterinarian" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" required>
                     <option value="" disabled {{ old('visit_veterinarian') ? '' : 'selected' }}>Select option</option>
                     <option value="Yes" {{ old('visit_veterinarian')=='Yes' ? 'selected' : '' }}>Yes</option>
                     <option value="No" {{ old('visit_veterinarian')=='No' ? 'selected' : '' }}>No</option>
-                    <option value="Sometimes" {{ old('visit_veterinarian')=='Sometimes' ? 'selected' : '' }}>Sometimes
-                    </option>
+                    <option value="Sometimes" {{ old('visit_veterinarian')=='Sometimes' ? 'selected' : '' }}>Sometimes</option>
                   </select>
                   <x-form-error name="visit_veterinarian" />
                 </div>
-
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Do you have any pet(s) in your house? How
-                    many?</label>
-                  <input type="number" name="existing_pets"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Number of pets you currently have" value="{{ old('existing_pets') }}" required />
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Do you have any pet(s) in your house? How many?</label>
+                  <input type="number" name="existing_pets" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" placeholder="Number of pets you currently have" value="{{ old('existing_pets') }}" required />
                   <x-form-error name="existing_pets" />
                 </div>
-
-                <!-- Documentation -->
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
-                        class="text-red-500">*</span></label>
-                    <button type="button" onclick="openValidIdModal()"
-                      class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">
-                      View Accepted Valid IDs
-                    </button>
-                  </div>
-                  <input type="file" name="valid_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                    required />
-                  <x-form-error name="valid_id" />
-                </div>
-
-                <!-- Oath Declaration -->
-                <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
-                  <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
-                    <i class="ph-fill ph-hand-palm mr-2"></i>Oath Declaration
-                  </h4>
-                  <div class="text-sm text-gray-700 leading-relaxed">
-                    I, <span id="inserted_name" class="font-semibold text-orange-600">[Your Full Name]</span>, do
-                    solemnly
-                    swear that I will take good care of my adopted pet, and he/she will not stray in the street again. I
-                    will take him/her to a veterinarian for regular check-ups and/or vaccination.
-                    <br><br>
-                    Issued this <span id="oath_day" class="font-semibold text-orange-600">[Day]</span> day of <span
-                      id="oath_month" class="font-semibold text-orange-600">[Month]</span>, 20<span id="oath_year"
-                      class="font-semibold text-orange-600">[YY]</span>, at the Angeles City Veterinary Office - Animal
-                    Shelter, Angeles City Pampanga.
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-              <i class="ph-fill ph-paw-print mr-2"></i>Submit Adoption Request
+          <!-- Step 3: Documents -->
+          <div class="adopt-step hidden" data-step="3">
+            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+              <i class="ph-fill ph-identification-card mr-2"></i>Documents
+            </h4>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span class="text-red-500">*</span></label>
+                <button type="button" onclick="openValidIdModal()" class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">View Accepted Valid IDs</button>
+              </div>
+              <input type="file" name="valid_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" required />
+              <x-form-error name="valid_id" />
+            </div>
+          </div>
+
+          <!-- Step 4: Oath & Submit -->
+          <div class="adopt-step hidden" data-step="4">
+            <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
+              <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
+                <i class="ph-fill ph-hand-palm mr-2"></i>Oath Declaration
+              </h4>
+              <div class="text-sm text-gray-700 leading-relaxed">
+                I, <span id="inserted_name" class="font-semibold text-orange-600">[Your Full Name]</span>, do solemnly swear that I will take good care of my adopted pet, and he/she will not stray in the street again. I will take him/her to a veterinarian for regular check-ups and/or vaccination.
+                <br><br>
+                Issued this <span id="oath_day" class="font-semibold text-orange-600">[Day]</span> day of <span id="oath_month" class="font-semibold text-orange-600">[Month]</span>, 20<span id="oath_year" class="font-semibold text-orange-600">[YY]</span>, at the Angeles City Veterinary Office - Animal Shelter, Angeles City Pampanga.
+              </div>
+            </div>
+
+            <div class="flex justify-end mt-4">
+              <button type="submit" id="submitAdoption" class="px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                <i class="ph-fill ph-paw-print mr-2"></i>Submit Adoption Request
+              </button>
+            </div>
+          </div>
+
+          <!-- Wizard Controls -->
+          <div class="mt-4 flex items-center justify-between">
+            <button type="button" id="adoptPrev" class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40" disabled>
+              Back
+            </button>
+            <button type="button" id="adoptNext" class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              Next
             </button>
           </div>
 
@@ -419,6 +404,59 @@
   </div>
 
   <script>
+    // Wizard logic for Adoption form
+    (function() {
+      const steps = Array.from(document.querySelectorAll('.adopt-step'));
+      const nextBtn = document.getElementById('adoptNext');
+      const prevBtn = document.getElementById('adoptPrev');
+      const progress = document.getElementById('adoptProgress');
+      const label = document.getElementById('adoptStepLabel');
+      const total = steps.length || 4;
+      let current = 1;
+
+      function showStep(step) {
+        steps.forEach(s => s.classList.add('hidden'));
+        const active = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (active) active.classList.remove('hidden');
+
+        const pct = Math.max(25, Math.min(100, (step / total) * 100));
+        progress.style.width = pct + '%';
+        label.textContent = `Step ${step} of ${total}`;
+
+        prevBtn.disabled = step === 1;
+        nextBtn.classList.toggle('hidden', step === total);
+      }
+
+      function validateStep(step) {
+        const container = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (!container) return true;
+        const requiredInputs = container.querySelectorAll('[required]');
+        for (const input of requiredInputs) {
+          if (input.type === 'file') {
+            if (!input.files || input.files.length === 0) {
+              input.reportValidity();
+              return false;
+            }
+          } else if (!input.value) {
+            input.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      nextBtn?.addEventListener('click', () => {
+        if (!validateStep(current)) return;
+        current = Math.min(total, current + 1);
+        showStep(current);
+      });
+      prevBtn?.addEventListener('click', () => {
+        current = Math.max(1, current - 1);
+        showStep(current);
+      });
+
+      showStep(current);
+    })();
     // OATH DATA AUTO-FILL
     document.addEventListener('DOMContentLoaded', function () {
       const fullNameInput = document.querySelector('input[name="full_name"]');

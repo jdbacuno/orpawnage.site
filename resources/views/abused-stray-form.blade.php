@@ -39,171 +39,154 @@
         </div>
         @endif
 
-        <!-- Form Start -->
+        <!-- Form Start (Wizard) -->
         <form id="reportForm" action="{{ route('report.animal.abuse') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
-          <!-- Add this note section -->
-          <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-lg">
-            <div class="flex items-start">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clip-rule="evenodd" />
-                </svg>
+          <!-- Stepper -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
+                <div id="stepProgressAbuse" class="h-2 bg-orange-500 rounded-full" style="width: 25%"></div>
               </div>
-              <div class="ml-3">
-                <p class="text-sm text-red-700">
-                  <strong>Important Notice:</strong> While we review all reports, please understand that we may not be
-                  able to immediately investigate or resolve every case due to resource limitations. Some reports may be
-                  grouped with similar cases in your area. You will receive a confirmation when your report is received,
-                  and may receive a generic notification when action is taken. For urgent cases requiring immediate
-                  intervention, please contact local authorities directly.
-                </p>
+              <span id="stepLabelAbuse" class="text-xs text-gray-600">Step 1 of 4</span>
+            </div>
+          </div>
+
+          <!-- Step 1: Notice -->
+          <div class="wizard-step-abuse" data-step="1">
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-lg">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-red-700">
+                    <strong>Important Notice:</strong> While we review all reports, please understand that we may not be able to immediately investigate or resolve every case due to resource limitations. Some reports may be grouped with similar cases in your area. You will receive a confirmation when your report is received, and may receive a generic notification when action is taken. For urgent cases, please contact local authorities directly.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mb-6">
-            <!-- Reporter Information -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-user-circle mr-2"></i>Reporter's Information
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Full Name (Optional)</label>
-                  <input type="text" name="full_name" value="{{ old('full_name') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Your full name" />
-                  <x-form-error name="full_name" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                  <input type="tel" name="contact_no"
-                    value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly
-                    required />
-                  <x-form-error name="contact_no" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Incident Information -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-map-pin mr-2"></i>Incident Information
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Where did it happen?</label>
-                  <input type="text" name="incident_location" value="{{ old('incident_location') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Where the incident occurred" required />
-                  <x-form-error name="incident_location" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">When did it happen?</label>
-                  <input type="date" name="incident_date" value="{{ old('incident_date') }}" max="{{ date('Y-m-d') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    required />
-                  <x-form-error name="incident_date" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Animal Information -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-paw-print mr-2"></i>Animal Information
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Type of Animal</label>
-                  <input type="text" name="species" value="{{ old('species') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="e.g. dog, cat, monkey..." required />
-                  <x-form-error name="species" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">What happened to the animal?</label>
-                  <select name="animal_condition"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    required>
-                    <option value="" disabled selected>Select condition</option>
-                    <option value="Illegal Meat Trading or Consumption" {{
-                      old('animal_condition')=='Illegal Meat Trading or Consumption' ? 'selected' : '' }}>
-                      Illegal Meat Trading/Consumption</option>
-                    <option value="Wounded" {{ old('animal_condition')=='Wounded' ? 'selected' : '' }}>Wounded</option>
-                    <option value="Physically Abused" {{ old('animal_condition')=='Physically Abused' ? 'selected' : ''
-                      }}>Physically Abused</option>
-                    <option value="Stray" {{ old('animal_condition')=='Stray' ? 'selected' : '' }}>Stray</option>
-                    <option value="Other" {{ old('animal_condition')=='Other' ? 'selected' : '' }}>Other</option>
-                  </select>
-                  <x-form-error name="animal_condition" />
-                </div>
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
-                  <textarea name="additional_notes"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    rows="4" placeholder="Provide additional details about the incident"
-                    required>{{ old('additional_notes') }}</textarea>
-                  <x-form-error name="additional_notes" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Photos of Evidence -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-camera mr-2"></i>Valid ID and Photos of Incident
-              </h4>
+          <!-- Step 2: Reporter Info -->
+          <div class="wizard-step-abuse hidden" data-step="2">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-user-circle mr-2"></i>Reporter's Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <!-- Valid ID Upload -->
-                <div class="mb-4">
-                  <div class="flex justify-between items-center mb-1">
-                    <label class="block text-sm font-medium text-gray-700">Upload Valid ID <span
-                        class="text-red-500">*</span></label>
-                    <button type="button" onclick="openValidIdModal()"
-                      class="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-                      View Accepted Valid IDs
-                    </button>
-                  </div>
-                  <input type="file" name="valid_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                    required />
-                  <x-form-error name="valid_id" />
-                </div>
-
-                <!-- Incident Photos Upload -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Incident and Its Location
-                    (Max 10) <span class="text-red-500">*</span></label>
-
-                  <!-- Hidden Input -->
-                  <input type="file" name="incident_photos[]" id="incident_photos_input" multiple accept="image/*"
-                    class="hidden" />
-
-                  <!-- Preview Container -->
-                  <div id="imagePreviews" class="my-2 grid grid-cols-3 gap-2"></div>
-
-                  <!-- Add More Button -->
-                  <button type="button" id="addMoreBtn"
-                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
-                    <i class="ph-fill ph-plus-circle"></i> Add More Photos
-                  </button>
-
-                  <x-form-error name="incident_photos" />
-                </div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name (Optional)</label>
+                <input type="text" name="full_name" value="{{ old('full_name') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="Your full name" />
+                <x-form-error name="full_name" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" name="contact_no"
+                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly required />
+                <x-form-error name="contact_no" />
               </div>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+          <!-- Step 3: Incident & Animal Info -->
+          <div class="wizard-step-abuse hidden" data-step="3">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-map-pin mr-2"></i>Incident Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Where did it happen?</label>
+                <input type="text" name="incident_location" value="{{ old('incident_location') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="Where the incident occurred" required />
+                <x-form-error name="incident_location" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">When did it happen?</label>
+                <input type="date" name="incident_date" value="{{ old('incident_date') }}" max="{{ date('Y-m-d') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required />
+                <x-form-error name="incident_date" />
+              </div>
+            </div>
+
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-paw-print mr-2"></i>Animal Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Type of Animal</label>
+                <input type="text" name="species" value="{{ old('species') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="e.g. dog, cat, monkey..." required />
+                <x-form-error name="species" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">What happened to the animal?</label>
+                <select name="animal_condition"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  required>
+                  <option value="" disabled selected>Select condition</option>
+                  <option value="Illegal Meat Trading or Consumption" {{ old('animal_condition')=='Illegal Meat Trading or Consumption' ? 'selected' : '' }}>Illegal Meat Trading/Consumption</option>
+                  <option value="Wounded" {{ old('animal_condition')=='Wounded' ? 'selected' : '' }}>Wounded</option>
+                  <option value="Physically Abused" {{ old('animal_condition')=='Physically Abused' ? 'selected' : '' }}>Physically Abused</option>
+                  <option value="Stray" {{ old('animal_condition')=='Stray' ? 'selected' : '' }}>Stray</option>
+                  <option value="Other" {{ old('animal_condition')=='Other' ? 'selected' : '' }}>Other</option>
+                </select>
+                <x-form-error name="animal_condition" />
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                <textarea name="additional_notes"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  rows="4" placeholder="Provide additional details about the incident" required>{{ old('additional_notes') }}</textarea>
+                <x-form-error name="additional_notes" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Photos -->
+          <div class="wizard-step-abuse hidden" data-step="4">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-camera mr-2"></i>Valid ID and Photos of Incident
+            </h4>
+            <div>
+              <div class="mb-4">
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-sm font-medium text-gray-700">Upload Valid ID <span class="text-red-500">*</span></label>
+                  <button type="button" onclick="openValidIdModal()" class="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer">View Accepted Valid IDs</button>
+                </div>
+                <input type="file" name="valid_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" required />
+                <x-form-error name="valid_id" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Incident and Its Location (Max 10) <span class="text-red-500">*</span></label>
+                <input type="file" name="incident_photos[]" id="incident_photos_input" multiple accept="image/*" class="hidden" />
+                <div id="imagePreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+                <button type="button" id="addMoreBtn" class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+                  <i class="ph-fill ph-plus-circle"></i> Add More Photos
+                </button>
+                <x-form-error name="incident_photos" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Wizard Controls -->
+          <div class="mt-4 flex items-center justify-between">
+            <button type="button" id="prevStepAbuse" class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40" disabled>
+              Back
+            </button>
+            <button type="button" id="nextStepAbuse" class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              Next
+            </button>
+            <button type="submit" id="submitAbuse" class="hidden px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
               <i class="ph-fill ph-warning mr-2"></i>Submit Report
             </button>
           </div>
@@ -253,6 +236,63 @@
   </div>
 
   <script>
+    // Wizard logic for Abused/Stray form
+    (function() {
+      const steps = Array.from(document.querySelectorAll('.wizard-step-abuse'));
+      const nextBtn = document.getElementById('nextStepAbuse');
+      const prevBtn = document.getElementById('prevStepAbuse');
+      const submitBtn = document.getElementById('submitAbuse');
+      const progress = document.getElementById('stepProgressAbuse');
+      const label = document.getElementById('stepLabelAbuse');
+      const total = steps.length || 4;
+      let current = 1;
+
+      function showStep(step) {
+        steps.forEach(s => s.classList.add('hidden'));
+        const active = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (active) active.classList.remove('hidden');
+
+        const pct = Math.max(25, Math.min(100, (step / total) * 100));
+        progress.style.width = pct + '%';
+        label.textContent = `Step ${step} of ${total}`;
+
+        prevBtn.disabled = step === 1;
+        nextBtn.classList.toggle('hidden', step === total);
+        submitBtn.classList.toggle('hidden', step !== total);
+      }
+
+      function validateStep(step) {
+        // Minimal per-step required fields enforcement
+        const container = steps.find(s => s.getAttribute('data-step') === String(step));
+        if (!container) return true;
+        const requiredInputs = container.querySelectorAll('[required]');
+        for (const input of requiredInputs) {
+          if (input.type === 'file') {
+            if (!input.files || input.files.length === 0) {
+              input.reportValidity();
+              return false;
+            }
+          } else if (!input.value) {
+            input.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      nextBtn?.addEventListener('click', () => {
+        if (!validateStep(current)) return;
+        current = Math.min(total, current + 1);
+        showStep(current);
+      });
+      prevBtn?.addEventListener('click', () => {
+        current = Math.max(1, current - 1);
+        showStep(current);
+      });
+
+      showStep(current);
+    })();
+
     const input = document.getElementById('incident_photos_input');
     const previewContainer = document.getElementById('imagePreviews');
     const addMoreBtn = document.getElementById('addMoreBtn');

@@ -1,6 +1,6 @@
 <x-layout>
   <section class="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center"
-    style="background-image: url('{{ asset('images/missing.jpeg') }}')" id="mainContent">
+    style="background-image: url('{{ asset('images/missing.png') }}')" id="mainContent">
 
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/40 z-0"></div>
@@ -39,166 +39,142 @@
         </div>
         @endif
 
-        <!-- Form Start -->
+        <!-- Form Start (Wizard) -->
         <form id="reportForm" action="{{ route('report.missing.pet') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
-          <!-- Add this note section -->
-          <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-lg">
-            <div class="flex items-start">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clip-rule="evenodd" />
-                </svg>
+          <!-- Stepper -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
+                <div id="stepProgressMissing" class="h-2 bg-orange-500 rounded-full" style="width: 20%"></div>
               </div>
-              <div class="ml-3">
-                <p class="text-sm text-red-700">
-                  <strong>Please note:</strong> Our team does not actively search for missing pets. Once your report is
-                  reviewed and approved, it will be shared with other registered users on this website via email to help
-                  spread awareness. You may also contact us through our official Facebook page,
-                  <strong>Orpawnage</strong>, to request that your missing pet poster be posted on their page.
-                </p>
+              <span id="stepLabelMissing" class="text-xs text-gray-600">Step 1 of 5</span>
+            </div>
+          </div>
+
+          <!-- Step 1: Notice -->
+          <div class="wizard-step-missing" data-step="1">
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-lg">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-red-700">
+                    <strong>Please note:</strong> Our team does not actively search for missing pets. Approved reports are shared via email to raise awareness. You may contact <strong>Orpawnage</strong> on Facebook to request posting a poster.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mb-6">
-            <!-- Owner Information -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-user-circle mr-2"></i>Owner's Information
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Owner's Name</label>
-                  <input type="text" name="owner_name" value="{{ old('owner_name') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Your full name" required />
-                  <x-form-error name="owner_name" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                  <input type="tel" name="contact_no"
-                    value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly
-                    required />
-                  <x-form-error name="contact_no" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Pet Information -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Pet's Name</label>
-                  <input type="text" name="pet_name" value="{{ old('pet_name') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Pet's name" required />
-                  <x-form-error name="pet_name" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Last Seen Location</label>
-                  <input type="text" name="last_seen_location" value="{{ old('last_seen_location') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Where the pet was last seen" required />
-                  <x-form-error name="last_seen_location" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Last Seen Date</label>
-                  <input type="date" name="last_seen_date" value="{{ old('last_seen_date') }}" max="{{ date('Y-m-d') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    required />
-                  <x-form-error name="last_seen_date" />
-                </div>
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Additional Info</label>
-                  <textarea name="pet_description"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    rows="4" placeholder="Breed, color, distinguishing marks, reward amount etc."
-                    required>{{ old('pet_description') }}</textarea>
-                  <x-form-error name="pet_description" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Photos Section -->
-            <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <i class="ph-fill ph-camera mr-2"></i>Photos
-              </h4>
+          <!-- Step 2: Owner Info -->
+          <div class="wizard-step-missing hidden" data-step="2">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-user-circle mr-2"></i>Owner's Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <!-- Valid ID Upload -->
-                <div class="mb-4">
-                  <div class="flex justify-between items-center mb-1">
-                    <label class="block text-sm font-medium text-gray-700">Upload Valid ID <span
-                        class="text-red-500">*</span></label>
-                    <button type="button" onclick="openValidIdModal()"
-                      class="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-                      View Accepted Valid IDs
-                    </button>
-                  </div>
-                  <input type="file" name="valid_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                    required />
-                  <x-form-error name="valid_id" />
-                </div>
-
-                <!-- Pet Photos Upload -->
-                <div class="mb-4">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Your Pet (Max 5) <span
-                      class="text-red-500">*</span></label>
-
-                  <!-- Hidden Input -->
-                  <input type="file" name="pet_photos[]" id="pet_photos_input" multiple accept="image/*" class="hidden"
-                    required />
-
-                  <!-- Preview Container -->
-                  <div id="petPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
-
-                  <!-- Add More Button -->
-                  <button type="button" id="addPetPhotosBtn"
-                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
-                    <i class="ph-fill ph-plus-circle"></i> Add Pet Photos
-                  </button>
-
-                  <x-form-error name="pet_photos" />
-                </div>
-
-                <!-- Location Photos Upload -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Last Seen Location or
-                    Possible Locations Your Pet Might Go (Max
-                    5) (Optional)</label>
-
-                  <!-- Hidden Input -->
-                  <input type="file" name="location_photos[]" id="location_photos_input" multiple accept="image/*"
-                    class="hidden" />
-
-                  <!-- Preview Container -->
-                  <div id="locationPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
-
-                  <!-- Add More Button -->
-                  <button type="button" id="addLocationPhotosBtn"
-                    class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
-                    <i class="ph-fill ph-plus-circle"></i> Add Location Photos
-                  </button>
-
-                  <x-form-error name="location_photos" />
-                </div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Owner's Name</label>
+                <input type="text" name="owner_name" value="{{ old('owner_name') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="Your full name" required />
+                <x-form-error name="owner_name" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" name="contact_no"
+                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly required />
+                <x-form-error name="contact_no" />
               </div>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-full sm:w-fit px-5 mt-2 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+          <!-- Step 3: Pet Info -->
+          <div class="wizard-step-missing hidden" data-step="3">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Pet's Name</label>
+                <input type="text" name="pet_name" value="{{ old('pet_name') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="Pet's name" required />
+                <x-form-error name="pet_name" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Last Seen Location</label>
+                <input type="text" name="last_seen_location" value="{{ old('last_seen_location') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                  placeholder="Where the pet was last seen" required />
+                <x-form-error name="last_seen_location" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Last Seen Date</label>
+                <input type="date" name="last_seen_date" value="{{ old('last_seen_date') }}" max="{{ date('Y-m-d') }}"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" required />
+                <x-form-error name="last_seen_date" />
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Additional Info</label>
+                <textarea name="pet_description" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400" rows="4" placeholder="Breed, color, distinguishing marks, reward amount etc." required>{{ old('pet_description') }}</textarea>
+                <x-form-error name="pet_description" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Photos (Pet) -->
+          <div class="wizard-step-missing hidden" data-step="4">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-camera mr-2"></i>Pet Photos & Valid ID
+            </h4>
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-sm font-medium text-gray-700">Upload Valid ID <span class="text-red-500">*</span></label>
+                <button type="button" onclick="openValidIdModal()" class="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer">View Accepted Valid IDs</button>
+              </div>
+              <input type="file" name="valid_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100" required />
+              <x-form-error name="valid_id" />
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Your Pet (Max 5) <span class="text-red-500">*</span></label>
+              <input type="file" name="pet_photos[]" id="pet_photos_input" multiple accept="image/*" class="hidden" required />
+              <div id="petPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+              <button type="button" id="addPetPhotosBtn" class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+                <i class="ph-fill ph-plus-circle"></i> Add Pet Photos
+              </button>
+              <x-form-error name="pet_photos" />
+            </div>
+          </div>
+
+          <!-- Step 5: Photos (Location Optional) -->
+          <div class="wizard-step-missing hidden" data-step="5">
+            <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
+              <i class="ph-fill ph-map-pin mr-2"></i>Location Photos (Optional)
+            </h4>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Last Seen Location or Possible Locations (Max 5)</label>
+            <input type="file" name="location_photos[]" id="location_photos_input" multiple accept="image/*" class="hidden" />
+            <div id="locationPhotosPreviews" class="my-2 grid grid-cols-3 gap-2"></div>
+            <button type="button" id="addLocationPhotosBtn" class="px-4 py-2 bg-orange-100 text-orange-700 text-sm font-medium rounded-md border border-orange-300 hover:bg-orange-200 transition w-fit flex items-center gap-2">
+              <i class="ph-fill ph-plus-circle"></i> Add Location Photos
+            </button>
+            <x-form-error name="location_photos" />
+          </div>
+
+          <!-- Wizard Controls -->
+          <div class="mt-4 flex items-center justify-between">
+            <button type="button" id="prevStepMissing" class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40" disabled>
+              Back
+            </button>
+            <button type="button" id="nextStepMissing" class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+              Next
+            </button>
+            <button type="submit" id="submitMissing" class="hidden px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
               <i class="ph-fill ph-paper-plane-tilt mr-2"></i>Submit Report
             </button>
           </div>
@@ -248,6 +224,62 @@
   </div>
 
   <script>
+  // Wizard logic for Missing Pet form
+  (function() {
+    const steps = Array.from(document.querySelectorAll('.wizard-step-missing'));
+    const nextBtn = document.getElementById('nextStepMissing');
+    const prevBtn = document.getElementById('prevStepMissing');
+    const submitBtn = document.getElementById('submitMissing');
+    const progress = document.getElementById('stepProgressMissing');
+    const label = document.getElementById('stepLabelMissing');
+    const total = steps.length || 5;
+    let current = 1;
+
+    function showStep(step) {
+      steps.forEach(s => s.classList.add('hidden'));
+      const active = steps.find(s => s.getAttribute('data-step') === String(step));
+      if (active) active.classList.remove('hidden');
+
+      const pct = Math.max(20, Math.min(100, (step / total) * 100));
+      progress.style.width = pct + '%';
+      label.textContent = `Step ${step} of ${total}`;
+
+      prevBtn.disabled = step === 1;
+      nextBtn.classList.toggle('hidden', step === total);
+      submitBtn.classList.toggle('hidden', step !== total);
+    }
+
+    function validateStep(step) {
+      const container = steps.find(s => s.getAttribute('data-step') === String(step));
+      if (!container) return true;
+      const requiredInputs = container.querySelectorAll('[required]');
+      for (const input of requiredInputs) {
+        if (input.type === 'file') {
+          if (!input.files || input.files.length === 0) {
+            input.reportValidity();
+            return false;
+          }
+        } else if (!input.value) {
+          input.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    nextBtn?.addEventListener('click', () => {
+      if (!validateStep(current)) return;
+      current = Math.min(total, current + 1);
+      showStep(current);
+    });
+    prevBtn?.addEventListener('click', () => {
+      current = Math.max(1, current - 1);
+      showStep(current);
+    });
+
+    showStep(current);
+  })();
+
     // Function to handle image uploads and previews
     function setupImageUpload(inputId, previewContainerId, addButtonId, maxFiles = 5) {
       const input = document.getElementById(inputId);

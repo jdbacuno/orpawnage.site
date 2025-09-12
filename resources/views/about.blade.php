@@ -43,7 +43,7 @@
   </section>
 
   <!-- ========== MISSION & VALUES SECTION ========== -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-16 bg-gray-100/90">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

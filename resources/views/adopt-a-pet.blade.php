@@ -4,8 +4,7 @@
 
     <!-- Mobile background image -->
     <div class="sm:hidden absolute inset-0 w-full h-full overflow-hidden z-0">
-      <img src="{{ asset('images/home_image-3.jpg') }}" alt="Adopt a Pet"
-        class="w-full h-full object-cover brightness-50" />
+      <img src="{{ asset('images/adopter.jpg') }}" alt="Adopt a Pet" class="w-full h-full object-cover brightness-50" />
     </div>
 
     <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8 lg:flex lg:items-center lg:gap-x-6">
@@ -174,7 +173,7 @@
       <div class="lg:w-1/2 relative">
         <div class="hidden sm:block w-full sm:max-w-[500px] mx-auto relative">
           <!-- Main Image -->
-          <img src="{{ asset('images/home_image-3.jpg') }}" alt="Pet Adoption Hero Image"
+          <img src="{{ asset('images/adopter.jpg') }}" alt="Pet Adoption Hero Image"
             class="w-full rounded-xl brightness-[.75] relative z-10" />
 
           <!-- Paw Print Corner Accents -->
