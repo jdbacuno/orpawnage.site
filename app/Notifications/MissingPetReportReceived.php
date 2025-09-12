@@ -46,7 +46,7 @@ class MissingPetReportReceived extends Notification implements ShouldQueue
       ->line('**Pet Name**: ' . $this->report->pet_name)
       ->line('**Last Seen**: ' . $this->report->last_seen_location . ' on ' . \Carbon\Carbon::parse($this->report->last_seen_date)->format('F j, Y'))
       ->line('You can track the status of your report in the Transactions section of our website. Once approved, your missing pet report will be shared to other registered users in our system via email.')
-      ->line('You may also contact us on our official Facebook page at Angeles City Veterinary Office to request posting a poster of your missing pet on our page.')
+      ->line('You may also contact us on our official Facebook page at Orpawnage to request posting a poster of your missing pet on our page.')
       ->action('View Report Status', url('/transactions/missing-status'))
       ->line('We hope your pet is found soon.')
       ->line('Thank you for using our service.')

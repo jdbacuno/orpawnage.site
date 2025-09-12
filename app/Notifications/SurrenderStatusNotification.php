@@ -90,7 +90,7 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
         $mailMessage
           ->line('📅 Your surrender appointment is scheduled!')
           ->line('**Scheduled Surrender Date:** ' . $application->surrender_date->format('F j, Y'))
-          ->line('**Location:** Angeles City Veterinary Office')
+          ->line('**Location:** Orpawnage Angeles Main Office')
           ->line('**On your surrender day, bring:**')
           ->line('- A valid government-issued ID')
           ->line('- Your transaction confirmation email')

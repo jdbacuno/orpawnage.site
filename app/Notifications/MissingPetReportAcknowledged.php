@@ -44,7 +44,7 @@ class MissingPetReportAcknowledged extends Notification implements ShouldQueue
       ->line('**Report Number:** ' . $this->report->report_number)
       ->line('**Pet Name:** ' . $this->report->pet_name)
       ->line('We have shared your report with our community members via email to help spread awareness about your missing pet.')
-      ->line('Additionally, if you have not already done so, we recommend posting your missing pet information on the Angeles City Veterinary Office Facebook page for broader reach.')
+      ->line('Additionally, if you have not already done so, we recommend posting your missing pet information on the Orpawnage Facebook page for broader reach.')
       ->action('View Report Status', url('/transactions/missing-status'))
       ->line('We hope your pet is found soon.')
       ->salutation("Regards,\nOrpawnage Team");

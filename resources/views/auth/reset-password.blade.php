@@ -254,11 +254,10 @@
           <img src="{{ asset('images/orpawnage-logo.png') }}" alt="OrPAWnage Logo" class="w-40 mb-6" />
           <h2 class="text-3xl font-bold text-white"><span class="bg-black/20 relative overflow-hidden p-2">
               <span class="animate-color-change-orange">
-                Or<strong class="animate-color-change-yellow">PAW</strong>nage
+                OR<strong class="animate-color-change-yellow">PAW</strong>NAGE
               </span>
               <span class="glowing-border"></span>
             </span></h2>
-          <p class="mt-2 text-lg text-gray-300">Angeles City Veterinary Office</p>
         </div>
       </div>
     </div>

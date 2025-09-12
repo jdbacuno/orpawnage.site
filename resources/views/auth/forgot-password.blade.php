@@ -204,7 +204,6 @@
               </span>
               <span class="glowing-border"></span>
             </span></h2>
-          <p class="mt-2 text-lg text-gray-300">Angeles City Veterinary Office</p>
         </div>
       </div>
     </div>

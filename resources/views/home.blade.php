@@ -26,7 +26,7 @@
       data-carousel="static">
       <!-- Item 2 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/home_image-2.jpg') }}" class="absolute block w-full h-full object-cover"
+        <img src="{{ asset('images/orpawnage-service-3.png') }}" class="absolute block w-full h-full object-cover"
           alt="Slide 2" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
@@ -42,7 +42,7 @@
 
       <!-- Item 1 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/home_image-1.jpg') }}" class="absolute block w-full h-full object-cover"
+        <img src="{{ asset('images/orpawnage-service-2.png') }}" class="absolute block w-full h-full object-cover"
           alt="Slide 1" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
           <div class="text-center text-white">
@@ -161,14 +161,14 @@
     <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-10 px-4">
       <!-- Image Section -->
       <div class="w-full md:w-1/2">
-        <img src="{{ asset('images/home_image-0.jpg') }}"
+        <img src="{{ asset('images/orpawnage-service.png') }}"
           class="w-full h-96 object-cover rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300" />
       </div>
 
       <!-- Text Section -->
       <div class="w-full md:w-1/2 text-black flex flex-col justify-between gap-y-6">
         <div>
-          <h2 class="text-4xl font-bold mb-4 text-black">Lorem Ipsum</h2>
+          <h2 class="text-4xl font-bold mb-4 text-black">What We Do</h2>
           <div class="w-20 h-1 bg-orange-400 rounded-full mt-1"></div>
         </div>
         <div class="text-lg/10 text-justify">

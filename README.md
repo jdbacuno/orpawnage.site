@@ -1,6 +1,6 @@
 <<<<<<< HEAD
 # Orpawnage
-A web-based pet adoption website for Angeles City Veterinary Office
+A web-based pet adoption website utilizing multivariate logistic regression
 
 ---
 <strong>1. Clone the repository</strong> 

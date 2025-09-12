@@ -5,7 +5,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <!-- Image -->
         <div class="order-2 lg:order-1 relative rounded-xl overflow-hidden">
-          <img src="{{ asset('images/orpawnage-logo.png') }}" alt="Angeles City Veterinary Office logo"
+          <img src="{{ asset('images/orpawnage-logo.png') }}" alt="Orpawnage logo"
             class="w-full h-auto object-cover transition-transform duration-300 hover:scale-105" />
           <div class="absolute -bottom-1 -left-1 w-24 h-24 border-l-4 border-b-4 border-orange-500"></div>
           <div class="absolute -top-1 -right-1 w-24 h-24 border-t-4 border-r-4 border-yellow-400"></div>

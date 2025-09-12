@@ -90,7 +90,7 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
                 $mailMessage
                     ->line('📅 Your new pet is ready to welcome you home!')
                     ->line('**Scheduled Visit Date:** ' . $application->pickup_date->format('F j, Y'))
-                    ->line('**Location:** Angeles City Veterinary Office')
+                    ->line('**Location:** Orpawnage Angeles Main Office')
                     ->line('**On your pickup day, bring:**')
                     ->line('- A valid government-issued ID')
                     ->line('- Your transaction confirmation email')
