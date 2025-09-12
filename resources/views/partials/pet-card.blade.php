@@ -31,14 +31,14 @@
 
     <!-- Colorized Badges -->
     <div class="flex flex-wrap gap-2 mb-3">
-      <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200">
+      <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer" data-description="Age" onclick="changeText(this)">
         {{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old
       </span>
       <span
-        class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border">
+        class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Sex" onclick="changeText(this)">
         {{ ucfirst($pet->sex) }}
       </span>
-      <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200">
+      <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer" data-description="Color" onclick="changeText(this)">
         {{ ucfirst($pet->color) }}
       </span>
       @php

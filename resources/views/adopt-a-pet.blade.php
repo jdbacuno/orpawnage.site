@@ -460,5 +460,25 @@
     });
   </script>
 
+  <script>
+    // Simple toggler for badge text/description
+    function changeText(el) {
+      const original = el.getAttribute('data-original-text') || el.textContent.trim();
+      const desc = el.getAttribute('data-description') || '';
+      // Store original once
+      if (!el.getAttribute('data-original-text')) {
+        el.setAttribute('data-original-text', original);
+      }
+      const showingDesc = el.getAttribute('data-showing') === 'desc';
+      if (showingDesc) {
+        el.textContent = el.getAttribute('data-original-text');
+        el.setAttribute('data-showing', 'orig');
+      } else {
+        el.textContent = desc;
+        el.setAttribute('data-showing', 'desc');
+      }
+    }
+  </script>
+
   @livewireScripts
 </x-layout>

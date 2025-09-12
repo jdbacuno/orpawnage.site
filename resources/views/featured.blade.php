@@ -93,17 +93,17 @@
                 </span>
               </div>
 
-              <!-- Colorized Badges -->
+              <!-- Colorized Badges (clickable/togglable) -->
               <div class="flex flex-wrap gap-2 mb-3">
-                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200">
+                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer" data-description="Age" onclick="changeText(this)">
                   {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
                   Str::plural($featured->age_unit) }} old
                 </span>
                 <span
-                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border">
+                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Sex" onclick="changeText(this)">
                   {{ ucfirst($featured->sex) }}
                 </span>
-                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200">
+                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer" data-description="Color" onclick="changeText(this)">
                   {{ ucfirst($featured->color) }}
                 </span>
               </div>
@@ -172,5 +172,24 @@
     });
 
     // share button removed; no extra JS needed
+  </script>
+
+  <script>
+    // Badge toggler shared with adopt-a-pet
+    function changeText(el) {
+      const original = el.getAttribute('data-original-text') || el.textContent.trim();
+      const desc = el.getAttribute('data-description') || '';
+      if (!el.getAttribute('data-original-text')) {
+        el.setAttribute('data-original-text', original);
+      }
+      const showingDesc = el.getAttribute('data-showing') === 'desc';
+      if (showingDesc) {
+        el.textContent = el.getAttribute('data-original-text');
+        el.setAttribute('data-showing', 'orig');
+      } else {
+        el.textContent = desc;
+        el.setAttribute('data-showing', 'desc');
+      }
+    }
   </script>
 </x-layout>
