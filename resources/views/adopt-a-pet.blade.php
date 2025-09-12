@@ -9,9 +9,12 @@
 
     <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
     <div class="hidden sm:block absolute inset-0 z-0">
-      <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 animate-[gradientShift_14s_ease-in-out_infinite]"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 animate-[gradientShift_14s_ease-in-out_infinite]">
+      </div>
       <div class="absolute inset-0 opacity-40"
-        style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;"></div>
+        style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;">
+      </div>
       <!-- Paw accents sprinkled like background (non-interactive) -->
       <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
         <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-30 text-7xl -top-10 left-8"></i>
@@ -355,7 +358,7 @@
                 </details>
                 <details class="process-step" data-step="5">
                   <summary class="cursor-pointer p-3 bg-white rounded-full border flex items-center justify-between">
-                    <span class="font-medium text-gray-800">5) Dalhin</span>
+                    <span class="font-medium text-gray-800">5) Dala</span>
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
@@ -434,8 +437,8 @@
 
       function setActiveTab(tab) {
         if (tab === 'english') processTitle.textContent = 'Adoption Process';
-        if (tab === 'tagalog') processTitle.textContent = 'Proseso sa Pag-aadopt';
-        if (tab === 'kapampangan') processTitle.textContent = 'Prosesu king Pamag-adopt';
+        if (tab === 'tagalog') processTitle.textContent = 'Proseso sa Adoption';
+        if (tab === 'kapampangan') processTitle.textContent = 'Prosesu king Adoption';
 
         tabButtons.forEach(btn => btn.classList.remove("active", "bg-yellow-100"));
         document.querySelector(`[data-tab="${tab}"]`).classList.add("active", "bg-yellow-100");
