@@ -1,15 +1,41 @@
 <x-transactions-layout>
-  <div class="flex flex-wrap items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Surrender Applications</h1>
+  <div class="mb-6">
+    <div class="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[1px]">
+      <div class="rounded-xl bg-white">
+        <div class="px-5 py-5 sm:px-6 sm:py-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                <i class="ph-fill ph-package"></i>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">Surrender Applications</h1>
+                <p class="text-sm text-gray-500">Manage applications to surrender pets</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="/transactions/adoptions-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Adoptions</a>
+            <a href="/transactions/surrender-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-indigo-600 text-white shadow-sm">Surrenders</a>
+            <a href="/transactions/missing-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Missing Pets</a>
+            <a href="/transactions/abused-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Abused/Stray</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Filters Section -->
   <div class="mt-4">
-    <div class="flex flex-wrap gap-4 mb-4">
+    <div class="flex flex-wrap gap-4 mb-4 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
       <form method="GET" action="{{ request()->url() }}" class="relative flex items-center mt-2 sm:mt-0">
         <input type="text" name="search" value="{{ request('search') }}"
           placeholder="Transaction number, email, or name"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[300px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[280px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition shadow-inner" />
         <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
           <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
         </div>
@@ -21,10 +47,10 @@
           class="ml-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
         @endif
       </form>
-      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+      <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
         <!-- Status Filter -->
         <select name="status"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
           onchange="this.form.submit()">
           <option value="">All Statuses</option>
           <option value="to be confirmed" {{ request('status')==='to be confirmed' ? 'selected' : '' }}>
@@ -48,7 +74,7 @@
         </select>
 
         <select name="direction"
-          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
           onchange="this.form.submit()">
           <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>
             Newest First
@@ -61,19 +87,23 @@
     </div>
 
     @if($applications->isEmpty())
-    <div class="flex items-center justify-center p-6 text-gray-500">
-      <p class="text-lg">No surrender applications found.</p>
+    <div
+      class="flex flex-col items-center justify-center p-10 text-center bg-white rounded-lg border border-gray-200 shadow-sm">
+      <img src="{{ asset('images/surrender.jpg') }}" class="h-20 w-20 object-cover rounded-full opacity-80 mb-3"
+        alt="Empty" />
+      <p class="text-lg font-medium text-gray-700">No surrender applications found</p>
+      <p class="text-sm text-gray-500">Try changing filters or check back later.</p>
     </div>
     @else
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
       @foreach($applications as $application)
       <div
-        class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+        class="bg-white w-full rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:shadow-md hover:-translate-y-[2px] transition-all duration-200">
         <!-- Pet and Owner Info Header -->
-        <div class="p-4 border-b border-gray-200">
+        <div class="p-4 border-b border-gray-100">
           <div class="flex items-start space-x-2">
             <!-- First Photo -->
-            <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+            <div class="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden ring-1 ring-gray-200">
               @if($application->animal_photos)
               <img src="{{ asset('storage/' . json_decode($application->animal_photos)[0]) }}"
                 alt="{{ $application->pet_name }}" class="w-full h-full object-cover cursor-pointer"
@@ -113,7 +143,7 @@
                 <span class="font-medium text-gray-900 truncate">{{ $application->full_name }}</span>
               </p>
               <p class="text-sm">
-                <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded 
+                <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded-md ring-1 ring-inset 
     {{ ($application->previous_status ?? $application->status) === 'to be confirmed' ? 'bg-orange-100 text-orange-700' : '' }}
     {{ ($application->previous_status ?? $application->status) === 'confirmed' ? 'bg-blue-100 text-blue-700' : '' }}
     {{ ($application->previous_status ?? $application->status) === 'to be scheduled' ? 'bg-yellow-100 text-yellow-700' : '' }}

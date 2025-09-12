@@ -192,7 +192,7 @@
       <!-- RIGHT SIDE: Background Image -->
       <div class="relative hidden w-full h-full lg:block lg:w-1/2 bg-cover bg-center" style="
           background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                    url({{ asset('images/vet_service.jpg') }}) no-repeat center center;
+                    url({{ asset('images/login-img.jpg') }}) no-repeat center center;
           background-size: cover;
         ">
         <!-- Centered Content -->

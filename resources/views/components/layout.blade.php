@@ -208,7 +208,7 @@
 
         <div class="max-w-screen-xl flex flex-wrap gap-y-4 items-center justify-between mx-auto p-4">
           <a href="/" class="flex items-center space-x-3">
-            <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="h-10 sm:h-8" alt="Flowbite Logo" />
+            <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="h-8" alt="Flowbite Logo" />
             {{-- <span class="self-center text-2xl font-semibold whitespace-nowrap text-orange-400" id="title">Or<strong
                 class="text-yellow-500">PAW</strong>nage</span> --}}
           </a>
@@ -469,17 +469,26 @@
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-around footer-content">
           <div class="flex items-center gap-x-4 logos mb-6 md:mb-0">
-            <a href="/" class="flex items-center">
-              <img src="{{ asset('images/orpawnage-logo.png') }}"
-                class="w-[80px] h-[80px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] lg:w-[130px] lg:h-[130px] xl:w-[200px] xl:h-[200px] object-fill"
-                alt="Brand Logo 1" />
+            <!-- Mobile: single footer logo from storage -->
+            <a href="/" class="flex items-center sm:hidden">
+              <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" class="w-[160px] h-auto object-contain"
+                alt="OrPAWnage Logo" />
             </a>
 
-            <a href="/" class="flex items-center">
-              <img src="{{ asset('images/orpawnage-brand-logo.png') }}"
-                class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
-                alt="Brand Logo 2" />
-            </a>
+            <!-- Tablet/Desktop: original two logos -->
+            <div class="hidden sm:flex items-center gap-x-4">
+              <a href="/" class="flex items-center">
+                <img src="{{ asset('images/orpawnage-logo.png') }}"
+                  class="w-[80px] h-[80px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] lg:w-[130px] lg:h-[130px] xl:w-[200px] xl:h-[200px] object-fill"
+                  alt="Brand Logo 1" />
+              </a>
+
+              <a href="/" class="flex items-center">
+                <img src="{{ asset('images/orpawnage-brand-logo.PNG') }}"
+                  class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
+                  alt="Brand Logo 2" />
+              </a>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">

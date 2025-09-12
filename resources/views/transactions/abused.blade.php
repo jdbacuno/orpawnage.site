@@ -1,13 +1,39 @@
 <x-transactions-layout>
-  <div class="flex flex-wrap items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Abused/Stray Reports</h1>
+  <div class="mb-6">
+    <div class="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[1px]">
+      <div class="rounded-xl bg-white">
+        <div class="px-5 py-5 sm:px-6 sm:py-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+                <i class="ph-fill ph-warning"></i>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">Abused/Stray Reports</h1>
+                <p class="text-sm text-gray-500">View and manage animal abuse/stray incidents</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="/transactions/adoptions-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Adoptions</a>
+            <a href="/transactions/surrender-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Surrenders</a>
+            <a href="/transactions/missing-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Missing Pets</a>
+            <a href="/transactions/abused-status"
+              class="px-3 py-1.5 text-sm rounded-full bg-indigo-600 text-white shadow-sm">Abused/Stray</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Filters Section -->
-  <div class="flex flex-wrap gap-4 my-4">
+  <div class="flex flex-wrap gap-4 my-4 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
     <form method="GET" action="{{ request()->url() }}" class="relative flex items-center mt-2 sm:mt-0">
       <input type="text" name="search" value="{{ request('search') }}" placeholder="Report number/name, or contact"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[300px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[280px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition shadow-inner" />
       <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
         <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
       </div>
@@ -19,10 +45,10 @@
         class="ml-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
       @endif
     </form>
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4">
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
       <!-- Status Filter -->
       <select name="status"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
         onchange="this.form.submit()">
         <option value="">All Statuses</option>
         <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
@@ -43,12 +69,12 @@
     $displayStatus = $report->previous_status ?? $report->status;
     @endphp
     <div
-      class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      class="bg-white w-full rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:shadow-md hover:-translate-y-[2px] transition-all duration-200">
       <!-- Report Info Header -->
-      <div class="p-4 border-b border-gray-200">
+      <div class="p-4 border-b border-gray-100">
         <div class="flex items-start space-x-2">
           <!-- Incident Photo (first photo or placeholder) -->
-          <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+          <div class="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden ring-1 ring-gray-200">
             @if($report->incident_photos)
             <img src="{{ asset('storage/' . json_decode($report->incident_photos)[0]) }}" alt="Incident photo"
               class="w-full h-full object-cover cursor-pointer"
@@ -83,7 +109,7 @@
                 }}</span>
             </p>
             <p class="text-sm">
-              <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded 
+              <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded-md ring-1 ring-inset 
                 {{ $displayStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
                 {{ $displayStatus === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
                 {{ $displayStatus === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
