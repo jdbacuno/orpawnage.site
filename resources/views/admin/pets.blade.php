@@ -196,111 +196,51 @@
     @else
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       @foreach($pets as $pet)
-      <div
-        class="relative bg-white w-full rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-        wire:poll.10s>
-
-        <!-- Image container with hover-specific slide-up -->
-        <div class="group relative h-48 overflow-hidden">
-          <a href="/services/{{ $pet->slug }}/adoption-form" class="block h-full" target="_blank">
-            <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
-              class="h-full w-full object-cover transition duration-300" />
-          </a>
-
-          <!-- Slide-Up Panel (now properly working) -->
-          <div
-            class="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md text-gray-900 p-3 translate-y-full group-hover:translate-y-0 transition duration-300 ease-in-out scrollbar-hidden">
-            <div class="flex flex-wrap gap-2 mb-1">
-              <span
-                class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-200 cursor-pointer"
-                data-description="Age" onclick="changeText(this)">
-                {{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }}
-              </span>
-
-              <span
-                class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-2 py-1 rounded-full border cursor-pointer"
-                data-description="Sex" onclick="changeText(this)">
-                {{ ucfirst($pet->sex) }}
-              </span>
-
-              <span
-                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full border border-green-200 cursor-pointer"
-                data-description="Color" onclick="changeText(this)">
-                {{ ucfirst($pet->color) }}
-              </span>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <span
-                class="{{ $pet->reproductive_status == 'neutered' ? 'bg-green-50 text-green-800 border-green-100' : 'bg-amber-50 text-amber-800 border-amber-100' }} text-xs px-2 py-1 rounded-full border cursor-pointer"
-                data-description="Reproductive Status" onclick="changeText(this)">
-                {{ ucfirst($pet->reproductive_status) }}
-              </span>
-
-              <span
-                class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full border border-gray-200 cursor-pointer"
-                data-description="Source" onclick="changeText(this)">
-                {{ ucfirst($pet->source) }}
-              </span>
-            </div>
+      <div class="relative bg-white w-full mx-auto rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200" wire:poll.10s>
+        <a href="/services/{{ $pet->slug }}/adoption-form" class="block relative" target="_blank">
+          <img src="{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image" class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
+          <div class="absolute top-2 left-2">
+            <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded">Pick me!</span>
           </div>
-        </div>
-
-        <!-- Card footer -->
-        <div class="p-3">
-          <div class="flex justify-between items-center mb-1">
-            <h3 class="text-md font-bold">
-              {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
-            </h3>
-            <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
-              {{ $pet->species === 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}
+          <div class="absolute top-2 right-2">
+            <span class="bg-black/60 text-white text-[10px] px-2 py-1 rounded flex items-center">
+              <i class="ph-fill ph-clock mr-1"></i>
+              Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}
             </span>
           </div>
+        </a>
 
-          <!-- Action Buttons with Timestamp and Three-Dots Menu -->
-          <div class="flex justify-between items-center mt-2">
-            <div class="text-gray-500 text-xs flex items-center">
-              <i class="ph-fill ph-clock mr-1"></i>
-              <span>Added {{ \Carbon\Carbon::parse($pet->created_at)->diffForHumans() }}</span>
+        <!-- Slide-Up Panel with Blur (includes admin menu) -->
+        <div class="absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="text-lg font-bold text-black">
+                {{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}
+              </h3>
+              <span class="inline-block mt-1 bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
+                {{ $pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $pet->pet_number }}
+              </span>
             </div>
 
             <!-- Three-Dots Menu -->
             <div class="relative">
-              <button
-                class="menu-toggle flex items-center justify-center p-1.5 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
-                data-menu-id="menu-{{ $pet->id }}">
-                <i class="ph-fill ph-dots-three-outline-vertical text-lg text-gray-500 hover:text-gray-700"></i>
+              <button class="menu-toggle flex items-center justify-center p-1.5 rounded-full hover:bg-gray-100 transition-colors focus:outline-none" data-menu-id="menu-{{ $pet->id }}">
+                <i class="ph-fill ph-dots-three-outline-vertical text-lg text-gray-700"></i>
               </button>
-
-              <div id="menu-{{ $pet->id }}"
-                class="hidden absolute bottom-full right-0 mb-2 w-40 bg-white rounded-md shadow-lg z-10 border border-gray-100">
+              <div id="menu-{{ $pet->id }}" class="hidden absolute right-0 top-8 w-44 bg-white rounded-md shadow-lg z-10 border border-gray-100">
                 <div class="py-1">
-                  <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank"
-                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  <a href="/services/{{ $pet->slug }}/adoption-form" target="_blank" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     <i class="ph-fill ph-eye mr-2 text-yellow-500"></i> View
                   </a>
-
-                  <button
-                    class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 edit-btn"
-                    data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}"
-                    data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}"
-                    data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}"
-                    data-color="{{ $pet->color }}" data-source="{{ $pet->source }}"
-                    data-image="{{ asset('storage/' . $pet->image_path) }}">
+                  <button class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 edit-btn" data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}" data-name="{{ $pet->pet_name }}" data-species="{{ $pet->species }}" data-age="{{ $pet->age }}" data-age-unit="{{ $pet->age_unit }}" data-sex="{{ $pet->sex }}" data-repro-status="{{ $pet->reproductive_status }}" data-color="{{ $pet->color }}" data-source="{{ $pet->source }}" data-image="{{ asset('storage/' . $pet->image_path) }}">
                     <i class="ph-fill ph-pencil-simple mr-2 text-blue-600"></i> Edit
                   </button>
-
-                  @if($pet->adoptionApplication && in_array($pet->adoptionApplication->status ?? null, ['to be
-                  confirmed', 'confirmed', 'to be picked
-                  up', 'to be scheduled', 'adoption on-going']))
-                  <button class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-400 cursor-not-allowed"
-                    disabled title="Cannot Archive - Adoption In Progress">
+                  @if($pet->adoptionApplication && in_array($pet->adoptionApplication->status ?? null, ['to be confirmed', 'confirmed', 'to be picked up', 'to be scheduled', 'adoption on-going']))
+                  <button class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-400 cursor-not-allowed" disabled title="Cannot Archive - Adoption In Progress">
                     <i class="ph-fill ph-archive mr-2"></i> Archive
                   </button>
                   @else
-                  <button
-                    class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 delete-btn"
-                    data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}">
+                  <button class="w-full text-left flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 delete-btn" data-id="{{ $pet->id }}" data-number="{{ $pet->pet_number }}">
                     <i class="ph-fill ph-archive mr-2 text-red-600"></i> Archive
                   </button>
                   @endif
@@ -308,6 +248,39 @@
               </div>
             </div>
           </div>
+
+          <!-- Colorized Badges (clickable/togglable) -->
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer" data-description="Age" onclick="changeText(this)">
+              {{ $pet->age }} {{ $pet->age == 1 ? Str::singular($pet->age_unit) : Str::plural($pet->age_unit) }} old
+            </span>
+            <span class="{{ $pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Sex" onclick="changeText(this)">
+              {{ ucfirst($pet->sex) }}
+            </span>
+            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer" data-description="Color" onclick="changeText(this)">
+              {{ ucfirst($pet->color) }}
+            </span>
+            @php
+              $ageYears = 0;
+              if (strtolower($pet->age_unit) === 'year' || strtolower($pet->age_unit) === 'years') {
+                $ageYears = (int) $pet->age;
+              } elseif (strtolower($pet->age_unit) === 'month' || strtolower($pet->age_unit) === 'months') {
+                $ageYears = floor(((int) $pet->age) / 12);
+              }
+            @endphp
+            @if ($ageYears >= 6)
+            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full border border-purple-200">
+              Senior
+            </span>
+            @endif
+            <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full border border-gray-200 cursor-pointer" data-description="Source" onclick="changeText(this)">
+              {{ ucfirst($pet->source) }}
+            </span>
+            <span class="{{ $pet->reproductive_status == 'neutered' ? 'bg-green-50 text-green-800 border-green-100' : 'bg-amber-50 text-amber-800 border-amber-100' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Reproductive Status" onclick="changeText(this)">
+              {{ ucfirst($pet->reproductive_status) }}
+            </span>
+          </div>
+
         </div>
       </div>
       @endforeach
