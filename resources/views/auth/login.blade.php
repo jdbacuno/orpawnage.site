@@ -282,7 +282,7 @@
       <!-- RIGHT SIDE: Background Image -->
       <div class="relative hidden w-full h-full lg:block lg:w-1/2 bg-cover bg-center right-content" style="
           background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                    url({{ asset('images/vet_service.jpg') }}) no-repeat center center;
+                    url({{ asset('images/login-img.jpg') }}) no-repeat center center;
           background-size: cover;
         ">
         <!-- Centered Content -->
@@ -294,7 +294,6 @@
               </span>
               <span class="glowing-border"></span>
             </span></h2>
-          <p class="mt-2 text-lg text-gray-300">Angeles City Veterinary Office</p>
         </div>
       </div>
     </div>

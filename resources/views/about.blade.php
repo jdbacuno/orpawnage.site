@@ -1,37 +1,6 @@
 <x-layout>
-  <!-- ========== HERO SECTION ========== -->
-  <section class="relative w-full h-[70vh] max-h-[800px] overflow-hidden" id="mainContent">
-    <!-- Background image -->
-    <img src="{{ asset('images/banner.jpg') }}" alt="Angeles City Veterinary Office staff with animals"
-      class="w-full h-full object-cover object-top" />
-
-    <!-- Solid dark overlay -->
-    <div class="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
-
-    <!-- Text content -->
-    <div class="absolute inset-0 flex items-center justify-center text-center px-5 z-20 mt-6">
-      <div class="max-w-4xl">
-        <h1
-          class="text-4xl font-bold mb-2 text-white cursor-pointer relative group flex flex-col sm:flex-row justify-center items-center gap-4">
-          <span>About</span>
-          <span class="tracking-widest px-4 py-3 bg-black/20 rounded-lg relative overflow-hidden">
-            <span class="animate-color-change-orange">
-              Or<strong class="animate-color-change-yellow">PAW</strong>nage
-            </span>
-            <span class="glowing-border"></span>
-          </span>
-        </h1>
-        <p
-          class="text-lg/10 mt-10 mx-auto max-w-[700px] text-white tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
-          The official online portal of Angeles City Veterinary Office for animal welfare services
-        </p>
-      </div>
-    </div>
-  </section>
-
-
   <!-- ========== WHO WE ARE SECTION ========== -->
-  <section class="bg-gray-50 py-16 md:py-24">
+  <section class="bg-gray-20 py-16 md:py-24">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <!-- Image -->
@@ -50,11 +19,11 @@
             </span>
           </div>
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            OrPAWnage </h2>
+            About <span class="text-yellow-500">OR<span class="text-orange-500">PAW</span>NAGE</span> </h2>
           <div class="space-y-4 text-gray-600 text-lg">
             <p>
-              OrPAWnage serves as the digital platform for the Angeles City Veterinary Office, connecting residents
-              with essential animal welfare services. Our office operates under the city government's commitment to
+              OrPAWnage serves as the digital platform for pet lovers or potential adopters looking to welcome a new
+              furry family member. Our office operates under the city government's commitment to
               responsible pet ownership and community health.
             </p>
             <p>
@@ -74,13 +43,13 @@
   </section>
 
   <!-- ========== MISSION & VALUES SECTION ========== -->
-  <section class="py-16 custom-gradient">
+  <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Our Mission & Values
         </h2>
-        <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        <div class="w-24 h-1 bg-black mx-auto"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -137,8 +106,13 @@
   </section>
 
   <!-- ========== SERVICES SECTION ========== -->
-  <section class="py-16 bg-yellow-20">
-    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+  <section class="py-16 bg-yellow-20 relative overflow-hidden">
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="w-full h-full bg-center bg-cover" style="background-image: url('{{ asset('images/pets.png') }}');">
+      </div>
+      {{-- <div class="absolute inset-0 bg-white/60"></div> --}}
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
           Our Animal Care Services
@@ -146,7 +120,7 @@
         <p class="text-gray-600 max-w-2xl mx-auto">
           Comprehensive support for pets, wildlife, and their caregivers
         </p>
-        <div class="w-24 h-1 bg-orange-500 mx-auto mt-4"></div>
+        <div class="w-24 h-1 bg-black mx-auto mt-4"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -154,7 +128,7 @@
         <div class="space-y-8">
           <!-- Adoption Services -->
           <div
-            class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+            class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
             <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -173,7 +147,7 @@
 
           <!-- Surrender Services -->
           <div
-            class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+            class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
             <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -195,7 +169,7 @@
         <div class="space-y-8">
           <!-- Wildlife Services -->
           <div
-            class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+            class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
             <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -214,7 +188,7 @@
 
           <!-- Reporting Services -->
           <div
-            class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+            class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
             <div class="flex flex-col gap-y-4 sm:flex-row items-start">
               <div class="flex-shrink-0 mr-6">
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -237,7 +211,7 @@
       <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Medical Services -->
         <div
-          class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+          class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
           <div class="flex flex-col gap-y-4 sm:flex-row items-start">
             <div class="flex-shrink-0 mr-6">
               <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -256,7 +230,7 @@
 
         <!-- Emergency Services -->
         <div
-          class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
+          class="bg-white/70 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-200 hover:border-orange-300 transition-all duration-300">
           <div class="flex flex-col gap-y-4 sm:flex-row items-start">
             <div class="flex-shrink-0 mr-6">
               <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">

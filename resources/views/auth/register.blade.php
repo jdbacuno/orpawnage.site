@@ -338,7 +338,7 @@
       <!-- Image Section -->
       <div class="relative hidden w-full lg:block lg:w-1/2 bg-cover bg-center right-content" style="
           background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                    url({{ asset('images/vet_spaying.jpg') }}) no-repeat center center;
+                    url({{ asset('images/register-img.jpg') }}) no-repeat center center;
           background-size: cover;
         ">
         <div class="relative z-10 flex flex-col items-center justify-center w-full h-full p-8 text-center">
@@ -349,7 +349,6 @@
               </span>
               <span class="glowing-border"></span>
             </span></h2>
-          <p class="mt-2 text-lg text-gray-300">Angeles City Veterinary Office</p>
         </div>
       </div>
     </div>

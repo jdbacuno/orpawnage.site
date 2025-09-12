@@ -6,13 +6,13 @@ tailwind.config = {
         black: '#151d13',
         orange: {
           400: '#ff7206',
-          500: '#ff6600',
+          500: '#fd6d09',
         },
         yellow: {
           20: '#fffef5',
           300: '#fff9db',
           400: '#fadb6b',
-          500: '#ffc800',
+          500: '#ffc400',
         },
       },
       keyframes: {

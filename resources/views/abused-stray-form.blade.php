@@ -1,6 +1,6 @@
 <x-layout>
   <section class="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center"
-    style="background-image: url('{{ asset('images/rescue.jpg') }}')" id="mainContent">
+    style="background-image: url('{{ asset('images/abuse-img.jpg') }}')" id="mainContent">
 
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/40 z-0"></div>
@@ -8,7 +8,7 @@
     <!-- Centered Form Card -->
     <div class="relative z-10 w-full max-w-4xl m-4">
       <div
-        class="p-6 rounded-xl bg-gray-50/90 border border-gray-300 shadow-md backdrop-blur-sm max-h-full sm:max-h-[90vh] overflow-y-auto scrollbar-hidden">
+        class="p-6 rounded-xl bg-gray-50/75 border border-gray-300 shadow-md backdrop-blur-sm max-h-full sm:max-h-[90vh] overflow-y-auto scrollbar-hidden">
         <h3 class="text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200 flex items-center">
           <i class="ph-fill ph-warning-circle mr-2 text-orange-500"></i>Report an Incident of Abused/Stray Animal
         </h3>
@@ -44,7 +44,7 @@
           @csrf
 
           <!-- Add this note section -->
-          <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-lg">
+          <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
@@ -54,7 +54,7 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm text-orange-700">
+                <p class="text-sm text-red-700">
                   <strong>Important Notice:</strong> While we review all reports, please understand that we may not be
                   able to immediately investigate or resolve every case due to resource limitations. Some reports may be
                   grouped with similar cases in your area. You will receive a confirmation when your report is received,
@@ -68,19 +68,19 @@
           <div class="mb-6">
             <!-- Reporter Information -->
             <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
                 <i class="ph-fill ph-user-circle mr-2"></i>Reporter's Information
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Full Name (Optional)</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Full Name (Optional)</label>
                   <input type="text" name="full_name" value="{{ old('full_name') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     placeholder="Your full name" />
                   <x-form-error name="full_name" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
                   <input type="tel" name="contact_no"
                     value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly
@@ -92,19 +92,19 @@
 
             <!-- Incident Information -->
             <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
                 <i class="ph-fill ph-map-pin mr-2"></i>Incident Information
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Where did it happen?</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Where did it happen?</label>
                   <input type="text" name="incident_location" value="{{ old('incident_location') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     placeholder="Where the incident occurred" required />
                   <x-form-error name="incident_location" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">When did it happen?</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">When did it happen?</label>
                   <input type="date" name="incident_date" value="{{ old('incident_date') }}" max="{{ date('Y-m-d') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     required />
@@ -115,19 +115,19 @@
 
             <!-- Animal Information -->
             <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
                 <i class="ph-fill ph-paw-print mr-2"></i>Animal Information
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Type of Animal</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Type of Animal</label>
                   <input type="text" name="species" value="{{ old('species') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     placeholder="e.g. dog, cat, monkey..." required />
                   <x-form-error name="species" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">What happened to the animal?</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">What happened to the animal?</label>
                   <select name="animal_condition"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     required>
@@ -144,7 +144,7 @@
                   <x-form-error name="animal_condition" />
                 </div>
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Additional Notes</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
                   <textarea name="additional_notes"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     rows="4" placeholder="Provide additional details about the incident"
@@ -156,17 +156,17 @@
 
             <!-- Photos of Evidence -->
             <div class="mb-6">
-              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+              <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center">
                 <i class="ph-fill ph-camera mr-2"></i>Valid ID and Photos of Incident
               </h4>
               <div>
                 <!-- Valid ID Upload -->
                 <div class="mb-4">
                   <div class="flex justify-between items-center mb-1">
-                    <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
+                    <label class="block text-sm font-medium text-gray-700">Upload Valid ID <span
                         class="text-red-500">*</span></label>
                     <button type="button" onclick="openValidIdModal()"
-                      class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">
+                      class="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
                       View Accepted Valid IDs
                     </button>
                   </div>
@@ -178,7 +178,7 @@
 
                 <!-- Incident Photos Upload -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Upload Photos of Incident and Its Location
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Upload Photos of Incident and Its Location
                     (Max 10) <span class="text-red-500">*</span></label>
 
                   <!-- Hidden Input -->
@@ -216,13 +216,13 @@
   <div id="validIdModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-1">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full space-y-4 relative max-h-[90vh] overflow-y-auto">
       <!-- Close Button -->
-      <button onclick="closeValidIdModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <button onclick="closeValidIdModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-900">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
       <h2 class="text-xl font-semibold">Accepted Valid IDs</h2>
 
-      <div class="text-sm text-gray-600 space-y-4">
+      <div class="text-sm text-gray-700 space-y-4">
         <div>
           <strong class="block mb-2">Primary IDs:</strong>
           <ul class="list-disc list-inside ml-4 space-y-1">

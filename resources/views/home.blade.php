@@ -7,12 +7,12 @@
       cursor: pointer;
       pointer-events: auto;
     }
-    
+
     .hero-button:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-    
+
     /* Ensure carousel content is properly layered */
     .carousel-content {
       position: relative;
@@ -24,38 +24,6 @@
     <!-- Carousel wrapper -->
     <div id="default-carousel" class="relative w-full h-full flex transition-transform duration-[1100ms] ease-in-out"
       data-carousel="static">
-      <!-- Item 1 -->
-      <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/home_image-1.jpg') }}" class="absolute block w-full h-full object-cover"
-          alt="Slide 1" />
-        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-          <div class="text-center text-white">
-            <h1 class="text-4xl font-bold mb-2 text-white cursor-pointer relative group">
-              <span class="tracking-widest px-4 py-2 bg-black/20 rounded-lg relative overflow-hidden">
-                <span class="animate-color-change-orange">
-                  Or<strong class="animate-color-change-yellow">PAW</strong>nage
-                </span>
-                <span class="glowing-border"></span>
-              </span>
-            </h1>
-            <p
-              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
-              The official online portal of Angeles City Veterinary Office for animal welfare services
-            </p>
-            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 relative z-40 carousel-content">
-              <a href="/services/adopt-a-pet"
-                class="hero-button inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-all duration-200 text-white">
-                <i class="ph-fill ph-paw-print mr-2"></i> Adopt a Pet
-              </a>
-              <a href="/donate"
-                class="hero-button inline-flex items-center px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-all duration-200 text-white">
-                <i class="ph-fill ph-hand-heart mr-2"></i> Donate Now
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Item 2 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
         <img src="{{ asset('images/home_image-2.jpg') }}" class="absolute block w-full h-full object-cover"
@@ -68,6 +36,38 @@
             <p
               class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
               We offer the best services for you.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 1 -->
+      <div class="min-w-full flex-shrink-0 relative h-full">
+        <img src="{{ asset('images/home_image-1.jpg') }}" class="absolute block w-full h-full object-cover"
+          alt="Slide 1" />
+        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+          <div class="text-center text-white">
+            <h1 class="text-4xl font-bold mb-2 text-white cursor-pointer relative group">
+              <span class="tracking-widest px-4 py-2 bg-black/20 rounded-lg relative overflow-hidden">
+                <span class="animate-color-change-orange">
+                  OR<strong class="animate-color-change-yellow">PAW</strong>NAGE
+                </span>
+                <span class="glowing-border"></span>
+              </span>
+            </h1>
+            <p
+              class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
+              An Online Portal Where Pets Find Their New Home
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 relative z-40 carousel-content">
+              <a href="/services/adopt-a-pet"
+                class="hero-button inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-all duration-200 text-white">
+                <i class="ph-fill ph-paw-print mr-2"></i> Adopt a Pet
+              </a>
+              <a href="/donate"
+                class="hero-button inline-flex items-center px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-all duration-200 text-white">
+                <i class="ph-fill ph-hand-heart mr-2"></i> Donate Now
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -143,11 +143,14 @@
 
     <!-- Slider indicators -->
     <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center space-x-2 pointer-events-none">
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
+      <button type="button"
+        class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(0)"></button>
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
+      <button type="button"
+        class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(1)"></button>
-      <button type="button" class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
+      <button type="button"
+        class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(2)"></button>
     </div>
   </div>

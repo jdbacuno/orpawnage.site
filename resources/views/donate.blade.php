@@ -4,13 +4,13 @@
 
     <!-- Background Image -->
     <div class="absolute inset-0 overflow-hidden">
-      <img src="{{ asset('images/donate.jpg') }}" alt="Donate Background"
-        class="w-full h-full object-cover bg-black mix-blend-multiply" />
+      <img src="{{ asset('images/donate.png') }}" alt="Donate Background"
+        class="w-full h-full object-cover bg-black mix-blend-light" />
     </div>
 
     <!-- Overlay Content - More compact version -->
     <div
-      class="relative z-10 w-full max-w-2xl bg-white/85 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4">
+      class="relative z-10 w-full max-w-2xl bg-white/70 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4">
       <!-- Header -->
       <div class="text-center mb-6">
         <h1
@@ -53,10 +53,10 @@
         <div class="bg-white p-3 rounded-lg border border-gray-100">
           <p class="flex items-start mb-2 text-sm md:text-base">
             <i class="ph-fill ph-map-pin text-orange-500 mt-0.5 mr-2"></i>
-            Angeles City Veterinary Office, City Hall Building
+            Orpawnage Main Building, Angeles City
           </p>
           <p class="text-xs md:text-sm text-gray-500 ml-5 pl-3 border-l-2 border-orange-100">
-            5J85+64M, Aniceto Gueco St., Pulung Maragul, Angeles
+            123 Pusang Gala St, Brgy. Pampang, Angeles City
           </p>
           <p class="flex items-center mt-3 text-sm md:text-base">
             <i class="ph-fill ph-clock text-orange-500 mr-2"></i>

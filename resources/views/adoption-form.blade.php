@@ -12,7 +12,7 @@
         </span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-10">
         <!-- LEFT SIDE: Pet Image -->
         <div class="overflow-hidden rounded-lg shadow-md h-fit cursor-pointer"
           onclick="openImageModal('{{ asset('storage/' . ($pet->image_path ?? 'pet-images/catdog.svg')) }}', '{{ strtolower($pet->pet_name) !== 'n/a' ? ucwords($pet->pet_name) : 'Unnamed' }}')">

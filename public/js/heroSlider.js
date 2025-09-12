@@ -1,5 +1,5 @@
 const carousel = document.querySelector('#default-carousel');
-let index = 0;
+let index = 1;
 let slideInterval;
 
 // Initialize the carousel
@@ -58,6 +58,6 @@ function resetInterval() {
 
 // Start the carousel when page loads
 document.addEventListener('DOMContentLoaded', () => {
+  updateCarousel();
   startCarousel();
-  updateIndicators();
 });

@@ -476,7 +476,7 @@
             </a>
 
             <a href="/" class="flex items-center">
-              <img src="{{ asset('images/orpawnage-logo-2.png') }}"
+              <img src="{{ asset('images/orpawnage-brand-logo.png') }}"
                 class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
                 alt="Brand Logo 2" />
             </a>
@@ -537,8 +537,8 @@
                 </li>
                 <li class="flex items-center gap-2 pl-4 text-sm">
                   <i class="ph-fill ph-facebook-logo text-orange-400"></i>
-                  <a href="https://facebook.com/AngelesCityVeterinaryOffice" target="_blank" class="nav-link">
-                    Angeles City Veterinary Office
+                  <a href="https://facebook.com/orpawnage" target="_blank" class="nav-link">
+                    Orpawnage Main Office
                   </a>
                 </li>
               </ul>
@@ -754,8 +754,9 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           </div>
                           <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
-                            <input type="tel" name="settings_contact_number" value="{{ old('settings_contact_number') }}"
-                              pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
+                            <input type="tel" name="settings_contact_number"
+                              value="{{ old('settings_contact_number') }}" pattern="^09\d{9}$" maxlength="11"
+                              placeholder="09XXXXXXXXX" required
                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
                             <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
                             <x-form-error name="settings_contact_number" />
@@ -818,7 +819,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
                             <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress" class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                              <div id="strength-progress"
+                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
                             </div>
                           </div>
 
@@ -900,7 +902,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
                           <div class="mt-2 space-y-2">
                             <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
                             <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress" class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                              <div id="strength-progress"
+                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
                             </div>
                           </div>
 
