@@ -1,7 +1,37 @@
 <x-layout>
   <!-- START OF THE SECTION -->
-  <section class="bg-white" id="mainContent">
-    <div class="max-w-screen-xl mx-auto px-4 md:px-8">
+  <section class="relative min-h-screen bg-white" id="mainContent">
+
+    <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
+    <div class="hidden sm:block absolute inset-0 z-0">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 animate-[gradientShift_14s_ease-in-out_infinite]">
+      </div>
+      <div class="absolute inset-0 opacity-40"
+        style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;">
+      </div>
+      <!-- Paw accents sprinkled like background (non-interactive) -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-30 text-7xl -top-10 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-6xl top-6 left-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-5xl top-10 right-1/3"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-8xl top-1/3 -left-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl top-1/2 left-1/5"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-6xl top-2/3 left-1/2"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-7xl bottom-10 right-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl bottom-24 right-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-6xl bottom-8 left-1/3"></i>
+        <!-- Extra right-side sprinkles -->
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl top-4 right-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl top-1/4 right-10"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-7xl top-1/3 right-1/6"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-6xl top-1/2 right-3"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl bottom-1/3 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-5xl bottom-1/5 right-1/12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl bottom-6 right-4"></i>
+      </div>
+    </div>
+    <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Pet Header -->
       <div class="flex flex-wrap justify-between items-center gap-3 mt-2 mb-6">
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
@@ -23,7 +53,14 @@
           </div>
 
           <!-- Pet Information Card -->
-          <div class="mt-6 bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm h-fit">
+          <div class="mt-6 relative bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm h-fit overflow-hidden">
+            <!-- Paw Accents -->
+            <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+              <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-2xl -top-2 left-2"></i>
+              <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-xl top-4 right-4"></i>
+              <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-2xl bottom-2 left-6"></i>
+              <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-xl bottom-4 right-2"></i>
+            </div>
             @if($hasPendingApplication)
             <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
               <div class="flex items-center">
@@ -43,7 +80,7 @@
             </div>
             @endif
 
-            <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+            <div class="relative z-10 flex flex-wrap justify-between items-center mb-4 gap-2">
               <h3 class="text-lg font-semibold text-gray-800 flex items-center">
                 <i class="ph-fill ph-paw-print mr-2 text-orange-500"></i>Pet Details
               </h3>
@@ -56,7 +93,7 @@
             </div>
 
             <!-- Badge Grid -->
-            <div class="grid grid-cols-2 gap-3">
+            <div class="relative z-10 grid grid-cols-2 gap-3">
               <!-- Species -->
               @php
               $speciesIcon = match ($pet->species) {
@@ -139,8 +176,18 @@
         </div>
 
         <!-- RIGHT SIDE: Adoption Process Card -->
-        <div class="p-6 bg-gray-50/80 backdrop-blur-lg rounded-lg border border-yellow-500 shadow-md">
-          <div class="flex items-center justify-between flex-wrap gap-3">
+        <div
+          class="my-6 relative p-6 bg-gray-50/80 backdrop-blur-lg rounded-lg border border-yellow-500 shadow-md overflow-hidden">
+          <!-- Paw Accents -->
+          <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-3xl -top-4 left-4"></i>
+            <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-2xl top-8 right-8"></i>
+            <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-3xl bottom-6 left-12"></i>
+            <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-2xl bottom-2 right-6"></i>
+            <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-xl top-20 left-20"></i>
+            <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-2xl bottom-12 right-12"></i>
+          </div>
+          <div class="relative z-10 flex items-center justify-between flex-wrap gap-3">
             <h3 class="font-bold text-lg text-black" id="processTitle">
               <i class="ph-fill ph-paw-print text-orange-500"></i> Adoption Process
             </h3>
@@ -155,7 +202,7 @@
           </div>
 
           <!-- Stepper -->
-          <div class="mt-4">
+          <div class="mt-4 relative z-10">
             <div class="hidden sm:flex items-center justify-between">
               <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
                 <div id="processProgress" class="h-2 bg-orange-500 rounded-full" style="width: 16.67%"></div>
@@ -173,7 +220,7 @@
           </div>
 
           <!-- Accordion Steps per language (fixed height on desktop to avoid layout shift) -->
-          <div class="mt-4 sm:h-96 sm:overflow-y-auto sm:pr-1 scrollbar-hidden">
+          <div class="mt-4 sm:h-96 sm:overflow-y-auto sm:pr-1 scrollbar-hidden relative z-10">
             <!-- English -->
             <div id="tab-content-english" class="tab-content">
               <div class="space-y-2">
@@ -486,230 +533,244 @@
       </div>
 
       <!-- Bottom: Adoption Form (Wizard) -->
-      <div class="p-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md">
+      <div class="relative p-6 rounded-xl bg-gray-50 border border-gray-300 shadow-md overflow-hidden">
+        <!-- Paw Accents -->
+        <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-4xl -top-6 left-8"></i>
+          <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-10 text-3xl top-10 right-12"></i>
+          <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-4xl bottom-8 left-16"></i>
+          <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-3xl bottom-4 right-8"></i>
+          <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-10 text-2xl top-20 left-24"></i>
+          <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-3xl bottom-16 right-20"></i>
+        </div>
         <!-- Alerts -->
-        @if (session('success'))
-        <div id="alert-3"
-          class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
-          role="alert">
-          <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-            viewBox="0 0 20 20">
-            <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-          </svg>
-          <span class="sr-only">Info</span>
-          <div class="ms-3 text-sm font-medium">
-            {!! session('success') !!}
-          </div>
-          <button type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-            data-dismiss-target="#alert-3" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        <div class="relative z-10">
+          @if (session('success'))
+          <div id="alert-3"
+            class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
+            role="alert">
+            <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
             </svg>
-          </button>
-        </div>
-        @endif
-
-        @if (session('error_request') || session('submission_error'))
-        <div id="alert-3" class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 border-l-4 border-red-400"
-          role="alert">
-          <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-            viewBox="0 0 20 20">
-            <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-          </svg>
-          <span class="sr-only">Info</span>
-          <div class="ms-3 text-sm font-medium">
-            {{ session('error_request') ?? session('submission_error') }}
-          </div>
-          <button type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"
-            data-dismiss-target="#alert-3" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-            </svg>
-          </button>
-        </div>
-        @endif
-
-        <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-          <i class="ph-fill ph-clipboard-text mr-2 text-orange-500"></i>Adoption Application Form
-        </h3>
-
-        <!-- Stepper -->
-        <div class="mb-4">
-          <div class="flex items-center justify-between">
-            <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
-              <div id="adoptProgress" class="h-2 bg-orange-500 rounded-full" style="width: 25%"></div>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">
+              {!! session('success') !!}
             </div>
-            <span id="adoptStepLabel" class="text-xs text-gray-600">Step 1 of 4</span>
+            <button type="button"
+              class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+              data-dismiss-target="#alert-3" aria-label="Close">
+              <span class="sr-only">Close</span>
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+            </button>
           </div>
-          <div class="mt-2 grid grid-cols-4 gap-2 text-[11px] text-gray-600">
-            <div class="text-center">Personal</div>
-            <div class="text-center">Pet Qs</div>
-            <div class="text-center">Documents</div>
-            <div class="text-center">Oath & Submit</div>
+          @endif
+
+          @if (session('error_request') || session('submission_error'))
+          <div id="alert-3"
+            class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 border-l-4 border-red-400" role="alert">
+            <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">
+              {{ session('error_request') ?? session('submission_error') }}
+            </div>
+            <button type="button"
+              class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"
+              data-dismiss-target="#alert-3" aria-label="Close">
+              <span class="sr-only">Close</span>
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+            </button>
           </div>
-        </div>
+          @endif
 
-        <form method="POST" action="/services/{{ $pet->slug }}/adoption-form" id="applicationForm"
-          enctype="multipart/form-data">
-          @csrf
+          <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center relative z-10">
+            <i class="ph-fill ph-clipboard-text mr-2 text-orange-500"></i>Adoption Application Form
+          </h3>
 
-          <!-- Step 1: Personal Information -->
-          <div class="adopt-step" data-step="1">
-            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-              <i class="ph-fill ph-user-circle mr-2"></i>Personal Information
-            </h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
-                <input type="text" name="full_name"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your full name" value="{{ old('full_name') }}" required />
-                <x-form-error name="full_name" />
+          <!-- Stepper -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between">
+              <div class="flex-1 h-2 bg-gray-200 rounded-full mr-3">
+                <div id="adoptProgress" class="h-2 bg-orange-500 rounded-full" style="width: 25%"></div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                <input type="email" name="email"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Your email" value="{{ auth()->user()->email }}" readonly required />
-                <x-form-error name="email" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Birthdate</label>
-                <input type="date" name="birthdate" id="birthdate"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  value="{{ old('birthdate') }}" required max="{{ date('Y-m-d') }}"
-                  onchange="calculateAge(this.value)" />
-                <x-form-error name="birthdate" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Age</label>
-                <input type="number" name="age" id="age"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Auto-calculated" value="{{ old('age') }}" readonly required />
-                <x-form-error name="age" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
-                <input type="text" name="contact_number"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
-                  placeholder="Your contact number"
-                  value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}" readonly
-                  required />
-                <x-form-error name="contact_number" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Address</label>
-                <input type="text" name="address"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your residential address" value="{{ old('address') }}" required />
-                <x-form-error name="address" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Civil Status</label>
-                <select name="civil_status"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  required>
-                  <option value="" disabled {{ old('civil_status') ? '' : 'selected' }}>Select status</option>
-                  <option value="Single" {{ old('civil_status')=='Single' ? 'selected' : '' }}>Single</option>
-                  <option value="Married" {{ old('civil_status')=='Married' ? 'selected' : '' }}>Married</option>
-                  <option value="Divorced" {{ old('civil_status')=='Divorced' ? 'selected' : '' }}>Divorced</option>
-                </select>
-                <x-form-error name="civil_status" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Citizenship</label>
-                <input type="text" name="citizenship"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  placeholder="Your citizenship" value="{{ old('citizenship') }}" required />
-                <x-form-error name="citizenship" />
-              </div>
+              <span id="adoptStepLabel" class="text-xs text-gray-600">Step 1 of 4</span>
+            </div>
+            <div class="mt-2 grid grid-cols-4 gap-2 text-[11px] text-gray-600">
+              <div class="text-center">Personal</div>
+              <div class="text-center">Pet Qs</div>
+              <div class="text-center">Documents</div>
+              <div class="text-center">Oath & Submit</div>
             </div>
           </div>
 
+          <form method="POST" action="/services/{{ $pet->slug }}/adoption-form" id="applicationForm"
+            enctype="multipart/form-data">
+            @csrf
 
-          <!-- Step 2: Pet-related Questions -->
-          <div class="adopt-step hidden" data-step="2">
-            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-              <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
-            </h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-600 mb-1">Why do you want to adopt?</label>
-                <textarea name="reason_for_adoption"
-                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                  rows="8" placeholder="Explain why you want to adopt this pet"
-                  required>{{ old('reason_for_adoption') }}</textarea>
-                <x-form-error name="reason_for_adoption" />
-              </div>
-              <div class="flex flex-col gap-4">
+            <!-- Step 1: Personal Information -->
+            <div class="adopt-step" data-step="1">
+              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-user-circle mr-2"></i>Personal Information
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Do you visit a Veterinarian?</label>
-                  <select name="visit_veterinarian"
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                  <input type="text" name="full_name"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    placeholder="Your full name" value="{{ old('full_name') }}" required />
+                  <x-form-error name="full_name" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                  <input type="email" name="email"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
+                    placeholder="Your email" value="{{ auth()->user()->email }}" readonly required />
+                  <x-form-error name="email" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Birthdate</label>
+                  <input type="date" name="birthdate" id="birthdate"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    value="{{ old('birthdate') }}" required max="{{ date('Y-m-d') }}"
+                    onchange="calculateAge(this.value)" />
+                  <x-form-error name="birthdate" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Age</label>
+                  <input type="number" name="age" id="age"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
+                    placeholder="Auto-calculated" value="{{ old('age') }}" readonly required />
+                  <x-form-error name="age" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Contact Number</label>
+                  <input type="text" name="contact_number"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100"
+                    placeholder="Your contact number"
+                    value="{{ auth()->user()->contact_number ?: 'Not Set (Please update in Account Settings)' }}"
+                    readonly required />
+                  <x-form-error name="contact_number" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Address</label>
+                  <input type="text" name="address"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    placeholder="Your residential address" value="{{ old('address') }}" required />
+                  <x-form-error name="address" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Civil Status</label>
+                  <select name="civil_status"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
                     required>
-                    <option value="" disabled {{ old('visit_veterinarian') ? '' : 'selected' }}>Select option</option>
-                    <option value="Yes" {{ old('visit_veterinarian')=='Yes' ? 'selected' : '' }}>Yes</option>
-                    <option value="No" {{ old('visit_veterinarian')=='No' ? 'selected' : '' }}>No</option>
-                    <option value="Sometimes" {{ old('visit_veterinarian')=='Sometimes' ? 'selected' : '' }}>Sometimes
-                    </option>
+                    <option value="" disabled {{ old('civil_status') ? '' : 'selected' }}>Select status</option>
+                    <option value="Single" {{ old('civil_status')=='Single' ? 'selected' : '' }}>Single</option>
+                    <option value="Married" {{ old('civil_status')=='Married' ? 'selected' : '' }}>Married</option>
+                    <option value="Divorced" {{ old('civil_status')=='Divorced' ? 'selected' : '' }}>Divorced</option>
                   </select>
-                  <x-form-error name="visit_veterinarian" />
+                  <x-form-error name="civil_status" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-600 mb-1">Do you have any pet(s) in your house? How
-                    many?</label>
-                  <input type="number" name="existing_pets"
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Citizenship</label>
+                  <input type="text" name="citizenship"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                    placeholder="Number of pets you currently have" value="{{ old('existing_pets') }}" required />
-                  <x-form-error name="existing_pets" />
+                    placeholder="Your citizenship" value="{{ old('citizenship') }}" required />
+                  <x-form-error name="citizenship" />
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Step 3: Documents -->
-          <div class="adopt-step hidden" data-step="3">
-            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
-              <i class="ph-fill ph-identification-card mr-2"></i>Documents
-            </h4>
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
-                    class="text-red-500">*</span></label>
-                <button type="button" onclick="openValidIdModal()"
-                  class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">View Accepted Valid
-                  IDs</button>
-              </div>
-              <input type="file" name="valid_id"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                required />
-              <x-form-error name="valid_id" />
-            </div>
-          </div>
 
-          <!-- Step 4: Oath & Submit -->
-          <div class="adopt-step hidden" data-step="4">
-            <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
-              <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
-                <i class="ph-fill ph-hand-palm mr-2"></i>Oath Declaration
+            <!-- Step 2: Pet-related Questions -->
+            <div class="adopt-step hidden" data-step="2">
+              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-paw-print mr-2"></i>Pet Information
               </h4>
-              <div class="text-sm text-gray-700 leading-relaxed">
-                I, <span id="inserted_name" class="font-semibold text-orange-600">[Your Full Name]</span>, do solemnly
-                swear that I will take good care of my adopted pet, and he/she will not stray in the street again. I
-                will take him/her to a veterinarian for regular check-ups and/or vaccination.
-                <br><br>
-                Issued this <span id="oath_day" class="font-semibold text-orange-600">[Day]</span> day of <span
-                  id="oath_month" class="font-semibold text-orange-600">[Month]</span>, 20<span id="oath_year"
-                  class="font-semibold text-orange-600">[YY]</span>, at the Orpawnage Angeles Main Office - Animal
-                Shelter, Angeles City Pampanga.
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-1">Why do you want to adopt?</label>
+                  <textarea name="reason_for_adoption"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                    rows="8" placeholder="Explain why you want to adopt this pet"
+                    required>{{ old('reason_for_adoption') }}</textarea>
+                  <x-form-error name="reason_for_adoption" />
+                </div>
+                <div class="flex flex-col gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Do you visit a Veterinarian?</label>
+                    <select name="visit_veterinarian"
+                      class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                      required>
+                      <option value="" disabled {{ old('visit_veterinarian') ? '' : 'selected' }}>Select option</option>
+                      <option value="Yes" {{ old('visit_veterinarian')=='Yes' ? 'selected' : '' }}>Yes</option>
+                      <option value="No" {{ old('visit_veterinarian')=='No' ? 'selected' : '' }}>No</option>
+                      <option value="Sometimes" {{ old('visit_veterinarian')=='Sometimes' ? 'selected' : '' }}>Sometimes
+                      </option>
+                    </select>
+                    <x-form-error name="visit_veterinarian" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Do you have any pet(s) in your house?
+                      How
+                      many?</label>
+                    <input type="number" name="existing_pets"
+                      class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                      placeholder="Number of pets you currently have" value="{{ old('existing_pets') }}" required />
+                    <x-form-error name="existing_pets" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Documents -->
+            <div class="adopt-step hidden" data-step="3">
+              <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="ph-fill ph-identification-card mr-2"></i>Documents
+              </h4>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <label class="block text-sm font-medium text-gray-600">Upload Valid ID <span
+                      class="text-red-500">*</span></label>
+                  <button type="button" onclick="openValidIdModal()"
+                    class="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer">View Accepted Valid
+                    IDs</button>
+                </div>
+                <input type="file" name="valid_id"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                  required />
+                <x-form-error name="valid_id" />
+              </div>
+            </div>
+
+            <!-- Step 4: Oath & Submit -->
+            <div class="adopt-step hidden" data-step="4">
+              <div class="p-4 bg-orange-50 rounded-lg border border-orange-100">
+                <h4 class="text-sm font-medium text-orange-800 mb-2 flex items-center">
+                  <i class="ph-fill ph-hand-palm mr-2"></i>Oath Declaration
+                </h4>
+                <div class="text-sm text-gray-700 leading-relaxed">
+                  I, <span id="inserted_name" class="font-semibold text-orange-600">[Your Full Name]</span>, do solemnly
+                  swear that I will take good care of my adopted pet, and he/she will not stray in the street again. I
+                  will take him/her to a veterinarian for regular check-ups and/or vaccination.
+                  <br><br>
+                  Issued this <span id="oath_day" class="font-semibold text-orange-600">[Day]</span> day of <span
+                    id="oath_month" class="font-semibold text-orange-600">[Month]</span>, 20<span id="oath_year"
+                    class="font-semibold text-orange-600">[YY]</span>, at the Orpawnage Angeles Main Office - Animal
+                  Shelter, Angeles City Pampanga.
+                </div>
               </div>
             </div>
 
@@ -719,23 +780,24 @@
                 <i class="ph-fill ph-paw-print mr-2"></i>Submit Adoption Request
               </button>
             </div>
-          </div>
+        </div>
 
-          <!-- Wizard Controls -->
-          <div class="mt-4 flex items-center justify-between">
-            <button type="button" id="adoptPrev"
-              class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40"
-              disabled>
-              Back
-            </button>
-            <button type="button" id="adoptNext"
-              class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
-              Next
-            </button>
-          </div>
+        <!-- Wizard Controls -->
+        <div class="mt-4 flex items-center justify-between">
+          <button type="button" id="adoptPrev"
+            class="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 disabled:opacity-40"
+            disabled>
+            Back
+          </button>
+          <button type="button" id="adoptNext"
+            class="px-5 bg-orange-500 text-white text-sm font-medium rounded-lg py-2 hover:bg-yellow-400 hover:text-black transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+            Next
+          </button>
+        </div>
 
         </form>
       </div>
+    </div>
 
     </div>
   </section>

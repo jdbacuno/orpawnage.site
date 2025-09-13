@@ -6,7 +6,7 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <div class="h-10 w-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
-                <i class="ph-fill ph-warning"></i>
+                <i class="ph-fill ph-warning-circle"></i>
               </div>
               <div>
                 <h1 class="text-2xl font-bold text-gray-900">Abused/Stray Reports</h1>

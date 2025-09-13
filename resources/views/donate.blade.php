@@ -10,9 +10,35 @@
 
     <!-- Overlay Content - More compact version -->
     <div
-      class="relative z-10 w-full max-w-2xl bg-white/70 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4">
+      class="relative z-10 w-full max-w-2xl bg-white/70 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4 overflow-hidden">
+      <!-- Paw Accents -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-3xl -top-4 left-4"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-2xl top-8 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-3xl bottom-6 left-12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-2xl bottom-2 right-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-xl top-20 left-20"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-2xl bottom-12 right-12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-2xl top-2 right-2"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-xl bottom-4 left-2"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-2xl top-12 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-xl bottom-8 right-4"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-2xl top-4 left-12"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-xl top-16 right-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-2xl bottom-10 left-20"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-xl bottom-16 right-20"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-lg top-24 left-4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-lg bottom-20 left-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-xl top-6 right-12"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-2xl top-18 left-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-xl bottom-14 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-2xl bottom-18 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-lg top-28 left-12"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-lg bottom-24 left-24"></i>
+      </div>
+
       <!-- Header -->
-      <div class="text-center mb-6">
+      <div class="relative z-10 text-center mb-6">
         <h1
           class="text-3xl md:text-4xl font-bold text-orange-500 mb-1 flex flex-col sm:flex-row items-center justify-center gap-2">
           <i class="ph-fill ph-hand-heart"></i> YOUR

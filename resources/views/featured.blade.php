@@ -1,56 +1,93 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="featured-gradient min-h-screen bg-yellow-20" id="mainContent">
-    <div class="max-w-screen-xl mx-auto px-4 md:px-8">
+  <section class="relative featured-gradient min-h-screen bg-yellow-20" id="mainContent">
+
+    <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
+    <div class="hidden sm:block absolute inset-0 z-0">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 animate-[gradientShift_14s_ease-in-out_infinite]">
+      </div>
+      <div class="absolute inset-0 opacity-40"
+        style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;">
+      </div>
+      <!-- Paw accents sprinkled like background (non-interactive) -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-30 text-7xl -top-10 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-6xl top-6 left-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-5xl top-10 right-1/3"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-8xl top-1/3 -left-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl top-1/2 left-1/5"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-6xl top-2/3 left-1/2"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-7xl bottom-10 right-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl bottom-24 right-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-6xl bottom-8 left-1/3"></i>
+        <!-- Extra right-side sprinkles -->
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl top-4 right-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-20 text-5xl top-1/4 right-10"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-25 text-7xl top-1/3 right-1/6"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-6xl top-1/2 right-3"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-25 text-7xl bottom-1/3 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-20 text-5xl bottom-1/5 right-1/12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl bottom-6 right-4"></i>
+      </div>
+    </div>
+    <div class="relative z-10 max-w-screen-xl mx-auto px-4 md:px-8">
       <!-- Hero / Purpose Banner -->
       <div class="mt-2 mb-8">
         <div class="rounded-2xl overflow-hidden">
           <div class="relative p-6 sm:p-8 border border-amber-200/60">
             <!-- Animated gradient background layer -->
-            <div class="absolute inset-0 bg-gradient-to-r from-amber-100 via-rose-100 to-orange-100 animate-[gradientShift_14s_ease-in-out_infinite]"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-amber-100 via-rose-100 to-orange-100 animate-[gradientShift_14s_ease-in-out_infinite]">
+            </div>
             <!-- Subtle dotted pattern overlay -->
-            <div class="absolute inset-0 opacity-[.28]" style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;"></div>
+            <div class="absolute inset-0 opacity-[.28]"
+              style="background-image: radial-gradient(rgba(251, 191, 36, 0.25) 1px, transparent 1px); background-size: 22px 22px;">
+            </div>
             <!-- Floating paw accents -->
-            <div class="pointer-events-none absolute -top-6 -left-6 text-yellow-400 opacity-50 animate-[floatSlow_10s_ease-in-out_infinite]">
+            <div
+              class="pointer-events-none absolute -top-6 -left-6 text-yellow-400 opacity-50 animate-[floatSlow_10s_ease-in-out_infinite]">
               <i class="ph-fill ph-paw-print text-7xl"></i>
             </div>
-            <div class="pointer-events-none absolute -bottom-8 right-10 text-orange-400 opacity-40 animate-[floatSlow_12s_ease-in-out_infinite_reverse]">
+            <div
+              class="pointer-events-none absolute -bottom-8 right-10 text-orange-400 opacity-40 animate-[floatSlow_12s_ease-in-out_infinite_reverse]">
               <i class="ph-fill ph-paw-print text-8xl"></i>
             </div>
-            <div class="pointer-events-none absolute top-6 right-1/3 text-rose-400 opacity-30 animate-[floatSlow_11s_ease-in-out_infinite]">
+            <div
+              class="pointer-events-none absolute top-6 right-1/3 text-rose-400 opacity-30 animate-[floatSlow_11s_ease-in-out_infinite]">
               <i class="ph-fill ph-paw-print text-6xl"></i>
             </div>
             <div class="relative">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight flex items-center">
-                  <i class="ph-fill ph-heart text-amber-500 mr-3"></i>
-                  Featured Pets
-                </h2>
-                <p class="mt-2 text-gray-700 max-w-2xl">
-                  These pets have a lower likelihood of being adopted quickly. Your attention can make all the
-                  difference—please consider meeting them first.
-                </p>
-                <ul class="mt-3 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
-                  <li class="inline-flex items-center"><i class="ph-fill ph-clock mr-1 text-amber-500"></i>Longest in
-                    care</li>
-                  <li class="inline-flex items-center"><i
-                      class="ph-fill ph-user-heart mr-1 text-rose-500"></i>Under‑noticed personalities</li>
-                  <li class="inline-flex items-center"><i
-                      class="ph-fill ph-stethoscope mr-1 text-orange-500"></i>Mild/special needs</li>
-                </ul>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight flex items-center">
+                    <i class="ph-fill ph-heart text-amber-500 mr-3"></i>
+                    Featured Pets
+                  </h2>
+                  <p class="mt-2 text-gray-700 max-w-2xl">
+                    These pets have a lower likelihood of being adopted quickly. Your attention can make all the
+                    difference—please consider meeting them first.
+                  </p>
+                  <ul class="mt-3 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
+                    <li class="inline-flex items-center"><i class="ph-fill ph-clock mr-1 text-amber-500"></i>Longest in
+                      care</li>
+                    <li class="inline-flex items-center"><i
+                        class="ph-fill ph-user-heart mr-1 text-rose-500"></i>Under‑noticed personalities</li>
+                    <li class="inline-flex items-center"><i
+                        class="ph-fill ph-stethoscope mr-1 text-orange-500"></i>Mild/special needs</li>
+                  </ul>
+                </div>
+                <div class="flex sm:flex-col gap-2">
+                  <a href="#pets"
+                    class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-500 text-white font-semibold hover:bg-amber-600 transition">
+                    <i class="ph-fill ph-paw-print mr-2"></i>See Featured Pets
+                  </a>
+                  <a href="/services/adopt-a-pet"
+                    class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white text-gray-800 font-semibold border hover:bg-gray-50 transition">
+                    Explore All Pets
+                  </a>
+                </div>
               </div>
-              <div class="flex sm:flex-col gap-2">
-                <a href="#pets"
-                  class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-amber-500 text-white font-semibold hover:bg-amber-600 transition">
-                  <i class="ph-fill ph-paw-print mr-2"></i>See Featured Pets
-                </a>
-                <a href="/services/adopt-a-pet"
-                  class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white text-gray-800 font-semibold border hover:bg-gray-50 transition">
-                  Explore All Pets
-                </a>
-              </div>
-            </div>
             </div>
           </div>
         </div>
@@ -111,15 +148,20 @@
 
               <!-- Colorized Badges (clickable/togglable) -->
               <div class="flex flex-wrap gap-2 mb-3">
-                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer" data-description="Age" onclick="changeText(this)">
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer"
+                  data-description="Age" onclick="changeText(this)">
                   {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
                   Str::plural($featured->age_unit) }} old
                 </span>
                 <span
-                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer" data-description="Sex" onclick="changeText(this)">
+                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
+                  data-description="Sex" onclick="changeText(this)">
                   {{ ucfirst($featured->sex) }}
                 </span>
-                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer" data-description="Color" onclick="changeText(this)">
+                <span
+                  class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer"
+                  data-description="Color" onclick="changeText(this)">
                   {{ ucfirst($featured->color) }}
                 </span>
               </div>
