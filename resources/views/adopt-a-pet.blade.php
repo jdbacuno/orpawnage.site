@@ -51,7 +51,7 @@
         </p>
 
         <!-- Adoption Process (Interactive Stepper + Accordion) -->
-        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-lg rounded-lg border border-yellow-500">
+        <div class="my-6 p-6 bg-gray-50/80 backdrop-blur-lg rounded-lg border border-yellow-500 shadow-md">
           <div class="flex items-center justify-between flex-wrap gap-3">
             <h3 class="font-bold text-lg text-black" id="processTitle">
               <i class="ph-fill ph-paw-print text-orange-500"></i> Adoption Process
@@ -95,12 +95,12 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         <span class="font-medium">Complete this form</span> with accurate personal information and
                         adoption details.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
@@ -109,14 +109,14 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         After submission, you'll receive a <span class="font-medium">confirmation email that you need to
                           confirm within 24 hours</span>.
                         <span class="text-red-400 font-medium">Failure to confirm within this period will automatically
                           cancel your application.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
@@ -125,12 +125,12 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Once confirmed, you'll receive another email with the estimated preparation time for your pet.
                         Please wait for the <span class="font-medium">scheduling email</span> to proceed.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
@@ -139,7 +139,7 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         When you receive the scheduling email, you must <span class="font-medium">set a pickup date
                           within 48 hours</span>.
@@ -147,7 +147,7 @@
                           application.</span> Available dates will be within 7 business days from the scheduling email
                         date.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
@@ -156,7 +156,7 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         On your scheduled date, bring:
                         <ul class="list-disc list-inside ml-5 mt-1">
@@ -166,7 +166,7 @@
                         <span class="text-red-400 font-medium">Failure to pick up within 3 business days after your
                           scheduled date will cancel the adoption.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="6">
@@ -175,13 +175,13 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li>
                         At pickup, we'll take <span class="font-medium">an official photo</span> of you with your new
                         pet holding an adoption information board. This may be shared on the City Information Office's
                         official channels.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
               </div>
@@ -196,12 +196,12 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         <span class="font-medium">Kumpletuhin ang form na ito</span> ng may tamang personal na
                         impormasyon at detalye ng pag-aadopt.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
@@ -210,14 +210,14 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Pagkatapos i-submit, makakatanggap ka ng <span class="font-medium">confirmation email na
                           kailangan mong i-confirm sa loob ng 24 oras</span>.
                         <span class="text-red-400 font-medium">Ang hindi pag-confirm sa loob ng panahong ito ay
                           awtomatikong magkakansela ng iyong aplikasyon.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
@@ -226,13 +226,13 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Kapag na-confirm na, makakatanggap ka ng isa pang email na naglalaman ng estimated time kung
                         gaano katagal i-prepare ang iyong ina-adopt na pet. Hintayin ang <span class="font-medium">email
                           para sa schedule</span> bago magpatuloy.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
@@ -241,7 +241,7 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Kapag natanggap mo na ang email para sa schedule, kailangan mong <span
                           class="font-medium">mag-set ng pickup date sa loob ng 48 oras</span>.
@@ -249,7 +249,7 @@
                           awtomatikong magkakansela ng iyong aplikasyon.</span> Ang mga available na petsa ay sa loob ng
                         7 working days ng aming opisina mula sa petsa ng email.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
@@ -258,7 +258,7 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Sa iyong nakatakdang petsa, dalhin ang:
                         <ul class="list-disc list-inside ml-5 mt-1">
@@ -269,7 +269,7 @@
                           opisina pagkatapos ng nakatakdang pickup date ay awtomatikong magkakansela ng iyong
                           application.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="6">
@@ -278,13 +278,13 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li>
                         Sa oras ng pickup, kukunan ka ng <span class="font-medium">opisyal na larawan</span> kasama ang
                         iyong bagong alaga na may hawak na adoption information board. I-popost po namin ito sa opisyal
                         na channels ng City Information Office.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
               </div>
@@ -299,12 +299,12 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         <span class="font-medium">Kumpletuan me ining form</span> gamit ing kekang personal a
                         impormasyun ampo ing detalye ning kekang pamag-adopt.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="2">
@@ -313,14 +313,14 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Kaybat meng i-submit, <span class="font-medium">makatanggap kang email ning kumpirmasyun a
                           kailangan mung i-confirm kilub ning 24 oras</span>.
                         <span class="text-red-400 font-medium">Nung e ka makakumpirma keng kilub ning panaun ayni,
                           automatic yang makansela ing kekang aplikasyun.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="3">
@@ -329,14 +329,14 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Nung mekumpirma ne, <span class="font-medium">makatanggap kang aliwang email</span> a ating
                         makalageng estimated time kung angga kang kapilan ka manaya king preparation mi para keng
                         ayampunan mung animal. <span class="font-medium">Paki-panayan mu ing email ning
                           pamag-schedule.</span>
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="4">
@@ -345,7 +345,7 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
                         Potang atanggap mu ne ing email ning pamag-schedule, <span class="font-medium">kailangan meng
                           i-set ing pickup date kilub ning 48 oras</span>.
@@ -353,7 +353,7 @@
                           yang makansela ing kekang aplikasyun.</span> Deng available a petsa atyu la kilub ning 7 aldo
                         a atyu kami keng office mi (e kayabe ing Sabado ampong Domingo) manibat keng petsa ning email.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
                 <details class="process-step" data-step="5">
@@ -382,13 +382,13 @@
                     <i class="ph-fill ph-caret-down text-gray-500"></i>
                   </summary>
                   <div class="p-3 text-sm text-gray-700">
-                    <ol class="list-decimal list-inside space-y-2 leading-7">
+                    <ul class="list-disc list-inside space-y-2 leading-7">
                       <li>
                         Keng pickup, <span class="font-medium">kuanan mi ing opisyal a litrato mu</span> kayabe ing
                         bayung animal mung tatalan ampo ing detalye yu a makasulat keng adoption information board.
                         I-post mi ya ini kareng opisyal a channels ning City Information Office.
                       </li>
-                    </ol>
+                    </ul>
                   </div>
                 </details>
               </div>
@@ -455,14 +455,35 @@
 
       document.body.addEventListener('toggle', function(e) {
         const details = e.target.closest('details.process-step');
-        if (!details || !details.open) return;
-        const current = Number(details.getAttribute('data-step')) || 1;
-        updateProgress(current);
+        if (!details) return;
+
+        if (details.open) {
+          // Close all other details
+          document.querySelectorAll('.process-step').forEach(otherDetails => {
+            if (otherDetails !== details) {
+              otherDetails.open = false;
+            }
+          });
+
+          const current = Number(details.getAttribute('data-step')) || 1;
+          updateProgress(current);
+
+          // Highlight active step
+          document.querySelectorAll('.process-step summary').forEach(sum => sum.classList.remove('bg-yellow-100', 'border-yellow-400'));
+          const activeSummary = details.querySelector('summary');
+          activeSummary.classList.add('bg-yellow-100', 'border-yellow-400');
+        }
       }, true);
 
       // Defaults
       setActiveTab('english');
       updateProgress(1);
+
+      // Initial highlight
+      const initialSummary = document.querySelector('.process-step[open] summary');
+      if (initialSummary) {
+        initialSummary.classList.add('bg-yellow-100', 'border-yellow-400');
+      }
 
       tabButtons.forEach(button => {
         button.addEventListener("click", () => setActiveTab(button.getAttribute("data-tab")));

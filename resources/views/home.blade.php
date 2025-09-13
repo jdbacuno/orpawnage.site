@@ -44,7 +44,7 @@
       <div class="min-w-full flex-shrink-0 relative h-full">
         <img src="{{ asset('images/orpawnage-service-2.png') }}" class="absolute block w-full h-full object-cover"
           alt="Slide 1" />
-        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center px-2">
           <div class="text-center text-white">
             <h1 class="text-4xl font-bold mb-2 text-white cursor-pointer relative group">
               <span class="tracking-widest px-4 py-2 bg-black/20 rounded-lg relative overflow-hidden">
@@ -210,10 +210,10 @@
         </a>
       </div>
 
-      <div class="relative group">
+      <div class="relative">
         <!-- Scroll Left Button -->
         <button
-          class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-0 group-hover:opacity-100 -ml-4"
+          class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-75 hover:opacity-100 -ml-4"
           onclick="scrollFeaturedPets(-1)">
           <i class="ph-fill ph-caret-left text-xl"></i>
         </button>
@@ -222,14 +222,70 @@
         <div class="relative overflow-x-auto pb-4 scrollbar-hidden" id="featuredPetsContainer">
           <div class="flex gap-x-6 px-2">
             @foreach($featuredPets as $featured)
-            <!-- Individual Pet Card -->
-            <div class="flex-shrink-0 w-full sm:max-w-[350px] relative group">
-              <div class="bg-white rounded-lg overflow-hidden">
-                <a href="/services/{{ $featured->slug }}/adoption-form" class="block" target="_blank">
-                  <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}"
-                    alt="Pet Image"
-                    class="h-64 w-full object-cover group-hover:brightness-95 transition-transform duration-500 hover:scale-105" />
-                </a>
+            <!-- ENHANCED CARD DESIGN -->
+            <div
+              class="flex-shrink-0 w-[350px] relative bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200">
+              <a href="/services/{{ $featured->slug }}/adoption-form" class="block relative">
+                <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
+                  class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
+                <div class="absolute top-2 left-2">
+                  <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded">Pick me!</span>
+                </div>
+                <div class="absolute top-2 right-2">
+                  <span class="bg-black/60 text-white text-[10px] px-2 py-1 rounded flex items-center">
+                    <i class="ph-fill ph-clock mr-1"></i>
+                    Added {{ \Carbon\Carbon::parse($featured->created_at)->diffForHumans() }}
+                  </span>
+                </div>
+              </a>
+
+              <!-- Enhanced Slide-Up Panel -->
+              <div
+                class="absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+
+                <!-- Name & ID -->
+                <div class="flex justify-between items-center mb-3">
+                  <h3 class="text-lg font-bold text-black">
+                    {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
+                  </h3>
+                  <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
+                    {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}
+                  </span>
+                </div>
+
+                <!-- Colorized Badges (clickable/togglable) -->
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span
+                    class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer"
+                    data-description="Age" onclick="changeText(this)">
+                    {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
+                    Str::plural($featured->age_unit) }} old
+                  </span>
+                  <span
+                    class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
+                    data-description="Sex" onclick="changeText(this)">
+                    {{ ucfirst($featured->sex) }}
+                  </span>
+                  <span
+                    class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer"
+                    data-description="Color" onclick="changeText(this)">
+                    {{ ucfirst($featured->color) }}
+                  </span>
+                </div>
+
+                <!-- CTAs -->
+                <div class="flex items-center justify-between">
+                  <div class="text-[11px] text-gray-600 inline-flex items-center gap-2">
+                    <span class="inline-flex items-center"><i class="ph-fill ph-sparkle mr-1 text-amber-600"></i>Give me
+                      a chance</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <a href="/services/{{ $featured->slug }}/adoption-form"
+                      class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
+                      <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
             @endforeach
@@ -238,7 +294,7 @@
 
         <!-- Scroll Right Button -->
         <button
-          class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full shadow-md hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-0 group-hover:opacity-100 -mr-4"
+          class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/80 rounded-full shadow-md hover:bg-orange-400 hover:text-white transition-all duration-300 md:opacity-75 hover:opacity-100 -mr-4"
           onclick="scrollFeaturedPets(1)">
           <i class="ph-fill ph-caret-right text-xl"></i>
         </button>
@@ -254,6 +310,25 @@
         left: direction * scrollAmount,
         behavior: 'smooth'
       });
+    }
+  </script>
+
+  <script>
+    // Badge toggler shared with featured page
+    function changeText(el) {
+      const original = el.getAttribute('data-original-text') || el.textContent.trim();
+      const desc = el.getAttribute('data-description') || '';
+      if (!el.getAttribute('data-original-text')) {
+        el.setAttribute('data-original-text', original);
+      }
+      const showingDesc = el.getAttribute('data-showing') === 'desc';
+      if (showingDesc) {
+        el.textContent = el.getAttribute('data-original-text');
+        el.setAttribute('data-showing', 'orig');
+      } else {
+        el.textContent = desc;
+        el.setAttribute('data-showing', 'desc');
+      }
     }
   </script>
   @endif
