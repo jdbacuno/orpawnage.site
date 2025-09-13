@@ -274,7 +274,7 @@
 
     </div>
 
-    <div class="relative z-10 p-6 w-full">
+    <div class="relative z-30 p-6 w-full">
       {{ $slot }}
     </div>
   </main>
