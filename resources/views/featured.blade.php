@@ -97,7 +97,7 @@
       <div class="container mx-auto px-4">
 
 
-        <div class="mb-5 p-4 bg-white border border-amber-200 rounded-xl shadow-sm">
+        <div class="mb-5 p-4 bg-white border border-amber-200 rounded-xl shadow-sm" id="pets">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex items-center gap-3">
               <div class="h-10 w-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
