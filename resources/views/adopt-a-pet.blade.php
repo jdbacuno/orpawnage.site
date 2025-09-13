@@ -97,7 +97,8 @@
                   <div class="p-3 text-sm text-gray-700">
                     <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
-                        <span class="font-medium">Complete this form</span> with accurate personal information and
+                        <span class="font-medium">Complete the form after selecting a pet,</span> with accurate personal
+                        information and
                         adoption details.
                       </li>
                     </ul>
@@ -198,7 +199,8 @@
                   <div class="p-3 text-sm text-gray-700">
                     <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
-                        <span class="font-medium">Kumpletuhin ang form na ito</span> ng may tamang personal na
+                        <span class="font-medium">Kumpletuhin ang form pagkapili ng pet,</span> ng may tamang personal
+                        na
                         impormasyon at detalye ng pag-aadopt.
                       </li>
                     </ul>
@@ -301,7 +303,8 @@
                   <div class="p-3 text-sm text-gray-700">
                     <ul class="list-disc list-inside space-y-2 leading-7">
                       <li class="pb-2 border-b border-blue-100">
-                        <span class="font-medium">Kumpletuan me ining form</span> gamit ing kekang personal a
+                        <span class="font-medium">Kumpletuan me ing form kayari mung mamiling pet,</span> gamit ing
+                        kekang personal a
                         impormasyun ampo ing detalye ning kekang pamag-adopt.
                       </li>
                     </ul>
@@ -479,8 +482,12 @@
       setActiveTab('english');
       updateProgress(1);
 
-      // Initial highlight
-      const initialSummary = document.querySelector('.process-step[open] summary');
+      // Ensure first accordion is open and highlighted
+      const firstDetails = document.querySelector('.process-step[data-step="1"]');
+      if (firstDetails && !firstDetails.open) {
+        firstDetails.open = true;
+      }
+      const initialSummary = document.querySelector('.process-step[data-step="1"] summary');
       if (initialSummary) {
         initialSummary.classList.add('bg-yellow-100', 'border-yellow-400');
       }
