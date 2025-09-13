@@ -227,8 +227,36 @@
   <!-- end: Sidebar -->
 
   <!-- start: Main -->
-  <main class=" md:ml-64 bg-gray-50 min-h-screen transition-all main">
-    <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30"
+  <main class="relative md:ml-64 min-h-screen transition-all main bg-gradient-to-b from-orange-50 to-white">
+    <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
+    <div class="hidden sm:block absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100">
+      </div>
+      <div class="absolute inset-0 opacity-20"
+        style="background-image: radial-gradient(rgba(251, 191, 36, 0.1) 1px, transparent 1px); background-size: 22px 22px;">
+      </div>
+      <!-- Paw accents sprinkled like background (non-interactive) -->
+      <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-7xl -top-10 left-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-6xl top-6 left-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-5xl top-10 right-1/3"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-8xl top-1/3 -left-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-7xl top-1/2 left-1/5"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-6xl top-2/3 left-1/2"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-7xl bottom-10 right-16"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-10 text-5xl bottom-24 right-1/4"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-6xl bottom-8 left-1/3"></i>
+        <!-- Extra right-side sprinkles -->
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-6xl top-4 right-6"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-10 text-5xl top-1/4 right-10"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-15 text-7xl top-1/3 right-1/6"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-10 text-6xl top-1/2 right-3"></i>
+        <i class="ph-fill ph-paw-print absolute text-orange-400 opacity-15 text-7xl bottom-1/3 right-8"></i>
+        <i class="ph-fill ph-paw-print absolute text-rose-400 opacity-10 text-5xl bottom-1/5 right-1/12"></i>
+        <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-6xl bottom-6 right-4"></i>
+      </div>
+    </div>
+    <div class="relative z-10 py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30"
       id="main-header">
       <button type="button" class="text-lg text-gray-600 sidebar-toggle">
         <i class="ri-menu-line"></i>
@@ -246,7 +274,7 @@
 
     </div>
 
-    <div class="p-6 w-full">
+    <div class="relative z-10 p-6 w-full">
       {{ $slot }}
     </div>
   </main>

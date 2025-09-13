@@ -216,28 +216,24 @@
           <!-- Dropdown Menu Button -->
           <div class="flex items-center md:order-2 space-x-3 transition duration-300">
             <button type="button"
-              class="flex items-center justify-center text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 relative"
+              class="group flex items-center justify-center text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 relative px-2 py-1"
               id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
               data-dropdown-placement="bottom">
 
               <span class="sr-only">Open user menu</span>
 
-              <!-- Ping animation -->
-              <div class="absolute inset-0 flex items-center justify-center -m-1 z-0 pointer-events-none">
-                <span class="block w-10 h-10 bg-orange-400 rounded-full animate-ping-slow opacity-60"></span>
+              <!-- Actual icon -->
+              <div class="relative z-10 flex items-center space-x-1">
+                <img src="{{ asset('images/orpawnage-logo.png') }}"
+                  class="w-8 h-8 rounded-full object-cover transition-transform duration-300 hover:scale-105"
+                  alt="User Logo" />
+                <svg class="w-4 h-4 text-gray-600 transition-transform duration-300 group-hover:rotate-180" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </div>
 
-              <!-- Actual icon -->
-              <svg
-                class="relative z-10 w-8 h-8 rounded-full bg-orange-500 hover:bg-yellow-400 transition-colors duration-300"
-                xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fff" viewBox="0 0 256 256">
-                <path
-                  d="M172,120a44,44,0,1,1-44-44A44.05,44.05,0,0,1,172,120Zm60,8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88.09,88.09,0,0,0-91.47-87.93C77.43,41.89,39.87,81.12,40,128.25a87.65,87.65,0,0,0,22.24,58.16A79.71,79.71,0,0,1,84,165.1a4,4,0,0,1,4.83.32,59.83,59.83,0,0,0,78.28,0,4,4,0,0,1,4.83-.32,79.71,79.71,0,0,1,21.79,21.31A87.62,87.62,0,0,0,216,128Z">
-                </path>
-              </svg>
-
             </button>
-
             <!-- Dropdown menu -->
             <div
               class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 border-t border-t-orange-400 rounded-lg shadow-md"
