@@ -441,7 +441,7 @@ class AdoptionApplicationController extends Controller
 
         $application->user->notify(new AdoptionStatusNotification($application->id));
 
-        return redirect()->back()->with('success', 'Pickup scheduled successfully!');
+        return redirect()->back()->with('success', 'Visitation scheduled successfully!');
     }
 
     public function destroy(AdoptionApplication $application)

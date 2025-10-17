@@ -56,3 +56,6 @@ yarn-error.log
 /scripts/ml/config.py
 /low_probability_pets.csv
 public/low_probability_pets.csv
+
+# Ignore the public storage symlink
+/public/storage
