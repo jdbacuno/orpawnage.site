@@ -57,7 +57,38 @@ function resetInterval() {
 }
 
 // Start the carousel when page loads
+let startX = 0;
+let endX = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
   updateCarousel();
   startCarousel();
+
+  // Add swipe support for mobile
+  const carousel = document.querySelector('#default-carousel');
+  if (carousel) {
+    carousel.addEventListener('touchstart', (e) => {
+      startX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+  }
 });
+
+function handleSwipe() {
+  const threshold = 50; // Minimum swipe distance
+  const diff = startX - endX;
+
+  if (Math.abs(diff) > threshold) {
+    if (diff > 0) {
+      // Swipe left - next slide
+      slideNext();
+    } else {
+      // Swipe right - previous slide
+      slidePrev();
+    }
+  }
+}

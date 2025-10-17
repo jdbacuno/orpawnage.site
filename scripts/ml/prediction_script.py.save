@@ -1,0 +1,288 @@
+import pandas as pd
+OBimport numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import RobustScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+from sqlalchemy import create_engine
+
+# Import configuration
+from config import DB_CONFIG
+
+print("=== FEATURED PETS ML SCRIPT ===")
+print(f"Started at: {datetime.now()}")
+
+# Database connection
+db_connection_string = (
+    f"{DB_CONFIG['dialect']}+{DB_CONFIG['driver']}://"
+    f"{DB_CONFIG['username']}:{DB_CONFIG['password']}@"
+    f"{DB_CONFIG['host']}/{DB_CONFIG['database']}"
+)
+db_connection = create_engine(db_connection_string)
+
+# Helper function
+def convert_to_months(age, unit):
+    if unit == 'weeks':
+        return age / 4
+    elif unit == 'years':
+        return age * 12
+    return age
+
+# Step 1: Clear existing featured pets
+print("\n1. CLEARING EXISTING FEATURED PETS...")
+try:
+    with db_connection.begin() as conn:
+        conn.exec_driver_sql("DELETE FROM featured_pets")
+    print("SUCCESS: Cleared featured_pets table")
+except Exception as e:
+    print(f"ERROR: {e}")
+    exit(1)
+
+# Step 2: Get available pets (not adopted, no active applications)
+print("\n2. FETCHING AVAILABLE PETS...")
+available_query = """
+    SELECT p.*
+    FROM pets p
+    WHERE p.archived_at IS NULL
+    AND p.id NOT IN (
+        SELECT DISTINCT pet_id FROM adoption_applications 
+        WHERE status IN ('picked up', 'to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going', 'to be picked up', 'archived')
+    )
+"""
+available_pets = pd.read_sql(available_query, db_connection)
+print(f"SUCCESS: Found {len(available_pets)} available pets")
+
+if len(available_pets) == 0:
+    print("ERROR: No available pets found!")
+    exit(0)
+
+# Step 3: Get training data (adopted pets from last 6 months)
+print("\n3. FETCHING TRAINING DATA...")
+six_months_ago = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%d')
+adopted_query = f"""
+    SELECT DISTINCT p.id, p.age, p.age_unit, p.sex, p.species,
+           a.status, a.updated_at as adoption_date, a.transaction_number
+    FROM pets p
+    JOIN adoption_applications a ON p.id = a.pet_id
+    WHERE a.status = 'picked up'
+    AND a.updated_at >= '{six_months_ago}'
+"""
+adopted_pets = pd.read_sql(adopted_query, db_connection)
+adopted_pets = adopted_pets.drop_duplicates(subset=['id'])
+print(f"SUCCESS: Found {len(adopted_pets)} adopted pets")
+
+# Convert ages
+for df in [available_pets, adopted_pets]:
+    if len(df) > 0:
+        df['age_months'] = df.apply(lambda x: convert_to_months(x['age'], x['age_unit']), axis=1)
+        df['age_months'] = df['age_months'].clip(lower=0.25)
+
+# Step 4: Select pets to feature
+if len(adopted_pets) < 60:
+    print("\n4. USING FALLBACK STRATEGY (insufficient training data)...")
+    # Feature oldest available pets
+    threshold = available_pets['age_months'].quantile(0.75)  # Top 25% oldest
+    featured_pets_selection = available_pets[available_pets['age_months'] >= threshold].copy()
+    featured_pets_selection = featured_pets_selection.sort_values('age_months', ascending=False)
+    
+    # Create featured pets data with proper structure
+    featured_pets_data = pd.DataFrame({
+        'pet_id': featured_pets_selection['id'],  # pet.id becomes pet_id in featured_pets
+        'adoption_probability': 0.1  # Low probability for fallback
+    })
+    
+    print(f"SUCCESS: Selected {len(featured_pets_data)} oldest pets")
+    
+else:
+    print("\n4. USING ML PREDICTION...")
+    # Prepare features
+    adopted_pets['log_age_months'] = np.log1p(adopted_pets['age_months'])
+    available_pets['log_age_months'] = np.log1p(available_pets['age_months'])
+    
+    # Label data
+    adopted_pets['was_adopted'] = 1
+    available_pets['was_adopted'] = 0
+    
+    # Combine for training
+    full_data = pd.concat([adopted_pets, available_pets], ignore_index=True)
+    
+    # Train model
+    features = ['log_age_months', 'sex', 'species']
+    X = full_data[features]
+    y = full_data['was_adopted']
+    
+    preprocessor = ColumnTransformer([
+        ('num', RobustScaler(), ['log_age_months']),
+        ('cat', OneHotEncoder(handle_unknown='ignore'), ['sex', 'species'])
+    ])
+    
+    model = Pipeline([
+        ('preprocessor', preprocessor),
+        ('classifier', LogisticRegression(max_iter=1000, random_state=42))
+    ])
+    
+    model.fit(X, y)
+    
+    # Predict for available pets
+    X_available = available_pets[features]
+    available_pets['adoption_probability'] = model.predict_proba(X_available)[:, 1]
+    
+    # Select lowest 25% probability
+    threshold = available_pets['adoption_probability'].quantile(0.25)
+    featured_pets_selection = available_pets[available_pets['adoption_probability'] <= threshold].copy()
+    featured_pets_selection = featured_pets_selection.sort_values('adoption_probability')
+    
+    # Create featured pets data with proper structure
+    featured_pets_data = pd.DataFrame({
+        'pet_id': featured_pets_selection['id'],  # pet.id becomes pet_id in featured_pets
+        'adoption_probability': featured_pets_selection['adoption_probability']
+    })
+    
+    print(f"SUCCESS: Selected {len(featured_pets_data)} pets with ML prediction")
+
+# Step 5: Save to database with correct structure
+print("\n5. SAVING TO DATABASE...")
+if len(featured_pets_data) > 0:
+    featured_pets_data.to_sql('featured_pets', db_connection, if_exists='append', index=False)
+    print(f"SUCCESS: Saved {len(featured_pets_data)} pets to featured_pets table")
+    
+    # Verify what we saved
+    verification = pd.read_sql("""
+        SELECT fp.pet_id, fp.adoption_probability, p.pet_name, p.species, p.age
+        FROM featured_pets fp
+        JOIN pets p ON fp.pet_id = p.id
+        ORDER BY fp.adoption_probability ASC
+        LIMIT 5
+    """, db_connection)
+    
+    print("\nVERIFICATION - Sample featured pets:")
+    print(verification.to_string(index=False))
+    
+    # Final count
+    final_count = pd.read_sql("SELECT COUNT(*) as count FROM featured_pets", db_connection)
+    print(f"SUCCESS: featured_pets table now contains {final_count.iloc[0]['count']} records")
+    
+else:
+    print("ERROR: No pets to feature!")
+
+# Step 6: Enhanced Analysis and Visualization (if we have training data)
+if len(adopted_pets) >= 10:
+    print("\n6. DETAILED ANALYSIS...")
+    
+    # Feature importance analysis
+    coefficients = model.named_steps['classifier'].coef_[0]
+    feature_names = (model.named_steps['preprocessor']
+                     .named_transformers_['cat']
+                     .get_feature_names_out(['sex', 'species']))
+    all_features = ['log_age_months'] + list(feature_names)
+
+    importance_df = pd.DataFrame({
+        'Feature': all_features,
+        'Coefficient': coefficients
+    })
+
+    print("\nFeature Importance in Adoption Prediction:")
+    print(importance_df.sort_values('Coefficient', ascending=False).to_string(index=False))
+
+    # Age distribution statistics
+    print("\nAge Distribution Statistics (months):")
+    age_stats = pd.DataFrame({
+        'Group': ['Adopted', 'Available'],
+        'Mean Age': [adopted_pets['age_months'].mean(), available_pets['age_months'].mean()],
+        'Median Age': [adopted_pets['age_months'].median(), available_pets['age_months'].median()],
+        'Min Age': [adopted_pets['age_months'].min(), available_pets['age_months'].min()],
+        'Max Age': [adopted_pets['age_months'].max(), available_pets['age_months'].max()],
+        'Total Count': [len(adopted_pets), len(available_pets)]
+    })
+    print(age_stats.to_string(index=False))
+
+    # Species distribution with adoption rates
+    print("\nSpecies Distribution with Adoption Rates:")
+    species_adopted = adopted_pets['species'].value_counts().rename('Adopted Count')
+    species_available = available_pets['species'].value_counts().rename('Available Count')
+    species_dist = pd.concat([species_adopted, species_available], axis=1).fillna(0)
+    species_dist['Total'] = species_dist['Adopted Count'] + species_dist['Available Count']
+    species_dist['Adoption Rate'] = species_dist['Adopted Count'] / species_dist['Total']
+    print(species_dist.to_string())
+
+    # Transaction analysis
+    print("\nTransaction Analysis:")
+    print(f"Total successful transactions: {adopted_pets['transaction_number'].nunique()}")
+    if len(adopted_pets) > 0:
+        print(f"Average pets per transaction: {len(adopted_pets) / adopted_pets['transaction_number'].nunique():.2f}")
+
+    # Monthly adoption trends
+    if 'adoption_date' in adopted_pets.columns:
+        adopted_pets['adoption_month'] = pd.to_datetime(adopted_pets['adoption_date']).dt.to_period('M')
+        monthly_stats = adopted_pets.groupby('adoption_month').agg({
+            'transaction_number': 'nunique',
+            'id': 'count'
+        }).rename(columns={'transaction_number': 'Unique Transactions', 'id': 'Total Pets Adopted'})
+
+        print("\nMonthly Adoption Statistics:")
+        print(monthly_stats.to_string())
+
+    # Sex distribution with adoption rates
+    print("\nSex Distribution with Adoption Rates:")
+    sex_adopted = adopted_pets['sex'].value_counts().rename('Adopted Count')
+    sex_available = available_pets['sex'].value_counts().rename('Available Count')
+    sex_dist = pd.concat([sex_adopted, sex_available], axis=1).fillna(0)
+    sex_dist['Total'] = sex_dist['Adopted Count'] + sex_dist['Available Count']
+    sex_dist['Adoption Rate'] = sex_dist['Adopted Count'] / sex_dist['Total']
+    print(sex_dist.to_string())
+
+    # Top transactions by number of pets
+    print("\nTop Transactions by Number of Pets Adopted:")
+    top_transactions = adopted_pets.groupby('transaction_number').agg({
+        'id': 'count',
+        'species': lambda x: x.value_counts().index[0] if len(x) > 0 else 'Unknown'
+    }).rename(columns={'id': 'Pets Adopted', 'species': 'Primary Species'}).sort_values('Pets Adopted', ascending=False)
+    print(top_transactions.head(10).to_string())
+
+    # Age group analysis
+    print("\nAge Group Analysis with Adoption Rates:")
+    age_bins = [0, 6, 12, 24, 60, 120, np.inf]
+    age_labels = ['0-6m', '6-12m', '1-2y', '2-5y', '5-10y', '10y+']
+    
+    adopted_pets['age_group'] = pd.cut(adopted_pets['age_months'], bins=age_bins, labels=age_labels)
+    available_pets['age_group'] = pd.cut(available_pets['age_months'], bins=age_bins, labels=age_labels)
+
+    age_group_adopted = adopted_pets['age_group'].value_counts().rename('Adopted Count')
+    age_group_available = available_pets['age_group'].value_counts().rename('Available Count')
+    age_group_dist = pd.concat([age_group_adopted, age_group_available], axis=1).fillna(0)
+    age_group_dist['Total'] = age_group_dist['Adopted Count'] + age_group_dist['Available Count']
+    age_group_dist['Adoption Rate'] = age_group_dist['Adopted Count'] / age_group_dist['Total']
+    print(age_group_dist.to_string())
+
+    # Save detailed analysis
+    try:
+        analysis_data = available_pets.copy()
+        if 'adoption_probability' in analysis_data.columns:
+            analysis_data = analysis_data.sort_values('adoption_probability')
+        else:
+            analysis_data = analysis_data.sort_values('age_months', ascending=False)
+        
+        analysis_data.to_csv('detailed_pet_analysis.csv', index=False)
+        print("\nSUCCESS: Detailed analysis saved to 'detailed_pet_analysis.csv'")
+    except Exception as e:
+        print(f"WARNING: Could not save analysis file: {e}")
+
+print(f"\n=== SUMMARY STATISTICS ===")
+print(f"Available pets analyzed: {len(available_pets)}")
+print(f"Adopted pets used for training: {len(adopted_pets) if len(adopted_pets) >= 10 else 0}")
+print(f"Featured pets selected: {len(featured_pets_data) if len(featured_pets_data) > 0 else 0}")
+if len(available_pets) > 0:
+    print(f"Average age of available pets: {available_pets['age_months'].mean():.1f} months")
+if len(adopted_pets) >= 10 and len(available_pets) > 0:
+    print(f"Average age of adopted pets: {adopted_pets['age_months'].mean():.1f} months")
+
+print(f"\n=== SCRIPT COMPLETED SUCCESSFULLY at {datetime.now()} ===")
+print("SUCCESS: Featured pets table has been updated with truly available pets!")
+print("SUCCESS: Check your Featured Pets page - it should now show only available pets!")
+if len(featured_pets_data) > 0:
+    strategy_used = "ML Prediction" if len(adopted_pets) >= 10 else "Fallback (Oldest Pets)"
+    print(f"SUCCESS: Strategy used: {strategy_used}")
+    print(f"SUCCESS: Pet IDs featured: {featured_pets_data['pet_id'].tolist()}")

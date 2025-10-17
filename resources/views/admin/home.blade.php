@@ -32,7 +32,7 @@
     <!-- Total Incomplete Adoption Applications -->
     <div
       class="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between h-32 cursor-pointer hover:shadow-lg transition-shadow duration-300"
-      onclick="window.location.href='{{ route('admin.adoption-applications') }}?status=to+be+picked+up&status=to+be+scheduled'">
+      onclick="window.location.href='{{ route('admin.adoption-applications') }}'">
       <h2 class="text-lg font-semibold text-gray-700">Incomplete Adoptions</h2>
       <p class="text-3xl font-bold text-red-600 text-right">{{ $totalIncompleteAdoptionApplications }}</p>
       <div class="text-xs text-gray-500 text-right">Click to view list</div>
@@ -121,7 +121,8 @@
             </option>
             @endfor
         </select>
-        <button onclick="updateChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
+        <button onclick="updateChart()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
           Update
         </button>
       </div>
@@ -136,17 +137,18 @@
       <div class="flex gap-2 items-center flex-wrap w-full sm:w-auto">
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600">From:</label>
-          <input type="month" id="startDate" value="{{ now()->subMonths(11)->format('Y-m') }}" 
+          <input type="month" id="startDate" value="{{ now()->subMonths(11)->format('Y-m') }}"
             class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2 w-full sm:w-auto"
             max="{{ now()->format('Y-m') }}">
         </div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <label class="text-sm text-gray-600">To:</label>
-          <input type="month" id="endDate" value="{{ now()->format('Y-m') }}" 
+          <input type="month" id="endDate" value="{{ now()->format('Y-m') }}"
             class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg px-3 py-2 w-full sm:w-auto"
             max="{{ now()->format('Y-m') }}">
         </div>
-        <button onclick="updateTrendChart()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
+        <button onclick="updateTrendChart()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
           Update
         </button>
       </div>
@@ -155,43 +157,43 @@
   </div>
 
   <!-- Adoption Rate Modal -->
-  <div id="adoptionRateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full">
-        <div class="flex justify-between items-center p-6 border-b">
-          <h3 class="text-xl font-semibold text-gray-900">Adoption Rate History</h3>
-          <button onclick="closeAdoptionRateModal()" class="text-gray-400 hover:text-gray-600">
-            <i class="ph-fill ph-x text-2xl"></i>
-          </button>
+  <div id="adoptionRateModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-gray-600 bg-opacity-50 hidden z-[9999]">
+    <div
+      class="bg-white p-2 rounded-lg shadow-lg w-full max-w-2xl max-h-[70vh] overflow-y-auto relative scrollbar-hidden">
+      <div class="flex justify-between items-center p-6 border-b">
+        <h3 class="text-xl font-semibold text-gray-900">Adoption Rate History</h3>
+        <button onclick="closeAdoptionRateModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="ph-fill ph-x text-2xl"></i>
+        </button>
+      </div>
+      <div class="p-6">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Select Period:</label>
+          <div class="flex gap-2 flex-wrap">
+            <select id="rateMonth"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8 w-full sm:w-auto">
+              @for($i = 1; $i <= 12; $i++) <option value="{{ $i }}" {{ $i==now()->month ? 'selected' : '' }}>
+                {{ Carbon\Carbon::create()->month($i)->format('F') }}
+                </option>
+                @endfor
+            </select>
+            <select id="rateYear"
+              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6 w-full sm:w-auto">
+              @for($year = 2024; $year <= now()->year; $year++)
+                <option value="{{ $year }}" {{ $year==now()->year ? 'selected' : '' }}>
+                  {{ $year }}
+                </option>
+                @endfor
+            </select>
+            <button onclick="loadAdoptionRate()"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
+              Load
+            </button>
+          </div>
         </div>
-        <div class="p-6">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Select Period:</label>
-            <div class="flex gap-2 flex-wrap">
-              <select id="rateMonth"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-8 w-full sm:w-auto">
-                @for($i = 1; $i <= 12; $i++) <option value="{{ $i }}" {{ $i==now()->month ? 'selected' : '' }}>
-                  {{ Carbon\Carbon::create()->month($i)->format('F') }}
-                  </option>
-                  @endfor
-              </select>
-              <select id="rateYear"
-                class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg pl-2 py-2 pr-6 w-full sm:w-auto">
-                @for($year = 2024; $year <= now()->year; $year++)
-                  <option value="{{ $year }}" {{ $year==now()->year ? 'selected' : '' }}>
-                    {{ $year }}
-                  </option>
-                  @endfor
-              </select>
-              <button onclick="loadAdoptionRate()"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 w-full sm:w-auto">
-                Load
-              </button>
-            </div>
-          </div>
-          <div id="adoptionRateContent" class="space-y-4">
-            <!-- Content will be loaded here -->
-          </div>
+        <div id="adoptionRateContent" class="space-y-4">
+          <!-- Content will be loaded here -->
         </div>
       </div>
     </div>
@@ -210,7 +212,7 @@
     function initializeChart() {
       const ctx = document.getElementById("adoptionChart").getContext("2d");
       const chartData = @json($currentMonthData);
-      
+
       adoptionChart = new Chart(ctx, {
         type: "bar",
         data: {
@@ -255,7 +257,7 @@
     function initializeTrendChart() {
       const ctx = document.getElementById("monthlyTrendChart").getContext("2d");
       const chartData = @json($monthlyTrendData);
-      
+
       monthlyTrendChart = new Chart(ctx, {
         type: "bar",
         data: {
@@ -300,7 +302,7 @@
     function updateChart() {
       const month = document.getElementById('chartMonth').value;
       const year = document.getElementById('chartYear').value;
-      
+
       fetch(`/admin/adoption-stats?month=${month}&year=${year}`)
         .then(response => response.json())
         .then(data => {
@@ -316,28 +318,28 @@
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       const currentDate = new Date().toISOString().slice(0, 7); // YYYY-MM format
-      
+
       // Validate date range
       if (startDate > endDate) {
         alert('Start date cannot be after end date');
         return;
       }
-      
+
       if (endDate > currentDate) {
         alert('End date cannot exceed current date');
         return;
       }
-      
+
       // Validate range limit (maximum 2 years)
       const start = new Date(startDate + '-01');
       const end = new Date(endDate + '-01');
       const monthsDifference = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-      
+
       if (monthsDifference > 24) {
         alert('Date range cannot exceed 2 years (24 months)');
         return;
       }
-      
+
       fetch(`/admin/monthly-trend-stats?startDate=${startDate}&endDate=${endDate}`)
         .then(response => {
           if (!response.ok) {
@@ -372,14 +374,14 @@
       const month = document.getElementById('rateMonth').value;
       const year = document.getElementById('rateYear').value;
       const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long' });
-      
+
       fetch(`/admin/adoption-stats?month=${month}&year=${year}`)
         .then(response => response.json())
         .then(data => {
           const totalCanine = data.reduce((sum, item) => sum + item.canine, 0);
           const totalFeline = data.reduce((sum, item) => sum + item.feline, 0);
           const totalAdoptions = totalCanine + totalFeline;
-          
+
           document.getElementById('adoptionRateContent').innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-blue-50 p-4 rounded-lg">

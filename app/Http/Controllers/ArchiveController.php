@@ -76,6 +76,7 @@ class ArchiveController extends Controller
         $item = match ($type) {
             'pets' => Pet::findOrFail($id),
             'adoption' => AdoptionApplication::findOrFail($id),
+	    'surrender' => SurrenderApplication::findOrFail($id),
             'missing' => MissingPetReport::findOrFail($id),
             'abused' => AnimalAbuseReport::findOrFail($id),
             default => null,
@@ -102,6 +103,17 @@ class ArchiveController extends Controller
                 }
                 $item->delete();
                 break;
+
+	    case 'surrender':
+		if ($item->valid_id_path) {
+      		  Storage::disk('public')->delete($item->valid_id_path);
+    		}
+    		if ($item->animal_photo_path) {
+      		  Storage::disk('public')->delete($item->animal_photo_path);
+    		}
+
+    		$item->delete();
+
 
             case 'missing':
                 // Delete files associated with missing pet report

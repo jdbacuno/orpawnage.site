@@ -32,7 +32,7 @@ class ContactNumberChanged extends Notification implements ShouldQueue
             ->line('Your contact number was recently changed from:')
             ->line($this->oldContact . ' to ' . $notifiable->contact_number)
             ->line('If you did not make this change, please secure your account.')
-            ->action('Secure Account', url('http://localhost/' . $isAdmin))
+            ->action('Secure Account', url('https://orpawnage.site/' . $isAdmin))
             ->line('Thank you for using our application!');
     }
 }

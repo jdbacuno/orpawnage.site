@@ -8,15 +8,15 @@
         <div
             class="absolute p-1 overflow-hidden bg-white text-red-500 right-14 w-28 h-auto text-sm rounded-md shadow-md">
             Report
-            a Bug?</div>
+            an Issue?</div>
     </button>
 
     <!-- Bug Report Chatbox -->
     <div id="bug-report-chatbox"
-        class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 z-40">
-        <div class="bg-orange-500 text-white p-4 rounded-t-lg">
+        class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 z-40 max-h-96 flex flex-col">
+        <div class="bg-orange-500 text-white p-4 rounded-t-lg shrink-0">
             <div class="flex justify-between items-center">
-                <h3 class="font-semibold">Report a Bug</h3>
+                <h3 class="font-semibold">Report an Issue</h3>
                 <button id="close-bug-chatbox" class="text-white hover:text-gray-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -25,13 +25,12 @@
                 </button>
             </div>
         </div>
-
-        <div class="p-4">
-            <form id="bug-report-form" enctype="multipart/form-data">
-                @csrf
+        <form id="bug-report-form" class="flex-1 flex flex-col overflow-hidden" enctype="multipart/form-data">
+            @csrf
+            <div class="flex-1 overflow-y-auto p-4">
                 <div class="mb-4">
                     <label for="bug-description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Describe the bug you encountered:
+                        Describe the issue you encountered:
                     </label>
                     <textarea id="bug-description" name="description" rows="4"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -40,25 +39,14 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="bug-email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email (optional):
-                    </label>
-                    <input type="email" id="bug-email" name="email"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                        placeholder="Enter your email to receive updates about this bug report">
-                    <p class="text-xs text-gray-500 mt-1">We'll use this to contact you about the status of your bug
-                        report</p>
-                </div>
-
-                <div class="mb-4">
                     <label for="bug-screenshot" class="block text-sm font-medium text-gray-700 mb-2">
                         Screenshot (optional):
                     </label>
                     <div class="flex items-center space-x-2">
                         <button type="button" id="capture-screenshot"
-                            class="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
+                            class="flex items-center px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
                             title="Captures only what you can currently see on screen">
-                            📸 Capture Current View
+                            <i class="ph-fill ph-camera mr-1"></i> Capture Current View
                         </button>
                         <input type="file" id="bug-screenshot" name="screenshot" accept="image/*" class="hidden">
                         <span id="screenshot-status" class="text-sm text-gray-500"></span>
@@ -73,19 +61,18 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="flex space-x-2">
-                    <button type="submit"
-                        class="flex-1 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition-colors">
-                        Submit Report
-                    </button>
-                    <button type="button" id="cancel-bug-report"
-                        class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="p-4 border-t flex space-x-2 bg-gray-50">
+                <button type="submit"
+                    class="flex-1 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition-colors">
+                    Submit Report
+                </button>
+                <button type="button" id="cancel-bug-report"
+                    class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

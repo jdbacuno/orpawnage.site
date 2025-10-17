@@ -47,11 +47,32 @@ class BugReportController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $bugReports = BugReport::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $query = BugReport::with('user')
+            ->orderBy('created_at', 'desc');
+
+        // Status filter - only apply if a specific status is selected (not empty and not "all")
+        if ($request->has('status') && $request->status !== '' && $request->status !== null) {
+            $query->where('status', $request->status);
+        }
+        // If no status is provided or it's empty, show all statuses
+
+        // Search filter
+        if ($request->has('search') && $request->search !== '') {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('description', 'like', "%{$searchTerm}%")
+                  ->orWhere('id', 'like', "%{$searchTerm}%")
+		  ->orWhere('admin_notes', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', function($userQuery) use ($searchTerm) {
+                      $userQuery->where('username', 'like', "%{$searchTerm}%");
+                  })
+                  ->orWhere('email', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $bugReports = $query->paginate(15);
 
         return view('admin.bug-reports', compact('bugReports'));
     }

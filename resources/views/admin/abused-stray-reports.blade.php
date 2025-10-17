@@ -1,287 +1,299 @@
 <x-admin-layout>
-  <h1 class="text-2xl font-bold text-gray-900">Manage Abused / Stray Reports</h1>
+  <div class="max-w-[1600px] mx-auto">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Manage Abused/Stray Reports</h1>
+      <p class="text-sm text-gray-600 mt-1">Review and process animal abuse and stray reports</p>
+    </div>
 
-  <!-- Filters Section -->
-  <div class="flex flex-wrap gap-2 my-4 items-center">
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center w-full">
-      <select name="status"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px]"
-        onchange="this.form.submit()">
-        <option value="">All Statuses</option>
-        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
-        <option value="action taken" {{ request('status')==='action taken' ? 'selected' : '' }}>Action Taken</option>
-        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
-      </select>
-      <select name="direction"
-        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
-        onchange="this.form.submit()">
-        <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>Newest First</option>
-        <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>Oldest First</option>
-      </select>
-      <div class="relative ml-auto">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by report number, reporter name, or contact number" class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[250px] focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
-        <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
-          <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
-        </div>
+    <!-- Global Alerts -->
+    @if (session('success'))
+    <div id="global-alert-success"
+      class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400" role="alert">
+      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        viewBox="0 0 20 20">
+        <path
+          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <span class="sr-only">Info</span>
+      <div class="ms-3 text-sm font-medium">{!! session('success') !!}</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+        onclick="this.parentElement.remove()" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div id="global-alert-error"
+      class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 border-l-4 border-red-400" role="alert">
+      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        viewBox="0 0 20 20">
+        <path
+          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <span class="sr-only">Info</span>
+      <div class="ms-3 text-sm font-medium">{{ session('error') }}</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"
+        onclick="this.parentElement.remove()" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    <!-- Status Tabs -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+      <div class="border-b border-gray-200">
+        <nav class="flex overflow-x-auto scrollbar-hidden" aria-label="Tabs">
+          <a href="{{ request()->fullUrlWithQuery(['status' => '']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ !request('status') ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-files mr-2"></i>
+            All Reports
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'pending' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-clock mr-2"></i>
+            Pending
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'action taken']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'action taken' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-check-circle mr-2"></i>
+            Action Taken
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'rejected']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'rejected' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-x-circle mr-2"></i>
+            Rejected
+          </a>
+        </nav>
       </div>
-      @foreach(request()->except(['search', 'page', 'status', 'direction']) as $key => $value)
-        <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
-      @endforeach
-      @if(request('search'))
-        <a href="{{ request()->url() }}?{{ http_build_query(request()->except(['search', 'page'])) }}" class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
-      @endif
-    </form>
-  </div>
 
-  @if($reports->isEmpty())
-  <div class="flex items-center justify-center p-6 text-gray-500">
-    <p class="text-lg">No reports found.</p>
-  </div>
-  @else
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-    @foreach($reports as $report)
-    <div
-      class="bg-white w-full rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-      <!-- Report Info Header -->
-      <div class="p-4 border-b border-gray-200">
-        <div class="flex items-start space-x-2">
-          <!-- Incident Photo (first photo or placeholder) -->
-          <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
+      <!-- Search and Sort -->
+      <div class="p-4 bg-gray-50 border-b border-gray-200">
+        <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
+          <div class="flex-1 min-w-[250px]">
+            <div class="relative">
+              <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Search by report number, reporter name, or contact"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+              <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
+                <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
+              </div>
+            </div>
+          </div>
+
+          <select name="direction"
+            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>Newest First</option>
+            <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>Oldest First</option>
+          </select>
+
+          <input type="hidden" name="status" value="{{ request('status') }}" />
+
+          @if(request('search'))
+          <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}"
+            class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition">
+            <i class="ph-fill ph-x mr-1"></i>Clear
+          </a>
+          @endif
+        </form>
+      </div>
+    </div>
+
+    @if($reports->isEmpty())
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <i class="ph-fill ph-file-search text-6xl text-gray-300 mb-4"></i>
+      <p class="text-lg text-gray-500">No abuse/stray reports found.</p>
+    </div>
+    @else
+    <!-- Reports Grid -->
+    <div class="space-y-6">
+      @foreach($reports as $report)
+      <div
+        class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+        <!-- Report Header -->
+        <div class="bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-200 p-4 sm:p-6">
+          <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <!-- Incident Image -->
+            <a href="{{ asset('storage/' . json_decode($report->incident_photos)[0]) }}" target="_blank"
+              class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 bg-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow group mx-auto sm:mx-0">
+              @if($report->incident_photos)
+              <img src="{{ asset('storage/' . json_decode($report->incident_photos)[0]) }}" alt="Incident photo"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+              @else
+              <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                <i class="ph-fill ph-warning-circle text-2xl sm:text-4xl text-gray-400"></i>
+              </div>
+              @endif
+            </a>
+
+            <div class="flex-1 min-w-0 w-full">
+              <div class="flex flex-col gap-4 mb-4">
+                <div class="min-w-0 flex-1">
+                  <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 break-words">
+                    <a href="#" class="text-blue-500 hover:text-blue-600"
+                      onclick="showReportDetails('{{ $report->id }}', event)">
+                      {{ $report->report_number }}
+                    </a>
+                  </h2>
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    <span
+                      class="px-2 sm:px-3 py-1 bg-white border border-gray-300 rounded-full text-xs sm:text-sm text-gray-700 inline-flex items-center">
+                      <i class="ph-fill ph-paw-print mr-1 flex-shrink-0"></i>
+                      <span class="truncate max-w-[120px] sm:max-w-none">{{ ucwords(strtolower($report->species))
+                        }}</span>
+                    </span>
+                    <span
+                      class="px-2 sm:px-3 py-1 bg-white border border-gray-300 rounded-full text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                      <i class="ph-fill ph-calendar mr-1"></i>
+                      {{ $report->incident_date->format('M d, Y') }}
+                    </span>
+                    <span class="px-2 sm:px-3 py-1
+              {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+              {{ $report->status === 'action taken' ? 'bg-green-100 text-green-700' : '' }}
+              {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+              rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
+                      @switch($report->status)
+                      @case('pending')
+                      <i class="ph-fill ph-clock mr-1"></i>Pending
+                      @break
+                      @case('action taken')
+                      <i class="ph-fill ph-check-circle mr-1"></i>Action Taken
+                      @break
+                      @case('rejected')
+                      <i class="ph-fill ph-x-circle mr-1"></i>Rejected
+                      @break
+                      @endswitch
+                    </span>
+                  </div>
+                  <div
+                    class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                    <span class="flex items-center min-w-0">
+                      <i class="ph-fill ph-user mr-1 flex-shrink-0"></i>
+                      <span class="truncate">{{ ucwords(strtolower($report->full_name ?: 'Anonymous')) }}</span>
+                    </span>
+                    <span class="flex items-center whitespace-nowrap">
+                      <i class="ph-fill ph-phone mr-1 flex-shrink-0"></i>
+                      {{ $report->contact_no }}
+                    </span>
+                    <span class="flex items-center min-w-0">
+                      <i class="ph-fill ph-map-pin mr-1 flex-shrink-0"></i>
+                      <span class="truncate">{{ $report->incident_location }}</span>
+                    </span>
+                    <span class="flex items-center whitespace-nowrap">
+                      <i class="ph-fill ph-first-aid mr-1 flex-shrink-0"></i>
+                      {{ ucwords($report->animal_condition) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Toggle Button -->
+              <button onclick="toggleReportDetails('{{ $report->id }}')"
+                class="w-full bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-left transition-colors flex items-center justify-between group">
+                <span
+                  class="font-medium text-sm sm:text-base text-gray-700 group-hover:text-gray-900 flex items-center gap-2 min-w-0 flex-1">
+                  <i id="report-icon-{{ $report->id }}"
+                    class="ph-fill ph-caret-right text-gray-400 group-hover:text-blue-600 transition-transform duration-200 flex-shrink-0"></i>
+                  <span class="truncate">View Full Report Details</span>
+                </span>
+                <span class="text-xs sm:text-sm text-gray-500 ml-2 flex-shrink-0 whitespace-nowrap">
+                  {{ $report->created_at->diffForHumans() }}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Details (Hidden by default) -->
+        <div id="report-details-{{ $report->id }}" class="hidden divide-y divide-gray-200">
+          <div class="p-6 bg-gray-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="text-sm font-medium text-gray-600">Additional Notes</label>
+                <p class="mt-2 text-gray-900 whitespace-pre-line">{{ $report->additional_notes }}</p>
+              </div>
+              <div>
+                <label class="text-sm font-medium text-gray-600">Valid ID</label>
+                <div class="mt-2">
+                  <a href="{{ asset('storage/' . $report->valid_id_path) }}" target="_blank"
+                    class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">
+                    <i class="ph-fill ph-image mr-2"></i>
+                    View Valid ID
+                  </a>
+                </div>
+              </div>
+            </div>
+
             @if($report->incident_photos)
-            <img src="{{ asset('storage/' . json_decode($report->incident_photos)[0]) }}" alt="Incident photo"
-              class="w-full h-full object-cover cursor-pointer"
-              onclick="openPhotosModal('{{ $report->id }}', 'incident', 0)">
-            @else
-            <div class="w-full h-full flex items-center justify-center bg-gray-100">
-              <i class="ph-fill ph-image text-2xl text-gray-400"></i>
+            <div>
+              <label class="text-sm font-medium text-gray-600 block mb-2">Incident Photos</label>
+              <div class="flex flex-wrap gap-2">
+                @foreach(json_decode($report->incident_photos) as $index => $photo)
+                <a href="{{ asset('storage/' . $photo) }}" target="_blank"
+                  class="w-24 h-24 rounded-lg overflow-hidden border border-gray-300 hover:border-blue-500 transition">
+                  <img src="{{ asset('storage/' . $photo) }}" alt="Incident photo {{ $index + 1 }}"
+                    class="w-full h-full object-cover">
+                </a>
+                @endforeach
+              </div>
+            </div>
+            @endif
+
+            @if($report->status === 'rejected' && $report->reject_reason)
+            <div class="p-4 bg-red-50 border border-red-200 rounded-lg mt-6">
+              <label class="text-sm font-medium text-red-800 block mb-2">Rejection Reason</label>
+              <p class="text-sm text-red-700">{{ $report->reject_reason }}</p>
             </div>
             @endif
           </div>
 
-          <div class="flex-1 min-w-0">
-            <h3 class="text-lg font-semibold flex items-center truncate">
-              <i class="ph-fill ph-tag mr-2"></i>
-              <a href="#" class="report-info-btn text-blue-500 hover:text-blue-600" data-id="{{ $report->id }}"
-                data-report-number="{{ $report->report_number }}" data-full-name="{{ $report->full_name }}"
-                data-contact-no="{{ $report->contact_no }}" data-incident-location="{{ $report->incident_location }}"
-                data-incident-date="{{ $report->incident_date->format('M d, Y') }}"
-                data-species="{{ ucwords(strtolower($report->species)) }}"
-                data-animal-condition="{{ $report->animal_condition }}"
-                data-additional-notes="{{ $report->additional_notes }}"
-                data-valid-id="{{ asset('storage/' . $report->valid_id_path) }}"
-                data-incident-photos="{{ $report->incident_photos }}" data-status="{{ $report->status }}"
-                data-reject-reason="{{ $report->reject_reason }}" data-user-email="{{ $report->user->email ?? '' }}">
-                {{ $report->report_number }}
-              </a>
-            </h3>
-            <p class="text-sm truncate">
-              <span class="text-gray-500">Reporter:</span>
-              <span class="font-medium text-gray-900 truncate">{{ ucwords(strtolower($report->full_name ?: 'Anonymous'))
-                }}</span>
-            </p>
-            <p class="text-sm">
-              <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded 
-                {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                {{ $report->status === 'acknowledged' ? 'bg-green-100 text-green-700' : '' }}
-                {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-                @switch($report->status)
-                @case('pending') Pending @break
-                @case('acknowledged') Acknowledged @break
-                @case('rejected') Rejected @break
-                @endswitch
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Buttons Dropdown -->
-      <div class="bg-gray-50 px-4 py-3 flex justify-end relative z-10">
-        <div class="relative inline-block text-left">
-          <div>
+          <!-- Action Buttons -->
+          <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            @if($report->status === 'pending')
             <button type="button"
-              class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
-              id="options-menu-{{ $report->id }}" aria-expanded="true" aria-haspopup="true"
-              onclick="toggleDropdown('{{ $report->id }}')">
-              <span class="mr-2">Actions</span>
-              <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                aria-hidden="true">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd" />
-              </svg>
+              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+              onclick="showRejectModal('{{ $report->id }}')">
+              <i class="ph-fill ph-x-circle mr-2"></i>Reject
             </button>
-          </div>
-
-          <!-- Dropdown menu positioned upward -->
-          <div
-            class="origin-bottom-right absolute right-0 bottom-full mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50"
-            id="dropdown-{{ $report->id }}">
-            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-{{ $report->id }}">
-              @if($report->status === 'pending')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-100 hover:text-green-900"
-                role="menuitem" onclick="showAcknowledgeModal('{{ $report->id }}')">
-                <i class="ph-fill ph-check-circle mr-2"></i> Action Taken
-              </button>
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-100 hover:text-red-900"
-                role="menuitem" onclick="showRejectModal('{{ $report->id }}')">
-                <i class="ph-fill ph-x-circle mr-2"></i> Reject Report
-              </button>
-              @elseif($report->status === 'action taken' || $report->status === 'rejected')
-              <button type="button"
-                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                role="menuitem" onclick="showArchiveModal('{{ $report->id }}')">
-                <i class="ph-fill ph-archive mr-2"></i> Archive
-              </button>
-              @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    @endforeach
-  </div>
-  @endif
-
-  <!-- Pagination -->
-  <div class="mt-6">
-    {{ $reports->appends(request()->except('page'))->links() }}
-  </div>
-
-  <!-- Report Info Modal -->
-  <div id="reportInfoModal"
-    class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div
-      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hidden">
-      <button id="closeReportInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x text-xl"></i>
-      </button>
-
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Report Details</h2>
-
-      <div class="mt-4">
-        <div class="flex gap-x-2 items-center">
-          <label class="text-sm font-medium text-gray-600">Valid ID</label>
-          <div>
-            <button id="viewValidId" class="text-blue-500 hover:underline text-sm hover:text-blue-600 cursor-pointer">
-              View Uploaded ID
+            <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              onclick="showAcknowledgeModal('{{ $report->id }}')">
+              <i class="ph-fill ph-check-circle mr-2"></i>Mark Action Taken
             </button>
+            @elseif(in_array($report->status, ['action taken', 'rejected']))
+            <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+              onclick="showArchiveModal('{{ $report->id }}')">
+              <i class="ph-fill ph-archive mr-2"></i>Archive
+            </button>
+            @endif
           </div>
         </div>
       </div>
-
-      <!-- Incident Photos Section -->
-      <div class="mt-2 mb-6 p-4 bg-gray-50 rounded-lg">
-        <div>
-          <label class="text-sm font-medium text-gray-600">Incident Photos</label>
-          <div id="incidentPhotosContainer" class="flex items-center gap-2 mt-2">
-            <!-- Photos will be inserted here by JavaScript -->
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Reporter's Name</label>
-            <input type="text" id="reporterName" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-600">Contact Number</label>
-            <input type="text" id="contactNumber" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Animal Species</label>
-            <input type="text" id="animalSpecies" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-600">Animal Condition</label>
-            <input type="text" id="animalCondition" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Incident Date</label>
-            <input type="text" id="incidentDate" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-600">Reporter's Email</label>
-            <input type="text" id="reporterEmail" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Incident Location</label>
-            <input type="text" id="incidentLocation" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <!-- Reject Reason (if rejected) -->
-        <div id="rejectReasonContainer" class="mt-4 hidden">
-          <label class="text-sm font-medium text-gray-600">Rejection Reason</label>
-          <input type="text" id="rejectReason" readonly
-            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-        </div>
-
-        <!-- Additional Notes Section -->
-        <div class="mt-4">
-          <label class="text-sm font-medium text-gray-600">Additional Notes</label>
-          <div type="text" id="additionalNotes" readonly
-            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-      <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
-        <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-          <i class="ph-fill ph-x"></i>
-        </button>
-        <h2 class="text-md font-semibold text-gray-800">Uploaded ID</h2>
-        <div class="w-full mt-2 flex justify-center items-center">
-          <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
-        </div>
-      </div>
+    <!-- Pagination -->
+    <div class="mt-6">
+      {{ $reports->appends(request()->except('page'))->links() }}
     </div>
+    @endif
   </div>
 
-  <!-- Photos Modal -->
-  <div id="photosModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-w-4xl max-h-[90vh] flex flex-col">
-      <button id="closePhotosModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-        <i class="ph-fill ph-x text-xl"></i>
-      </button>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4" id="photosModalTitle">Photos</h2>
-
-      <div class="flex-1 overflow-hidden relative">
-        <!-- Main Image Display -->
-        <div class="w-full h-full flex items-center justify-center">
-          <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-contain rounded-lg shadow-md">
-        </div>
-      </div>
-
-      <!-- Thumbnail Strip -->
-      <div id="photoThumbnails" class="flex gap-2 mt-4 overflow-x-auto py-2">
-        <!-- Thumbnails will be inserted here by JavaScript -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Acknowledge Confirmation Modal -->
+  <!-- Acknowledge Modal -->
   <div id="acknowledgeModal"
     class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -289,43 +301,48 @@
         <i class="ph-fill ph-x text-xl"></i>
       </button>
       <h2 class="text-lg font-semibold text-gray-800 mb-4">Acknowledge Report</h2>
-      <p id="confirmationMessage" class="text-gray-700 mb-6">Notify user that action has been taken on their report?</p>
+      <p id="acknowledgeMessage" class="text-gray-700 mb-6">Mark this report as action taken and notify the reporter?
+      </p>
       <div class="flex justify-end gap-3">
         <button id="cancelAcknowledge"
           class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
-        <form id="actionForm" method="POST" action="{{ route('admin.abused-reports.acknowledge') }}"
+        <form id="acknowledgeForm" method="POST" action="{{ route('admin.abused-reports.acknowledge') }}"
           class="inline-block">
           @csrf
           @method('PATCH')
           <input type="hidden" name="report_id" id="acknowledgeReportId">
-          <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-            <i class="ph-fill ph-check-circle mr-2"></i>Notify
+          <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+            <i class="ph-fill ph-check-circle mr-2"></i>Confirm
           </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Reject Confirmation Modal -->
+  <!-- Reject Modal -->
   <div id="rejectModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
       <button id="closeRejectModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
       <h2 class="text-lg font-semibold text-gray-800 mb-4">Reject Report</h2>
-      <p class="mb-2">Please provide a reason for rejecting this report:</p>
-      <p class="my-2 text-red-500 text-sm">This will send an email notification to the reporter.</p>
-      <form id="actionForm" method="POST" action="{{ route('admin.abused-reports.reject') }}">
+      <p class="mb-2">Provide a reason for rejecting this report:</p>
+      <p class="my-2 text-red-500 text-sm"><i class="ph-fill ph-warning mr-1"></i>An email will be sent to the reporter.
+      </p>
+      <form id="rejectForm" method="POST" action="{{ route('admin.abused-reports.reject') }}">
         @csrf
         @method('PATCH')
         <input type="hidden" name="report_id" id="rejectReportId">
-        <label for="rejectReason" class="block font-medium text-gray-700">Reason:</label>
-        <textarea id="rejectReason" name="reject_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
-        <x-form-error name="reject_reason" />
+        <label for="rejectReason" class="block font-medium text-gray-700 mb-2">Reason <span
+            class="text-red-600">*</span></label>
+        <textarea id="rejectReason" name="reject_reason" rows="4" required maxlength="500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 mb-4"
+          placeholder="Explain why this report is being rejected..."></textarea>
+        <p class="text-xs text-gray-500 mb-4">Maximum 500 characters</p>
         <div class="flex justify-end gap-3">
           <button type="button" id="cancelReject"
             class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
             Reject Report
           </button>
         </div>
@@ -333,30 +350,26 @@
     </div>
   </div>
 
-  <!-- Archive Confirmation Modal -->
+  <!-- Archive Modal -->
   <div id="archiveModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-      <button type="button" id="closeArchiveModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <button id="closeArchiveModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
-
-      <h2 class="text-xl font-semibold text-gray-800 flex items-center"><i class="ph-fill ph-archive mr-2"></i>Confirm
-        Archive</h2>
+      <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="ph-fill ph-archive mr-2"></i>Confirm Archive
+      </h2>
       <p class="mb-4">Are you sure you want to archive this report?</p>
-      <p class="mb-4 text-gray-500 text-sm">Archived reports will be moved to a separate section and won't appear in the
-        main list.</p>
-
+      <p class="mb-4 text-gray-500 text-sm">Archived reports won't appear in the main list.</p>
       <form id="archiveForm" method="POST" action="{{ route('admin.abused-reports.archive') }}">
         @csrf
         @method('PATCH')
         <input type="hidden" name="report_id" id="archiveReportId">
-
-        <div class="flex justify-end space-x-3 mt-4">
-          <button type="button" id="cancelArchive" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-            Cancel
-          </button>
-          <button type="submit" class="bg-gray-600 px-4 py-2 text-white hover:bg-gray-500 rounded-md flex items-center">
-            <i class="ph-fill ph-archive mr-2"></i>Confirm Archive
+        <div class="flex justify-end gap-3">
+          <button type="button" id="cancelArchive"
+            class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 flex items-center">
+            <i class="ph-fill ph-archive mr-2"></i>Archive
           </button>
         </div>
       </form>
@@ -364,190 +377,86 @@
   </div>
 
   <script>
-    // Report Info Modal
-    document.querySelectorAll('.report-info-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        // Basic info
-        document.getElementById('reporterName').value = this.dataset.fullName || 'Anonymous';
-        document.getElementById('contactNumber').value = this.dataset.contactNo || 'Not provided';
-        document.getElementById('reporterEmail').value = this.dataset.userEmail || 'Not provided';
-        document.getElementById('animalSpecies').value = this.dataset.species;
-        document.getElementById('animalCondition').value = this.dataset.animalCondition;
-        document.getElementById('incidentLocation').value = this.dataset.incidentLocation;
-        document.getElementById('incidentDate').value = this.dataset.incidentDate;
-        document.getElementById('additionalNotes').textContent = this.dataset.additionalNotes || 'No additional notes provided';
-        
-        // Reject reason (if rejected)
-        const rejectReasonContainer = document.getElementById('rejectReasonContainer');
-        if (this.dataset.status === 'rejected' && this.dataset.rejectReason) {
-          rejectReasonContainer.classList.remove('hidden');
-          document.getElementById('rejectReason').value = this.dataset.rejectReason;
-        } else {
-          rejectReasonContainer.classList.add('hidden');
-        }
-        
-        // Set up the valid ID view button
-        document.getElementById('viewValidId').onclick = function() {
-          document.getElementById('modalImage').src = button.dataset.validId;
-          document.getElementById('imageModal').classList.remove('hidden');
-        };
-        
-        // Load incident photos
-        const incidentPhotosContainer = document.getElementById('incidentPhotosContainer');
-        incidentPhotosContainer.innerHTML = '';
-        
-        try {
-          const incidentPhotos = JSON.parse(button.dataset.incidentPhotos || '[]');
-          
-          if (incidentPhotos.length === 0) {
-            incidentPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">No incident photos uploaded</p>';
-          } else {
-            incidentPhotos.forEach((photo, index) => {
-              const photoUrl = "{{ asset('storage/') }}/" + photo;
-              const photoElement = document.createElement('div');
-              photoElement.className = 'cursor-pointer hover:opacity-80 transition-opacity';
-              photoElement.innerHTML = `
-                <img src="${photoUrl}" alt="Incident photo ${index + 1}" 
-                    class="w-24 h-24 object-cover rounded-md border border-gray-200"
-                    onclick="openPhotosModal('${button.dataset.id}', 'incident', ${index})">
-              `;
-              incidentPhotosContainer.appendChild(photoElement);
-            });
-          }
-        } catch (e) {
-          incidentPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">Error loading incident photos</p>';
-        }
-        
-        document.getElementById('reportInfoModal').classList.remove('hidden');
-      });
-    });
+    function toggleReportDetails(id) {
+      const details = document.getElementById('report-details-' + id);
+      const icon = document.getElementById('report-icon-' + id);
 
-    // Function to open photos modal for a specific report
-    function openPhotosModal(reportId, type, startIndex = 0) {
-      const button = document.querySelector(`.report-info-btn[data-id="${reportId}"]`);
-      if (!button) return;
-      
-      try {
-        const photos = JSON.parse(button.dataset.incidentPhotos || '[]');
-        if (photos.length === 0) return;
-        
-        const modal = document.getElementById('photosModal');
-        const mainImg = document.getElementById('mainPhoto');
-        const thumbnailsContainer = document.getElementById('photoThumbnails');
-        const modalTitle = document.getElementById('photosModalTitle');
-        
-        // Set modal title
-        modalTitle.textContent = 'Incident Photos';
-        
-        // Clear previous thumbnails
-        thumbnailsContainer.innerHTML = '';
-        
-        // Set initial image
-        let currentIndex = startIndex >= 0 && startIndex < photos.length ? startIndex : 0;
-        mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-        
-        // Create thumbnails
-        photos.forEach((photo, index) => {
-          const thumbnail = document.createElement('div');
-          thumbnail.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${index === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          thumbnail.innerHTML = `<img src="{{ asset('storage/') }}/${photo}" alt="Thumbnail ${index + 1}" class="w-full h-full object-cover">`;
-          thumbnail.addEventListener('click', () => {
-            currentIndex = index;
-            mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-            // Update active thumbnail
-            document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-              thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-            });
-          });
-          thumbnailsContainer.appendChild(thumbnail);
-        });
-        
-        modal.classList.remove('hidden');
-      } catch (e) {
-        console.error('Error loading photos:', e);
+      if (details.classList.contains('hidden')) {
+        details.classList.remove('hidden');
+        icon.classList.remove('ph-caret-right');
+        icon.classList.add('ph-caret-down');
+      } else {
+        details.classList.add('hidden');
+        icon.classList.remove('ph-caret-down');
+        icon.classList.add('ph-caret-right');
       }
     }
 
-    // Close report info modal
-    document.getElementById('closeReportInfoModal').addEventListener('click', function() {
-      document.getElementById('reportInfoModal').classList.add('hidden');
-    });
-
-    // Photos modal close handler
-    document.getElementById('closePhotosModal').addEventListener('click', function() {
-      document.getElementById('photosModal').classList.add('hidden');
-    });
-
-    // Image modal close handler
-    document.getElementById('closeImageModal').addEventListener('click', function() {
-      document.getElementById('imageModal').classList.add('hidden');
-    });
-
-    // Improved toggle function for upward dropdown
-    function toggleDropdown(id) {
-      const dropdown = document.getElementById(`dropdown-${id}`);
-      dropdown.classList.toggle('hidden');
-      
-      // Close other open dropdowns
-      document.querySelectorAll('[id^="dropdown-"]').forEach(otherDropdown => {
-        if (otherDropdown.id !== `dropdown-${id}` && !otherDropdown.classList.contains('hidden')) {
-          otherDropdown.classList.add('hidden');
-        }
-      });
-      
-      // Prevent the click from propagating to document
-      event.stopPropagation();
-    }
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function() {
-      document.querySelectorAll('[id^="dropdown-"]').forEach(dropdown => {
-        dropdown.classList.add('hidden');
-      });
-    });
-
-    // Show acknowledge modal
     function showAcknowledgeModal(id) {
       document.getElementById('acknowledgeReportId').value = id;
       document.getElementById('acknowledgeModal').classList.remove('hidden');
     }
 
-    document.getElementById('closeAcknowledgeModal').addEventListener('click', function() {
-      document.getElementById('acknowledgeModal').classList.add('hidden');
-    });
-
-    document.getElementById('cancelAcknowledge').addEventListener('click', function() {
-      document.getElementById('acknowledgeModal').classList.add('hidden');
-    });
-
-    // Show reject modal
     function showRejectModal(id) {
       document.getElementById('rejectReportId').value = id;
       document.getElementById('rejectModal').classList.remove('hidden');
     }
 
-    document.getElementById('closeRejectModal').addEventListener('click', function() {
-      document.getElementById('rejectModal').classList.add('hidden');
-    });
-
-    document.getElementById('cancelReject').addEventListener('click', function() {
-      document.getElementById('rejectModal').classList.add('hidden');
-    });
-
-    // Show archive modal
     function showArchiveModal(id) {
       document.getElementById('archiveReportId').value = id;
       document.getElementById('archiveModal').classList.remove('hidden');
     }
 
-    // Close archive modal
-    document.getElementById('closeArchiveModal').addEventListener('click', function() {
+    document.getElementById('closeAcknowledgeModal').addEventListener('click', () => {
+      document.getElementById('acknowledgeModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelAcknowledge').addEventListener('click', () => {
+      document.getElementById('acknowledgeModal').classList.add('hidden');
+    });
+
+    document.getElementById('closeRejectModal').addEventListener('click', () => {
+      document.getElementById('rejectModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelReject').addEventListener('click', () => {
+      document.getElementById('rejectModal').classList.add('hidden');
+    });
+
+    document.getElementById('closeArchiveModal').addEventListener('click', () => {
       document.getElementById('archiveModal').classList.add('hidden');
     });
 
-    // Cancel archive
-    document.getElementById('cancelArchive').addEventListener('click', function() {
+    document.getElementById('cancelArchive').addEventListener('click', () => {
       document.getElementById('archiveModal').classList.add('hidden');
+    });
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('acknowledgeModal').classList.add('hidden');
+        document.getElementById('rejectModal').classList.add('hidden');
+        document.getElementById('archiveModal').classList.add('hidden');
+      }
+    });
+
+    // Close when clicking outside
+    document.getElementById('acknowledgeModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('rejectModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('archiveModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.add('hidden');
+      }
     });
   </script>
 </x-admin-layout>

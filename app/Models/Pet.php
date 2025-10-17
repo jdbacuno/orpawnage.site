@@ -25,7 +25,7 @@ class Pet extends Model
 
     public function adoptionApplication()
     {
-        return $this->hasOne(AdoptionApplication::class);
+        return $this->hasMany(AdoptionApplication::class);
     }
 
     protected static function booted()
@@ -45,4 +45,15 @@ class Pet extends Model
             event(new PetDeleted($pet));
         });
     }
+
+    public function getFormattedAgeAttribute()
+{
+    // If the age is a whole number, show without decimals
+    if ($this->age == floor($this->age)) {
+        return number_format($this->age, 0);
+    }
+    
+    // Otherwise, remove trailing zeros from decimals
+    return rtrim(rtrim(number_format($this->age, 2), '0'), '.');
+}
 }

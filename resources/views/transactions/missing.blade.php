@@ -1,261 +1,367 @@
 <x-transactions-layout>
-  <div class="mb-6">
-    <div class="rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[1px]">
-      <div class="rounded-xl bg-white">
-        <div class="px-5 py-5 sm:px-6 sm:py-6 flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
-                <i class="ph-fill ph-magnifying-glass"></i>
-              </div>
-              <div>
-                <h1 class="text-2xl font-bold text-gray-900">Missing Pet Reports</h1>
-                <p class="text-sm text-gray-500">Review and manage reported missing pets</p>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <a href="/transactions/adoption-status"
-              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Adoptions</a>
-            <a href="/transactions/surrender-status"
-              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Surrenders</a>
-            <a href="/transactions/missing-status"
-              class="px-3 py-1.5 text-sm rounded-full bg-indigo-600 text-white shadow-sm">Missing Pets</a>
-            <a href="/transactions/abused-status"
-              class="px-3 py-1.5 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">Abused/Stray</a>
-          </div>
-        </div>
-      </div>
+  <div class="max-w-[1600px] mx-auto">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">My Missing Pet Reports</h1>
+      <p class="text-sm text-gray-600 mt-1">Track and manage your missing pet reports</p>
     </div>
-  </div>
 
-  <!-- Filters Section -->
-  <div class="flex flex-wrap gap-4 my-4 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-    <form method="GET" action="{{ request()->url() }}" class="relative flex items-center mt-2 sm:mt-0">
-      <input type="text" name="search" value="{{ request('search') }}" placeholder="Report number/name, or contact"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 min-w-[280px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition shadow-inner" />
-      <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
-        <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
+    <!-- Global Alerts -->
+    @if (session('success'))
+    <div id="global-alert-success"
+      class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400" role="alert">
+      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        viewBox="0 0 20 20">
+        <path
+          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <span class="sr-only">Info</span>
+      <div class="ms-3 text-sm font-medium">{!! session('success') !!}</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+        onclick="this.parentElement.remove()" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div id="global-alert-error"
+      class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 border-l-4 border-red-400" role="alert">
+      <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        viewBox="0 0 20 20">
+        <path
+          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <span class="sr-only">Info</span>
+      <div class="ms-3 text-sm font-medium">{{ session('error') }}</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"
+        onclick="this.parentElement.remove()" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    <!-- Status Tabs -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+      <div class="border-b border-gray-200">
+        <nav class="flex overflow-x-auto scrollbar-hidden" aria-label="Tabs">
+          <a href="{{ request()->fullUrlWithQuery(['status' => '']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ !request('status') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-files mr-2"></i>
+            All Reports
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'pending' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-clock mr-2"></i>
+            Pending
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'approved']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'approved' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-check-circle mr-2"></i>
+            Approved
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'rejected']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'rejected' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-x-circle mr-2"></i>
+            Rejected
+          </a>
+          <a href="{{ request()->fullUrlWithQuery(['status' => 'found']) }}"
+            class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+              {{ request('status') === 'found' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+            <i class="ph-fill ph-check-square mr-2"></i>
+            Found
+          </a>
+        </nav>
       </div>
-      @foreach(request()->except(['search', 'page']) as $key => $value)
-      <input type="hidden" name="{{ $key }}" value="{{ $value }}" />
-      @endforeach
-      @if(request('search'))
-      <a href="{{ request()->url() }}?{{ http_build_query(request()->except(['search', 'page'])) }}"
-        class="ml-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Clear</a>
-      @endif
-    </form>
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
-      <!-- Status Filter -->
-      <select name="status"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[180px] focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
-        onchange="this.form.submit()">
-        <option value="">All Statuses</option>
-        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
-        <option value="acknowledged" {{ request('status')==='acknowledged' ? 'selected' : '' }}>Acknowledged</option>
-        <option value="rejected" {{ request('status')==='rejected' ? 'selected' : '' }}>Rejected</option>
-      </select>
-    </form>
-  </div>
 
-  @if ($missingReports->isEmpty())
-  <div
-    class="flex flex-col items-center justify-center p-10 text-center bg-white rounded-lg border border-gray-200 shadow-sm">
-    <img src="{{ asset('images/missing.png') }}" class="h-20 w-20 opacity-70 mb-3 rounded-full" alt="Empty" />
-    <p class="text-lg font-medium text-gray-700">No missing pet reports found</p>
-    <p class="text-sm text-gray-500">Try changing filters or check back later.</p>
-  </div>
-  @else
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-    @foreach($missingReports as $report)
-    @php
-    $displayStatus = $report->previous_status ?? $report->status;
-    @endphp
-    <div
-      class="bg-white w-full rounded-xl shadow-sm overflow-hidden border border-gray-200 hover:shadow-md hover:-translate-y-[2px] transition-all duration-200">
-      <!-- Pet and Owner Info Header -->
-      <div class="p-4 border-b border-gray-100">
-        <div class="flex items-start space-x-2">
-          <!-- Pet Image (first pet photo or placeholder) -->
-          <div class="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden ring-1 ring-gray-200">
-            @if($report->pet_photos)
-            <img src="{{ asset('storage/' . json_decode($report->pet_photos)[0]) }}" alt="{{ $report->pet_name }}"
-              class="w-full h-full object-cover cursor-pointer"
-              onclick="openPhotosModal('{{ $report->id }}', 'pet', 0)">
-            @else
-            <div class="w-full h-full flex items-center justify-center bg-gray-100">
-              <i class="ph-fill ph-paw-print text-2xl text-gray-400"></i>
+      <!-- Search and Sort -->
+      <div class="p-4 bg-gray-50 border-b border-gray-200">
+        <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
+          <div class="flex-1 min-w-[250px]">
+            <div class="relative">
+              <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Search by report number, pet name, or contact"
+                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+              <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
+                <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
+              </div>
             </div>
-            @endif
           </div>
 
-          <div class="flex-1 min-w-0">
-            <h3 class="text-lg font-semibold flex items-center truncate">
-              <i class="ph-fill ph-tag mr-2"></i><a href="#"
-                class="owner-info-btn text-blue-500 hover:text-blue-600 hover:underline" data-id="{{ $report->id }}"
-                data-name="{{ $report->owner_name }}" data-pet-name="{{ $report->pet_name }}"
-                data-last-seen-date="{{ $report->last_seen_date->format('M d, Y') }}"
-                data-contact="{{ $report->contact_no }}" data-validid="{{ asset('storage/' . $report->valid_id_path) }}"
-                data-petphotos="{{ $report->pet_photos }}" data-locationphotos="{{ $report->location_photos }}"
-                data-description="{{ $report->pet_description }}" data-location="{{ $report->last_seen_location }}">{{
-                $report->report_number }}</a>
-            </h3>
-            <p class="text-sm truncate">
-              <span class="text-gray-500">Owner:</span>
-              <span class="font-medium text-gray-900 truncate">{{ ucwords(strtolower($report->owner_name)) }}</span>
-            </p>
-            <p class="text-sm">
-              <span class="text-gray-500">Status:</span> <span class="px-2 py-1 text-xs rounded-md ring-1 ring-inset 
-                {{ $displayStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                {{ $displayStatus === 'acknowledged' ? 'bg-green-100 text-green-700' : '' }}
-                {{ $displayStatus === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-                @switch($displayStatus)
-                @case('pending') Waiting for Review @break
-                @case('acknowledged') Acknowledged @break
-                @case('rejected') Rejected @break
-                @endswitch
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
+          <select name="direction"
+            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 min-w-[150px]"
+            onchange="this.form.submit()">
+            <option value="desc" {{ request('direction', 'desc' )==='desc' ? 'selected' : '' }}>Newest First</option>
+            <option value="asc" {{ request('direction')==='asc' ? 'selected' : '' }}>Oldest First</option>
+          </select>
 
-      <!-- Action Buttons -->
-      <div class="bg-gray-50 px-4 py-3 flex justify-end">
-        <form method="POST" action="/transactions/missing-status/{{ $report->id }}">
-          @csrf
-          @method('DELETE')
-          <button type="button" onclick="showDeleteModal('{{ $report->id }}', '{{ $report->report_number }}')"
-            class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center">
-            <i class="ph-fill ph-trash mr-1"></i> Delete
-          </button>
+          <input type="hidden" name="status" value="{{ is_array(request('status')) ? '' : request('status') }}" />
+
+          @if(request('search'))
+          <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}"
+            class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition">
+            <i class="ph-fill ph-x mr-1"></i>Clear
+          </a>
+          @endif
         </form>
       </div>
     </div>
-    @endforeach
-  </div>
-  @endif
 
-  <!-- Pagination -->
-  <div class="mt-6">
-    {{ $missingReports->appends(request()->except('page'))->links() }}
-  </div>
+    @if($missingReports->isEmpty())
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <i class="ph-fill ph-file-search text-6xl text-gray-300 mb-4"></i>
+      <p class="text-lg text-gray-500">No missing pet reports found.</p>
+    </div>
+    @else
+    <!-- Reports Grid -->
+    <div class="space-y-6">
+      @foreach($missingReports as $report)
+      <div
+        class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+        <!-- Report Header -->
+        <div
+          class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+          <!-- Report Header -->
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+              <!-- Pet Image -->
+              <a href="{{ asset('storage/' . json_decode($report->pet_photos)[0]) }}" target="_blank"
+                class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 bg-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow group mx-auto sm:mx-0">
+                @if($report->pet_photos)
+                <img src="{{ asset('storage/' . json_decode($report->pet_photos)[0]) }}" alt="{{ $report->pet_name }}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                @else
+                <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                  <i class="ph-fill ph-paw-print text-2xl sm:text-4xl text-gray-400"></i>
+                </div>
+                @endif
+              </a>
 
-  <!-- Owner Info Modal -->
-  <div id="ownerInfoModal"
-    class="fixed inset-0 px-2 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div
-      class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hidden">
-      <button id="closeOwnerInfoModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-        <i class="ph-fill ph-x text-xl"></i>
-      </button>
+              <div class="flex-1 min-w-0 w-full">
+                <div class="flex flex-col gap-3 mb-4">
+                  <div class="min-w-0">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 break-words">
+                      {{ $report->report_number }}
+                    </h2>
 
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Owner's Information</h2>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                      <span
+                        class="px-2 sm:px-3 py-1 bg-white border border-gray-300 rounded-full text-xs sm:text-sm text-gray-700 inline-flex items-center">
+                        <i class="ph-fill ph-paw-print mr-1 flex-shrink-0"></i>
+                        <span class="truncate max-w-[120px] sm:max-w-none">{{ ucfirst($report->pet_name) }}</span>
+                      </span>
+                      <span
+                        class="px-2 sm:px-3 py-1 bg-white border border-gray-300 rounded-full text-xs sm:text-sm text-gray-700 whitespace-nowrap">
+                        <i class="ph-fill ph-calendar mr-1"></i>
+                        {{ $report->last_seen_date->format('M d, Y') }}
+                      </span>
+                      <span class="px-2 sm:px-3 py-1
+                {{ $report->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                {{ $report->status === 'approved' ? 'bg-green-100 text-green-700' : '' }}
+                {{ $report->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}
+                {{ $report->status === 'found' ? 'bg-blue-100 text-blue-700' : '' }}
+                rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
+                        @switch($report->status)
+                        @case('pending')
+                        <i class="ph-fill ph-clock mr-1"></i>Pending Review
+                        @break
+                        @case('approved')
+                        <i class="ph-fill ph-check-circle mr-1"></i>Approved
+                        @break
+                        @case('rejected')
+                        <i class="ph-fill ph-x-circle mr-1"></i>Rejected
+                        @break
+                        @case('found')
+                        <i class="ph-fill ph-check-square mr-1"></i>Found
+                        @break
+                        @endswitch
+                      </span>
+                    </div>
 
-      <div class="mt-4">
-        <div class="flex gap-x-2 items-center">
-          <label class="text-sm font-medium text-gray-600">Valid ID</label>
-          <div>
-            <button id="viewValidId" class="text-blue-500 hover:underline text-sm hover:text-blue-600 cursor-pointer">
-              View Uploaded ID
-            </button>
+                    <div
+                      class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                      <span class="flex items-center min-w-0">
+                        <i class="ph-fill ph-user mr-1 flex-shrink-0"></i>
+                        <span class="truncate">{{ ucwords(strtolower($report->owner_name)) }}</span>
+                      </span>
+                      <span class="flex items-center whitespace-nowrap">
+                        <i class="ph-fill ph-phone mr-1 flex-shrink-0"></i>
+                        {{ $report->contact_no }}
+                      </span>
+                      <span class="flex items-center min-w-0">
+                        <i class="ph-fill ph-map-pin mr-1 flex-shrink-0"></i>
+                        <span class="truncate">{{ $report->last_seen_location }}</span>
+                      </span>
+                      <span class="flex items-center whitespace-nowrap">
+                        <i class="ph-fill ph-calendar-blank mr-1 flex-shrink-0"></i>
+                        Last Seen: {{ $report->last_seen_date->format('M d, Y') }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Toggle Button -->
+                <button onclick="toggleReportDetails('{{ $report->id }}')"
+                  class="w-full bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-left transition-colors flex items-center justify-between group">
+                  <span
+                    class="font-medium text-sm sm:text-base text-gray-700 group-hover:text-gray-900 flex items-center gap-2 min-w-0 flex-1">
+                    <i id="report-icon-{{ $report->id }}"
+                      class="ph-fill ph-caret-right text-gray-400 group-hover:text-blue-600 transition-transform duration-200 flex-shrink-0"></i>
+                    <span class="truncate">View Full Report Details</span>
+                  </span>
+                  <span class="text-xs sm:text-sm text-gray-500 ml-2 flex-shrink-0 whitespace-nowrap">
+                    {{ $report->created_at->diffForHumans() }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Details (Hidden by default) -->
+          <div id="report-details-{{ $report->id }}" class="hidden divide-y divide-gray-200">
+            <div class="p-4 sm:p-6 bg-gray-50">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <div>
+                  <label class="text-xs sm:text-sm font-medium text-gray-600">Message/Description</label>
+                  <p class="mt-2 text-sm text-gray-900 whitespace-pre-line break-words">{{ $report->pet_description }}
+                  </p>
+                </div>
+                <div>
+                  <label class="text-xs sm:text-sm font-medium text-gray-600">Valid ID</label>
+                  <div class="mt-2">
+                    <a href="{{ asset('storage/' . $report->valid_id_path) }}" target="_blank"
+                      class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm text-blue-600 hover:bg-blue-50 transition">
+                      <i class="ph-fill ph-image mr-2 flex-shrink-0"></i>
+                      View Valid ID
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              @if($report->pet_photos)
+              <div class="mb-4 sm:mb-6">
+                <label class="text-xs sm:text-sm font-medium text-gray-600 block mb-2">Pet Photos</label>
+                <div class="flex flex-wrap gap-2">
+                  @foreach(json_decode($report->pet_photos) as $index => $photo)
+                  <a href="{{ asset('storage/' . $photo) }}" target="_blank"
+                    class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border border-gray-300 hover:border-blue-500 transition">
+                    <img src="{{ asset('storage/' . $photo) }}" alt="Pet photo {{ $index + 1 }}"
+                      class="w-full h-full object-cover">
+                  </a>
+                  @endforeach
+                </div>
+              </div>
+              @endif
+
+              @if($report->location_photos)
+              <div class="mb-4 sm:mb-6">
+                <label class="text-xs sm:text-sm font-medium text-gray-600 block mb-2">Location Photos</label>
+                <div class="flex flex-wrap gap-2">
+                  @foreach(json_decode($report->location_photos) as $index => $photo)
+                  <a href="{{ asset('storage/' . $photo) }}" target="_blank"
+                    class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border border-gray-300 hover:border-blue-500 transition">
+                    <img src="{{ asset('storage/' . $photo) }}" alt="Location photo {{ $index + 1 }}"
+                      class="w-full h-full object-cover">
+                  </a>
+                  @endforeach
+                </div>
+              </div>
+              @endif
+
+              @if($report->status === 'rejected' && $report->reject_reason)
+              <div class="p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-start gap-2">
+                  <i class="ph-fill ph-warning text-red-600 mt-0.5 flex-shrink-0"></i>
+                  <div class="min-w-0">
+                    <label class="text-xs sm:text-sm font-medium text-red-800 block mb-1">Rejection Reason</label>
+                    <p class="text-xs sm:text-sm text-red-700 break-words">{{ $report->reject_reason }}</p>
+                  </div>
+                </div>
+              </div>
+              @endif
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap justify-end gap-2 sm:gap-3">
+              @if($report->status === 'approved')
+              @php
+              $lastReposted = $report->last_reposted_at ?? $report->created_at;
+              $daysSince = now()->diffInDays($lastReposted);
+              $daysRemaining = max(0, 5 - (int)$daysSince); // Cast to integer and ensure non-negative
+              $canRepost = $daysSince >= 5;
+              @endphp
+              <form method="POST" action="{{ route('missing.mark-found') }}" class="flex-1 sm:flex-none">
+                @csrf
+                <input type="hidden" name="report_id" value="{{ $report->id }}">
+                <button type="button" onclick="showFoundModal('{{ $report->id }}', '{{ $report->report_number }}')"
+                  class="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-600 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-700 transition whitespace-nowrap flex items-center justify-center gap-1">
+                  <i class="ph-fill ph-check-square flex-shrink-0"></i>
+                  <span class="hidden sm:inline">Mark as Found</span>
+                  <span class="sm:hidden">Found</span>
+                </button>
+              </form>
+              <form method="POST" action="{{ route('missing.repost') }}" class="flex-1 sm:flex-none">
+                @csrf
+                <input type="hidden" name="report_id" value="{{ $report->id }}">
+                <button type="submit" {{ !$canRepost ? 'disabled' : '' }}
+                  class="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm {{ $canRepost ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg transition whitespace-nowrap flex items-center justify-center gap-1"
+                  title="{{ !$canRepost ? 'Available in ' . $daysRemaining . ' day(s)' : 'Repost to top' }}">
+                  <i class="ph-fill ph-arrow-clockwise flex-shrink-0"></i>
+                  <span class="hidden sm:inline">Repost {{ !$canRepost ? '(' . $daysRemaining . 'd)' : '' }}</span>
+                  <span class="sm:hidden">Repost</span>
+                </button>
+              </form>
+              @endif
+              <button type="button" onclick="showDeleteModal('{{ $report->id }}', '{{ $report->report_number }}')"
+                class="flex-1 sm:flex-none px-3 sm:px-4 py-2 border border-red-300 text-red-600 text-xs sm:text-sm rounded-lg hover:bg-red-50 transition whitespace-nowrap flex items-center justify-center gap-1">
+                <i class="ph-fill ph-trash flex-shrink-0"></i>
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Pet Photos Section -->
-      <div class="mt-2 mb-6 p-4 bg-gray-50 rounded-lg">
-        <div>
-          <label class="text-sm font-medium text-gray-600">Pet Photos</label>
-          <div id="petPhotosContainer" class="flex items-center gap-2 mt-2">
-            <!-- Photos will be inserted here by JavaScript -->
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Owner's Name</label>
-            <input type="text" id="ownerName" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-600">Contact Number</label>
-            <input type="text" id="ownerContact" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Pet's Name</label>
-            <input type="text" id="petName" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-          <div>
-            <label class="text-sm font-medium text-gray-600">Last Seen On</label>
-            <input type="text" id="lastSeenOn" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 mt-4">
-          <div>
-            <label class="text-sm font-medium text-gray-600">Last Seen At</label>
-            <input type="text" id="lastSeenAt" readonly
-              class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100">
-          </div>
-        </div>
-
-        <!-- Location Photos Section -->
-        <div class="mt-4">
-          <label class="text-sm font-medium text-gray-600">Locations of Last and/or Possible Sightings</label>
-          <div id="locationPhotosContainer" class="flex items-center gap-2 mt-2">
-            <!-- Photos will be inserted here by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Pet Description Section -->
-        <div class="mt-4">
-          <label class="text-sm font-medium text-gray-600">Additional Notes/Info</label>
-          <div type="text" id="descriptionContent" readonly
-            class="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-900 bg-gray-100 whitespace-pre-line">
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-      <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-h-[90vh] overflow-auto">
-        <button id="closeImageModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
-          <i class="ph-fill ph-x"></i>
-        </button>
-        <h2 class="text-md font-semibold text-gray-800">Uploaded ID</h2>
-        <div class="w-full mt-2 flex justify-center items-center">
-          <img id="modalImage" alt="Uploaded ID" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
-        </div>
-      </div>
+    <!-- Pagination -->
+    <div class="mt-6">
+      {{ $missingReports->appends(request()->except('page'))->links() }}
     </div>
+    @endif
   </div>
 
-  <!-- Photos Modal -->
-  <div id="photosModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-4 rounded-lg shadow-lg relative w-auto max-w-4xl max-h-[90vh] flex flex-col">
-      <button id="closePhotosModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
+  <!-- Mark as Found Modal -->
+  <div id="foundModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <button id="closeFoundModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
-      <h2 class="text-xl font-semibold text-gray-800 mb-4" id="photosModalTitle">Photos</h2>
-
-      <div class="flex-1 overflow-hidden relative">
-        <!-- Main Image Display -->
-        <div class="w-full h-full flex items-center justify-center">
-          <img id="mainPhoto" alt="Photo" class="max-h-[60vh] max-w-full object-cover rounded-lg shadow-md">
-        </div>
-      </div>
-
-      <!-- Thumbnail Strip -->
-      <div id="photoThumbnails" class="flex gap-2 mt-4 overflow-x-auto py-2">
-        <!-- Thumbnails will be inserted here by JavaScript -->
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Mark Pet as Found</h2>
+      <p id="foundMessage" class="text-gray-700 mb-6"></p>
+      <p class="text-sm text-gray-600 mb-4">Congratulations! This will update your report status to "Found".</p>
+      <div class="flex justify-end gap-3">
+        <button id="cancelFound" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+        <form id="foundForm" method="POST" action="{{ route('missing.mark-found') }}" class="inline-block">
+          @csrf
+          <input type="hidden" name="report_id" id="foundReportId">
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            <i class="ph-fill ph-check-square mr-2"></i>Confirm Found
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -285,142 +391,27 @@
   </div>
 
   <script>
-    // Owner Info Modal
-    document.querySelectorAll('.owner-info-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        document.getElementById('ownerName').value = this.dataset.name;
-        document.getElementById('ownerContact').value = this.dataset.contact;
+    function toggleReportDetails(id) {
+      const details = document.getElementById('report-details-' + id);
+      const icon = document.getElementById('report-icon-' + id);
 
-        document.getElementById('petName').value = this.dataset.petName;
-        document.getElementById('lastSeenOn').value = this.dataset.lastSeenDate;
-        document.getElementById('lastSeenAt').value = this.dataset.location;
-        
-        // Set up the valid ID view button
-        document.getElementById('viewValidId').onclick = function() {
-          document.getElementById('modalImage').src = button.dataset.validid;
-          document.getElementById('imageModal').classList.remove('hidden');
-        };
-        
-        document.getElementById('descriptionContent').textContent = this.dataset.description || 'No description provided';
-        
-        // Load pet photos
-        const petPhotosContainer = document.getElementById('petPhotosContainer');
-        petPhotosContainer.innerHTML = '';
-        
-        try {
-          const petPhotos = JSON.parse(button.dataset.petphotos || '[]');
-          
-          if (petPhotos.length === 0) {
-            petPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">No pet photos uploaded</p>';
-          } else {
-            petPhotos.forEach((photo, index) => {
-              const photoUrl = "{{ asset('storage/') }}/" + photo;
-              const photoElement = document.createElement('div');
-              photoElement.className = 'cursor-pointer hover:opacity-80 transition-opacity';
-              photoElement.innerHTML = `
-                <img src="${photoUrl}" alt="Pet photo ${index + 1}" 
-                    class="w-24 h-24 object-cover rounded-md border border-gray-200"
-                    onclick="openPhotosModal('${button.dataset.id}', 'pet', ${index})">
-              `;
-              petPhotosContainer.appendChild(photoElement);
-            });
-          }
-        } catch (e) {
-          petPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">Error loading pet photos</p>';
-        }
-        
-        // Load location photos
-        const locationPhotosContainer = document.getElementById('locationPhotosContainer');
-        locationPhotosContainer.innerHTML = '';
-        
-        try {
-          const locationPhotos = JSON.parse(button.dataset.locationphotos || '[]');
-          
-          if (locationPhotos.length === 0) {
-            locationPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">No location photos uploaded</p>';
-          } else {
-            locationPhotos.forEach((photo, index) => {
-              const photoUrl = "{{ asset('storage/') }}/" + photo;
-              const photoElement = document.createElement('div');
-              photoElement.className = 'cursor-pointer hover:opacity-80 transition-opacity';
-              photoElement.innerHTML = `
-                <img src="${photoUrl}" alt="Location photo ${index + 1}" 
-                     class="w-24 h-24 object-cover rounded-md border border-gray-200"
-                     onclick="openPhotosModal('${button.dataset.id}', 'location', ${index})">
-              `;
-              locationPhotosContainer.appendChild(photoElement);
-            });
-          }
-        } catch (e) {
-          locationPhotosContainer.innerHTML = '<p class="text-gray-500 text-sm">Error loading location photos</p>';
-        }
-        
-        document.getElementById('ownerInfoModal').classList.remove('hidden');
-      });
-    });
-
-    // Function to open photos modal for a specific report
-    function openPhotosModal(reportId, type, startIndex = 0) {
-      const button = document.querySelector(`.owner-info-btn[data-id="${reportId}"]`);
-      if (!button) return;
-      
-      try {
-        const photos = JSON.parse(button.dataset[`${type}photos`] || '[]');
-        if (photos.length === 0) return;
-        
-        const modal = document.getElementById('photosModal');
-        const mainImg = document.getElementById('mainPhoto');
-        const thumbnailsContainer = document.getElementById('photoThumbnails');
-        const modalTitle = document.getElementById('photosModalTitle');
-        
-        // Set modal title
-        modalTitle.textContent = type === 'pet' ? 'Pet Photos' : 'Location Photos';
-        
-        // Clear previous thumbnails
-        thumbnailsContainer.innerHTML = '';
-        
-        // Set initial image
-        let currentIndex = startIndex >= 0 && startIndex < photos.length ? startIndex : 0;
-        mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-        
-        // Create thumbnails
-        photos.forEach((photo, index) => {
-          const thumbnail = document.createElement('div');
-          thumbnail.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${index === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-          thumbnail.innerHTML = `<img src="{{ asset('storage/') }}/${photo}" alt="Thumbnail ${index + 1}" class="w-full h-full object-cover">`;
-          thumbnail.addEventListener('click', () => {
-            currentIndex = index;
-            mainImg.src = "{{ asset('storage/') }}/" + photos[currentIndex];
-            // Update active thumbnail
-            document.querySelectorAll('#photoThumbnails div').forEach((thumb, i) => {
-              thumb.className = `flex-shrink-0 w-16 h-16 cursor-pointer border-2 rounded-md overflow-hidden ${i === currentIndex ? 'border-blue-500' : 'border-transparent'}`;
-            });
-          });
-          thumbnailsContainer.appendChild(thumbnail);
-        });
-        
-        modal.classList.remove('hidden');
-      } catch (e) {
-        console.error('Error loading photos:', e);
+      if (details.classList.contains('hidden')) {
+        details.classList.remove('hidden');
+        icon.classList.remove('ph-caret-right');
+        icon.classList.add('ph-caret-down');
+      } else {
+        details.classList.add('hidden');
+        icon.classList.remove('ph-caret-down');
+        icon.classList.add('ph-caret-right');
       }
     }
 
-    // Close owner info modal
-    document.getElementById('closeOwnerInfoModal').addEventListener('click', function() {
-      document.getElementById('ownerInfoModal').classList.add('hidden');
-    });
+    function showFoundModal(id, reportNumber) {
+      document.getElementById('foundReportId').value = id;
+      document.getElementById('foundMessage').textContent = `Mark report ${reportNumber} as found?`;
+      document.getElementById('foundModal').classList.remove('hidden');
+    }
 
-    // Photos modal close handler
-    document.getElementById('closePhotosModal').addEventListener('click', function() {
-      document.getElementById('photosModal').classList.add('hidden');
-    });
-
-    // Image modal close handler
-    document.getElementById('closeImageModal').addEventListener('click', function() {
-      document.getElementById('imageModal').classList.add('hidden');
-    });
-
-    // Delete modal functions
     function showDeleteModal(reportId, reportNumber) {
       document.getElementById('deleteReportId').value = reportId;
       document.getElementById('reportNumberToDelete').textContent = reportNumber;
@@ -428,12 +419,41 @@
       document.getElementById('deleteModal').classList.remove('hidden');
     }
 
-    document.getElementById('closeDeleteModal').addEventListener('click', function() {
+    document.getElementById('closeFoundModal').addEventListener('click', () => {
+      document.getElementById('foundModal').classList.add('hidden');
+    });
+
+    document.getElementById('cancelFound').addEventListener('click', () => {
+      document.getElementById('foundModal').classList.add('hidden');
+    });
+
+    document.getElementById('closeDeleteModal').addEventListener('click', () => {
       document.getElementById('deleteModal').classList.add('hidden');
     });
 
-    document.getElementById('cancelDelete').addEventListener('click', function() {
+    document.getElementById('cancelDelete').addEventListener('click', () => {
       document.getElementById('deleteModal').classList.add('hidden');
+    });
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('foundModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.add('hidden');
+      }
+    });
+
+    // Close when clicking outside
+    document.getElementById('foundModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('deleteModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.add('hidden');
+      }
     });
   </script>
 </x-transactions-layout>

@@ -4,10 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="canonical" href="https://orpawnage.site" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OrPAWnage | {{ Route::currentRouteName() ? ucwords(str_replace('.', ' ', Route::currentRouteName())) : '' }}
-  </title>
-  <link rel="icon" href="{{ asset('images/orpawnage-logo.png') }}" type="image/png" sizes="16x16">
+  <title>@yield('title', 'ORPAWNAGE | Adopt. Don\'t Shop.')</title>
+  <meta name="description" content="@yield('description', 'At OrPAWnage, we believe that every animal deserves a loving
+            home. Our mission is to rescue, protect, and find forever homes
+            for abandoned or abused pets. With the help of our compassionate
+            team and supportive community, we strive to reduce animal
+            homelessness and promote responsible pet ownership.')">
+  <meta name="keywords"
+    content="@yield('keywords', 'orpawnage, orpawnage.site, orpawnage.com, paws, paw, pawnage, orphanage, pet adoption, adoption adopt, animal services, angeles city veterinary office, adopt a pet')">
+  <link rel="icon" type="image/x-icon" href="https://orpawnage.site/images/favicon.ico">
+  <link rel="icon" type="image/x-icon" sizes="16x16" href="https://orpawnage.site/images/favicon-16x16.ico">
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
   @vite(['resources/css/admin/fonts/phosphor/phosphor-fill.css', 'resources/css/admin/fonts/phosphor/phosphor.css'])
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,6 +23,17 @@
 
   @vite(['resources/css/preloader.css', 'resources/css/style.css'])
   @vite(['resources/css/orpawnage-animation.css'])
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "name": "OrPAWnage",
+      "url": "https://orpawnage.site",
+      "logo": "https://orpawnage.site/images/favicon.ico",
+      "favicon": "https://orpawnage.site/images/favicon.ico"
+    }
+  </script>
 
   <style>
     /* Add this custom CSS for the link animation */
@@ -118,7 +137,7 @@
   </style>
 </head>
 
-<body class="mx-auto max-w-[1920px] relative">
+<body class="m-auto max-w-[1920px] relative">
   <!-- ===== Preloader Start ===== -->
   <div id="preloader" class="preloader">
     <div class="dog">
@@ -188,11 +207,11 @@
   </div>
   <!-- ===== Preloader End ===== -->
 
-  <div class="bg-white">
-    <header class="absolute inset-x-0 z-50">
+  <div id="main-content" class="bg-white hidden">
+    <header class="absolute inset-x-0">
       <!-- ========== START OF NAVBAR ========== -->
       <!-- Admin Indicator Bar -->
-      <nav id="main-header" class="bg-white fixed w-full z-20 start-0 border-b border-gray-200 shadow-sm">
+      <nav id="main-header" class="bg-white fixed w-full z-40 start-0 border-b border-gray-200 shadow-sm">
         @if (Auth::check() && Auth::user()->isAdmin)
         <div id="adminIndicator" class="footer-gradient text-black font-semibold text-center py-2 px-4 shadow-md">
           <div class="flex items-center justify-center gap-2 flex-wrap">
@@ -213,73 +232,81 @@
                 class="text-yellow-500">PAW</strong>nage</span> --}}
           </a>
 
-          <!-- Dropdown Menu Button -->
-          <div class="flex items-center md:order-2 space-x-3 transition duration-300">
+          <!-- Dropdown Menu Button / Guest CTA -->
+          <div class="flex items-center md:order-2 space-x-1 transition duration-300">
+            @guest
+            <!-- Guest: CTA Buttons -->
+            <a href="{{ route('login') }}"
+              class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-orange-600 bg-white border border-orange-600 rounded-full hover:bg-orange-50 focus:ring-4 focus:ring-orange-400/40 transition-all duration-300">
+              Log In
+            </a>
+            <a href="{{ route('Sign Up') }}"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-full hover:bg-yellow-500 hover:text-black focus:ring-4 focus:ring-orange-400/40 transition-all duration-300 shadow-md hover:shadow-lg">
+              Sign Up
+            </a>
+            @else
+            <!-- Authenticated: User Menu Button -->
             <button type="button"
               class="group flex items-center justify-center text-sm bg-transparent rounded-full md:me-0 focus:ring-4 focus:ring-orange-400/40 relative px-2 py-1"
               id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
               data-dropdown-placement="bottom">
-
               <span class="sr-only">Open user menu</span>
-
-              <!-- Actual icon -->
               <div class="relative z-10 flex items-center space-x-1">
-                <img src="{{ asset('images/orpawnage-logo.png') }}"
-                  class="w-8 h-8 rounded-full object-cover transition-transform duration-300 hover:scale-105"
-                  alt="User Logo" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#fd6d09" viewBox="0 0 256 256">
+                  <path
+                    d="M172,120a44,44,0,1,1-44-44A44.05,44.05,0,0,1,172,120Zm60,8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88.09,88.09,0,0,0-91.47-87.93C77.43,41.89,39.87,81.12,40,128.25a87.65,87.65,0,0,0,22.24,58.16A79.71,79.71,0,0,1,84,165.1a4,4,0,0,1,4.83.32,59.83,59.83,0,0,0,78.28,0,4,4,0,0,1,4.83-.32,79.71,79.71,0,0,1,21.79,21.31A87.62,87.62,0,0,0,216,128Z">
+                  </path>
+                </svg>
                 <svg class="w-4 h-4 text-gray-600 transition-transform duration-300 group-hover:rotate-180" fill="none"
                   stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </div>
-
             </button>
+
             <!-- Dropdown menu -->
             <div
               class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 border-t border-t-orange-400 rounded-lg shadow-md"
               id="user-dropdown">
               <div class="px-4 py-3">
                 <span class="block text-sm text-gray-900">Your Account</span>
-                <span class="block text-sm text-gray-500 truncate truncate">
-                  @if (Auth::check())
+                <span class="block text-sm text-gray-500 truncate">
                   {{ Auth::user()->email }}
-                  @endif
                 </span>
               </div>
               <ul class="py-2 transition-colors duration-300" aria-labelledby="user-menu-button">
                 @if (Auth::user()->isAdmin)
                 <li class="mx-4 flex items-center gap-x-2 text-gray-700 mx-1 nav-link">
                   <i class="ph-fill ph-grid-four"></i>
-                  <a href="/admin" target="_blank" class="block py-2 text-sm">Go to
-                    Admin Dashboard</a>
+                  <a href="/admin" target="_blank" class="block py-2 text-sm">Go to Admin Dashboard</a>
                 </li>
                 @endif
 
                 <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-bell"></i>
-                  <a href="/transactions" class="block py-2 text-sm">Transaction
-                    Status</a>
+                  <a href="/transactions" class="block py-2 text-sm">Transaction History</a>
                 </li>
 
-                <!-- Add this near the user dropdown menu items in layout.blade.php -->
                 @unless(Auth::user()->is_banned)
                 <li class="mx-4 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-gear"></i>
                   <button onclick="openSettingsModal()" class="block py-2 text-sm">Profile Settings</button>
                 </li>
                 @endunless
+
                 <li class="mx-4 mb-2 flex items-center gap-x-2 text-gray-700 rounded-full mx-1 nav-link">
                   <i class="ph-fill ph-sign-out"></i>
                   <form action="/logout" method="POST">
                     @csrf
                     @method('DELETE')
-
-                    <button class="block py-2 text-sm">
-                      Sign Out</button>
+                    <button class="block py-2 text-sm">Sign Out</button>
                   </form>
                 </li>
               </ul>
             </div>
+            @endguest
+
+            <!-- Mobile Menu Toggle -->
             <button data-collapse-toggle="navbar-user" type="button"
               class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
               aria-controls="navbar-user" aria-expanded="false">
@@ -342,7 +369,7 @@
                       </li>
                       <li>
                         <a href="/services/surrender-an-animal"
-                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender a Pet</a>
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender / Rehome</a>
                       </li>
                     </ul>
                   </div>
@@ -356,7 +383,7 @@
                       </li>
                       <li>
                         <a href="/services/surrender-an-animal"
-                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender a Pet</a>
+                          class="nav-link block rounded-full mx-1 transition-colors duration-300">Surrender / Rehome</a>
                       </li>
                     </ul>
                   </div>
@@ -426,7 +453,8 @@
               <!-- SUCCESSFUL ADOPTION -->
               <li class="xl:mr-6 md:mr-4">
                 <a href="/featured-adoptions"
-                  class="nav-link {{ request()->is('featured-adoptions') ? 'active' : '' }}">Adopted Pets</a>
+                  class="nav-link {{ request()->is('featured-adoptions') ? 'active' : '' }}">Adopted
+                  Pets</a>
               </li>
 
               <!-- ABOUT US -->
@@ -471,18 +499,12 @@
                 alt="OrPAWnage Logo" />
             </a>
 
-            <!-- Tablet/Desktop: original two logos -->
-            <div class="hidden sm:flex items-center gap-x-4">
+            <!-- Tablet/Desktop: single logo -->
+            <div class="hidden sm:flex items-center">
               <a href="/" class="flex items-center">
-                <img src="{{ asset('images/orpawnage-logo.png') }}"
-                  class="w-[80px] h-[80px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] lg:w-[130px] lg:h-[130px] xl:w-[200px] xl:h-[200px] object-fill"
-                  alt="Brand Logo 1" />
-              </a>
-
-              <a href="/" class="flex items-center">
-                <img src="{{ asset('images/orpawnage-brand-logo.PNG') }}"
-                  class="w-[90px] h-[80px] sm:w-[100px] sm:h-[90px] md:w-[120px] md:h-[100px] lg:w-[130px] lg:h-[120px] xl:w-[250px] xl:h-[200px] object-cover"
-                  alt="Brand Logo 2" />
+                <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}"
+                  class="w-[200px] h-auto object-contain sm:w-[220px] md:w-[250px] lg:w-[280px] xl:w-[300px]"
+                  alt="OrPAWnage Logo" />
               </a>
             </div>
           </div>
@@ -502,7 +524,7 @@
                 <li class="flex items-center gap-2 pl-4 text-sm">
                   <a href="/services/surrender-an-animal" class="flex items-center gap-2 nav-link">
                     <i class="ph-fill ph-hand-palm text-orange-400"></i>
-                    Surrender a Pet
+                    Surrender / Rehome
                   </a>
                 </li>
                 <li class="flex items-center gap-2 pl-4 text-sm">
@@ -555,14 +577,16 @@
 
         <div class="text-white sm:flex sm:items-center sm:justify-between">
           <span class="text-sm text-gray-500 sm:text-center">
-            © 2025 <strong>OrPAWnage</strong>™. All Rights Reserved.
+            © 2025 <strong>ORPAWNAGE</strong>™. All Rights Reserved.
           </span>
-          <div class="flex gap-x-4 mt-4 sm:justify-center sm:mt-0">
-            <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors duration-300">Terms &
-              Conditions</a>
-            <a href="#" class="text-gray-500 hover:text-orange-500 transition-colors duration-300">Privacy &
-              Policy</a>
-          </div>
+          <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 sm:mt-0 gap-4">
+            <li>
+              <a href="/privacy-policy" class="hover:text-orange-400 transition-colors duration-200">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/terms-and-conditions" class="hover:text-orange-400 transition-colors duration-200">Terms &amp; Conditions</a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
@@ -571,7 +595,7 @@
   </div>
 
   <!-- Scroll to Top Button -->
-  <button id="scrollToTop" class="fixed bottom-8 right-8 z-50 hidden bg-orange-500 hover:bg-yellow-400 hover:text-black 
+  <button id="scrollToTop" class="fixed bottom-8 right-8 z-50 hidden bg-orange-500 hover:bg-yellow-400 hover:text-black
 text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-full transition-opacity duration-300">
     <i class="ph-fill ph-arrow-up"></i>
   </button>
@@ -596,428 +620,441 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
   @endphp
 
   <!-- Settings Modal -->
-  <div id="settingsModal" class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-1 pb-20 text-center sm:block sm:p-0">
-      <!-- Background overlay -->
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-      </div>
+  <div id="settingsModal"
+    class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-gray-500 opacity-75" aria-hidden="true"></div>
 
-      <!-- Modal content -->
-      <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-3xl sm:w-full">
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div class="w-full">
-              <!-- Header -->
-              <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-900">
-                  <i class="ph-fill ph-gear mr-2 text-orange-400"></i>Account Settings
-                </h3>
-                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-500">
-                  <i class="ph-fill ph-x text-2xl"></i>
+    <!-- Modal content -->
+    <div
+      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-3xl sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="w-full">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-2xl font-bold text-gray-900">
+                <i class="ph-fill ph-gear mr-2 text-orange-400"></i>Account Settings
+              </h3>
+              <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-gray-500">
+                <i class="ph-fill ph-x text-2xl"></i>
+              </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b border-gray-200">
+              <nav class="-mb-px flex space-x-8">
+                <button onclick="switchTab('account-tab')" id="account-tab-btn"
+                  class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'account-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
+                  Account
+                </button>
+                <button onclick="switchTab('password-tab')" id="password-tab-btn"
+                  class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
+                  Password
+                </button>
+                @auth
+                @unless(Auth::user()->isAdmin)
+                <button onclick="switchTab('danger-tab')" id="danger-tab-btn"
+                  class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'danger-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
+                  Danger Zone
+                </button>
+                @endunless
+                @endauth
+              </nav>
+            </div>
+
+            <!-- Tab content -->
+            <div class="py-4">
+              <!-- Success Alert -->
+              @if(session('settings-success'))
+              <div id="alert-3"
+                class="flex items-center pl-4 pr-6 py-3 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
+                role="alert">
+                <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                  viewBox="0 0 20 20">
+                  <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>
+                <span class="sr-only">Info</span>
+                <div class="ms-3 text-sm font-medium">
+                  {!! session('settings-success') !!}
+                </div>
+                <button type="button"
+                  class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+                  data-dismiss-target="#alert-3" aria-label="Close">
+                  <span class="sr-only">Close</span>
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                  </svg>
                 </button>
               </div>
+              @endif
 
-              <!-- Tabs -->
-              <div class="border-b border-gray-200">
-                <nav class="-mb-px flex space-x-8">
-                  <button onclick="switchTab('account-tab')" id="account-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'account-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
-                    Account
-                  </button>
-                  <button onclick="switchTab('password-tab')" id="password-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'password-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
-                    Password
-                  </button>
-                  @if (!auth()->user()->isAdmin)
-                  <button onclick="switchTab('danger-tab')" id="danger-tab-btn"
-                    class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'danger-tab' ? 'border-orange-500 text-orange-500' : 'border-transparent text-gray-500' }}">
-                    Danger Zone
-                  </button>
-                  @endif
-                </nav>
-              </div>
-
-              <!-- Tab content -->
-              <div class="py-4">
-                <!-- Success Alert -->
-                @if(session('settings-success'))
-                <div id="alert-3"
-                  class="flex items-center pl-4 pr-6 py-3 mb-4 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400"
-                  role="alert">
-                  <svg class="shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>
-                  <span class="sr-only">Info</span>
-                  <div class="ms-3 text-sm font-medium">
-                    {!! session('settings-success') !!}
-                  </div>
-                  <button type="button"
-                    class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-                    data-dismiss-target="#alert-3" aria-label="Close">
-                    <span class="sr-only">Close</span>
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                      viewBox="0 0 14 14">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                  </button>
-                </div>
-                @endif
-
-                <!-- Account Tab -->
-                <div id="account-tab" class="tab-content {{ $activeTab === 'account-tab' ? 'activeTab' : 'hidden' }}">
-                  <!-- Overview / Verification -->
-                  <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4 mb-6">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-start">
-                        <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
-                        <div>
-                          <h3 class="text-lg font-medium text-gray-900">Email Verification</h3>
-                          <p class="text-sm text-gray-700">
-                            Status: <span
-                              class="{{ auth()->user()->hasVerifiedEmail() ? 'text-green-600 font-medium' : 'text-red-600 font-medium' }}">
-                              {{ auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Not Verified' }}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                      @unless(auth()->user()->hasVerifiedEmail())
-                      <form method="POST" action="{{ route('verification.send') }}#settingsModal">
-                        @csrf
-                        <button type="submit"
-                          class="text-sm bg-orange-400 hover:bg-orange-500 text-white px-4 py-2 rounded-md transition">
-                          Resend Verification
-                        </button>
-                      </form>
-                      @endunless
-                    </div>
-                  </div>
-
-                  <!-- Profile & Contact -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Email Update -->
-                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                      <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="ph-fill ph-envelope mr-2 text-orange-400"></i>Change Email
-                      </h3>
-                      <form method="POST" action="{{ route('settings.email.update') }}" id="emailUpdateForm">
-                        @csrf
-                        @method('PATCH')
-                        <div class="space-y-4">
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Email</label>
-                            <input type="email" value="{{ auth()->user()->email }}"
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
-                          </div>
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
-                            <input type="email" name="settings_email" value="{{ old('settings_email') }}" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="New email address">
-                            <x-form-error name="settings_email" />
-                          </div>
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
-                            <div class="relative">
-                              <input type="password" name="settings_email_current_password" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                                placeholder="Enter your current password">
-                              <button type="button" onclick="togglePasswordVisibility(this)"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                                <i class="ph-fill ph-eye text-lg"></i>
-                              </button>
-                            </div>
-                            <x-form-error name="settings_email_current_password" />
-                          </div>
-                          <div class="pt-1 flex justify-end">
-                            <button type="submit"
-                              class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
-                              <i class="ph-fill ph-check-circle mr-2"></i>Save
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-
-                    <!-- Contact Number Update -->
-                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                      <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="ph-fill ph-phone mr-2 text-orange-400"></i>Update Contact
-                      </h3>
-                      <form method="POST" action="{{ route('settings.contact.update') }}" id="contactUpdateForm">
-                        @csrf
-                        @method('PATCH')
-                        <div class="space-y-4">
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
-                            <input type="tel" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update)' }}"
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
-                          </div>
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
-                            <input type="tel" name="settings_contact_number"
-                              value="{{ old('settings_contact_number') }}" pattern="^09\d{9}$" maxlength="11"
-                              placeholder="09XXXXXXXXX" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
-                            <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
-                            <x-form-error name="settings_contact_number" />
-                          </div>
-                          <div>
-                            <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
-                            <div class="relative">
-                              <input type="password" name="settings_contact_current_password" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                                placeholder="Enter your current password">
-                              <button type="button" onclick="togglePasswordVisibility(this)"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                                <i class="ph-fill ph-eye text-lg"></i>
-                              </button>
-                            </div>
-                            <x-form-error name="settings_contact_current_password" />
-                          </div>
-                          <div class="pt-1 flex justify-end">
-                            <button type="submit"
-                              class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
-                              <i class="ph-fill ph-check-circle mr-2"></i>Save
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Password Tab -->
-                <div id="password-tab" class="tab-content {{ $activeTab === 'password-tab' ? 'activeTab' : 'hidden' }}">
-                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
-                      <i class="ph-fill ph-lock mr-2 text-orange-400"></i>
-                      @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
-                      Set a Password
-                      @else
-                      Change Password
-                      @endif
-                    </h3>
-
-                    @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
-                    <form method="POST" action="{{ route('settings.password.setup') }}" id="passwordSetupForm">
-                      @csrf
-                      @method('PATCH')
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_password" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Choose a password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
-                            </button>
-                          </div>
-                          <x-form-error name="settings_password" />
-
-                          <div class="mt-2 space-y-2">
-                            <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
-                            <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress"
-                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
-                            </div>
-                          </div>
-
-                          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
-                            <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
-                              <i class="ph-fill ph-info mr-2"></i>Password Requirements
-                            </h4>
-                            <ul class="text-xs space-y-1">
-                              <li id="req-length" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
-                              </li>
-                              <li id="req-uppercase" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
-                              </li>
-                              <li id="req-lowercase" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
-                              </li>
-                              <li id="req-number" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
-                              </li>
-                              <li id="req-symbol" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_password_confirmation" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Confirm your password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="pt-3 flex justify-end">
-                        <button type="submit"
-                          class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
-                          <i class="ph-fill ph-check-circle mr-2"></i>Set Password
-                        </button>
-                      </div>
-                    </form>
-                    @else
-                    <!-- Existing password change form -->
-                    <form method="POST" action="{{ route('settings.password.update') }}" id="passwordChangeForm">
-                      @csrf
-                      @method('PATCH')
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_current_password" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Current password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
-                            </button>
-                          </div>
-                          <x-form-error name="settings_current_password" />
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
-                          <div class="relative">
-                            <input type="password" id="password" name="settings_password" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="New password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
-                            </button>
-                          </div>
-                          <x-form-error name="settings_password" />
-
-                          <div class="mt-2 space-y-2">
-                            <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
-                            <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
-                              <div id="strength-progress"
-                                class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
-                            </div>
-                          </div>
-
-                          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
-                            <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
-                              <i class="ph-fill ph-info mr-2"></i>Password Requirements
-                            </h4>
-                            <ul class="text-xs space-y-1">
-                              <li id="req-length" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
-                              </li>
-                              <li id="req-uppercase" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
-                              </li>
-                              <li id="req-lowercase" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
-                              </li>
-                              <li id="req-number" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
-                              </li>
-                              <li id="req-symbol" class="flex items-center text-blue-700">
-                                <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div>
-                          <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
-                          <div class="relative">
-                            <input type="password" name="settings_password_confirmation" required
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
-                              placeholder="Confirm new password">
-                            <button type="button" onclick="togglePasswordVisibility(this)"
-                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
-                              <i class="ph-fill ph-eye text-lg"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="pt-3 flex justify-end">
-                        <button type="submit"
-                          class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
-                          <i class="ph-fill ph-check-circle mr-2"></i>Update Password
-                        </button>
-                      </div>
-                    </form>
-                    @endif
-                  </div>
-                </div>
-
-                <!-- Danger Zone Tab -->
-                <div id="danger-tab" class="tab-content {{ $activeTab === 'danger-tab' ? 'activeTab' : 'hidden' }}">
-                  @if (!auth()->user()->isAdmin)
-                  <div class="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm">
-                    <h3 class="text-base font-semibold text-red-800 mb-4 flex items-center">
-                      <i class="ph-fill ph-trash mr-2 text-red-500"></i>Delete Account
-                    </h3>
-
-                    @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-r-lg">
-                      <div class="flex items-center">
-                        <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
+              <!-- Account Tab -->
+              <div id="account-tab" class="tab-content {{ $activeTab === 'account-tab' ? 'activeTab' : 'hidden' }}">
+                @auth
+                <!-- Overview / Verification -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4 mb-6">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-start">
+                      <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
+                      <div>
+                        <h3 class="text-lg font-medium text-gray-900">Email Verification</h3>
                         <p class="text-sm text-gray-700">
-                          You signed up with Google. To delete your account, you must first
-                          <a href="#" onclick="switchTab('password-tab')" class="text-orange-500 hover:underline">
-                            set a password
-                          </a>.
+                          Status: <span
+                            class="{{ Auth::user()->hasVerifiedEmail() ? 'text-green-600 font-medium' : 'text-red-600 font-medium' }}">
+                            {{ Auth::user()->hasVerifiedEmail() ? 'Verified' : 'Not Verified' }}
+                          </span>
                         </p>
                       </div>
                     </div>
-                    @else
-                    <p class="text-sm text-gray-700 mb-4">
-                      Once you delete your account, there is no going back. Please be certain.
-                    </p>
-
-                    <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
+                    @unless(Auth::user()->hasVerifiedEmail())
+                    <form method="POST" action="{{ route('verification.send') }}">
                       @csrf
-                      @method('DELETE')
+                      <button type="submit"
+                        class="text-sm bg-orange-400 hover:bg-orange-500 text-white px-4 py-2 rounded-md transition">
+                        Resend Verification
+                      </button>
+                    </form>
+                    @endunless
+                  </div>
+                </div>
+
+                <!-- Profile & Contact -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Email Update -->
+                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-envelope mr-2 text-orange-400"></i>Change Email
+                    </h3>
+                    <form method="POST" action="{{ route('settings.email.update') }}" id="emailUpdateForm">
+                      @csrf
+                      @method('PATCH')
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Email</label>
+                          <input type="email" value="{{ auth()->user()->email }}"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Email</label>
+                          <input type="email" name="settings_email" value="{{ old('settings_email') }}" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="New email address">
+                          <x-form-error name="settings_email" />
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                          <div class="relative">
+                            <input type="password" name="settings_email_current_password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Enter your current password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="settings_email_current_password" />
+                        </div>
+                        <div class="pt-1 flex justify-end">
+                          <button type="submit"
+                            class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Save
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Contact Number Update -->
+                  <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                      <i class="ph-fill ph-phone mr-2 text-orange-400"></i>Update Contact
+                    </h3>
+                    <form method="POST" action="{{ route('settings.contact.update') }}" id="contactUpdateForm">
+                      @csrf
+                      @method('PATCH')
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Number</label>
+                          <input type="tel" value="{{ auth()->user()->contact_number ?: 'Not Set (Please update)' }}"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-gray-100" readonly>
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">New Phone Number</label>
+                          <input type="tel" name="settings_contact_number" value="{{ old('settings_contact_number') }}"
+                            pattern="^09\d{9}$" maxlength="11" placeholder="09XXXXXXXXX" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400">
+                          <p class="mt-1 text-xs text-gray-500">Format: 09XXXXXXXXX (11 digits)</p>
+                          <x-form-error name="settings_contact_number" />
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                          <div class="relative">
+                            <input type="password" name="settings_contact_current_password" required
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                              placeholder="Enter your current password">
+                            <button type="button" onclick="togglePasswordVisibility(this)"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                              <i class="ph-fill ph-eye text-lg"></i>
+                            </button>
+                          </div>
+                          <x-form-error name="settings_contact_current_password" />
+                        </div>
+                        <div class="pt-1 flex justify-end">
+                          <button type="submit"
+                            class="px-4 py-2 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                            <i class="ph-fill ph-check-circle mr-2"></i>Save
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                @else
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <p class="text-sm text-gray-600">Please log in to access account settings.</p>
+                </div>
+                @endauth
+              </div>
+
+              <!-- Password Tab -->
+              <div id="password-tab" class="tab-content {{ $activeTab === 'password-tab' ? 'activeTab' : 'hidden' }}">
+                @auth
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <h3 class="text-base font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="ph-fill ph-lock mr-2 text-orange-400"></i>
+                    @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                    Set a Password
+                    @else
+                    Change Password
+                    @endif
+                  </h3>
+
+                  @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                  <form method="POST" action="{{ route('settings.password.setup') }}" id="passwordSetupForm">
+                    @csrf
+                    @method('PATCH')
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
                         <div class="relative">
-                          <input type="password" name="settings_delete_current_password" required
-                            class="w-full border border-red-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
-                            placeholder="Enter your current password">
+                          <input type="password" name="settings_password" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="Choose a password">
                           <button type="button" onclick="togglePasswordVisibility(this)"
                             class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
                             <i class="ph-fill ph-eye text-lg"></i>
                           </button>
                         </div>
-                        <x-form-error name="settings_delete_current_password" />
+                        <x-form-error name="settings_password" />
+
+                        <div class="mt-2 space-y-2">
+                          <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
+                          <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
+                            <div id="strength-progress"
+                              class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                          </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
+                          <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                            <i class="ph-fill ph-info mr-2"></i>Password Requirements
+                          </h4>
+                          <ul class="text-xs space-y-1">
+                            <li id="req-length" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
+                            </li>
+                            <li id="req-uppercase" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
+                            </li>
+                            <li id="req-lowercase" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
+                            </li>
+                            <li id="req-number" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
+                            </li>
+                            <li id="req-symbol" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
+                            </li>
+                          </ul>
+                        </div>
                       </div>
-                      <div class="pt-3 flex justify-end">
-                        <button type="submit"
-                          class="px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow">
-                          <i class="ph-fill ph-warning-circle mr-2"></i>Delete Account Permanently
-                        </button>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
+                        <div class="relative">
+                          <input type="password" name="settings_password_confirmation" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="Confirm your password">
+                          <button type="button" onclick="togglePasswordVisibility(this)"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <i class="ph-fill ph-eye text-lg"></i>
+                          </button>
+                        </div>
                       </div>
-                    </form>
-                    @endif
-                  </div>
+                    </div>
+                    <div class="pt-3 flex justify-end">
+                      <button type="submit"
+                        class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                        <i class="ph-fill ph-check-circle mr-2"></i>Set Password
+                      </button>
+                    </div>
+                  </form>
+                  @else
+                  <!-- Existing password change form -->
+                  <form method="POST" action="{{ route('settings.password.update') }}" id="passwordChangeForm">
+                    @csrf
+                    @method('PATCH')
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                        <div class="relative">
+                          <input type="password" name="settings_current_password" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="Current password">
+                          <button type="button" onclick="togglePasswordVisibility(this)"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <i class="ph-fill ph-eye text-lg"></i>
+                          </button>
+                        </div>
+                        <x-form-error name="settings_current_password" />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">New Password</label>
+                        <div class="relative">
+                          <input type="password" id="password" name="settings_password" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="New password">
+                          <button type="button" onclick="togglePasswordVisibility(this)"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <i class="ph-fill ph-eye text-lg"></i>
+                          </button>
+                        </div>
+                        <x-form-error name="settings_password" />
+
+                        <div class="mt-2 space-y-2">
+                          <p id="strength-text" class="text-xs text-blue-700">Start typing to see strength...</p>
+                          <div class="h-1.5 mt-1 rounded-full w-full bg-transparent">
+                            <div id="strength-progress"
+                              class="h-1.5 rounded-full w-0 bg-transparent transition-all duration-300"></div>
+                          </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mt-3">
+                          <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                            <i class="ph-fill ph-info mr-2"></i>Password Requirements
+                          </h4>
+                          <ul class="text-xs space-y-1">
+                            <li id="req-length" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> Minimum 6 characters
+                            </li>
+                            <li id="req-uppercase" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one uppercase letter
+                            </li>
+                            <li id="req-lowercase" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one lowercase letter
+                            </li>
+                            <li id="req-number" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one number
+                            </li>
+                            <li id="req-symbol" class="flex items-center text-blue-700">
+                              <i class="ph-fill ph-circle mr-2 text-xs"></i> At least one symbol
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Confirm New Password</label>
+                        <div class="relative">
+                          <input type="password" name="settings_password_confirmation" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+                            placeholder="Confirm new password">
+                          <button type="button" onclick="togglePasswordVisibility(this)"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <i class="ph-fill ph-eye text-lg"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pt-3 flex justify-end">
+                      <button type="submit"
+                        class="px-5 py-2.5 bg-orange-400 text-white text-sm font-medium rounded-lg hover:bg-orange-500 transition duration-300 flex items-center justify-center shadow">
+                        <i class="ph-fill ph-check-circle mr-2"></i>Update Password
+                      </button>
+                    </div>
+                  </form>
                   @endif
                 </div>
+                @endauth
               </div>
-              <!-- End Tab content -->
+
+              <!-- Danger Zone Tab -->
+              <div id="danger-tab" class="tab-content {{ $activeTab === 'danger-tab' ? 'activeTab' : 'hidden' }}">
+                @auth
+                @unless(Auth::user()->isAdmin)
+                <div class="bg-red-50 p-6 rounded-xl border border-red-200 shadow-sm">
+                  <h3 class="text-base font-semibold text-red-800 mb-4 flex items-center">
+                    <i class="ph-fill ph-trash mr-2 text-red-500"></i>Delete Account
+                  </h3>
+
+                  @if(auth()->user()->signed_up_with_google && !auth()->user()->has_set_password)
+                  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-r-lg">
+                    <div class="flex items-center">
+                      <i class="ph-fill ph-warning text-yellow-500 text-xl mr-2"></i>
+                      <p class="text-sm text-gray-700">
+                        You signed up with Google. To delete your account, you must first
+                        <a href="#" onclick="switchTab('password-tab')" class="text-orange-500 hover:underline">
+                          set a password
+                        </a>.
+                      </p>
+                    </div>
+                  </div>
+                  @else
+                  <p class="text-sm text-gray-700 mb-4">
+                    Once you delete your account, there is no going back. Please be certain.
+                  </p>
+
+                  <form method="POST" action="{{ route('settings.delete') }}" id="deleteAccountForm">
+                    @csrf
+                    @method('DELETE')
+                    <div>
+                      <label class="block text-sm font-medium text-gray-600 mb-1">Current Password</label>
+                      <div class="relative">
+                        <input type="password" name="settings_delete_current_password" required
+                          class="w-full border border-red-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-300 focus:border-red-400"
+                          placeholder="Enter your current password">
+                        <button type="button" onclick="togglePasswordVisibility(this)"
+                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                          <i class="ph-fill ph-eye text-lg"></i>
+                        </button>
+                      </div>
+                      <x-form-error name="settings_delete_current_password" />
+                    </div>
+                    <div class="pt-3 flex justify-end">
+                      <button type="submit"
+                        class="px-5 py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center shadow">
+                        <i class="ph-fill ph-warning-circle mr-2"></i>Delete Account Permanently
+                      </button>
+                    </div>
+                  </form>
+                  @endif
+                </div>
+                @else
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <p class="text-sm text-gray-600">Account deletion is not available for administrator accounts.</p>
+                </div>
+                @endunless
+                @endauth
+              </div>
             </div>
+            <!-- End Tab content -->
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <script>
@@ -1035,22 +1072,25 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       window.location.hash = '';
       history.replaceState(null, null);
     }
-    
+
     // Update your DOMContentLoaded event listener
     document.addEventListener('DOMContentLoaded', function() {
       // Check if we should open the modal (from URL hash)
       if (window.location.hash.includes('settingsModal')) {
         openSettingsModal();
-        
+
         // Parse the tab parameter from the URL
         const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
         const tab = urlParams.get('tab');
-        
+
         // Switch to the specified tab if valid
         if (tab && ['account-tab', 'password-tab', 'danger-tab'].includes(tab)) {
             switchTab(tab);
         }
       }
+
+      // Initialize password strength checker after DOM is loaded
+      initializePasswordStrength();
     });
 
     // Modify your switchTab function to update URL
@@ -1060,50 +1100,72 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
           tab.classList.add('hidden');
           tab.classList.remove('activeTab');
       });
-      
+
       // Deactivate all tab buttons
       document.querySelectorAll('.tab-button').forEach(button => {
           button.classList.remove('border-orange-500', 'text-orange-500');
           button.classList.add('border-transparent', 'text-gray-500');
       });
-      
+
       // Show selected tab content
       document.getElementById(tabId).classList.remove('hidden');
       document.getElementById(tabId).classList.add('activeTab');
-      
+
       // Activate selected tab button
       const tabButton = document.getElementById(tabId + '-btn');
       tabButton.classList.remove('border-transparent', 'text-gray-500');
       tabButton.classList.add('border-orange-500', 'text-orange-500');
-      
+
       // Update URL without reloading
       history.replaceState(null, null, '#settingsModal?tab=' + tabId);
     }
 
-    // Password strength checker
-    const passwordInput = document.getElementById('password');
-    const strengthText = document.getElementById('strength-text');
-    const strengthProgress = document.getElementById('strength-progress');
+    // Password strength checker functions
+    function initializePasswordStrength() {
+      // Get all password inputs that need strength checking
+      const passwordInputs = document.querySelectorAll('input[name="settings_password"]');
 
-    const reqLength = document.getElementById('req-length');
-    const reqUpper = document.getElementById('req-uppercase');
-    const reqLower = document.getElementById('req-lowercase');
-    const reqNumber = document.getElementById('req-number');
-    const reqSymbol = document.getElementById('req-symbol');
+      passwordInputs.forEach(passwordInput => {
+        if (passwordInput) {
+          passwordInput.addEventListener('input', () => {
+            updatePasswordStrength(passwordInput.value);
+          });
+        }
+      });
+    }
 
     const updateRequirement = (condition, element) => {
+      if (!element) return;
+
       if (condition) {
         element.classList.remove('text-blue-700');
         element.classList.add('text-green-600');
-        element.querySelector('i').classList.replace('ph-circle', 'ph-check-circle');
+        const icon = element.querySelector('i');
+        if (icon) {
+          icon.classList.replace('ph-circle', 'ph-check-circle');
+        }
       } else {
         element.classList.remove('text-green-600');
         element.classList.add('text-blue-700');
-        element.querySelector('i').classList.replace('ph-check-circle', 'ph-circle');
+        const icon = element.querySelector('i');
+        if (icon) {
+          icon.classList.replace('ph-check-circle', 'ph-circle');
+        }
       }
     };
 
-    const updateStrength = (password) => {
+    const updatePasswordStrength = (password) => {
+      const strengthText = document.getElementById('strength-text');
+      const strengthProgress = document.getElementById('strength-progress');
+      const reqLength = document.getElementById('req-length');
+      const reqUpper = document.getElementById('req-uppercase');
+      const reqLower = document.getElementById('req-lowercase');
+      const reqNumber = document.getElementById('req-number');
+      const reqSymbol = document.getElementById('req-symbol');
+
+      // If elements don't exist, return early
+      if (!strengthText || !strengthProgress) return;
+
       const hasLength = password.length >= 6;
       const hasUpper = /[A-Z]/.test(password);
       const hasLower = /[a-z]/.test(password);
@@ -1128,7 +1190,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
 
       if (progressPercentage === 0) {
         strengthText.innerText = 'Start typing to see strength...';
-        strengthProgress.style.backgroundColor = '#ef4444'; // Red
+        strengthText.className = 'text-xs text-blue-700';
+        strengthProgress.style.backgroundColor = 'transparent';
       } else if (progressPercentage < 40) {
         strengthText.innerText = 'Weak';
         strengthText.className = 'text-xs text-red-600';
@@ -1144,65 +1207,61 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       }
     };
 
-    passwordInput.addEventListener('input', () => {
-      updateStrength(passwordInput.value);
-    });
-
     // Toggle password visibility
     function togglePasswordVisibility(button) {
       const input = button.parentElement.querySelector('input');
       const type = input.type === 'password' ? 'text' : 'password';
       input.type = type;
-      button.innerHTML = type === 'password' 
-        ? '<i class="ph-fill ph-eye text-lg"></i>' 
+      button.innerHTML = type === 'password'
+        ? '<i class="ph-fill ph-eye text-lg"></i>'
         : '<i class="ph-fill ph-eye-slash text-lg"></i>';
     }
 
     // Prevent default form submission and handle it manually
     document.getElementById('emailUpdateForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       // You can add validation or other logic here before submission
       const submitButton = this.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
-      
+
       // Submit the form after validation
       this.submit();
     });
 
     document.getElementById('contactUpdateForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       // You can add validation or other logic here before submission
       const submitButton = this.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
-      
+
       // Submit the form after validation
       this.submit();
     });
 
     document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       // You can add validation or other logic here before submission
       const submitButton = this.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
-      
+
       // Submit the form after validation
       this.submit();
     });
 
     document.getElementById('deleteAccountForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       // You can add validation or other logic here before submission
       const submitButton = this.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
-      
+
       // Submit the form after validation
       this.submit();
     });
@@ -1210,11 +1269,11 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
     // Add this to your existing script section
     document.getElementById('passwordSetupForm')?.addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       const submitButton = this.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.innerHTML = '<i class="ph-fill ph-circle-notch animate-spin mr-2"></i> Processing...';
-      
+
       this.submit();
     });
 
@@ -1223,7 +1282,7 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
       const adminIndicator = document.getElementById('adminIndicator');
       const navbar = document.getElementById('main-header');
       const header = document.querySelector('header');
-      
+
       if (adminIndicator && navbar && header) {
         // Get the computed styles to account for any CSS
         const indicatorStyles = window.getComputedStyle(adminIndicator);
@@ -1231,18 +1290,18 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
         const indicatorTop = parseInt(indicatorStyles.top) || 0;
         const indicatorMarginTop = parseInt(indicatorStyles.marginTop) || 0;
         const indicatorMarginBottom = parseInt(indicatorStyles.marginBottom) || 0;
-        
+
         // Calculate total height including margins
         const totalIndicatorHeight = indicatorHeight + indicatorTop + indicatorMarginTop + indicatorMarginBottom;
-        
+
         // Set navbar and header position
         navbar.style.top = totalIndicatorHeight + 'px';
         header.style.top = totalIndicatorHeight + 'px';
-        
+
         // Ensure navbar is visible
         navbar.style.position = 'fixed';
         navbar.style.zIndex = '20';
-        
+
         // Add some debugging for mobile
         console.log('Indicator height:', indicatorHeight, 'Total height:', totalIndicatorHeight);
       } else if (navbar && header) {
@@ -1256,8 +1315,8 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
     document.addEventListener('DOMContentLoaded', function() {
       adjustNavbarPosition();
       // Additional check after a short delay to handle any dynamic content
-      setTimeout(adjustNavbarPosition, 100);
-      
+      adjustNavbarPosition();
+
       // Use ResizeObserver to watch for changes in admin indicator size
       const adminIndicator = document.getElementById('adminIndicator');
       if (adminIndicator && window.ResizeObserver) {
@@ -1267,19 +1326,19 @@ text-white text-lg font-bold w-12 h-12 flex items-center justify-center rounded-
         resizeObserver.observe(adminIndicator);
       }
     });
-    
+
     window.addEventListener('resize', adjustNavbarPosition);
-    
+
     // Also adjust when the page becomes visible (for mobile browsers)
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) {
-        setTimeout(adjustNavbarPosition, 50);
+        adjustNavbarPosition();
       }
     });
-    
+
     // Additional check for mobile orientation changes
     window.addEventListener('orientationchange', function() {
-      setTimeout(adjustNavbarPosition, 200);
+      adjustNavbarPosition();
     });
 
   </script>

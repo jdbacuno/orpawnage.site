@@ -25,7 +25,7 @@ class PasswordChanged extends Notification implements ShouldQueue
             ->subject('Your Password Has Been Changed')
             ->line('Your account password was recently changed.')
             ->line('If you did not make this change, please secure your account immediately.')
-            ->action('Secure Your Account', url('http://localhost/' . $isAdmin))
+            ->action('Secure Your Account', url('https://orpawnage.site/' . $isAdmin))
             ->line('Thank you for using our application!');
     }
 }

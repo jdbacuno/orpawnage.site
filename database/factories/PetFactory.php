@@ -37,17 +37,41 @@ class PetFactory extends Factory
         $slug = Str::slug("{$species}" . uniqid());
 
         return [
-            'pet_number' => $this->faker->unique()->numberBetween(1, 1000),
-            'species' => $species,
-            'name' => $this->faker->firstName(),
-            'age' => $this->faker->numberBetween(1, 15),
-            'age_unit' => $this->faker->randomElement(['months', 'years']),
+            'pet_number' => $this->faker->unique()->numberBetween(1, 40),
+
+            // First, decide species and store it for later use
+            'species' => $species = $this->faker->randomElement(['feline', 'canine']),
+
+            'pet_name' => $this->faker->firstName(),
+
+            // Decide whether to use "months" or "years"
+            'age_unit' => $ageUnit = $this->faker->randomElement(['months', 'years']),
+
+            // Age depends on the chosen age unit
+            'age' => $ageUnit === 'years'
+                ? $this->faker->numberBetween(1, 3)  // 1 to 3 years
+                : $this->faker->numberBetween(1, 12), // 1 to 12 months
+
             'sex' => $this->faker->randomElement(['male', 'female']),
             'reproductive_status' => $this->faker->randomElement(['intact', 'neutered', 'unknown']),
-            'color' => $this->faker->randomElement(['black', 'white', 'orange', 'brown']),
+            'color' => $this->faker->randomElement([
+                'black',
+                'white',
+                'orange',
+                'brown',
+                'bi-color',
+                'tri-color',
+                'brindle',
+                'other'
+            ]),
             'source' => $this->faker->randomElement(['surrendered', 'rescued', 'other']),
-            'image_path' => 'pet-images/catdog.svg',
-            'slug' => $slug, // Ensures uniqueness
+
+            // Image depends on species
+            'image_path' => $species === 'feline'
+                ? $this->faker->imageUrl(360, 360, 'cats', true, 'cats', true, 'jpg')
+                : $this->faker->imageUrl(360, 360, 'dogs', true, 'dogs', true, 'jpg'),
+
+            'slug' => $slug, // Ensure uniqueness
         ];
     }
 }

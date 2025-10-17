@@ -1,207 +1,286 @@
 <x-admin-layout>
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Bug Reports</h1>
-        <p class="text-gray-600">Manage and track bug reports from users</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white p-6 rounded-lg shadow border">
-            <div class="flex items-center">
-                <div class="p-2 bg-yellow-100 rounded-lg">
-                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
-                        </path>
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Pending</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $bugReports->where('status',
-                        'pending')->count() }}</p>
-                </div>
-            </div>
+    <div class="max-w-[1600px] mx-auto">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Bug Reports Management</h1>
+            <p class="text-sm text-gray-600 mt-2">Review and manage bug reports submitted by users.</p>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow border">
-            <div class="flex items-center">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">In Progress</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $bugReports->where('status',
-                        'in_progress')->count() }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow border">
-            <div class="flex items-center">
-                <div class="p-2 bg-green-100 rounded-lg">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                        </path>
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Resolved</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ $bugReports->where('status',
-                        'resolved')->count() }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bug Reports Cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        @forelse($bugReports as $bugReport)
-        <div class="bg-white rounded-lg shadow border hover:shadow-lg transition-shadow">
-            <!-- Compact Header -->
-            <div class="p-4 border-b border-gray-200">
-                <div class="flex justify-between items-start mb-2">
-                    <div class="flex-1 min-w-0">
-                        @if($bugReport->user)
-                        <h3 class="font-semibold text-gray-900 truncate">{{ $bugReport->user->username }}</h3>
-                        <p class="text-xs text-gray-500 truncate">{{ $bugReport->user->email }}</p>
-                        @elseif($bugReport->email)
-                        <h3 class="font-semibold text-gray-900 truncate">Anonymous User</h3>
-                        <p class="text-xs text-gray-500 truncate">{{ $bugReport->email }}</p>
-                        @else
-                        <h3 class="font-semibold text-gray-900 truncate">Anonymous User</h3>
-                        <p class="text-xs text-gray-500 truncate">No email provided</p>
-                        @endif
-                    </div>
-                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ml-2 flex-shrink-0
-                            @if($bugReport->status === 'pending') bg-yellow-100 text-yellow-800
-                            @elseif($bugReport->status === 'in_progress') bg-blue-100 text-blue-800
-                            @else bg-green-100 text-green-800
-                            @endif">
-                        {{ ucfirst(str_replace('_', ' ', $bugReport->status)) }}
-                    </span>
-                </div>
-
-                <div class="text-xs text-gray-500 space-y-1">
-                    <p>Reported: {{ $bugReport->created_at->format('M d, Y H:i') }}</p>
-                    @if($bugReport->page_url)
-                    <p class="truncate">Page:
-                        <a href="{{ $bugReport->page_url }}" target="_blank"
-                            class="text-orange-600 hover:text-orange-800">
-                            {{ Str::limit(parse_url($bugReport->page_url, PHP_URL_PATH) ?: $bugReport->page_url, 30)
-                            }}
-                        </a>
-                    </p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Compact Content -->
-            <div class="p-4 space-y-3">
-                <!-- Description -->
-                <div>
-                    <h4 class="text-xs font-medium text-gray-700 mb-1">Bug Description:</h4>
-                    <div class="text-sm text-gray-900 overflow-hidden">
-                        <span id="description-preview-{{ $bugReport->id }}">
-                            {{ Str::limit($bugReport->description, 80) }}
-                        </span>
-                        @if(strlen($bugReport->description) > 80)
-                        <button
-                            onclick="showFullDescription({{ $bugReport->id }}, `{{ addslashes($bugReport->description) }}`)"
-                            class="text-orange-600 hover:text-orange-800 text-xs mt-1">
-                            Read more
-                        </button>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Screenshot -->
-                @if($bugReport->screenshot_path)
-                <div>
-                    <button onclick="viewScreenshot('{{ asset('storage/' . $bugReport->screenshot_path) }}')"
-                        class="text-orange-600 hover:text-orange-800 text-xs font-medium">
-                        📷 View Screenshot
-                    </button>
-                </div>
-                @endif
-
-                <!-- Admin Notes -->
-                <div>
-                    <h4 class="text-xs font-medium text-gray-700 mb-1">Admin Notes:</h4>
-                    <div class="text-sm text-gray-900">
-                        @if($bugReport->admin_notes)
-                        <span id="notes-preview-{{ $bugReport->id }}">
-                            {{ Str::limit($bugReport->admin_notes, 60) }}
-                        </span>
-                        @if(strlen($bugReport->admin_notes) > 60)
-                        <button
-                            onclick="showFullNotes({{ $bugReport->id }}, `{{ addslashes($bugReport->admin_notes) }}`)"
-                            class="text-orange-600 hover:text-orange-800 text-xs mt-1">
-                            Read more
-                        </button>
-                        @endif
-                        @else
-                        <p class="text-gray-500 italic text-xs">No notes added yet</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="p-4 border-t border-gray-200">
-                <div class="flex space-x-2">
-                    <button
-                        onclick="openStatusModal({{ $bugReport->id }}, '{{ $bugReport->status }}', `{{ addslashes($bugReport->admin_notes) }}`)"
-                        class="flex-1 px-3 py-2 bg-orange-500 text-white text-sm rounded-md hover:bg-orange-600 transition-colors">
-                        Update Status
-                    </button>
-                    <button
-                        onclick="openDeleteModal({{ $bugReport->id }}, '{{ $bugReport->user ? $bugReport->user->name : 'Anonymous User' }}')"
-                        class="px-3 py-2 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 transition-colors">
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
-        @empty
-        <div class="col-span-full">
-            <div class="bg-white p-8 rounded-lg shadow border text-center">
-                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
-                    </path>
+        @if (session('success'))
+        <div id="global-alert-success" class="flex items-center p-4 mb-6 text-green-800 rounded-lg bg-green-50 border-l-4 border-green-400" role="alert">
+            <svg class="shrink-0 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <div class="ms-3 text-sm font-medium">{!! session('success') !!}</div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg p-1.5 hover:bg-green-200 h-8 w-8" onclick="this.parentElement.remove()">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 14 14">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                 </svg>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">No Bug Reports</h3>
-                <p class="text-gray-500">There are no bug reports to display.</p>
+            </button>
+        </div>
+        @endif
+
+        <!-- Status Tabs and Search -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+            <!-- Status Tabs -->
+            <div class="border-b border-gray-200">
+                <nav class="flex overflow-x-auto scrollbar-hidden" aria-label="Tabs">
+                    <a href="{{ request()->fullUrlWithQuery(['status' => '']) }}"
+                        class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+                            {{ !request('status') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        <i class="ph-fill ph-files mr-2"></i>
+                        All Reports
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}"
+                        class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+                            {{ request('status') === 'pending' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        <i class="ph-fill ph-clock mr-2"></i>
+                        Pending
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['status' => 'in_progress']) }}"
+                        class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+                            {{ request('status') === 'in_progress' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        <i class="ph-fill ph-gear mr-2"></i>
+                        In Progress
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['status' => 'resolved']) }}"
+                        class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors
+                            {{ request('status') === 'resolved' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        <i class="ph-fill ph-check-circle mr-2"></i>
+                        Resolved
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-4 items-center">
+                    <div class="flex-1 min-w-[300px]">
+                        <div class="relative">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Search by username, bug description, admin notes, or report ID"
+                                class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 pl-10 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition" />
+                            <div class="absolute left-3 inset-y-0 flex items-center h-full pointer-events-none">
+                                <i class="ph-fill ph-magnifying-glass text-gray-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="status" value="{{ request('status') }}" />
+
+                    @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}"
+                        class="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300 transition">
+                        <i class="ph-fill ph-x mr-1"></i>Clear
+                    </a>
+                    @endif
+                </form>
             </div>
         </div>
-        @endforelse
-    </div>
 
-    <!-- Pagination -->
-    @if($bugReports->hasPages())
-    <div class="mt-6">
-        {{ $bugReports->links() }}
-    </div>
-    @endif
+        @if($bugReports->isEmpty())
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <i class="ph-fill ph-bug text-5xl text-gray-300 mb-4"></i>
+            <p class="text-lg text-gray-500">No bug reports found.</p>
+        </div>
+        @else
+        <div class="space-y-6">
+            @foreach($bugReports as $bugReport)
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <!-- Report Header -->
+                <div class="bg-gradient-to-r from-orange-50 to-red-50 border-b border-gray-200 p-6">
+                    <div class="flex flex-col sm:flex-row items-start gap-4">
+                        <div class="flex-1 min-w-0 w-full">
+                            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+                                <div class="min-w-0 flex-1">
+                                    <h2 class="text-xl font-bold text-gray-900 mb-2">
+                                        @if($bugReport->user)
+                                        {{ $bugReport->user->username }}
+                                        @else
+                                        Anonymous Reporter
+                                        @endif
+                                        <span class="text-base text-gray-500">#{{ $bugReport->id }}</span>
+                                    </h2>
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <span class="px-3 py-1 rounded-full text-sm font-semibold
+                      @if($bugReport->status === 'pending') bg-yellow-100 text-yellow-800 border border-yellow-200
+                      @elseif($bugReport->status === 'in_progress') bg-blue-100 text-blue-800 border border-blue-200
+                      @else bg-green-100 text-green-800 border border-green-200
+                      @endif">
+                                            <i class="ph-fill ph-{{ $bugReport->status === 'pending' ? 'clock' : ($bugReport->status === 'in_progress' ? 'gear' : 'check-circle') }} mr-1"></i>
+                                            {{ ucfirst(str_replace('_', ' ', $bugReport->status)) }}
+                                        </span>
+                                        @if($bugReport->user)
+                                        <span class="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700">
+                                            <i class="ph-fill ph-envelope mr-1"></i>{{ $bugReport->user->email }}
+                                        </span>
+                                        @elseif($bugReport->email)
+                                        <span class="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700">
+                                            <i class="ph-fill ph-envelope mr-1"></i>{{ $bugReport->email }}
+                                        </span>
+                                        @endif
+                                        @if($bugReport->screenshot_path)
+                                        <span class="px-3 py-1 bg-orange-100 border border-orange-300 rounded-full text-sm text-orange-700">
+                                            <i class="ph-fill ph-image mr-1"></i>Screenshot
+                                        </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
+                                        <span>
+                                            <i class="ph-fill ph-calendar mr-1"></i>
+                                            {{ $bugReport->created_at->format('M d, Y H:i') }}
+                                        </span>
+                                        @if($bugReport->resolved_at)
+                                        <span class="text-green-600">
+                                            <i class="ph-fill ph-check-circle mr-1"></i>
+                                            {{ \Carbon\Carbon::parse($bugReport->resolved_at)->format('M d, Y') }}
+                                        </span>
+                                        @endif
+                                    </div>
+                                    @if($bugReport->page_url)
+                                    <div class="mt-2 text-sm text-gray-600 flex items-center gap-2">
+                                        <i class="ph-fill ph-link"></i>
+                                        <a href="{{ $bugReport->page_url }}" target="_blank" class="text-orange-600 hover:text-orange-800 truncate">
+                                            {{ Str::limit(parse_url($bugReport->page_url, PHP_URL_PATH) ?: $bugReport->page_url, 50) }}
+                                        </a>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                <div class="flex gap-2">
+                                    <button onclick="openStatusModal({{ $bugReport->id }}, '{{ $bugReport->status }}', `{{ addslashes($bugReport->admin_notes ?? '') }}`)"
+                                        class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
+                                        <i class="ph-fill ph-pencil-simple mr-1"></i>Update
+                                    </button>
+                                    <button onclick="openDeleteModal({{ $bugReport->id }}, '{{ $bugReport->user ? $bugReport->user->username : 'Anonymous Reporter' }}')"
+                                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                                        <i class="ph-fill ph-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button onclick="toggleBugDetails('{{ $bugReport->id }}')"
+                                class="w-full bg-white hover:bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-left transition-colors flex items-center justify-between group">
+                                <span class="font-medium text-gray-700 group-hover:text-gray-900 flex items-center gap-2">
+                                    <i id="bug-icon-{{ $bugReport->id }}" class="ph-fill ph-caret-right text-gray-400 group-hover:text-orange-600 transition-transform duration-200"></i>
+                                    View Bug Details & Description
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Section -->
+                <div id="bug-details-{{ $bugReport->id }}" class="hidden border-t border-gray-200">
+                    <div class="p-6 bg-gray-50 space-y-6">
+                        <!-- Bug Description -->
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center">
+                                <i class="ph-fill ph-text-align-left mr-2 text-orange-600"></i>
+                                Bug Description
+                            </h3>
+                            <div class="bg-white border border-gray-300 rounded-lg p-4">
+                                <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ $bugReport->description }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Screenshot -->
+                        @if($bugReport->screenshot_path)
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center">
+                                <i class="ph-fill ph-image mr-2 text-orange-600"></i>
+                                Screenshot
+                            </h3>
+                            <button onclick="viewScreenshot('{{ asset('storage/' . $bugReport->screenshot_path) }}')" 
+                                class="flex items-center gap-2 px-4 py-3 bg-orange-50 border-2 border-orange-300 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors text-sm font-medium">
+                                <i class="ph-fill ph-image text-lg"></i>
+                                <span>View Screenshot</span>
+                            </button>
+                        </div>
+                        @endif
+
+                        <!-- Admin Notes -->
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center">
+                                <i class="ph-fill ph-note mr-2 text-orange-600"></i>
+                                Admin Notes
+                            </h3>
+                            <div class="bg-white border border-gray-300 rounded-lg p-4">
+                                @if($bugReport->admin_notes)
+                                <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ $bugReport->admin_notes }}</p>
+                                @else
+                                <div class="text-center py-4">
+                                    <i class="ph-fill ph-note-blank text-3xl text-gray-300 mb-2"></i>
+                                    <p class="text-sm text-gray-500 italic">No admin notes</p>
+                                    <button onclick="openStatusModal({{ $bugReport->id }}, '{{ $bugReport->status }}', '')" 
+                                        class="mt-2 text-orange-600 hover:text-orange-800 text-sm font-medium">
+                                        <i class="ph-fill ph-plus mr-1"></i>Add Notes
+                                    </button>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Technical Info -->
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center">
+                                <i class="ph-fill ph-code mr-2 text-orange-600"></i>
+                                Technical Information
+                            </h3>
+                            <div class="bg-white border border-gray-300 rounded-lg p-4 space-y-3">
+                                @if($bugReport->user_agent)
+                                <div>
+                                    <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Browser/Device</label>
+                                    <p class="mt-1 text-xs text-gray-700 bg-gray-50 p-2 rounded break-all">{{ $bugReport->user_agent }}</p>
+                                </div>
+                                @endif
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Report ID</label>
+                                        <p class="mt-1 text-sm text-gray-900 font-mono">#{{ $bugReport->id }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Submitted</label>
+                                        <p class="mt-1 text-sm text-gray-900">{{ $bugReport->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination -->
+        @if($bugReports->hasPages())
+        <div class="mt-6">
+            {{ $bugReports->links() }}
+        </div>
+        @endif
+        @endif
     </div>
 
     <!-- Status Update Modal -->
-    <div id="statusModal"
-        class="fixed px-1 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Update Bug Report Status</h3>
+    <div id="statusModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto">
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Update Bug Report</h3>
+                        <p class="text-sm text-gray-600 mt-2">Update the status and add notes about this bug report.</p>
+                    </div>
+                    <button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="ph-fill ph-x text-2xl"></i>
+                    </button>
+                </div>
+
                 <form id="statusUpdateForm">
                     @csrf
                     <input type="hidden" id="bugReportId" name="bug_report_id">
 
                     <div class="mb-4">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                        <select id="status" name="status"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <select id="status" name="status" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
                             <option value="resolved">Resolved</option>
@@ -210,17 +289,15 @@
 
                     <div class="mb-4">
                         <label for="adminNotes" class="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
-                        <textarea id="adminNotes" name="admin_notes" rows="3"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            placeholder="Add notes about the bug report..."></textarea>
+                        <textarea id="adminNotes" name="admin_notes" rows="4" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none" placeholder="Add notes about the bug report, actions taken, or resolution details..." maxlength="1000"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">Maximum 1000 characters</p>
                     </div>
 
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="closeStatusModal()"
-                            class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50">
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeStatusModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                             Cancel
                         </button>
-                        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600">
+                        <button type="submit" class="flex-1 bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 rounded-lg transition-colors font-medium">
                             Update Status
                         </button>
                     </div>
@@ -229,281 +306,211 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal"
-        class="fixed px-1 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <div class="flex items-center mb-4">
-                    <div
-                        class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
-                            </path>
-                        </svg>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-auto">
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Delete Bug Report</h3>
+                        <p class="text-sm text-gray-600 mt-2">Are you sure you want to delete this bug report?</p>
+                    </div>
+                    <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="ph-fill ph-x text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div class="flex">
+                        <i class="ph-fill ph-warning text-red-600 text-xl mr-3"></i>
+                        <div>
+                            <p class="text-sm text-red-800 font-medium">This action cannot be undone</p>
+                            <p class="text-sm text-red-700">
+                                Bug report from <span id="deleteUserName" class="font-semibold"></span> will be permanently deleted.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Bug Report</h3>
-                    <p class="text-sm text-gray-500 mb-4">
-                        Are you sure you want to delete the bug report from <span id="deleteUserName"
-                            class="font-medium"></span>?
-                        This action cannot be undone.
-                    </p>
-                    <div class="flex justify-center space-x-3">
-                        <button onclick="closeDeleteModal()"
-                            class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50">
+
+                <form id="deleteForm" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                             Cancel
                         </button>
-                        <button onclick="confirmDelete()"
-                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
-                            Delete
+                        <button type="submit" class="flex-1 bg-red-600 px-4 py-2 text-white hover:bg-red-700 rounded-lg transition-colors font-medium">
+                            Delete Report
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
     <!-- Screenshot Modal -->
-    <div id="screenshotModal"
-        class="fixed px-1 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="p-5 border w-11/12 max-w-3xl shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Screenshot</h3>
-                    <button onclick="closeScreenshotModal()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+    <div id="screenshotModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl mx-auto">
+            <button onclick="closeScreenshotModal()" class="absolute -top-10 right-0 text-white hover:text-gray-300">
+                <i class="ph-fill ph-x text-2xl"></i>
+            </button>
+            <div class="bg-white rounded-lg shadow-2xl overflow-hidden">
+                <div class="p-4 bg-gray-900 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-white">Bug Report Screenshot</h3>
+                    <a id="screenshotDownload" href="" download class="text-white hover:text-gray-300">
+                        <i class="ph-fill ph-download text-lg"></i>
+                    </a>
                 </div>
-                <div class="text-center">
-                    <img id="screenshotImage" class="w-full h-auto max-h-96 object-contain mx-auto"
-                        alt="Bug Report Screenshot">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Full Description Modal -->
-    <div id="descriptionModal"
-        class="fixed px-1 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Bug Description</h3>
-                    <button onclick="closeDescriptionModal()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-lg max-h-64 overflow-y-auto">
-                    <p id="fullDescription" class="text-gray-900 whitespace-pre-wrap break-words"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Full Notes Modal -->
-    <div id="fullNotesModal"
-        class="fixed px-1 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Admin Notes</h3>
-                    <button onclick="closeFullNotesModal()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-lg max-h-64 overflow-y-auto">
-                    <p id="fullNotes" class="text-gray-900 whitespace-pre-wrap break-words"></p>
+                <div class="flex items-center justify-center bg-gray-100 p-4 max-h-[70vh] overflow-auto">
+                    <img id="screenshotImage" class="max-w-full h-auto rounded shadow-lg" alt="Bug Report Screenshot">
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Delete modal variables
-        let deleteBugReportId = null;
-
-
-
-        // Delete modal functions
-        function openDeleteModal(id, userName) {
-            deleteBugReportId = id;
-            document.getElementById('deleteUserName').textContent = userName;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            deleteBugReportId = null;
-        }
-
-        function confirmDelete() {
-            if (deleteBugReportId) {
-                // Create a form to submit the delete request
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/admin/bug-reports/${deleteBugReportId}`;
-                
-                // Add CSRF token
-                const csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                
-                // Add method override
-                const methodField = document.createElement('input');
-                methodField.type = 'hidden';
-                methodField.name = '_method';
-                methodField.value = 'DELETE';
-                
-                form.appendChild(csrfToken);
-                form.appendChild(methodField);
-                document.body.appendChild(form);
-                form.submit();
-            }
+        function toggleBugDetails(id) {
+            const details = document.getElementById('bug-details-' + id);
+            const icon = document.getElementById('bug-icon-' + id);
+            const isHidden = details.classList.contains('hidden');
+            
+            details.classList.toggle('hidden');
+            icon.classList.toggle('ph-caret-right', !isHidden);
+            icon.classList.toggle('ph-caret-down', isHidden);
         }
 
         function openStatusModal(id, status, notes) {
-            console.log('Opening status modal for bug report:', id, 'with status:', status);
             document.getElementById('bugReportId').value = id;
             document.getElementById('status').value = status;
             document.getElementById('adminNotes').value = notes || '';
-            document.getElementById('statusModal').classList.remove('hidden');
             
-            // Verify the form is populated correctly
-            console.log('Form values after population:');
-            console.log('ID:', document.getElementById('bugReportId').value);
-            console.log('Status:', document.getElementById('status').value);
-            console.log('Notes:', document.getElementById('adminNotes').value);
+            const modal = document.getElementById('statusModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeStatusModal() {
-            document.getElementById('statusModal').classList.add('hidden');
+            const modal = document.getElementById('statusModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openDeleteModal(id, userName) {
+            document.getElementById('deleteUserName').textContent = userName;
+            document.getElementById('deleteForm').action = `/admin/bug-reports/${id}`;
+            
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
         }
 
         function viewScreenshot(imageSrc) {
             document.getElementById('screenshotImage').src = imageSrc;
-            document.getElementById('screenshotModal').classList.remove('hidden');
+            document.getElementById('screenshotDownload').href = imageSrc;
+            
+            const modal = document.getElementById('screenshotModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeScreenshotModal() {
-            document.getElementById('screenshotModal').classList.add('hidden');
-        }
-
-        function showFullDescription(id, description) {
-            document.getElementById('fullDescription').textContent = description;
-            document.getElementById('descriptionModal').classList.remove('hidden');
-        }
-
-        function closeDescriptionModal() {
-            document.getElementById('descriptionModal').classList.add('hidden');
-        }
-
-        function showFullNotes(id, notes) {
-            document.getElementById('fullNotes').textContent = notes;
-            document.getElementById('fullNotesModal').classList.remove('hidden');
-        }
-
-        function closeFullNotesModal() {
-            document.getElementById('fullNotesModal').classList.add('hidden');
+            const modal = document.getElementById('screenshotModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
         }
 
         // Handle status update form submission
         document.getElementById('statusUpdateForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const bugReportId = document.getElementById('bugReportId').value;
             const status = document.getElementById('status').value;
             const adminNotes = document.getElementById('adminNotes').value;
-            
-            console.log('Submitting status update for bug report:', bugReportId);
-            console.log('Status:', status);
-            console.log('Admin notes content:', adminNotes);
-            
-            // Test if the form data is correct
-            if (!bugReportId) {
-                alert('Error: Bug report ID is missing');
+
+            if (!bugReportId || !status) {
+                alert('Error: Required fields are missing');
                 return;
             }
-            
-            if (!status) {
-                alert('Error: Status is required');
-                return;
-            }
-            
+
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            // Create form data with all required fields
             const formData = new FormData();
             formData.append('_token', csrfToken);
             formData.append('_method', 'PATCH');
             formData.append('status', status);
             formData.append('admin_notes', adminNotes);
-            
-            // Test the request URL
-            const requestUrl = `/admin/bug-reports/${bugReportId}/status`;
-            console.log('Request URL:', requestUrl);
-            
-            fetch(requestUrl, {
-                method: 'POST', // Using POST with _method for compatibility
+
+            // Disable submit button
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Updating...';
+
+            fetch(`/admin/bug-reports/${bugReportId}/status`, {
+                method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-CSRF-TOKEN': csrfToken
                 }
-            }).then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                    });
-                }
-                return response.json();
             })
+            .then(response => response.json())
             .then(data => {
-                console.log('Response data:', data);
                 if (data.success) {
                     closeStatusModal();
                     location.reload();
                 } else {
                     alert('Failed to update status: ' + (data.message || 'Unknown error'));
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
             })
             .catch(error => {
                 console.error('Error updating status:', error);
-                alert('Error updating status: ' + error.message);
+                alert('Error updating status');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
             });
         });
 
         // Close modals when clicking outside
-        document.addEventListener('click', function(e) {
-            if (e.target.id === 'statusModal') {
+        document.querySelectorAll('[id$="Modal"]').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    if (this.id === 'statusModal') closeStatusModal();
+                    if (this.id === 'deleteModal') closeDeleteModal();
+                    if (this.id === 'screenshotModal') closeScreenshotModal();
+                }
+            });
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 closeStatusModal();
-            }
-            if (e.target.id === 'deleteModal') {
                 closeDeleteModal();
-            }
-            if (e.target.id === 'screenshotModal') {
                 closeScreenshotModal();
             }
-            if (e.target.id === 'descriptionModal') {
-                closeDescriptionModal();
-            }
-            if (e.target.id === 'fullNotesModal') {
-                closeFullNotesModal();
-            }
         });
-    </script>
 
+        // Auto-hide success alert after 5 seconds
+        const successAlert = document.getElementById('global-alert-success');
+        if (successAlert) {
+            setTimeout(() => {
+                successAlert.style.transition = 'opacity 0.5s ease';
+                successAlert.style.opacity = '0';
+                setTimeout(() => successAlert.remove(), 500);
+            }, 5000);
+        }
+    </script>
 </x-admin-layout>

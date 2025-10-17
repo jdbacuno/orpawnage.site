@@ -31,7 +31,7 @@
         <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-25 text-6xl bottom-6 right-4"></i>
       </div>
     </div>
-    <div class="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-6">
+    <div class="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-8">
       <div class="text-center">
         <span
           class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm font-medium">
@@ -87,13 +87,13 @@
         </div>
       </div>
 
-      <!-- Masonry Gallery -->
+      <!-- Standard Grid Gallery (replaces masonry) -->
       <div class="mt-10">
-        <div class="gallery-grid columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 [column-fill:_balance]">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           @php $__idx = 0; @endphp
           @foreach($featuredPets as $month => $images)
           @foreach($images as $image)
-          <div class="mb-4 break-inside-avoid" style="break-inside: avoid;">
+          <div class="gallery-item-wrapper">
             <div
               class="gallery-item relative overflow-hidden rounded-xl shadow-sm group cursor-pointer transition-all duration-300 hover:shadow-lg"
               data-index="{{ $__idx }}" data-src="{{ asset('storage/' . $image->image_path) }}"
@@ -189,21 +189,37 @@
   </section>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function updateHeaderSpacer() {
-        const header = document.getElementById('main-header');
-        const mainContent = document.getElementById('mainContent');
-        if (header && mainContent) {
-          const headerHeight = header.offsetHeight;
-          mainContent.style.marginTop = `${headerHeight}px`;
-          mainContent.style.paddingTop = `${headerHeight * .2}px`;
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.getElementById('main-header');
+      const mainContent = document.getElementById('mainContent');
+      const adminIndicator = document.getElementById('adminIndicator');
+
+      const EXTRA_TOP_SPACING_PX = 8;
+
+      function computeHeights() {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const adminHeight = adminIndicator ? adminIndicator.offsetHeight : 0;
+        return { headerHeight, adminHeight };
       }
 
-      // Initial update
+      function updateHeaderSpacer() {
+        if (!mainContent) return;
+        const { headerHeight, adminHeight } = computeHeights();
+        const totalTop = (headerHeight || 0) + (adminHeight || 0);
+
+        mainContent.style.marginTop = '0px';
+        mainContent.style.paddingTop = `${(totalTop + EXTRA_TOP_SPACING_PX) * .8}px`;
+        mainContent.style.paddingBottom = `${(totalTop + EXTRA_TOP_SPACING_PX * .8)}px`;
+      }
+
       updateHeaderSpacer();
-      // Update on window resize
       window.addEventListener('resize', updateHeaderSpacer);
+
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(updateHeaderSpacer);
+        if (header) ro.observe(header);
+        if (adminIndicator) ro.observe(adminIndicator);
+      }
 
       // Modal functionality with navigation
       const modal = document.getElementById('imageModal');
@@ -280,7 +296,7 @@
       const monthFilter = document.getElementById('monthFilter');
       const loadMoreBtn = document.getElementById('loadMoreBtn');
       const loadMoreWrapper = document.getElementById('loadMoreWrapper');
-      const galleryContainer = document.querySelector('.gallery-grid');
+      const galleryContainer = document.querySelector('.grid');
       const emptyState = document.getElementById('emptyState');
       const resultCount = document.getElementById('resultCount');
       let currentPage = 0;

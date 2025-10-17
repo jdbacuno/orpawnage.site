@@ -83,12 +83,10 @@ class PetListing extends Component
         $this->color = $this->normalizeFilterValue($this->color);
         $this->source = $this->normalizeFilterValue($this->source);
 
-        $query = Pet::whereNotIn('id', function ($subQuery) {
-            $subQuery->select('pet_id')
-                ->from('adoption_applications')
-                ->whereNotIn('status', ['rejected']);
-        })
-            ->whereNull('archived_at'); // Exclude pets with non-null archived_at
+        $query = Pet::query()
+            ->whereDoesntHave('adoptionApplication', function ($query) {
+                $query->whereIn('status', ['to be scheduled', 'adoption on-going', 'picked up']);
+            });
 
         // Apply filters if any are set
         if ($this->species) {
@@ -137,7 +135,10 @@ class PetListing extends Component
                                 ->orWhereRaw('LOWER(source) LIKE ?', ['%' . $singularTerm . '%'])
                                 ->orWhereRaw('LOWER(reproductive_status) LIKE ?', ['%' . $term . '%'])
                                 ->orWhereRaw('LOWER(reproductive_status) LIKE ?', ['%' . $singularTerm . '%'])
-                                ->orWhereRaw('LOWER(pet_number) LIKE ?', ['%' . $term . '%']);
+                                ->orWhereRaw('LOWER(pet_number) LIKE ?', ['%' . $term . '%'])
+                                // Add breed search here
+                                ->orWhereRaw('LOWER(breed) LIKE ?', ['%' . $term . '%'])
+                                ->orWhereRaw('LOWER(breed) LIKE ?', ['%' . $singularTerm . '%']);
 
                             if ($term === 'cat' || $singularTerm === 'cat') {
                                 $subQuery->orWhereRaw('LOWER(TRIM(species)) = ?', ['feline']);

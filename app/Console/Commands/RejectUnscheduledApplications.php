@@ -14,7 +14,7 @@ class RejectUnscheduledApplications extends Command
 
   public function handle()
   {
-    $cutoff = Carbon::now()->subMinute(); // subHours(48)
+    $cutoff = Carbon::now()->subHours(48); // subHours(48)
 
     $applications = AdoptionApplication::with('user')
       ->where('status', 'to be scheduled')
@@ -27,7 +27,7 @@ class RejectUnscheduledApplications extends Command
         'reject_reason' => 'Pickup schedule not set within 48 hours'
       ]);
 
-      $app->user->notify(new AdoptionStatusNotification($app));
+      $app->user->notify(new AdoptionStatusNotification($app->id));
     }
 
     $this->info("Auto-rejected {$applications->count()} unscheduled applications");

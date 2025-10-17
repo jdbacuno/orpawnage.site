@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF DONATION SECTION ========== -->
-  <section class="relative flex items-center justify-center min-h-screen bg-black/50" id="mainContent">
+  <section class="relative w-full min-h-screen bg-cover bg-center flex justify-start sm:justify-center items-center bg-black/50" id="mainContent">
 
     <!-- Background Image -->
     <div class="absolute inset-0 overflow-hidden">
@@ -10,7 +10,7 @@
 
     <!-- Overlay Content - More compact version -->
     <div
-      class="relative z-10 w-full max-w-2xl bg-white/70 backdrop-blur-xs p-6 md:p-8 rounded-xl shadow-lg border border-white/20 mx-4 overflow-hidden">
+      class="relative z-10 w-full max-w-2xl bg-white/70 backdrop-blur-xs p-4 sm:p-8 rounded-xl shadow-lg border border-white/20 mx-4 overflow-hidden">
       <!-- Paw Accents -->
       <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
         <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-20 text-3xl -top-4 left-4"></i>
@@ -95,22 +95,36 @@
   <!-- ========== END OF DONATION SECTION ========== -->
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function updateHeaderSpacer() {
-          const header = document.getElementById('main-header');
-          const mainContent = document.getElementById('mainContent');
-          
-          if (header && mainContent) {
-              const headerHeight = header.offsetHeight;
-              mainContent.style.marginTop = `${headerHeight * .5}px`;
-          }
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.getElementById('main-header');
+      const mainContent = document.getElementById('mainContent');
+      const adminIndicator = document.getElementById('adminIndicator');
+
+      const EXTRA_TOP_SPACING_PX = 8;
+
+      function computeHeights() {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const adminHeight = adminIndicator ? adminIndicator.offsetHeight : 0;
+        return { headerHeight, adminHeight };
       }
 
-      // Initial update
-      updateHeaderSpacer();
+      function updateHeaderSpacer() {
+        if (!mainContent) return;
+        const { headerHeight, adminHeight } = computeHeights();
+        const totalTop = headerHeight + adminHeight;
 
-      // Update on window resize
+        mainContent.style.paddingTop = `${totalTop + EXTRA_TOP_SPACING_PX}px`;
+        mainContent.style.paddingBottom = `${totalTop + EXTRA_TOP_SPACING_PX}px`;
+      }
+
+      updateHeaderSpacer();
       window.addEventListener('resize', updateHeaderSpacer);
+
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(updateHeaderSpacer);
+        if (header) ro.observe(header);
+        if (adminIndicator) ro.observe(adminIndicator);
+      }
     });
   </script>
 </x-layout>

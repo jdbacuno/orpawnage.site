@@ -43,57 +43,52 @@ class MissingPetAlert extends Notification implements ShouldQueue
       $petPhotos = json_decode($this->report->pet_photos, true) ?? [];
       $locationPhotos = json_decode($this->report->location_photos, true) ?? [];
 
-      // Determine main pet photo
-      $mainPetPhoto = !empty($petPhotos) ? $petPhotos[0] : null;
-
-      // Filter out the main photo from other pet photos
-      $otherPetPhotos = array_values(array_filter($petPhotos, function ($photo) use ($mainPetPhoto) {
-        return $photo !== $mainPetPhoto;
-      }));
-
-      // Get up to 3 pet photos for display
-      $displayPetPhotos = array_slice($otherPetPhotos, 0, 3);
-
-      // Attach the rest (excluding main + first 3)
-      $remainingPetPhotos = array_slice($otherPetPhotos, 3);
-
-      // Get up to 3 location photos for display
-      $displayLocationPhotos = array_slice($locationPhotos, 0, 3);
-
-      // Attach the rest of the location photos
-      $remainingLocationPhotos = array_slice($locationPhotos, 3);
-
+      // Build the email message
       $mailMessage = (new MailMessage)
         ->subject('MISSING PET ALERT: ' . $this->report->pet_name)
-        ->view(
-          'emails.missing-pet-alert',
-          [
-            'report' => $this->report,
-            'notifiable' => $notifiable,
-            'mainPetPhotoUrl' => $mainPetPhoto,
-            'allPetPhotos' => $displayPetPhotos,
-            'locationPhotos' => $displayLocationPhotos,
-            'isReporter' => $notifiable->id === $this->report->user_id,
-          ]
-        );
+        ->greeting('MISSING PET ALERT')
+        ->line('**Pet Name:** ' . $this->report->pet_name)
+        ->line('**Last Seen Date:** ' . date('F j, Y', strtotime($this->report->last_seen_date)))
+        ->line('**Last Seen Location:** ' . $this->report->last_seen_location)
+        ->line('**Message/Description:** ' . $this->report->pet_description)
+        ->line('')
+        ->line('**Please check the attached images of the missing pet and location photos.**')
+        ->line('')
+        ->line('**If you have seen this pet, please contact:**')
+        ->line('**Owner:** ' . $this->report->owner_name)
+        ->line('**Phone:** ' . $this->report->contact_no)
+        ->line('')
+        ->action('You may also help us find other missing pets', url('/missing-pets-browse'));
 
-      // Attach extra pet photos
-      foreach ($remainingPetPhotos as $photoPath) {
+      // Add reporter-specific message
+      if ($notifiable->id === $this->report->user_id) {
+        $mailMessage->line('')
+          ->line('---')
+          ->line('**Note to reporter:** This alert has been sent to all registered users in our community. You can check the status of your report anytime.')
+          ->action('Check Missing Pet Status', url('/transactions/missing-status'));
+      }
+
+      $mailMessage->line('')
+        ->line('Thank you for helping us find ' . $this->report->pet_name . '!')
+        ->salutation('The Orpawnage Team');
+
+      // Attach pet photos
+      foreach ($petPhotos as $index => $photoPath) {
         $fullPath = storage_path('app/public/' . str_replace('storage/', '', $photoPath));
         if (file_exists($fullPath)) {
           $mailMessage->attach($fullPath, [
-            'as' => basename($photoPath),
+            'as' => $this->report->pet_name . '_photo_' . ($index + 1) . '.' . pathinfo($photoPath, PATHINFO_EXTENSION),
             'mime' => $this->getMimeTypeFromExtension(pathinfo($photoPath, PATHINFO_EXTENSION)),
           ]);
         }
       }
 
-      // Attach extra location photos
-      foreach ($remainingLocationPhotos as $photoPath) {
+      // Attach location photos
+      foreach ($locationPhotos as $index => $photoPath) {
         $fullPath = storage_path('app/public/' . str_replace('storage/', '', $photoPath));
         if (file_exists($fullPath)) {
           $mailMessage->attach($fullPath, [
-            'as' => basename($photoPath),
+            'as' => 'location_photo_' . ($index + 1) . '.' . pathinfo($photoPath, PATHINFO_EXTENSION),
             'mime' => $this->getMimeTypeFromExtension(pathinfo($photoPath, PATHINFO_EXTENSION)),
           ]);
         }
@@ -102,11 +97,17 @@ class MissingPetAlert extends Notification implements ShouldQueue
       return $mailMessage;
     } catch (\Exception $e) {
       Log::error('Email sending failed for MissingPetAlert: ' . $e->getMessage());
-      return (new MailMessage)->subject('Error Sending Missing Pet Alert Email');
+
+      return (new MailMessage)
+        ->subject('Error Sending Missing Pet Alert Email')
+        ->line('There was an error sending the missing pet alert. Please contact support.')
+        ->salutation('The Orpawnage Team');
     }
   }
 
-  // Helper function to determine the MIME type based on the file extension
+  /**
+   * Helper function to determine the MIME type based on the file extension
+   */
   protected function getMimeTypeFromExtension($extension)
   {
     $mimeTypes = [
@@ -116,9 +117,9 @@ class MissingPetAlert extends Notification implements ShouldQueue
       'gif'  => 'image/gif',
       'bmp'  => 'image/bmp',
       'svg'  => 'image/svg+xml',
+      'webp' => 'image/webp',
     ];
 
-    // Return the MIME type for the given extension, or default to 'image/jpeg'
     return $mimeTypes[strtolower($extension)] ?? 'image/jpeg';
   }
 }

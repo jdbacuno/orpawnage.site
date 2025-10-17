@@ -17,11 +17,11 @@ class DashboardController extends Controller
         
         // Total available pets (not picked up or in-process for adoption)
         $totalAvailablePets = Pet::whereNull('archived_at')
-            ->whereNotIn('id', function ($subQuery) {
-                $subQuery->select('pet_id')
-                    ->from('adoption_applications')
-                    ->whereIn('status', ['picked up', 'to be scheduled', 'to be confirmed', 'confirmed', 'adoption on-going']);
-            })->count();
+    ->whereNotIn('id', function ($subQuery) {
+        $subQuery->select('pet_id')
+            ->from('adoption_applications')
+            ->whereIn('status', ['to be scheduled', 'adoption on-going', 'picked up']);
+    })->count();
         
         // Current month adoption rate
         $currentMonth = Carbon::now()->format('Y-m');

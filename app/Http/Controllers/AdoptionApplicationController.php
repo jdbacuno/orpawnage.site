@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Notification;
 
 class AdoptionApplicationController extends Controller
 {
+    const APPLICATION_LIMIT = 20;
+
     public function index()
     {
         $sort = request('sort', 'created_at');
@@ -27,37 +29,111 @@ class AdoptionApplicationController extends Controller
         $search = request('search');
 
         $query = AdoptionApplication::with(['pet', 'user'])
-            ->where('status', '!=', 'archived') // Exclude archived applications by default
-            ->orderBy($sort, $direction);
+            ->where('status', '!=', 'archived'); // Exclude archived applications by default
 
-        if ($status && $status !== 'all') {
-            $query->where('status', $status);
+        if ($status && $status !== '') {
+            // Handle specific status filter
+            if (is_array($status)) {
+                $query->whereIn('status', $status);
+            } else {
+                $query->where('status', $status);
+            }
+
+            // Get filtered applications
+            $applications = $query->get();
+
+            // Group by pet and sort (only for status filters)
+            $grouped = $applications->groupBy('pet_id')->map(function ($applications) {
+                return $applications->sortBy(function ($app) {
+                    $statusOrder = [
+                        'to be confirmed' => 1,
+                        'confirmed' => 2,
+                        'to be scheduled' => 3,
+                        'adoption on-going' => 4,
+                        'picked up' => 5,
+                        'rejected' => 6,
+                    ];
+
+                    $order = $statusOrder[$app->status] ?? 7;
+
+                    // Boost priority for Angeles City residents in confirmed status
+                    if ($app->status === 'confirmed' && stripos($app->address, 'angeles') !== false) {
+                        $order = 1.5;
+                    }
+
+                    return $order;
+                })->values();
+            });
+
+            // Flatten back to collection for pagination
+            $flatApplications = $grouped->flatten(1);
+        } else {
+            // For "all applications" (no status filter) - ungrouped version
+            $query->whereIn('status', [
+                'to be confirmed',
+                'confirmed',
+                'to be scheduled',
+                'adoption on-going',
+                'picked up',
+                'rejected'
+            ]);
+
+            // Apply sorting for ungrouped version
+            $sort = request('sort', 'created_at');
+            $direction = request('direction', 'desc');
+
+            $flatApplications = $query->orderBy($sort, $direction)->get();
         }
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('transaction_number', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('full_name', 'like', "%$search%")
-                ;
+            $flatApplications = $flatApplications->filter(function ($app) use ($search) {
+                return stripos($app->transaction_number, $search) !== false ||
+                    stripos($app->email, $search) !== false ||
+                    stripos($app->full_name, $search) !== false;
             });
         }
 
+        // Manual pagination
         $perPage = request()->get('per_page', 12);
-        $applications = $query->paginate($perPage);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $flatApplications->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
-        return view('admin.adoption-applications', ['adoptionApplications' => $applications]);
+        $applications = new LengthAwarePaginator(
+            $currentItems,
+            $flatApplications->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        // Append query parameters to pagination links
+        $applications->appends(request()->query());
+
+        return view('admin.adoption-applications', [
+            'adoptionApplications' => $applications
+        ]);
     }
 
     public function create(Pet $pet)
     {
+        $isPetArchived = $pet->archived_at !== null;
+
         $hasPendingApplication = AdoptionApplication::where('user_id', Auth::id())
             ->whereIn('status', ['to be confirmed', 'confirmed', 'adoption on-going', 'to be scheduled'])
             ->exists();
 
+        // Check if pet has reached application limit (excluding archived and rejected)
+        $applicationCount = AdoptionApplication::where('pet_id', $pet->id)
+            ->whereNotIn('status', ['archived', 'rejected'])
+            ->count();
+
+        $applicationLimitReached = $applicationCount >= self::APPLICATION_LIMIT;
+
         return view('adoption-form', [
             'pet' => $pet,
-            'hasPendingApplication' => $hasPendingApplication
+            'hasPendingApplication' => $hasPendingApplication,
+            'applicationLimitReached' => $applicationLimitReached,
+            'isPetArchived' => $isPetArchived
         ]);
     }
 
@@ -72,7 +148,20 @@ class AdoptionApplicationController extends Controller
             return back()->with(
                 'error_request',
                 'You already have a pending adoption application (Transaction #' . $existingApplication->transaction_number . '). ' .
-                    'Please wait until your current application is completed or rejected before submitting a new one. You may also cancel the on-going application to be able to submit an adoption request for a different pet.'
+                    'Please wait until your current application is completed or rejected before submitting a new one. ' .
+                    'You may also cancel the on-going application to be able to submit an adoption request for a different pet.'
+            );
+        }
+
+        // Check if pet has reached application limit (excluding archived and rejected)
+        $applicationCount = AdoptionApplication::where('pet_id', $pet->id)
+            ->whereNotIn('status', ['archived', 'rejected'])
+            ->count();
+
+        if ($applicationCount >= self::APPLICATION_LIMIT) {
+            return back()->with(
+                'error_request',
+                'This pet is no longer accepting applications at the moment. The maximum number of applications has been reached. In the meantime, please browse other available pets for adoption.'
             );
         }
 
@@ -88,7 +177,6 @@ class AdoptionApplicationController extends Controller
                     $birthdate = new DateTime($value);
                     $today = new DateTime();
                     $age = $today->diff($birthdate)->y;
-
                     if ($age != $request->age) {
                         $fail('The age does not match the birthdate provided.');
                     }
@@ -101,7 +189,8 @@ class AdoptionApplicationController extends Controller
             'reason_for_adoption' => ['required', 'string', 'max:1000'],
             'visit_veterinarian' => ['required', 'string', 'in:Yes,No,Sometimes'],
             'existing_pets' => ['required', 'integer', 'min:0'],
-            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            // Valid ID: 5MB max
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
         ]);
 
         if ($validator->fails()) {
@@ -111,19 +200,21 @@ class AdoptionApplicationController extends Controller
                 ->with('submission_error', 'Failed to submit application. Please check the form for errors.');
         }
 
-        // Check if pet is already adopted or has pending applications
-        if ($pet->is_adopted) {
-            return back()->with('error_request', 'This pet has already been adopted.');
-        }
-
+        // Check if pet is no longer available for adoption
         if (AdoptionApplication::where('pet_id', $pet->id)
-            ->where('status', '!=', 'rejected')
+            ->whereIn('status', ['adoption on-going', 'picked up'])
             ->exists()
         ) {
-            return back()->with('error_request', 'This pet has already been requested for adoption.');
+            return back()->with('error_request', 'This pet is no longer available for adoption.');
+        }
+
+        // Check if pet has been archived
+        if ($pet->archived_at !== null) {
+            return back()->with('error_request', 'This pet is no longer available for adoption.');
         }
 
         $validated = $validator->validated();
+
         $validated['full_name'] = ucwords(strtolower(trim($validated['full_name'])));
         $validated['email'] = strtolower(trim($validated['email']));
         $validated['address'] = ucfirst(trim($validated['address']));
@@ -148,7 +239,9 @@ class AdoptionApplicationController extends Controller
 
         return back()->with(
             'success',
-            'Adoption application submitted successfully! Please check your email to confirm your application within 24 hours. You can visit the ' . '<a href="/transactions/adoption-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application. You may resend the confirmation email if you did not receive it.'
+            'Adoption application submitted successfully! Please check your email to confirm your application within 24 hours. ' .
+                'You can visit the <a href="/transactions/adoption-status" class="text-blue-500">Transactions</a> ' .
+                'page to track your application. You may resend the confirmation email if you did not receive it.'
         );
     }
 
@@ -199,13 +292,35 @@ class AdoptionApplicationController extends Controller
 
         $application = AdoptionApplication::with(['user', 'pet'])->findOrFail($request->application_id);
 
-        // Update status
+        // Update status to 'to be scheduled'
         $application->update(['status' => 'to be scheduled']);
 
-        // Send email with scheduling link
+        // Reject only confirmed or to be confirmed applications (not already rejected ones)
+        $otherApplications = AdoptionApplication::where('pet_id', $application->pet_id)
+            ->where('id', '!=', $application->id)
+            ->whereIn('status', ['confirmed', 'to be confirmed'])
+            ->get();
+
+        $rejectedCount = 0;
+        foreach ($otherApplications as $otherApp) {
+            $otherApp->update([
+                'status' => 'rejected',
+                'reject_reason' => 'Another applicant has been selected to move forward with the adoption process.'
+            ]);
+
+            // Send rejection email only to newly rejected applicants
+            $otherApp->user->notify(new AdoptionStatusNotification($otherApp->id));
+            $rejectedCount++;
+        }
+
+        // Send email to selected applicant with scheduling information
         $application->user->notify(new AdoptionStatusNotification($application->id));
 
-        return redirect()->back()->with('success', 'Application moved to scheduling. An email has been sent to the applicant.');
+        $message = $rejectedCount > 0
+            ? "Application moved to scheduling for visitation. Emails have been sent to the selected applicant and {$rejectedCount} other applicant(s)."
+            : "Application moved to scheduling visitation. Email has been sent to the selected applicant.";
+
+        return redirect()->back()->with('success', $message);
     }
 
     public function markAsPickedUp(Request $request)
@@ -284,7 +399,7 @@ class AdoptionApplicationController extends Controller
     {
         $application = AdoptionApplication::findOrFail($id);
 
-        // Logic to send email...
+        // Resend confirmation email
         $application->user->notify(new AdoptionStatusNotification($application->id));
 
         return back()->with('success', 'Confirmation email resent successfully.');
@@ -300,17 +415,24 @@ class AdoptionApplicationController extends Controller
 
         $pickupDate = Carbon::parse($validated['pickup_date']);
 
-        // Build 7 business day window (including today if not weekend)
+        // Build 7 business day window
         $start = Carbon::now();
         $end = $start->copy();
         $businessDays = 0;
+
         while ($businessDays < 7) {
-            if (!$end->isWeekend()) $businessDays++;
-            if ($businessDays < 7) $end->addDay();
+            if (!$end->isWeekend()) {
+                $businessDays++;
+            }
+            if ($businessDays < 7) {
+                $end->addDay();
+            }
         }
 
         if ($pickupDate->gt($end) || $pickupDate->isWeekend()) {
-            return redirect()->back()->withErrors(['pickup_date' => 'Date must be a weekday within 7 business days.']);
+            return redirect()->back()->withErrors([
+                'pickup_date' => 'Date must be a weekday within 7 business days.'
+            ]);
         }
 
         $application->pickup_date = $pickupDate;

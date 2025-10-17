@@ -48,8 +48,8 @@ class AnimalAbuseReportController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('report_number', 'like', "%$search%")
-                  ->orWhere('full_name', 'like', "%$search%")
-                  ->orWhere('contact_no', 'like', "%$search%")
+                    ->orWhere('full_name', 'like', "%$search%")
+                    ->orWhere('contact_no', 'like', "%$search%")
                 ;
             });
         }
@@ -78,10 +78,32 @@ class AnimalAbuseReportController extends Controller
             'species' => ['required', 'string'],
             'animal_condition' => ['required', 'string'],
             'additional_notes' => ['required', 'string'],
-            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:10240'],
-            'incident_photos' => ['required', 'array', 'max:10'],
-            'incident_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            // Valid ID: 5MB max
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
+            // Incident photos: max 10 files, 5MB each
+            'incident_photos' => ['required', 'array', 'max:5'],
+            'incident_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
         ]);
+
+        // Add custom validation for total upload size (50MB limit for abuse reports)
+        $validator->after(function ($validator) use ($request) {
+            $totalSize = 0;
+
+            if ($request->hasFile('valid_id')) {
+                $totalSize += $request->file('valid_id')->getSize();
+            }
+
+            if ($request->hasFile('incident_photos')) {
+                foreach ($request->file('incident_photos') as $photo) {
+                    $totalSize += $photo->getSize();
+                }
+            }
+
+            // 50MB total limit (50 * 1024 * 1024 bytes) - higher for abuse reports
+            if ($totalSize > 26214400) {
+                $validator->errors()->add('files', 'Total file size cannot exceed 25MB.');
+            }
+        });
 
         if ($validator->fails()) {
             return redirect()->back()

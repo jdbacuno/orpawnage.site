@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Pet;
 
 class PetArchivedNotification extends Notification implements ShouldQueue
@@ -34,6 +34,25 @@ class PetArchivedNotification extends Notification implements ShouldQueue
             ->subject("{$label} #{$petNumber} Has Been Archived")
             ->greeting("Pet Archive Notification")
             ->line("We're archiving {$label} #{$petNumber} ({$petName}) from our active records.");
+
+        // Add pet image if available
+        if ($this->pet->image_path && Storage::disk('public')->exists($this->pet->image_path)) {
+            $extension = pathinfo($this->pet->image_path, PATHINFO_EXTENSION);
+            $mimeType = match(strtolower($extension)) {
+                'jpg', 'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'webp' => 'image/webp',
+                'bmp' => 'image/bmp',
+                'svg' => 'image/svg+xml',
+                default => 'image/jpeg'
+            };
+            
+            $mail->attach(Storage::disk('public')->path($this->pet->image_path), [
+                'as' => "{$petName}_{$petNumber}.{$extension}",
+                'mime' => $mimeType,
+            ]);
+        }
 
         if ($this->pet->archive_reason === 'Other') {
             $mail->line('**Reason for Archiving:**')

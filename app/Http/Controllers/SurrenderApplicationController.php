@@ -27,7 +27,7 @@ class SurrenderApplicationController extends Controller
     }
 
     $query = SurrenderApplication::with(['user'])
-      ->where('status', '!=', 'archived') // Exclude archived applications by default
+      ->where('status', '!=', 'archived')
       ->orderBy($sort, $direction);
 
     if ($status && $status !== 'all') {
@@ -38,8 +38,7 @@ class SurrenderApplicationController extends Controller
       $query->where(function ($q) use ($search) {
         $q->where('transaction_number', 'like', "%$search%")
           ->orWhere('email', 'like', "%$search%")
-          ->orWhere('full_name', 'like', "%$search%")
-        ;
+          ->orWhere('full_name', 'like', "%$search%");
       });
     }
 
@@ -51,7 +50,6 @@ class SurrenderApplicationController extends Controller
 
   public function create(Pet $pet)
   {
-
     return view('surrender', [
       'pet' => $pet
     ]);
@@ -73,13 +71,12 @@ class SurrenderApplicationController extends Controller
       'breed' => ['nullable', 'string', 'max:255'],
       'sex' => ['required', 'string', 'in:Male,Female,Unknown'],
       'reason' => ['required', 'string', 'max:1000'],
-      'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,pdf', 'max:10240'],
+      'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
       'animal_photos' => ['required', 'array', 'max:5'],
-      'animal_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+      'animal_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
       'declaration' => ['required', 'accepted'],
     ]);
 
-    // Custom age-birthdate validation
     $validator->after(function ($validator) use ($request) {
       if ($request->birthdate) {
         $birthdate = new \DateTime($request->birthdate);
@@ -90,6 +87,20 @@ class SurrenderApplicationController extends Controller
           $validator->errors()->add('age', 'The age does not match the birthdate provided.');
         }
       }
+
+      $totalSize = 0;
+      if ($request->hasFile('valid_id')) {
+        $totalSize += $request->file('valid_id')->getSize();
+      }
+      if ($request->hasFile('animal_photos')) {
+        foreach ($request->file('animal_photos') as $photo) {
+          $totalSize += $photo->getSize();
+        }
+      }
+
+      if ($totalSize > 26214400) {
+        $validator->errors()->add('files', 'Total file size cannot exceed 25MB.');
+      }
     });
 
     if ($validator->fails()) {
@@ -99,10 +110,8 @@ class SurrenderApplicationController extends Controller
         ->with('submission_error', 'Failed to submit application. Please check the form for errors.');
     }
 
-    // Only proceed with file uploads and DB storage if validation passes
     $validated = $validator->validated();
 
-    // Sanitize and normalize data
     $validated['full_name'] = ucwords(strtolower(trim($validated['full_name'])));
     $validated['email'] = strtolower(trim($validated['email']));
     $validated['address'] = ucfirst(trim($validated['address']));
@@ -111,13 +120,11 @@ class SurrenderApplicationController extends Controller
     $validated['reason'] = trim($validated['reason']);
     $validated['transaction_number'] = $this->generateUniqueTransactionNumber();
 
-    // Upload valid ID
     $validIdExtension = $request->valid_id->getClientOriginalExtension();
     $validIdFilename = str_replace(' ', '_', $validated['email']) . '_' . $validated['transaction_number'] . '.' . $validIdExtension;
     $validIdPath = $request->file('valid_id')->storeAs('valid_ids', $validIdFilename, 'public');
     $validated['valid_id_path'] = $validIdPath;
 
-    // Upload animal photos
     $animalPhotos = [];
     foreach ($request->file('animal_photos') as $index => $photo) {
       $photoName = "animal_photo_{$validated['transaction_number']}_{$index}." . $photo->getClientOriginalExtension();
@@ -126,7 +133,6 @@ class SurrenderApplicationController extends Controller
     }
     $validated['animal_photos'] = json_encode($animalPhotos);
 
-    // Store application
     $application = SurrenderApplication::create([
       'user_id' => Auth::id(),
       'full_name' => $validated['full_name'],
@@ -143,7 +149,7 @@ class SurrenderApplicationController extends Controller
       'sex' => $validated['sex'],
       'reason' => $validated['reason'],
       'valid_id_path' => $validated['valid_id_path'],
-      'animal_photos' => $validated['animal_photos'], // Correct field name
+      'animal_photos' => $validated['animal_photos'],
       'transaction_number' => $validated['transaction_number'],
     ]);
 
@@ -170,9 +176,7 @@ class SurrenderApplicationController extends Controller
       ]);
     }
 
-    // Check if the application has expired (24 hours)
     if ($application->created_at->diffInHours(now()) > 24) {
-      // Auto-reject expired applications
       $application->update([
         'status' => 'rejected',
         'reject_reason' => 'Application expired - not confirmed within 24 hours'
@@ -184,7 +188,6 @@ class SurrenderApplicationController extends Controller
       ]);
     }
 
-    // Update the application status to confirmed
     $application->status = 'confirmed';
     $application->confirmed_at = now();
     $application->save();
@@ -198,25 +201,11 @@ class SurrenderApplicationController extends Controller
     ]);
   }
 
-  public function moveToSchedule(Request $request)
-  {
-    $request->validate([
-      'application_id' => ['required', 'exists:surrender_applications,id']
-    ]);
-
-    $application = SurrenderApplication::with(['user'])->findOrFail($request->application_id);
-
-    $application->update(['status' => 'to be scheduled']);
-    $application->user->notify(new SurrenderStatusNotification($application->id));
-
-    return redirect()->back()->with('success', 'Application moved to scheduling. An email has been sent to the applicant.');
-  }
-
   public function markAsCompleted(Request $request)
   {
     $application = SurrenderApplication::with(['user'])->findOrFail($request->application_id);
 
-    if ($application->status !== 'surrender on-going') {
+    if ($application->status !== 'confirmed') {
       return redirect()->back()->with('error', 'Invalid status change.');
     }
 
@@ -273,46 +262,16 @@ class SurrenderApplicationController extends Controller
     return back()->with('success', 'Confirmation email resent successfully.');
   }
 
-  public function scheduleSurrender(Request $request, $id)
-  {
-    $application = SurrenderApplication::findOrFail($id);
-
-    $validated = $request->validate([
-      'surrender_date' => 'required|date|after_or_equal:today'
-    ]);
-
-    $surrenderDate = Carbon::parse($validated['surrender_date']);
-
-    // Build 7 business day window (including today if not weekend)
-    $start = Carbon::now();
-    $end = $start->copy();
-    $businessDays = 0;
-    while ($businessDays < 7) {
-      if (!$end->isWeekend()) $businessDays++;
-      if ($businessDays < 7) $end->addDay();
-    }
-
-    if ($surrenderDate->gt($end) || $surrenderDate->isWeekend()) {
-      return redirect()->back()->withErrors(['surrender_date' => 'Date must be a weekday within 7 business days.']);
-    }
-
-    $application->surrender_date = $surrenderDate;
-    $application->status = 'surrender on-going';
-    $application->save();
-
-    $application->user->notify(new SurrenderStatusNotification($application->id));
-
-    return redirect()->back()->with('success', 'Surrender scheduled successfully!');
-  }
-
   public function destroy(SurrenderApplication $application)
   {
-    // Delete the associated files if they exist
     if ($application->valid_id_path) {
       Storage::disk('public')->delete($application->valid_id_path);
     }
-    if ($application->animal_photo_path) {
-      Storage::disk('public')->delete($application->animal_photo_path);
+    if ($application->animal_photos) {
+      $photos = json_decode($application->animal_photos);
+      foreach ($photos as $photo) {
+        Storage::disk('public')->delete($photo);
+      }
     }
 
     $application->delete();

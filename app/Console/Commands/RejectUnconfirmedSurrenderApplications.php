@@ -13,7 +13,7 @@ class RejectUnconfirmedSurrenderApplications extends Command
 
   public function handle()
   {
-    $cutoff = Carbon::now()->subMinute(); // subHours(24)
+    $cutoff = Carbon::now()->subHours(24); // subHours(24)
 
     $applications = SurrenderApplication::where('status', 'to be confirmed')
       ->where('created_at', '<=', $cutoff)

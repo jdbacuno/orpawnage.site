@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Events\AdoptionApplicationCreated;
 use App\Events\AdoptionApplicationDeleted;
 use App\Events\AdoptionStatusUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class AdoptionApplication extends Model
-{
+{ 
+    use HasFactory;
+	
     protected $casts = [
         'pickup_date' => 'date:Y-m-d', // Ensures it's treated as a Carbon instance
         'birthdate' => 'date:Y-m-d',

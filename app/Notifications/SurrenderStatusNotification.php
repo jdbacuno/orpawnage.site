@@ -36,8 +36,6 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
     $statusSubjectMap = [
       'to be confirmed' => 'Confirm Your Surrender Application',
       'confirmed' => 'Application Confirmed',
-      'to be scheduled' => 'Set a Surrender Date',
-      'surrender on-going' => 'Scheduled for Surrender',
       'completed' => 'Completed',
       'rejected' => 'Rejected',
     ];
@@ -68,43 +66,20 @@ class SurrenderStatusNotification extends Notification implements ShouldQueue
       case 'confirmed':
         $mailMessage
           ->line('âœ… Your surrender application has been **confirmed**!')
-          ->line('We are now preparing for your surrender. This may take **3â€“5 business days**.')
-          ->line('You will receive another email to select a schedule to bring your animal to our facility.')
+          ->line('Our team will now review your application and contact you as soon as we can to discuss the surrender process.')
+          ->line('**What to expect next:**')
+          ->line('- Our team will call you to determine if you can bring the animal to our facility')
+          ->line('- For certain situations, we may arrange for the animal to be retrieved')
+          ->line('- Please keep your phone available for our call')
           ->line('Thank you for your patience and for choosing to surrender responsibly!');
-        break;
-
-      case 'to be scheduled':
-        $mailMessage
-          ->line('ðŸ“… You can now select a schedule to bring your animal to our facility!')
-          ->line('Your application is now ready for **scheduling**.')
-          ->action('Select Schedule', url('/transactions/surrender-status'))
-          ->line('Please schedule within **48 hours** to avoid cancellation.')
-          ->line('**Available time slots:** 8:00 AM to 4:00 PM, Monday to Friday.')
-          ->line('**What to bring on your scheduled date:**')
-          ->line('- Valid government-issued ID')
-          ->line('- Copy of this confirmation')
-          ->line('- Any medical records for the animal (if available)');
-        break;
-
-      case 'surrender on-going':
-        $mailMessage
-          ->line('ðŸ“… Your surrender appointment is scheduled!')
-          ->line('**Scheduled Surrender Date:** ' . $application->surrender_date->format('F j, Y'))
-          ->line('**Location:** Orpawnage Angeles Main Office')
-          ->line('**On your surrender day, bring:**')
-          ->line('- A valid government-issued ID')
-          ->line('- Your transaction confirmation email')
-          ->line('- The animal in a secure carrier or leash')
-          ->line('âš ï¸ Failure to visit after **3 business days** from your scheduled date will cancel the surrender process.')
-          ->line('ðŸ“¸ We\'ll take an official photo of the animal for our records.');
         break;
 
       case 'completed':
         $mailMessage
-          ->line('ðŸ¡ Your surrender process is now **complete**.')
+          ->line('í¿¡ Your surrender process is now **complete**.')
           ->line('**Completion Date:** ' . $application->updated_at->format('F j, Y'))
           ->line("Thank you for responsibly surrendering your animal.")
-          ->line('ðŸ¾ We will provide proper care for the animal and work to find it a new home if appropriate.');
+          ->line('í°¾ We will provide proper care for the animal and work to find it a new home if appropriate.');
         break;
 
       case 'rejected':

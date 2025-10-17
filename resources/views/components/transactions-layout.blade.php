@@ -2,7 +2,7 @@
   <div class="flex min-h-screen" id="mainContent">
     <!-- Sidebar - Fixed width -->
     <aside class="hidden sm:block w-70 bg-white border-r border-gray-200 px-4 flex-shrink-0 fixed h-full z-10">
-      <h2 class="text-lg font-semibold mt-4 mb-4">Manage Transactions</h2>
+      <h2 class="text-lg font-semibold mt-8 mb-4">Manage Transactions</h2>
       <nav class="space-y-2">
         <a href="/transactions/adoption-status"
           class="{{ request()->is('transactions/adoption-status') || request()->is('transactions') ? 'bg-indigo-600 text-white' : 'text-black' }} flex items-center px-4 py-2 rounded-full hover:bg-indigo-600 hover:text-white transition">
@@ -60,22 +60,36 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function updateHeaderSpacer() {
-          const header = document.getElementById('main-header');
-          const mainContent = document.getElementById('mainContent');
-          
-          if (header && mainContent) {
-              const headerHeight = header.offsetHeight;
-              mainContent.style.marginTop = `${headerHeight}px`;
-          }
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.getElementById('main-header');
+      const mainContent = document.getElementById('mainContent');
+      const adminIndicator = document.getElementById('adminIndicator');
+
+      const EXTRA_TOP_SPACING_PX = 8;
+
+      function computeHeights() {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const adminHeight = adminIndicator ? adminIndicator.offsetHeight : 0;
+        return { headerHeight, adminHeight };
       }
 
-      // Initial update
-      updateHeaderSpacer();
+      function updateHeaderSpacer() {
+        if (!mainContent) return;
+        const { headerHeight, adminHeight } = computeHeights();
+        const totalTop = headerHeight + adminHeight;
 
-      // Update on window resize
+        mainContent.style.paddingTop = `${(totalTop + EXTRA_TOP_SPACING_PX) * .7}px`;
+        mainContent.style.paddingBottom = `${totalTop + EXTRA_TOP_SPACING_PX}px`;
+      }
+
+      updateHeaderSpacer();
       window.addEventListener('resize', updateHeaderSpacer);
+
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(updateHeaderSpacer);
+        if (header) ro.observe(header);
+        if (adminIndicator) ro.observe(adminIndicator);
+      }
     });
   </script>
 </x-layout>

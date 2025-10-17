@@ -27,7 +27,7 @@ class RejectUnconfirmedApplications extends Command
                 'reject_reason' => 'Application not confirmed within 24 hours'
             ]);
 
-            $app->user->notify(new AdoptionStatusNotification($app));
+            $app->user->notify(new AdoptionStatusNotification($app->id));
         }
 
         $this->info("Auto-rejected {$applications->count()} applications");

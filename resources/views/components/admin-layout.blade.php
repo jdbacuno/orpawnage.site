@@ -75,7 +75,7 @@
   <div
     class="fixed left-0 top-0 w-64 h-full bg-white p-4 z-50 sidebar-menu transition-transform flex flex-col border-r border-gray-300">
     <a href="/" target="_blank" class="flex items-center pb-4 border-b border-b-gray-300">
-      <img src="{{ asset('images/orpawnage-brand-logo-2.png') }}" alt="logo" class="h-8 rounded object-cover" />
+      <img src="{{ asset('images/orpawnage-brand-logo-2.PNG') }}" alt="logo" class="h-8 rounded object-cover" />
       {{-- <span class="text-lg font-bold text-yellow-500 ml-3">
         Or<span class="text-orange-500">PAW</span>nage
       </span> --}}
@@ -256,7 +256,7 @@
         <i class="ph-fill ph-paw-print absolute text-yellow-400 opacity-15 text-6xl bottom-6 right-4"></i>
       </div>
     </div>
-    <div class="relative z-10 py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30"
+    <div class="relative py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-40"
       id="main-header">
       <button type="button" class="text-lg text-gray-600 sidebar-toggle">
         <i class="ri-menu-line"></i>
@@ -296,13 +296,10 @@
   $errors->has('current_password') || $errors->has('password')
   @endphp
 
-  <!-- Settings Modal -->
-  <div id="settingsModal" class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-1 pb-20 text-center sm:block sm:p-0">
-      <!-- Background overlay -->
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-      </div>
+<!-- Settings Modal -->
+  <div id="settingsModal" class="{{ $modalOpen ? '' : 'hidden' }} fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+  <!-- Background overlay -->
+  <div class="fixed inset-0 bg-gray-500 opacity-75" aria-hidden="true"></div>
 
       <!-- Modal content -->
       <div

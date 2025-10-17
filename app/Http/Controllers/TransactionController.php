@@ -19,31 +19,28 @@ class TransactionController extends Controller
 
         $query = AdoptionApplication::with('pet')->where('user_id', $userId);
 
-        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be picked up', 'adoption on-going', 'to be scheduled', 'picked up', 'rejected', 'archive'])) {
+        // Exclude archived applications
+        $query->where('status', '!=', 'archived');
+
+        // Status filter
+        if ($status && in_array($status, ['to be confirmed', 'confirmed', 'to be scheduled', 'adoption on-going', 'picked up', 'rejected'])) {
             $query->where('status', $status);
         }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('transaction_number', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%")
-                  ->orWhere('full_name', 'like', "%$search%")
-                ;
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('full_name', 'like', "%$search%");
             });
         }
 
-        $perPage = request()->get('per_page', 12);
+        // Apply sorting - newest first by default
+        $direction = $request->get('direction', 'desc');
+        $query->orderBy('created_at', $direction === 'asc' ? 'asc' : 'desc');
 
-        $applications = $query->orderByRaw("
-            CASE status
-                WHEN 'to be picked up' THEN 0
-                WHEN 'to be scheduled' THEN 1
-                WHEN 'confirmed' THEN 2
-                WHEN 'to be confirmed' THEN 3
-                WHEN 'picked up' THEN 4
-                ELSE 3
-            END
-        ")->latest()->paginate($perPage);
+        $perPage = request()->get('per_page', 12);
+        $applications = $query->paginate($perPage)->appends($request->query());
 
         return view('transactions.adoptions', [
             'adoptionApplications' => $applications,
@@ -66,8 +63,8 @@ class TransactionController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('transaction_number', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%")
-                  ->orWhere('full_name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('full_name', 'like', "%$search%")
                 ;
             });
         }
@@ -99,40 +96,34 @@ class TransactionController extends Controller
 
         $query = MissingPetReport::where('user_id', $userId);
 
+        // Exclude archived reports
+        $query->where('status', '!=', 'archived');
+
         // Status filter
-        switch ($status) {
-            case 'pending':
-                $query->where('status', 'pending');
-                break;
-            case 'acknowledged':
-                $query->where('status', 'acknowledged');
-                break;
-            case 'rejected':
-                $query->where('status', 'rejected');
-                break;
-            default:
-                // No additional filtering for 'all' or empty status
-                break;
+        if ($status && in_array($status, ['pending', 'approved', 'rejected', 'found'])) {
+            $query->where('status', $status);
         }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('report_number', 'like', "%$search%")
-                  ->orWhere('owner_name', 'like', "%$search%")
-                  ->orWhere('contact_no', 'like', "%$search%")
-                ;
+                    ->orWhere('pet_name', 'like', "%$search%")
+                    ->orWhere('contact_no', 'like', "%$search%");
             });
         }
 
+        // Apply sorting - newest first by default
+        $direction = $request->get('direction', 'desc');
+        $query->orderBy('created_at', $direction === 'asc' ? 'asc' : 'desc');
+
         $perPage = request()->get('per_page', 12);
-        $reports = $query->latest()->paginate($perPage);
+        $reports = $query->paginate($perPage)->appends($request->query());
 
         return view('transactions.missing', [
             'missingReports' => $reports,
             'status' => $status,
         ]);
     }
-
     public function abused(Request $request)
     {
         $userId = Auth::id();
@@ -163,8 +154,8 @@ class TransactionController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('report_number', 'like', "%$search%")
-                  ->orWhere('full_name', 'like', "%$search%")
-                  ->orWhere('contact_no', 'like', "%$search%")
+                    ->orWhere('full_name', 'like', "%$search%")
+                    ->orWhere('contact_no', 'like', "%$search%")
                 ;
             });
         }

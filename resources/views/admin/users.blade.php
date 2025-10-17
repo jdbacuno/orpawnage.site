@@ -92,7 +92,7 @@
 
   <!-- User Details Modal -->
   <div id="userModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[70vh] overflow-y-auto">
       <button type="button" id="closeUserModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph ph-x"></i>
       </button>
@@ -133,31 +133,44 @@
   </div>
 
   <!-- Temporary Ban Modal -->
-  <div id="temporaryBanModal" class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+  <div id="temporaryBanModal"
+    class="fixed inset-0 px-1 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-      <button type="button" id="closeTemporaryBanModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+      <button type="button" id="closeTemporaryBanModal"
+        class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
         <i class="ph-fill ph-x text-xl"></i>
       </button>
 
       <h2 class="text-xl font-semibold text-gray-800">Temporarily Ban User</h2>
-      <p class="mb-4">Please provide a reason for temporarily banning this user:</p>
-      <p class="mb-4 text-orange-500 text-sm">This will send an email notification to the user. The ban will automatically lift after 7 days.</p>
+      <p class="mb-4">Please provide a reason and select an expiration date for temporarily banning this user:</p>
+      <p class="mb-4 text-orange-500 text-sm">This will send an email notification to the user.</p>
 
       <form id="temporaryBanForm" method="POST" action="">
         @csrf
         @method('PATCH')
         <input type="hidden" name="user_id" id="temporaryBanUserId">
 
-        <label for="temporary_ban_reason" class="block font-medium text-gray-700">Reason:</label>
-        <textarea id="temporary_ban_reason" name="temporary_ban_reason" class="w-full border p-2 rounded-md mb-4" required></textarea>
+        <div class="mb-4">
+          <label for="temporary_ban_reason" class="block font-medium text-gray-700 mb-1">Reason:</label>
+          <textarea id="temporary_ban_reason" name="temporary_ban_reason" class="w-full border p-2 rounded-md"
+            required></textarea>
+        </div>
 
-        <button type="submit" id="temporaryBanSubmitBtn" class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md w-full disabled:opacity-50 disabled:cursor-not-allowed">
+        <div class="mb-4">
+          <label for="temporary_ban_expires_at" class="block font-medium text-gray-700 mb-1">Ban Until:</label>
+          <input type="datetime-local" id="temporary_ban_expires_at" name="temporary_ban_expires_at"
+            class="w-full border p-2 rounded-md" required min="{{ now()->addDay()->format('Y-m-d\TH:i') }}">
+          <p class="text-xs text-gray-500 mt-1">Select the date and time when the ban should be lifted</p>
+        </div>
+
+        <button type="submit" id="temporaryBanSubmitBtn"
+          class="bg-orange-500 px-4 py-2 text-white hover:bg-orange-400 rounded-md w-full disabled:opacity-50 disabled:cursor-not-allowed">
           <i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban
         </button>
       </form>
     </div>
   </div>
-
+  
   <script>
     function showUserModal(userId) {
       const modal = document.getElementById('userModal');
@@ -274,18 +287,22 @@
         }
       });
 
-      document.getElementById('temporaryBanModal')?.addEventListener('click', function(e) {
-        if (e.target === this) {
-          this.classList.add('hidden');
-          // Reset form and button state
-          document.getElementById('temporaryBanForm').reset();
-          const submitBtn = document.getElementById('temporaryBanSubmitBtn');
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Confirm Temporary Ban';
-            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          }
-        }
+      document.getElementById('temporaryBanForm')?.addEventListener('submit', function(e) {
+      const expiryDate = new Date(document.getElementById('temporary_ban_expires_at').value);
+      const now = new Date();
+      
+      if (expiryDate <= now) {
+        e.preventDefault();
+        alert('Expiration date must be in the future.');
+        return false;
+      }
+      
+      const submitBtn = document.getElementById('temporaryBanSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="ph-fill ph-clock mr-2"></i>Processing...';
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
       });
 
       // Handle escape key to close modals

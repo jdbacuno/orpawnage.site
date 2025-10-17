@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MissingPetReport;
 use App\Models\User;
 use App\Notifications\MissingPetAlert;
-use App\Notifications\MissingPetReportAcknowledged;
+use App\Notifications\MissingPetReportApproved;
 use App\Notifications\MissingPetReportReceived;
 use App\Notifications\MissingPetReportRejected;
 use Illuminate\Http\Request;
@@ -18,9 +18,32 @@ use Illuminate\Support\Str;
 
 class MissingPetReportController extends Controller
 {
-    public function index(Request $request)
+    // Public view for missing pets page
+    public function publicIndex()
     {
-        $query = MissingPetReport::query();
+        $recentPosts = MissingPetReport::where('status', 'approved')
+            ->latest('last_reposted_at')
+            ->latest('created_at')
+            ->take(8)
+            ->get();
+
+        return view('missing-form', compact('recentPosts'));
+    }
+
+    public function browsePage()
+{
+    $recentPosts = MissingPetReport::where('status', 'approved')
+        ->latest('last_reposted_at')
+        ->latest('created_at')
+        ->paginate(12);
+
+    return view('missing-pets-browse', compact('recentPosts'));
+}
+
+    // User transaction page - view own reports
+    public function userIndex(Request $request)
+    {
+        $query = MissingPetReport::where('user_id', Auth::id());
 
         // Exclude archived reports
         $query->where('status', '!=', 'archived');
@@ -28,43 +51,54 @@ class MissingPetReportController extends Controller
         // Status Filter
         $status = $request->status;
         $search = $request->search;
-        switch ($status) {
-            case 'pending':
-                $query->where('status', 'pending');
-                break;
-
-            case 'acknowledged':
-                $query->where('status', 'acknowledged');
-                break;
-
-            case 'rejected':
-                $query->where('status', 'rejected');
-                break;
-
-            default:
-                // No additional status filter
-                break;
+        
+        if ($status && in_array($status, ['pending', 'approved', 'rejected', 'found'])) {
+            $query->where('status', $status);
         }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('report_number', 'like', "%$search%")
-                  ->orWhere('owner_name', 'like', "%$search%")
-                  ->orWhere('contact_no', 'like', "%$search%")
-                ;
+                    ->orWhere('pet_name', 'like', "%$search%");
             });
         }
 
-        // Sorting
-        if ($request->has('sort') && in_array($request->sort, ['last_seen_date'])) {
-            $direction = $request->get('direction', 'asc') === 'desc' ? 'desc' : 'asc';
-            $query->orderBy($request->sort, $direction);
-        } else {
-            $query->latest();
+        // Order by last reposted date first, then created date
+        $query->latest('last_reposted_at')
+              ->latest('created_at');
+
+        $missingReports = $query->paginate(12)->appends($request->query());
+
+        return view('transactions.missing', compact('missingReports'));
+    }
+
+    // Admin index
+    public function index(Request $request)
+    {
+        $query = MissingPetReport::query();
+
+        $query->where('status', '!=', 'archived');
+
+        $status = $request->status;
+        $search = $request->search;
+        
+        if ($status && in_array($status, ['pending', 'approved', 'rejected', 'found'])) {
+            $query->where('status', $status);
         }
 
-        $reports = $query->paginate(12)
-            ->appends($request->query());
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('report_number', 'like', "%$search%")
+                    ->orWhere('owner_name', 'like', "%$search%")
+                    ->orWhere('pet_name', 'like', "%$search%")
+                    ->orWhere('contact_no', 'like', "%$search%");
+            });
+        }
+
+        $direction = $request->get('direction', 'desc');
+        $query->orderBy('created_at', $direction === 'asc' ? 'asc' : 'desc');
+
+        $reports = $query->paginate(12)->appends($request->query());
 
         return view('admin.missing-pet-reports', compact('reports'));
     }
@@ -78,34 +112,46 @@ class MissingPetReportController extends Controller
             'last_seen_location' => ['required', 'string'],
             'last_seen_date' => ['required', 'date', 'before_or_equal:today'],
             'pet_description' => ['required', 'string'],
-            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg', 'max:10240'],
+            'valid_id' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
             'pet_photos' => ['required', 'array', 'max:5'],
-            'pet_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'pet_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
             'location_photos' => ['nullable', 'array', 'max:5'],
-            'location_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'location_photos.*' => ['file', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator->after(function ($validator) use ($request) {
+            $totalSize = 0;
+
+            if ($request->hasFile('valid_id')) {
+                $totalSize += $request->file('valid_id')->getSize();
+            }
+            if ($request->hasFile('pet_photos')) {
+                foreach ($request->file('pet_photos') as $photo) {
+                    $totalSize += $photo->getSize();
+                }
+            }
+            if ($request->hasFile('location_photos')) {
+                foreach ($request->file('location_photos') as $photo) {
+                    $totalSize += $photo->getSize();
+                }
+            }
+
+            if ($totalSize > 26214400) {
+                $validator->errors()->add('files', 'Total file size cannot exceed 25MB.');
+            }
+        });
 
         $validated = $validator->validated();
         $validated['user_id'] = Auth::id();
         $validated['report_number'] = $this->generateUniqueReportNumber();
 
-        // Upload Valid ID
         if ($request->hasFile('valid_id')) {
             $validIdFile = $request->file('valid_id');
             $validIdName = "valid_id_{$validated['report_number']}." . $validIdFile->getClientOriginalExtension();
             $validated['valid_id_path'] = $validIdFile->storeAs('missing_pet_valid_ids', $validIdName, 'public');
-
-            // Remove the file object from validated data
             unset($validated['valid_id']);
         }
 
-        // Upload Pet Photos
         $petPhotos = [];
         if ($request->hasFile('pet_photos')) {
             foreach ($request->file('pet_photos') as $index => $photo) {
@@ -113,13 +159,10 @@ class MissingPetReportController extends Controller
                 $path = $photo->storeAs('missing_pet_photos', $photoName, 'public');
                 $petPhotos[] = $path;
             }
-
-            // Remove the files array from validated data
             unset($validated['pet_photos']);
         }
         $validated['pet_photos'] = json_encode($petPhotos);
 
-        // Upload Location Photos
         $locationPhotos = [];
         if ($request->hasFile('location_photos')) {
             foreach ($request->file('location_photos') as $index => $photo) {
@@ -127,8 +170,6 @@ class MissingPetReportController extends Controller
                 $path = $photo->storeAs('missing_pet_location_photos', $photoName, 'public');
                 $locationPhotos[] = $path;
             }
-
-            // Remove the files array from validated data
             unset($validated['location_photos']);
         }
         $validated['location_photos'] = json_encode($locationPhotos);
@@ -138,32 +179,33 @@ class MissingPetReportController extends Controller
 
         $report->user->notify(new MissingPetReportReceived($report));
 
-        return redirect()->back()->with('success', 'Missing pet report submitted successfully! Kindly await for an email update or visit the ' . '<a href="/transactions/missing-status" class="text-blue-500">Transactions' . "</a>" . ' page to track your application.');
+        return redirect()->back()->with('success', 'Missing pet report submitted successfully! Kindly await for an email update or visit the <a href="/transactions/missing-status" class="text-blue-500 underline">Transactions</a> page to track your report.');
     }
 
-    public function acknowledge(Request $request)
+    public function approve(Request $request)
     {
         $request->validate([
             'report_id' => ['required', 'exists:missing_pet_reports,id']
         ]);
 
         $report = MissingPetReport::findOrFail($request->report_id);
-        $report->update(['status' => 'acknowledged']);
+        $report->update([
+            'status' => 'approved',
+            'last_reposted_at' => now()
+        ]);
 
         try {
-            // First, notify the reporter that their report has been acknowledged
-            $report->user->notify(new MissingPetReportAcknowledged($report));
+            $report->user->notify(new MissingPetReportApproved($report));
 
-            // Then, send the missing pet alert to all users in chunks to avoid memory spikes
             User::chunkById(500, function ($users) use ($report) {
                 Notification::send($users, new MissingPetAlert($report));
             });
 
             return redirect()->back()
-                ->with('success', 'Report #' . $report->report_number . ' has been acknowledged. The reporter has been notified and missing pet alerts have been sent to all users.');
+                ->with('success', 'Report #' . $report->report_number . ' has been approved and posted. Missing pet alerts have been sent to all users.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Report acknowledged but failed to send notifications: ' . $e->getMessage());
+                ->with('error', 'Report approved but failed to send notifications: ' . $e->getMessage());
         }
     }
 
@@ -190,21 +232,67 @@ class MissingPetReportController extends Controller
         }
     }
 
+    public function markAsFound(Request $request)
+    {
+        $request->validate([
+            'report_id' => ['required', 'exists:missing_pet_reports,id']
+        ]);
+
+        $report = MissingPetReport::findOrFail($request->report_id);
+        
+        if ($report->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $report->update(['status' => 'found']);
+
+        return redirect()->back()
+            ->with('success', 'Your missing pet has been marked as found! Congratulations!');
+    }
+
+    public function repost(Request $request)
+    {
+        $request->validate([
+            'report_id' => ['required', 'exists:missing_pet_reports,id']
+        ]);
+
+        $report = MissingPetReport::findOrFail($request->report_id);
+        
+        if ($report->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        if ($report->status !== 'approved') {
+            return redirect()->back()->with('error', 'Only approved reports can be reposted.');
+        }
+
+        $lastReposted = $report->last_reposted_at ?? $report->created_at;
+        $daysSince = now()->diffInDays($lastReposted);
+
+        if ($daysSince < 5) {
+            $daysRemaining = 5 - $daysSince;
+            return redirect()->back()
+                ->with('error', "You can repost this report in {$daysRemaining} day(s).");
+        }
+
+        $report->update(['last_reposted_at' => now()]);
+
+        return redirect()->back()
+            ->with('success', 'Your missing pet report has been reposted to the top!');
+    }
+
     public function destroy(MissingPetReport $missingReport)
     {
-        // Delete the associated valid ID if it exists
         if ($missingReport->valid_id_path) {
             Storage::disk('public')->delete($missingReport->valid_id_path);
         }
 
-        // Delete all pet photos
         if ($missingReport->pet_photos) {
             foreach (json_decode($missingReport->pet_photos) as $photo) {
                 Storage::disk('public')->delete($photo);
             }
         }
 
-        // Delete all location photos
         if ($missingReport->location_photos) {
             foreach (json_decode($missingReport->location_photos) as $photo) {
                 Storage::disk('public')->delete($photo);
@@ -225,8 +313,8 @@ class MissingPetReportController extends Controller
 
         $report = MissingPetReport::findOrFail($request->report_id);
 
-        if ($report->status !== 'acknowledged' && $report->status !== 'rejected') {
-            return redirect()->back()->with('error', 'Only acknowledged or rejected reports can be archived.');
+        if (!in_array($report->status, ['approved', 'rejected', 'found'])) {
+            return redirect()->back()->with('error', 'Only approved, rejected, or found reports can be archived.');
         }
 
         $report->update([
@@ -236,7 +324,6 @@ class MissingPetReportController extends Controller
 
         return redirect()->back()->with('success', 'Missing pet report archived.');
     }
-
 
     private function generateUniqueReportNumber()
     {

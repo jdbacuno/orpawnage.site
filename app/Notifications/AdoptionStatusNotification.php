@@ -15,7 +15,6 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
 
     protected $applicationId;
     protected $oldPickupDate;
-
     protected $isUserLoggedIn;
 
     public function __construct(int $applicationId, $oldPickupDate = null, $isUserLoggedIn = false)
@@ -43,77 +42,156 @@ class AdoptionStatusNotification extends Notification implements ShouldQueue
         $statusSubjectMap = [
             'picked up' => 'Adoption Completed',
             'to be confirmed' => 'Confirm Your Application',
-            'to be scheduled' => 'Set a Pickup Date',
-            'adoption on-going' => 'Scheduled for Pickup',
+            'to be scheduled' => 'Selected for Adoption - Schedule Your Visit',
+            'adoption on-going' => 'Scheduled for Visit',
         ];
 
-        $customSubject = $statusSubjectMap[$status] ?? ucwords($status); // fallback to default format
+        $customSubject = $statusSubjectMap[$status] ?? ucwords($status);
+
+        $petName = $application->pet->pet_name ?? 'your selected pet';
 
         $mailMessage = (new MailMessage)
             ->subject("Adoption Application - {$customSubject} - Transaction #{$transactionNumber}")
             ->greeting('Hello ' . $application->user->full_name . ',')
-            ->line('**Transaction #:** ' . $transactionNumber)
-            ->line('**Pet Name:** ' . $application->pet->pet_name)
-            ->line('**Application Date:** ' . $application->created_at->format('F j, Y'));
+            ->line('**Transaction #:** ' . $transactionNumber);
+
+        if ($application->pet->pet_name) {
+            $mailMessage->line('**Pet Name:** ' . $application->pet->pet_name);
+        }
+
+        $mailMessage->line('**Application Date:** ' . $application->created_at->format('F j, Y'));
 
         switch ($application->status) {
             case 'to be confirmed':
                 $mailMessage
-                    ->line('🎉 We have received your application!')
-                    ->line('Please confirm within **24 hours** to proceed with the adoption.')
+                    ->line('��� Thank you for submitting your adoption application!')
+                    ->line('**Action Required:** Please confirm your application within **24 hours** to proceed.')
                     ->action('Confirm Application', URL::signedRoute('adoption.confirm', ['application' => $application->id]))
-                    ->line('Failure to confirm within 24 hours will automatically cancel your application.')
-                    ->line('We look forward to helping you adopt a pet!');
+                    ->line('⚠️ Failure to confirm within 24 hours will automatically cancel your application.')
+                    ->line('After confirmation, our team will review your application. Priority is given to Angeles City residents.');
                 break;
 
             case 'confirmed':
                 $mailMessage
-                    ->line('✅ Your adoption application has been **confirmed**!')
-                    ->line('We are now preparing the pet for adoption. This may take **3–5 business days**.')
-                    ->line('You will receive another email to select a schedule to bring your pet home.')
+                    ->line('✅ Your application has been **confirmed**!')
+                    ->line('Our team is now reviewing your application along with others.')
+                    ->line('')
+                    ->line('**What happens next:**')
+                    ->line('• We conduct background reviews of all confirmed applications')
+                    ->line('• Priority is given to Angeles City residents')
+                    ->line('• If multiple applicants are confirmed, we select based on background check and residency')
+                    ->line('')
+                    ->line('If you are selected, you will receive a scheduling email.')
                     ->line('Thank you for your patience and for choosing to adopt!');
                 break;
 
             case 'to be scheduled':
                 $mailMessage
-                    ->line('📅 You can now select a schedule to bring your pet home!')
-                    ->line('Your application is now ready for **scheduling**.')
-                    ->action('Select Schedule', url('/transactions/adoption-status'))
-                    ->line('Please schedule within **48 hours** to avoid cancellation.')
-                    ->line('**Available time slots:** 8:00 AM to 4:00 PM, Monday to Friday.')
-                    ->line('**What to bring on your scheduled date:**')
-                    ->line('- Valid government-issued ID')
-                    ->line('- Copy of this confirmation');
+                    ->line('��� Congratulations! You have been **selected** to move forward with the adoption' . ($application->pet->pet_name ? ' of **' . $application->pet->pet_name . '**' : '') . '!')
+                    ->line('')
+                    ->line('**Action Required:** You must schedule your visitation date within **48 hours**. Failure to respond will cancel your application.')
+                    ->line('')
+                    ->line('**Available visitation dates:** Within the next 7 business days')
+                    ->line('**Available time slots:** 8:00 AM to 4:00 PM, Monday to Friday')
+                    ->line('')
+                    ->line('**On your scheduled visit, please bring:**')
+                    ->line('• Valid government ID (matching the one you submitted)')
+                    ->line('• Your transaction number: **' . $transactionNumber . '**')
+                    ->line('')
+                    ->line('**During your visit, we will:**')
+                    ->line('• Discuss the pet\'s needs, vaccination, and other care requirements')
+                    ->line('• Answer any questions you may have')
+                    ->line('• Complete the final adoption paperwork')
+                    ->line('')
+                    ->line('**Good news:** Kittens/puppies 3 months or younger can usually go home immediately as they don\'t require additional taming.')
+                    ->action('Schedule Your Visit', url('/transactions/adoption-status'))
+                    ->line('**Note:** Other applicants will be notified that a candidate has been selected.');
                 break;
 
             case 'adoption on-going':
+                $petNameText = $application->pet->pet_name ?? 'your selected pet';
                 $mailMessage
-                    ->line('📅 Your new pet is ready to welcome you home!')
+                    ->line('��� Your visit has been scheduled!')
+                    ->line('')
                     ->line('**Scheduled Visit Date:** ' . $application->pickup_date->format('F j, Y'))
                     ->line('**Location:** Orpawnage Angeles Main Office')
-                    ->line('**On your pickup day, bring:**')
-                    ->line('- A valid government-issued ID')
-                    ->line('- Your transaction confirmation email')
-                    ->line('⚠️ Failure to visit after **3 business days** from your scheduled date will cancel the adoption.')
-                    ->line('📸 We\'ll take an official photo of you and your new pet during the handover. The photo will be featured on Angeles City Information Office for documentation.');
+                    ->line('')
+                    ->line('**Please bring on your visit:**')
+                    ->line('• Valid government-issued ID (matching the one you submitted)')
+                    ->line('• Your transaction number: **' . $transactionNumber . '**')
+                    ->line('')
+                    ->line('**During your visit:**')
+                    ->line('• We\'ll discuss **' . $petNameText . '**\'s needs, vaccination, and other care requirements')
+                    ->line('• You can ask any questions you may have')
+                    ->line('• We\'ll complete the adoption paperwork')
+                    ->line('• If **' . $petNameText . '** is 3 months or younger, you may take them home the same day')
+                    ->line('')
+                    ->line('��� Upon successful pickup, we\'ll take an official photo of you with your new pet. This will be featured on our Facebook page and website for documentation.')
+                    ->line('')
+                    ->line('⚠️ If you cannot make your scheduled visit, please contact us immediately to reschedule.');
                 break;
 
             case 'picked up':
+                $petNameText = $application->pet->pet_name ?? 'your new pet';
                 $mailMessage
-                    ->line('🏡 Congratulations! Your adoption is now **complete**.')
+                    ->line('��� Congratulations! Your adoption is now **complete**.')
+                    ->line('')
                     ->line('**Completion Date:** ' . $application->updated_at->format('F j, Y'))
-                    ->line("Thank you for providing a loving home to **{$application->pet->pet_name}**!")
-                    ->line('🐾 We would love to see how your new pet is doing! Share updates on our [Facebook page](https://www.facebook.com/ACVeterinaryOffice/).');
+                    ->line('')
+                    ->line("Thank you for providing a loving home to **{$petNameText}**!")
+                    ->line('')
+                    ->line('**Important Reminders:**')
+                    ->line('• If **' . $petNameText . '** has health or behavioral issues, you may need to return for follow-up visits')
+                    ->line('• Keep your contact information updated in case we need to reach you')
+                    ->line('')
+                    ->line('��� We would love to see how your new pet is doing! Share updates on our [Facebook page](https://www.facebook.com/orpawnage/).')
+                    ->line('')
+                    ->line('Your official adoption photo will soon be featured on [official website](https://orpawnage.site/featured-adoptions/) and our social media platforms.');
                 break;
 
             case 'rejected':
-                $mailMessage
-                    ->line('We regret to inform you that your adoption application has been **rejected**.')
-                    ->line('**Reason for Rejecting:** ' . $application->reject_reason)
-                    ->line('We encourage you to:')
-                    ->line('- Review our adoption requirements')
-                    ->line('- Consider other available pets')
-                    ->action('Browse Available Pets', url('/services/adopt-a-pet'));
+                $petNameText = $application->pet->pet_name ?? 'the pet';
+                $rejectReason = $application->reject_reason ?? 'No reason provided';
+
+                // Check if rejection is due to another applicant being selected
+                if ($rejectReason === 'Another applicant has been selected to move forward with the adoption process.') {
+                    $mailMessage
+                        ->line('Thank you for your interest in adopting **' . $petNameText . '**.')
+                        ->line('')
+                        ->line('We regret to inform you that another applicant has been selected to move forward with the adoption process for this pet.')
+                        ->line('')
+                        ->line('**This doesn\'t mean your application wasn\'t good!** We carefully review all applications and sometimes must make difficult decisions when multiple qualified applicants apply for the same pet.')
+                        ->line('')
+                        ->line('**Background reviews are based on:**')
+                        ->line('• Residency (priority given to Angeles City residents)')
+                        ->line('• Background check results')
+                        ->line('• Application completeness and accuracy')
+                        ->line('')
+                        ->line('We encourage you to:')
+                        ->line('• Browse our other available pets - there are many wonderful animals waiting for homes')
+                        ->line('• Submit a new application for a different pet')
+                        ->line('• Check back regularly as new pets become available')
+                        ->action('Browse Available Pets', url('/services/adopt-a-pet'))
+                        ->line('Thank you for choosing to adopt and giving a rescued animal a second chance at life!');
+                } else {
+                    $mailMessage
+                        ->line('We regret to inform you that your adoption application has been **rejected**.')
+                        ->line('')
+                        ->line('**Reason:** ' . $rejectReason)
+                        ->line('')
+                        ->line('We encourage you to:')
+                        ->line('• Review our adoption requirements');
+
+                    // Only show this line if there's an actual reason provided
+                    if ($application->reject_reason && $application->reject_reason !== 'No reason provided') {
+                        $mailMessage->line('• Address any concerns mentioned in the rejection reason');
+                    }
+
+                    $mailMessage
+                        ->line('• Consider applying for other available pets')
+                        ->action('Browse Available Pets', url('/services/adopt-a-pet'))
+                        ->line('If you have questions about this decision, please contact us and reference your transaction number.');
+                }
                 break;
         }
 

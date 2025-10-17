@@ -20,7 +20,7 @@
     }
   </style>
   <!-- ========== START OF HERO CAROUSEL ========== -->
-  <div class="relative w-full h-screen 4xl:h-50 overflow-hidden">
+  <div class="relative w-full h-screen 4xl:h-50 overflow-hidden pb-[env(safe-area-inset-bottom)] md:pb-0">
     <!-- Carousel wrapper -->
     <div id="default-carousel" class="relative w-full h-full flex transition-transform duration-[1100ms] ease-in-out"
       data-carousel="static">
@@ -42,7 +42,7 @@
 
       <!-- Item 1 -->
       <div class="min-w-full flex-shrink-0 relative h-full">
-        <img src="{{ asset('images/orpawnage-service-2.png') }}" class="absolute block w-full h-full object-cover"
+        <img src="{{ asset('images/orpawnage-service-2.jpg') }}" class="absolute block w-full h-full object-cover"
           alt="Slide 1" />
         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center px-2">
           <div class="text-center text-white">
@@ -58,13 +58,13 @@
               class="text-lg/10 mt-10 mx-auto max-w-[700px] tracking-widest drop-shadow-md bg-black/20 px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-center flex justify-center items-center border border-white/20">
               An Online Portal Where Pets Find Their New Home
             </p>
-            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 relative z-40 carousel-content">
+            <div class="mt-8 flex flex-row flex-wrap justify-center gap-2 md:gap-4 relative z-40 carousel-content">
               <a href="/services/adopt-a-pet"
-                class="hero-button inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-all duration-200 text-white">
+                class="hero-button inline-flex items-center px-3 py-2 md:px-6 md:py-3 bg-orange-500 hover:bg-yellow-400 hover:text-black rounded-md font-medium transition-all duration-200 text-white text-sm md:text-base">
                 <i class="ph-fill ph-paw-print mr-2"></i> Adopt a Pet
               </a>
               <a href="/donate"
-                class="hero-button inline-flex items-center px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-all duration-200 text-white">
+                class="hero-button inline-flex items-center px-3 py-2 md:px-6 md:py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-md font-medium transition-all duration-200 text-white text-sm md:text-base">
                 <i class="ph-fill ph-hand-heart mr-2"></i> Donate Now
               </a>
             </div>
@@ -95,7 +95,7 @@
           @endforeach
         </div>
         @else
-        <img src="{{ asset('images/home_image-3.jpg') }}"
+        <img src="{{ asset('images/pets.png') }}"
           class="absolute block w-full h-full object-cover sm:object-cover md:object-cover lg:object-contain xl:object-contain"
           alt="Slide 3" />
         @endif
@@ -142,7 +142,8 @@
     </div>
 
     <!-- Slider indicators -->
-    <div class="absolute bottom-8 left-0 right-0 z-30 flex justify-center space-x-2 pointer-events-none">
+    <div
+      class="absolute bottom-4 md:bottom-8 left-0 right-0 z-30 flex justify-center space-x-2 pointer-events-none pb-[max(env(safe-area-inset-bottom),0px)] md:pb-0">
       <button type="button"
         class="h-2 w-6 rounded-full bg-white/50 hover:bg-yellow-400 transition-all duration-300 pointer-events-auto"
         onclick="goToSlide(0)"></button>
@@ -196,7 +197,7 @@
   $featuredPets = app('App\Http\Controllers\FeaturedPetController')->index()->getData()['featuredPets'];
   @endphp
 
-  <!-- ========== START OF FEATURED PETS SECTION ========== -->
+  <!-- ========== START OF FEATURED PETS SECTION (HOME PAGE) ========== -->
   @if($featuredPets->count() > 4)
   <section class="w-full py-16 bg-white bg-yellow-20">
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
@@ -222,11 +223,15 @@
         <div class="relative overflow-x-auto pb-4 scrollbar-hidden" id="featuredPetsContainer">
           <div class="flex gap-x-6 px-2">
             @foreach($featuredPets as $featured)
-            <!-- ENHANCED CARD DESIGN -->
+            <!-- ENHANCED CARD DESIGN WITH CLICK-TO-SLIDE -->
             <div
-              class="flex-shrink-0 w-[350px] relative bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200">
-              <a href="/services/{{ $featured->slug }}/adoption-form" class="block relative">
-                <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
+              class="flex-shrink-0 w-[350px] relative bg-white rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200"
+              wire:poll.10s>
+
+              <!-- Image with click handler (NO LONGER AN <a> TAG) -->
+              <div class="block relative cursor-pointer" onclick="toggleSlideUp(this.closest('.group'))">
+                <img src="{{ asset('storage/' . ($featured->pet->image_path ?? 'pet-images/catdog.svg')) }}"
+                  alt="Pet Image"
                   class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
                 <div class="absolute top-2 left-2">
                   <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded">Pick me!</span>
@@ -234,22 +239,28 @@
                 <div class="absolute top-2 right-2">
                   <span class="bg-black/60 text-white text-[10px] px-2 py-1 rounded flex items-center">
                     <i class="ph-fill ph-clock mr-1"></i>
-                    Added {{ \Carbon\Carbon::parse($featured->created_at)->diffForHumans() }}
+                    Added {{ \Carbon\Carbon::parse($featured->pet->created_at)->diffForHumans() }}
                   </span>
                 </div>
-              </a>
+              </div>
 
-              <!-- Enhanced Slide-Up Panel -->
+              <!-- Slide-Up Panel with Blur (CLICK-TO-SLIDE VERSION) -->
               <div
-                class="absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+                class="slide-up-panel absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full transition-all duration-300 ease-in-out">
+
+                <!-- Close button -->
+                <button onclick="event.stopPropagation(); closeSlideUp(this)"
+                  class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10 opacity-0 pointer-events-none">
+                  <i class="ph-fill ph-x text-lg"></i>
+                </button>
 
                 <!-- Name & ID -->
-                <div class="flex justify-between items-center mb-3">
+                <div class="flex justify-between items-center mb-3 pr-8">
                   <h3 class="text-lg font-bold text-black">
-                    {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
+                    {{ strtolower($featured->pet->pet_name) !== 'n/a' ? ucwords($featured->pet->pet_name) : 'Unnamed' }}
                   </h3>
                   <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
-                    {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}
+                    {{ $featured->pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet->pet_number }}
                   </span>
                 </div>
 
@@ -257,19 +268,20 @@
                 <div class="flex flex-wrap gap-2 mb-3">
                   <span
                     class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer"
-                    data-description="Age" onclick="changeText(this)">
-                    {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
-                    Str::plural($featured->age_unit) }} old
+                    data-description="Age" onclick="event.stopPropagation(); changeText(this)">
+                    {{ $featured->pet->formatted_age }} {{ $featured->pet->formatted_age == 1 ?
+                    Str::singular($featured->pet->age_unit) :
+                    Str::plural($featured->pet->age_unit) }} old
                   </span>
                   <span
-                    class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
-                    data-description="Sex" onclick="changeText(this)">
-                    {{ ucfirst($featured->sex) }}
+                    class="{{ $featured->pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
+                    data-description="Sex" onclick="event.stopPropagation(); changeText(this)">
+                    {{ ucfirst($featured->pet->sex) }}
                   </span>
                   <span
                     class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer"
-                    data-description="Color" onclick="changeText(this)">
-                    {{ ucfirst($featured->color) }}
+                    data-description="Color" onclick="event.stopPropagation(); changeText(this)">
+                    {{ ucfirst($featured->pet->color) }}
                   </span>
                 </div>
 
@@ -280,7 +292,7 @@
                       a chance</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <a href="/services/{{ $featured->slug }}/adoption-form"
+                    <a href="/services/{{ $featured->pet->slug }}/adoption-form" onclick="event.stopPropagation()"
                       class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
                       <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
                     </a>
@@ -303,6 +315,7 @@
   </section>
 
   <script>
+    // HORIZONTAL SCROLL FUNCTIONALITY (HOME PAGE SPECIFIC)
     function scrollFeaturedPets(direction) {
       const container = document.getElementById('featuredPetsContainer');
       const scrollAmount = 350; // Matches card width + gap
@@ -311,9 +324,52 @@
         behavior: 'smooth'
       });
     }
-  </script>
 
-  <script>
+    // CLICK-TO-SLIDE FUNCTIONALITY (SHARED WITH FEATURED PAGE)
+    function toggleSlideUp(card) {
+      const panel = card.querySelector('.slide-up-panel');
+      const closeButton = panel.querySelector('button');
+      const isOpen = !panel.classList.contains('translate-y-full');
+
+      if (isOpen) {
+        // Close
+        panel.classList.add('translate-y-full');
+        card.classList.remove('details-open');
+        closeButton.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        // Close all other open panels first
+        document.querySelectorAll('.slide-up-panel').forEach(p => {
+          p.classList.add('translate-y-full');
+          p.closest('.group').classList.remove('details-open');
+          p.querySelector('button').classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        // Open this one
+        panel.classList.remove('translate-y-full');
+        card.classList.add('details-open');
+        closeButton.classList.remove('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function closeSlideUp(button) {
+      const panel = button.closest('.slide-up-panel');
+      const card = button.closest('.group');
+      panel.classList.add('translate-y-full');
+      card.classList.remove('details-open');
+      button.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // Close slide-up when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.group')) {
+        document.querySelectorAll('.slide-up-panel').forEach(panel => {
+          panel.classList.add('translate-y-full');
+          panel.closest('.group').classList.remove('details-open');
+          panel.querySelector('button').classList.add('opacity-0', 'pointer-events-none');
+        });
+      }
+    });
+
     // Badge toggler shared with featured page
     function changeText(el) {
       const original = el.getAttribute('data-original-text') || el.textContent.trim();
@@ -332,5 +388,5 @@
     }
   </script>
   @endif
-  <!-- ========== END OF FEATURED PETS SECTION ========== -->
+  <!-- ========== END OF FEATURED PETS SECTION (HOME PAGE) ========== -->
 </x-layout>

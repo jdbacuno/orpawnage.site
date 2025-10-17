@@ -12,50 +12,30 @@ class ScheduleServiceProvider extends ServiceProvider
     // updating featured pet task
     $schedule->command('app:update-featured-pets')
       ->everyMinute()
-      ->onOneServer()
+      //  ->onOneServer()
       ->appendOutputTo(storage_path('logs/update-featured-pets.log'));
 
     // adoption tasks
     $schedule->command('applications:reject-unconfirmed')
       ->everyMinute()
-      ->onOneServer()
+      // ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-reject.log'));
 
     $schedule->command('applications:reject-unscheduled')
       ->everyMinute()
-      ->onOneServer()
+      // ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-reject-unscheduled.log'));
-
-    $schedule->command('applications:reject-unpicked')
-      ->daily()
-      ->onOneServer()
-      ->appendOutputTo(storage_path('logs/auto-reject-unpicked.log'));
-
-    $schedule->command('users:auto-ban-rejected-applications')
-      ->daily() // Run daily to check for violations
-      ->onOneServer()
-      ->appendOutputTo(storage_path('logs/auto-ban-users.log'));
 
     // Auto-lift temporary bans
     $schedule->command('users:auto-lift-temporary-bans')
-      ->daily() // Run daily to check for expired temporary bans
-      ->onOneServer()
+      ->everyMinute() // Run daily to check for expired temporary bans
+      // ->onOneServer()
       ->appendOutputTo(storage_path('logs/auto-lift-temporary-bans.log'));
 
     // surrender tasks
     $schedule->command('surrender:reject-unconfirmed')
       ->everyMinute()
-      ->onOneServer()
+      // ->onOneServer()
       ->appendOutputTo(storage_path('logs/surrender-auto-reject.log'));
-
-    $schedule->command('surrender:reject-unscheduled')
-      ->everyMinute()
-      ->onOneServer()
-      ->appendOutputTo(storage_path('logs/surrender-auto-reject-unscheduled.log'));
-
-    $schedule->command('surrender:reject-uncompleted')
-      ->daily()
-      ->onOneServer()
-      ->appendOutputTo(storage_path('logs/surrender-auto-reject-uncompleted.log'));
   }
 }

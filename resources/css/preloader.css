@@ -46,6 +46,21 @@ body{
   left: 0;
 }
 
+.preloader.h-16,
+.preloader.w-16 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4rem;
+  height: 4rem;
+}
+
+.preloader.h-16 .dog,
+.preloader.w-16 .dog {
+  transform: scale(0.213);
+  transform-origin: center;
+}
+
 .dog {
   z-index: 1;
   width: 300px;
@@ -53,6 +68,13 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 768px) {
+  #preloader:not(.h-16):not(.w-16) .dog {
+    transform: scale(0.65);
+    transform-origin: center;
+  }
 }
 
 .dog * {
@@ -68,7 +90,7 @@ body{
   height: 3.3333333333%;
   background-color: #ded1d1;
   border-radius: 2px;
-  animation: shadow calc(1 * var(--semi-duration)) infinite;
+  animation: shadow var(--duration) infinite;
 }
 
 .torso {
@@ -411,13 +433,18 @@ body{
 }
 
 @keyframes shadow {
-  from,
-  to {
-    transform: scaleX(0.75);
+  0%,
+  100% {
+    transform: translateX(0) scaleX(0.75);
   }
-  45%,
-  55% {
-    transform: scaleX(0.5);
+  25% {
+    transform: translateX(-5px) scaleX(0.6);
+  }
+  50% {
+    transform: translateX(-10px) scaleX(0.5);
+  }
+  75% {
+    transform: translateX(-5px) scaleX(0.6);
   }
 }
 @keyframes torso {

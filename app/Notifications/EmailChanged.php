@@ -32,7 +32,7 @@ class EmailChanged extends Notification implements ShouldQueue
             ->line('The email address associated with your account was recently changed.')
             ->line('New email address: ' . $this->user->email)
             ->line('If you did not make this change, please secure your account immediately.')
-            ->action('Secure Account', url('http://localhost/' . $isAdmin))
+            ->action('Secure Account', url('https://orpawnage.site/' . $isAdmin))
             ->line('Thank you for using our application!');
     }
 }

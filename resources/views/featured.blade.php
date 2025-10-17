@@ -1,6 +1,6 @@
 <x-layout>
   <!-- ========== START OF PET LISTING SECTION ========== -->
-  <section class="relative featured-gradient min-h-screen bg-yellow-20" id="mainContent">
+  <section class="relative featured-gradient bg-yellow-20 flex-none" id="mainContent">
 
     <!-- Desktop/Large screens: warm gradient + subtle pattern background -->
     <div class="hidden sm:block absolute inset-0 z-0">
@@ -69,10 +69,10 @@
                     difference—please consider meeting them first.
                   </p>
                   <ul class="mt-3 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
-                    <li class="inline-flex items-center"><i class="ph-fill ph-clock mr-1 text-amber-500"></i>Longest in
+                    <li class="inline-flex items-center"><i class="ph-fill ph-clock mr-1 text-amber-500"></i>Aging in
                       care</li>
                     <li class="inline-flex items-center"><i
-                        class="ph-fill ph-user-heart mr-1 text-rose-500"></i>Under‑noticed personalities</li>
+                        class="ph-fill ph-heart-break mr-1 text-rose-500"></i>Under‑noticed personalities</li>
                     <li class="inline-flex items-center"><i
                         class="ph-fill ph-stethoscope mr-1 text-orange-500"></i>Mild/special needs</li>
                   </ul>
@@ -93,9 +93,9 @@
         </div>
       </div>
 
+
       @if ($featuredPets->count() > 0)
       <div class="container mx-auto px-4">
-
 
         <div class="mb-5 p-4 bg-white border border-amber-200 rounded-xl shadow-sm" id="pets">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -115,11 +115,15 @@
         <div
           class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 justify-center">
           @foreach ($featuredPets as $featured)
-          <!-- ENHANCED CARD DESIGN -->
+          <!-- ENHANCED CARD DESIGN WITH CLICK-TO-SLIDE -->
           <div
-            class="relative bg-white w-full mx-auto rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200">
-            <a href="/services/{{ $featured->slug }}/adoption-form" class="block relative">
-              <img src="{{ asset('storage/' . ($featured->image_path ?? 'pet-images/catdog.svg')) }}" alt="Pet Image"
+            class="relative bg-white w-full mx-auto rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-all duration-200 border border-gray-200"
+            wire:poll.10s>
+
+            <!-- Image with click handler (NO LONGER AN <a> TAG) -->
+            <div class="block relative cursor-pointer" onclick="toggleSlideUp(this.closest('.group'))">
+              <img src="{{ asset('storage/' . ($featured->pet->image_path ?? 'pet-images/catdog.svg')) }}"
+                alt="Pet Image"
                 class="h-64 w-full object-cover group-hover:brightness-95 transition-all duration-300" />
               <div class="absolute top-2 left-2">
                 <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded">Pick me!</span>
@@ -127,22 +131,28 @@
               <div class="absolute top-2 right-2">
                 <span class="bg-black/60 text-white text-[10px] px-2 py-1 rounded flex items-center">
                   <i class="ph-fill ph-clock mr-1"></i>
-                  Added {{ \Carbon\Carbon::parse($featured->created_at)->diffForHumans() }}
+                  Added {{ \Carbon\Carbon::parse($featured->pet->created_at)->diffForHumans() }}
                 </span>
               </div>
-            </a>
+            </div>
 
-            <!-- Enhanced Slide-Up Panel -->
+            <!-- Slide-Up Panel with Blur (CLICK-TO-SLIDE VERSION) -->
             <div
-              class="absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+              class="slide-up-panel absolute bottom-0 left-0 w-full bg-white/70 backdrop-blur-md text-gray-900 p-4 translate-y-full transition-all duration-300 ease-in-out">
+
+              <!-- Close button -->
+              <button onclick="event.stopPropagation(); closeSlideUp(this)"
+                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10 opacity-0 pointer-events-none">
+                <i class="ph-fill ph-x text-lg"></i>
+              </button>
 
               <!-- Name & ID -->
-              <div class="flex justify-between items-center mb-3">
+              <div class="flex justify-between items-center mb-3 pr-8">
                 <h3 class="text-lg font-bold text-black">
-                  {{ strtolower($featured->pet_name) !== 'n/a' ? ucwords($featured->pet_name) : 'Unnamed' }}
+                  {{ strtolower($featured->pet->pet_name) !== 'n/a' ? ucwords($featured->pet->pet_name) : 'Unnamed' }}
                 </h3>
                 <span class="bg-yellow-400 text-xs text-black py-1 px-2 rounded font-bold">
-                  {{ $featured->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet_number }}
+                  {{ $featured->pet->species == 'feline' ? 'Cat' : 'Dog' }}#{{ $featured->pet->pet_number }}
                 </span>
               </div>
 
@@ -150,19 +160,20 @@
               <div class="flex flex-wrap gap-2 mb-3">
                 <span
                   class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full border border-blue-200 cursor-pointer"
-                  data-description="Age" onclick="changeText(this)">
-                  {{ $featured->age }} {{ $featured->age == 1 ? Str::singular($featured->age_unit) :
-                  Str::plural($featured->age_unit) }} old
+                  data-description="Age" onclick="event.stopPropagation(); changeText(this)">
+                  {{ $featured->pet->formatted_age }} {{ $featured->pet->formatted_age == 1 ?
+                  Str::singular($featured->pet->age_unit) :
+                  Str::plural($featured->pet->age_unit) }} old
                 </span>
                 <span
-                  class="{{ $featured->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
-                  data-description="Sex" onclick="changeText(this)">
-                  {{ ucfirst($featured->sex) }}
+                  class="{{ $featured->pet->sex == 'male' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-pink-100 text-pink-800 border-pink-200' }} text-xs px-3 py-1 rounded-full border cursor-pointer"
+                  data-description="Sex" onclick="event.stopPropagation(); changeText(this)">
+                  {{ ucfirst($featured->pet->sex) }}
                 </span>
                 <span
                   class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full border border-green-200 cursor-pointer"
-                  data-description="Color" onclick="changeText(this)">
-                  {{ ucfirst($featured->color) }}
+                  data-description="Color" onclick="event.stopPropagation(); changeText(this)">
+                  {{ ucfirst($featured->pet->color) }}
                 </span>
               </div>
 
@@ -173,7 +184,7 @@
                     chance</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <a href="/services/{{ $featured->slug }}/adoption-form"
+                  <a href="/services/{{ $featured->pet->slug }}/adoption-form" onclick="event.stopPropagation()"
                     class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
                     <i class="ph-fill ph-paw-print mr-1"></i>Adopt me
                   </a>
@@ -192,13 +203,13 @@
 
       @else
       <!-- No Pets Found Message -->
-      <div class="text-center text-black mt-10 h-dvh">
+      <div class="text-center text-black mt-10">
         <div class="max-w-md mx-auto bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <i class="ph-fill ph-paw-print text-3xl text-gray-500"></i>
           <p class="mt-3 text-lg font-semibold">No featured pets right now</p>
           <p class="text-sm text-gray-600">Great news—everyone is getting attention. Please explore all adoptable pets
             instead.</p>
-          <a href="/adopt-a-pet"
+          <a href="/services/adopt-a-pet"
             class="mt-4 inline-flex items-center px-4 py-2 rounded-lg bg-amber-500 text-white font-semibold hover:bg-amber-600 transition">
             Explore All Pets
           </a>
@@ -209,31 +220,85 @@
   </section>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function updateHeaderSpacer() {
-        const header = document.getElementById('main-header');
-        const mainContent = document.getElementById('mainContent');
-        
-        if (header && mainContent) {
-          const headerHeight = header.offsetHeight;
-          mainContent.style.marginTop = `${headerHeight}px`;
-          mainContent.style.paddingTop = `${headerHeight * .30}px`;
-          mainContent.style.paddingBottom = `${headerHeight * .30}px`;
-        }
-      }
-     
-      // Initial update
-      updateHeaderSpacer();
-     
-      // Update on window resize
-      window.addEventListener('resize', updateHeaderSpacer);
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.getElementById('main-header');
+      const mainContent = document.getElementById('mainContent');
+      const adminIndicator = document.getElementById('adminIndicator');
 
-    // share button removed; no extra JS needed
+      const EXTRA_TOP_SPACING_PX = 8;
+
+      function computeHeights() {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const adminHeight = adminIndicator ? adminIndicator.offsetHeight : 0;
+        return { headerHeight, adminHeight };
+      }
+
+      function updateHeaderSpacer() {
+        if (!mainContent) return;
+        const { headerHeight, adminHeight } = computeHeights();
+        const totalTop = headerHeight + adminHeight;
+
+        mainContent.style.paddingTop = `${totalTop + EXTRA_TOP_SPACING_PX}px`;
+        mainContent.style.paddingBottom = `${totalTop + EXTRA_TOP_SPACING_PX}px`;
+      }
+
+      updateHeaderSpacer();
+      window.addEventListener('resize', updateHeaderSpacer);
+
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(updateHeaderSpacer);
+        if (header) ro.observe(header);
+        if (adminIndicator) ro.observe(adminIndicator);
+      }
+    });
   </script>
 
   <script>
-    // Badge toggler shared with adopt-a-pet
+    function toggleSlideUp(card) {
+      const panel = card.querySelector('.slide-up-panel');
+      const closeButton = panel.querySelector('button');
+      const isOpen = !panel.classList.contains('translate-y-full');
+
+      if (isOpen) {
+        // Close
+        panel.classList.add('translate-y-full');
+        card.classList.remove('details-open');
+        closeButton.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        // Close all other open panels first
+        document.querySelectorAll('.slide-up-panel').forEach(p => {
+          p.classList.add('translate-y-full');
+          p.closest('.group').classList.remove('details-open');
+          p.querySelector('button').classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        // Open this one
+        panel.classList.remove('translate-y-full');
+        card.classList.add('details-open');
+        closeButton.classList.remove('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function closeSlideUp(button) {
+      const panel = button.closest('.slide-up-panel');
+      const card = button.closest('.group');
+      panel.classList.add('translate-y-full');
+      card.classList.remove('details-open');
+      button.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // Close slide-up when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.group')) {
+        document.querySelectorAll('.slide-up-panel').forEach(panel => {
+          panel.classList.add('translate-y-full');
+          panel.closest('.group').classList.remove('details-open');
+          panel.querySelector('button').classList.add('opacity-0', 'pointer-events-none');
+        });
+      }
+    });
+
+    // Badge toggler function
     function changeText(el) {
       const original = el.getAttribute('data-original-text') || el.textContent.trim();
       const desc = el.getAttribute('data-description') || '';

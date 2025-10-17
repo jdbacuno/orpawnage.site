@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Console\Scheduling\Schedule;
 use Symfony\Component\Process\Process;
 
 class UpdateFeaturedPets extends Command
@@ -13,13 +12,14 @@ class UpdateFeaturedPets extends Command
 
     public function handle()
     {
-        // Use the correct path to Python and your script
-        $pythonPath = 'C:\Users\jonas\AppData\Local\Programs\Python\Python313\python.exe';
+        // Use correct Linux Python path
+        $pythonPath = '/usr/bin/python';
         $scriptPath = base_path('scripts/ml/prediction_script.py');
 
         // Verify the script exists
         if (!file_exists($scriptPath)) {
             $this->error("Script not found at: " . $scriptPath);
+            $this->info("Looking for script at: " . $scriptPath);
             return 1;
         }
 
@@ -28,8 +28,7 @@ class UpdateFeaturedPets extends Command
             $scriptPath
         ]);
 
-        $process->setTimeout(300);  // Set timeout to 300 seconds (5 minutes)
-
+        $process->setTimeout(300);
         $process->run();
 
         if ($process->isSuccessful()) {
