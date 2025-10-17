@@ -56,4 +56,4 @@ yarn-error.log
 /scripts/ml/config.py
 
 # Ignore the public storage symlink
-/storage/app/
+/storage/app/public/
