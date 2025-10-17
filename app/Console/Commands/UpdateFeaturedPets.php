@@ -13,7 +13,7 @@ class UpdateFeaturedPets extends Command
     public function handle()
     {
         // Use correct Linux Python path
-        $pythonPath = '/usr/bin/python';
+        $pythonPath = 'C:\Users\jonas\AppData\Local\Programs\Python\Python313\python.exe';
         $scriptPath = base_path('scripts/ml/prediction_script.py');
 
         // Verify the script exists

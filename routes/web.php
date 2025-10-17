@@ -19,14 +19,11 @@ use App\Http\Controllers\SurrenderApplicationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Livewire\PetListing;
-use App\Models\AdoptionApplication;
 use App\Models\OfficeStaff;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
-use Spatie\Sitemap\SitemapGenerator;
-use Psr\Http\Message\UriInterface;
 use Spatie\Sitemap\Tags\Url;
 use Spatie\Sitemap\Sitemap;
 
@@ -46,7 +43,7 @@ Route::get('/generate-sitemap', function () {
         config('app.url') . '/about',
         config('app.url') . '/privacy-policy',
         config('app.url') . '/terms-and-conditions',
-	config('app.url') . '/missing-pets-browse',
+        config('app.url') . '/missing-pets-browse',
     ];
 
     foreach ($urls as $url) {
@@ -63,7 +60,7 @@ Route::get('/generate-sitemap', function () {
 // =============================================================================
 
 // Home Page
-Route::view('/', 'home')->name('Home');
+Route::view('/', 'home');
 
 // Featured Pages
 Route::get('/featured-pets', [FeaturedPetController::class, 'index'])->name('Featured Pets');
@@ -200,7 +197,7 @@ Route::middleware(['auth', 'verified', 'check.banned'])->group(function () {
         ->name('surrender.confirm');
 
     // Transaction Pages - require authentication
-    Route::get('/transactions', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
+    Route::get('/transactions', [TransactionController::class, 'adoption']);
     Route::prefix('transactions')->group(function () {
         Route::get('/adoption-status', [TransactionController::class, 'adoption'])->name('Adoption Applications Status');
         Route::post('/schedule-pickup/{id}', [AdoptionApplicationController::class, 'schedulePickup'])->name('schedule.pickup');
@@ -264,8 +261,6 @@ Route::middleware(['isAdmin', 'verified', 'auth', 'check.banned'])->group(functi
         ->name('admin.adoption-applications.archive');
     Route::patch('/admin/surrender-applications/archive', [SurrenderApplicationController::class, 'archive'])
         ->name('admin.surrender-applications.archive');
-    Route::patch('/admin/missing-pets/archive', [MissingPetReportController::class, 'archive'])
-        ->name('admin.missing-reports.archive');
     Route::patch('/admin/abused-reports/archive', [AnimalAbuseReportController::class, 'archive'])
         ->name('admin.abused-reports.archive');
 
