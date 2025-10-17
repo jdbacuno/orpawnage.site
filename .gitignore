@@ -58,4 +58,4 @@ yarn-error.log
 public/low_probability_pets.csv
 
 # Ignore the public storage symlink
-/public/storage
+/storage/app/
