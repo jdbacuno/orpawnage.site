@@ -54,8 +54,6 @@ yarn-error.log
 /.zed
 >>>>>>> a71a53f (First commit)
 /scripts/ml/config.py
-/low_probability_pets.csv
-public/low_probability_pets.csv
 
 # Ignore the public storage symlink
 /storage/app/
